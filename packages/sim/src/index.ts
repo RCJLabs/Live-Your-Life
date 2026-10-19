@@ -143,7 +143,7 @@ export {
   offenceFor,
   offenceOf,
 } from './law/records.ts';
-export { oddsAt, shopOn } from './law/shop.ts';
+export { oddsAt, shopOn, stockOf } from './law/shop.ts';
 export type { Case, Hold, LawSlice, Visit } from './law/state.ts';
 export { ACTIVITY_TIMER, type LifeSlice, levelsNow, lifeModule } from './life.ts';
 export {

@@ -29,7 +29,7 @@ const COOK = 10;
 
 export type Doing = 'sleep' | 'walk' | 'cook';
 
-interface Pt {
+export interface Pt {
   readonly x: number;
   readonly y: number;
 }
@@ -54,7 +54,7 @@ export interface Commute {
   readonly metres: number;
 }
 
-const length = (path: readonly Pt[]): number =>
+export const length = (path: readonly Pt[]): number =>
   path.slice(1).reduce((sum, p, i) => sum + Math.hypot(p.x - (path[i] as Pt).x, p.y - (path[i] as Pt).y), 0);
 
 /**
@@ -62,7 +62,7 @@ const length = (path: readonly Pt[]): number =>
  * anywhere along its opening; walking its middle keeps a person clear of both jambs, and so out of
  * the walls' boxes, which the depth sort could otherwise draw in front of them.
  */
-function throughMiddle(p: Pt, doors: readonly DoorPlan[]): Pt {
+export function throughMiddle(p: Pt, doors: readonly DoorPlan[]): Pt {
   for (const d of doors) {
     if (d.along === 'x' && Math.abs(p.y - d.y) < CELL && Math.abs(p.x - d.x) <= d.width / 2) return { x: d.x, y: p.y };
     if (d.along === 'y' && Math.abs(p.x - d.x) < CELL && Math.abs(p.y - d.y) <= d.width / 2) return { x: p.x, y: d.y };
@@ -104,7 +104,7 @@ export function commuteFor(plan: BlockPlan, grid: WalkGrid, seed: string): Commu
 }
 
 /** Where along a way someone is, `s` metres in, and which way they face. */
-function along(path: readonly Pt[], s: number): { x: number; y: number; yaw: number } {
+export function along(path: readonly Pt[], s: number): { x: number; y: number; yaw: number } {
   let left = s;
   for (let i = 1; i < path.length; i++) {
     const a = path[i - 1] as Pt;

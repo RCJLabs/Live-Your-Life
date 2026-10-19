@@ -15,9 +15,9 @@ const runs = Number(process.argv[2] ?? 3);
 const match = process.argv[3] ?? '';
 /** The kept still picture, and the plain painter's order every frame, to compare; and M1.1's generated block. */
 const PATHS = [
-  { name: 'kept still picture', query: 'at=13:00' },
-  { name: 'everything every frame', query: 'at=13:00&cache=0' },
-  { name: 'kept still picture, at night', query: 'at=22:30' },
+  { name: 'kept still picture', query: 'spike&at=13:00' },
+  { name: 'everything every frame', query: 'spike&at=13:00&cache=0' },
+  { name: 'kept still picture, at night', query: 'spike&at=22:30' },
   { name: 'generated block', query: 'block=generated&at=13:00' },
   { name: 'generated block, at night', query: 'block=generated&at=22:30' },
 ].filter((p) => p.name.includes(match));
