@@ -44,6 +44,14 @@ export const COSTS: Readonly<Record<Activity, number>> = {
   work: 0,
 };
 
+/**
+ * The alarm (D57): what you do ends this long before your next shift, the walk to work. The
+ * longest flat-to-diner walk on the slice's blocks is about 30 game minutes at D49's pace (tune).
+ * The sim doesn't know where your flat is yet (ROADMAP open question 43); when it does, the walk
+ * is your own.
+ */
+export const ALARM_MINUTES = 30;
+
 /** The longest an activity may be asked to last: a day. */
 export const MAX_ACTIVITY_MINUTES = 24 * 60;
 

@@ -14,7 +14,7 @@ import {
   tickOf,
   withCareer,
 } from '../../test/slice.ts';
-import { START_CASH } from '../dials.ts';
+import { ALARM_MINUTES, START_CASH } from '../dials.ts';
 import { createLifeGame } from '../game.ts';
 import { weeklyCount } from './days.ts';
 import { taxOf } from './records.ts';
@@ -152,6 +152,20 @@ describe('a shift', () => {
     const during = play(game, sim, soon, advance(90)).state;
     expect(game.options(during, sim)).toContainEqual(doing('work', 420));
     expect(refusal(game, sim, during, doing('work', 421))).toBe('past-the-shift');
+  });
+
+  it('ends what you do a walk before the shift (D57), and during it at its end, not the next one’s (D58)', () => {
+    const signed = play(game, sim, fresh(), signUp(1)).state;
+    const sleep = (state: GameState) =>
+      game.options(state, sim).find((a) => a.type === 'life/do' && a.activity === 'sleep')?.minutes;
+    const hour = play(game, sim, signed, at(signed, 1, 14)).state;
+    expect(game.fact(hour, 'job.next-shift-in', undefined, sim)).toBe(60);
+    expect(sleep(hour)).toBe(60 - ALARM_MINUTES);
+    const morning = play(game, sim, signed, at(signed, 1, 9)).state;
+    expect(sleep(morning)).toBe(6 * 60 - ALARM_MINUTES);
+    const during = play(game, sim, signed, at(signed, 1, 16)).state;
+    expect(game.fact(during, 'job.on-shift', undefined, sim)).toBe(true);
+    expect(sleep(during)).toBe(game.fact(during, 'job.shift-left', undefined, sim));
   });
 });
 

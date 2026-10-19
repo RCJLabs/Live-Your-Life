@@ -13,7 +13,9 @@ const NAMES = { you: 'Dana', coworker: 'Ray', fence: 'Gina' };
 const lines = sim.content.entries<LineRecord>('line').map(([id, l]) => ({ id, ...l }));
 
 /** Events too rare to come up in a short sweep, which the law's own tests raise. */
-const RARE = ['law/revoked', 'law/discharged', 'home/paid-owed'];
+// law/dismissed (a contest won) left the bots' sweep when D57's alarm changed their weeks; court.test.ts
+// raises it.
+const RARE = ['law/revoked', 'law/discharged', 'law/dismissed', 'home/paid-owed'];
 
 /** Every event the bots raise in a few lives of each kind, by type. */
 function census(): Map<string, Beat[]> {
