@@ -1,0 +1,10 @@
+{
+  "//": "The stage draws, so it sees the DOM's canvas types; it is not an eb.pure package, and may use any Math.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

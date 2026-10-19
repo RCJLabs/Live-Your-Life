@@ -4,6 +4,6 @@
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["vite/client", "vite-plugin-pwa/client"]
   },
-  "include": ["src"],
+  "include": ["src", "dev"],
   "exclude": ["src/**/*.test.ts"]
 }
