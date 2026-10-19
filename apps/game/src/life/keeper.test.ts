@@ -102,11 +102,13 @@ describe('the lives kept on this device (M1.7, D54)', () => {
     expect(await store.keys('lyl/full/journal/life-1/')).toEqual([]);
   });
 
-  it('tells the player when storage refuses a save', async () => {
-    const failed: string[] = [];
-    const keeper = keeperOn(memoryStore({ quota: 200 }), failed);
-    const result = await keeper.save('life-1', livedIn('full'), null);
-    expect(result.ok).toBe(false);
-    expect(failed.length).toBe(1);
+  it('tells the player when storage refuses a save, whether the journal or the state', async () => {
+    // At 10 characters the journal's day is refused; at 200 it fits and the state is refused.
+    for (const quota of [10, 200]) {
+      const failed: string[] = [];
+      const result = await keeperOn(memoryStore({ quota }), failed).save('life-1', livedIn('full'), null);
+      expect(result.ok, `quota ${quota}`).toBe(false);
+      expect(failed.length, `quota ${quota}`).toBe(1);
+    }
   });
 });

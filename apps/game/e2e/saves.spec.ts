@@ -66,6 +66,7 @@ test('brings a life back after a reload: the day, the money, the journal and the
   await page.locator('#map-places button', { hasText: 'Diner' }).first().click();
   await arrive(page);
   await page.click('#play');
+  const diner = (await L<PlaceInfo[]>(page, 'places')).find((p) => p.kind === 'door' && p.building === 'diner');
   const before = {
     tick: await L<number>(page, 'tick'),
     cash: await L<number>(page, 'fact', 'economy.amount', { resource: 'cash' }),
@@ -79,7 +80,8 @@ test('brings a life back after a reload: the day, the money, the journal and the
   expect(await L<string[]>(page, 'journal')).toEqual(before.journal);
   expect(before.journal.some((line) => line.includes('signed up'))).toBe(true);
   const at = await L<{ x: number; y: number }>(page, 'where');
-  const want = await L<{ x: number; y: number }>(page, 'standOf', before.reached);
+  expect(before.reached, 'the place you last reached is the diner’s door').toBe(diner?.id);
+  const want = await L<{ x: number; y: number }>(page, 'standOf', diner?.id);
   expect(Math.hypot(at.x - want.x, at.y - want.y)).toBeLessThan(0.05);
   expect(errors).toEqual([]);
 });
