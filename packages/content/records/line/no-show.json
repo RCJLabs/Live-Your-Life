@@ -1,0 +1,4 @@
+{
+  "beat": "job/no-show",
+  "text": "{you} did not show up for the {shift} shift on {date}."
+}

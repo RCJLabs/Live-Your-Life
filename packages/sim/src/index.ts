@@ -22,6 +22,16 @@ export {
   weekdayOf,
 } from './calendar.ts';
 export {
+  dateOf,
+  hours,
+  type LineRecord,
+  lineFor,
+  lineRecord,
+  money,
+  type Names,
+  QUIET,
+} from './chronicle.ts';
+export {
   type BackPlan,
   type BlockPlan,
   type BuildingPlan,
@@ -193,3 +203,4 @@ export {
   type Pronouns,
 } from './ties/records.ts';
 export type { TiesSlice } from './ties/state.ts';
+export { NAMES, type YouSlice, youModule } from './you.ts';

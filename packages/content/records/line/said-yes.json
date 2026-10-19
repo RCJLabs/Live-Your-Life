@@ -1,0 +1,8 @@
+{
+  "beat": "ties/answered",
+  "when": {
+    "field": "yes",
+    "is": "true"
+  },
+  "text": "{you} agreed to cover {coworker}'s shift on {date}."
+}

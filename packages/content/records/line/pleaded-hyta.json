@@ -1,0 +1,8 @@
+{
+  "beat": "law/pleaded",
+  "when": {
+    "field": "plea",
+    "is": "hyta"
+  },
+  "text": "{you} pleaded guilty and was placed on probation as a youthful trainee."
+}

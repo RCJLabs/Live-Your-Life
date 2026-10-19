@@ -1,0 +1,4 @@
+{
+  "beat": "law/ticketed",
+  "text": "The police wrote {you} a ticket for {offence}, with a court date on {court}."
+}
