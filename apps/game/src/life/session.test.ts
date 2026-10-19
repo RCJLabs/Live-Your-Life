@@ -34,6 +34,10 @@ describe('the life on the page (M1.6)', () => {
     for (let i = 0; i < 120; i++) life.elapse(16.7, 4);
     expect(life.fact('time.tick')).toBe(Math.floor((120 * 16.7 * 4) / 500));
     expect(life.refused).toEqual([]);
+    // Whole game minutes only (M1.7): one action for each minute that passed, not one a frame.
+    const elapses = life.session.log.filter((a) => a.type === 'time/elapse');
+    expect(elapses.length).toBeLessThanOrEqual(life.fact('time.tick') as number);
+    for (const a of elapses) expect((a.ms as number) % 500).toBe(0);
   });
 
   it('writes what happens to the journal and the toasts, in the chronicle’s words', () => {

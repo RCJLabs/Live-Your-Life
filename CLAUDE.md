@@ -39,7 +39,7 @@ pnpm check        # typecheck → lint → test → build → e2e (what CI runs)
 pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
 pnpm lint         # Biome, then the purity check over this repo's eb.pure packages (tools/purity)
 pnpm test         # Vitest
-pnpm build        # apps/game/dist; LYL_BASE sets the base path (CI uses /Live-Your-Life/)
+pnpm build        # apps/game/dist; LYL_BASE sets the base path (`/` by default, as life.rcjlabs.com serves it, D53)
 pnpm e2e          # Playwright against `vite preview` of the build, under LYL_BASE
 pnpm format       # Biome autofix
 pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public/icons/icon.svg; the PNGs are committed

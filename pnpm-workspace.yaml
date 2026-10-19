@@ -13,3 +13,5 @@ packages:
   - engine/packages/compiler
   - engine/packages/script
   - engine/tools/cli
+  # M1.7: saves. Slots in IndexedDB, backups and quarantine; the page's, not the sim's.
+  - engine/packages/platform
