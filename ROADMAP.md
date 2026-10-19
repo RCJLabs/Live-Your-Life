@@ -383,6 +383,11 @@ How to read this file:
       - The fixture and the keeper: a slice changed without a migration; journal entries past the save kept; the journal never written; where you were not kept; a torn journal day costing the life; a refused write thrown, not told; time sent every frame.
       - On the page, by the browser tests: no save after a choice; the place you reached not recorded; a failed load played as a new life; a backup used without saying so; a life ended with no confirm; buttons under 44 px on your lives.
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.
+  - **Done when:**
+    - the browser bot plays a steady week and a thief's case on the page, by taps alone, at 390 px with the CPU slowed four times, and the sim refuses nothing (D55) [auto];
+    - its taps, pans and real minutes per game day, for both, are in Readings [auto];
+    - a browser test in CI plays a full day by the bot, refusing nothing, seen failing on a planted bug [auto];
+    - Evan sets the tap budget from the reading, and decides speed 3 with it (D56, open question 39) [you].
 - **M1.9 The playtest gate.** A tester brief (Rule or Drool's TESTERS.md is the model); five strangers' sessions recorded.
 
 **Done when:** bots finish 500 seeded weeks headless and every event is reached [auto]; the browser bot's taps and minutes per day are under the budget set from M1.8's first reading [auto]; ≥30 fps at speed 1 on Evan's phone [you]; the first fixture save still loads [auto]; the content diff shows the slice whole, with none of the later game's text [auto]; five playtest sessions are logged [you].

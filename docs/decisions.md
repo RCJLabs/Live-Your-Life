@@ -511,6 +511,22 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Autosave only, a few lives; chosen (recommended). Autosave plus saves by hand: familiar from The Sims, and every bad roll is undoable. Autosave with one point a day to go back to: still lets a player dodge an arrest.
 
+### D55. The browser bot plays a steady week, and a thief's case. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The tap budget is read from a bot that plays the page by taps, as a player would, on a phone's screen with the CPU slowed four times. Its main reading is the everyday loop: sign up for shifts, eat, sleep, walk to work and work, pay rent. A second reading takes once from a shelf and plays until the case is over, because being held, a court date and a plea are taps too.
+
+**Proposed with it.**
+- **The bot's rules are the steady bot's** (`packages/sim/src/bot.ts`), with one addition the page needs: it sets off for the diner 40 game minutes before a shift, since the walk takes time the sim's menu doesn't know about.
+- **What counts.** Taps, pans (the camera brought round to a place) and real minutes per game day. The bot takes no time to think, so its minutes are the least a player could spend.
+
+**Options considered.** A steady worker plus a thief run; chosen (recommended). The steady worker only: cheaper, leaves the law's taps unmeasured. A random player: finds stuck states, but its count says little about a player's.
+
+### D56. The tap budget is read before "run to the next thing" is built. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** M1.8 measures the game as it stands; speed 3 or a "wait until" (ROADMAP open question 39) is decided after, with the reading in hand (CLAUDE.md: measure before tuning).
+
+**Options considered.** Measure first; chosen (recommended). Build speed 3 first: one round fewer, but the reading never shows what it saves.
+
 ---
 
 ## Open items

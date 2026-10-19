@@ -276,7 +276,18 @@ export function play(
   Object.assign(window, {
     __lyl: {
       life: {
-        places: () => places.all.map((p) => ({ id: p.id, kind: p.kind, label: p.label, building: p.building })),
+        places: () =>
+          places.all.map((p) => ({
+            id: p.id,
+            kind: p.kind,
+            label: p.label,
+            building: p.building,
+            serves: p.serves ?? [],
+          })),
+        options: () => life.options().map((a) => ({ ...a })),
+        /** Whether the page is busy on its own: walking, or an activity's time passing on screen. */
+        busy: () => player.walking || s.ff !== null,
+        open: () => ({ panel: panel.open, menu: sheet.open, choice: choice.open, map: map.open }),
         screenOf: (id: string) => {
           const p = places.all.find((x) => x.id === id);
           return p ? project(viewOf(camera, size), { x: p.stand.x, y: p.stand.y, z: 0 }) : null;
