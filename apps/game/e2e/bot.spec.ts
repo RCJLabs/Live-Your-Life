@@ -13,7 +13,16 @@ test('the browser bot plays to its first shift and works it, by taps alone, and 
 }) => {
   test.setTimeout(900_000);
   await page.goto('./?seed=bot-1');
+  // The page's own count of the clicks it receives, to hold the bot's count of its taps to.
+  await page.evaluate(() => {
+    const w = window as unknown as { __clicks: number };
+    w.__clicks = 0;
+    document.addEventListener('click', () => w.__clicks++, true);
+  });
   const run = await play(page, 'steady', 3);
+  expect(run.taps, 'every tap counted').toBe(
+    await page.evaluate(() => (window as unknown as { __clicks: number }).__clicks),
+  );
   expect(run.refused).toEqual([]);
   expect(run.days.map((d) => d.day)).toEqual([0, 1, 2]);
   for (const d of run.days) expect(d.taps, `day ${d.day}`).toBeGreaterThan(0);

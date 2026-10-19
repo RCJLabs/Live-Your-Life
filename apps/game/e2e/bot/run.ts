@@ -19,6 +19,8 @@ export interface Played {
   readonly journal: string[];
   /** Taps before the first day began: the speed, set once. */
   readonly setup: number;
+  /** Every tap of the run, the last part-day's included. */
+  readonly taps: number;
 }
 
 /** What still waits on a thief: the case isn't over while any of these is listed. */
@@ -52,5 +54,6 @@ export async function play(page: Page, profile: Profile, days: number): Promise<
     refused: await d.hook<unknown[]>('refused'),
     journal: await d.hook<string[]>('journal'),
     setup,
+    taps: d.taps,
   };
 }
