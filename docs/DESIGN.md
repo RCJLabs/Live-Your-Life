@@ -91,7 +91,7 @@ Three tiers (D10):
 | Tier | Who | Cadence | Count |
 | --- | --- | --- | --- |
 | 0 | the household | every tick | a few |
-| 1 | named, persistent people with jobs, schedules, homes, relationships, aging | per game hour off screen, per tick on screen | a few hundred to about a thousand (tune; M0.4) |
+| 1 | named, persistent people with jobs, schedules, homes, relationships, aging | off screen once a game day each, a twenty-fourth of them every game hour (D30); per tick on screen | 1,000 (tune; D31), re-measured at M2.2 |
 | 2 | district statistics: population by age and income, the job market, crime rates | per game day | the city |
 
 A tier-2 person who is met becomes tier 1 and stays.
@@ -99,6 +99,15 @@ A tier-2 person who is met becomes tier 1 and stays.
 - **Generation:** name pools by the city's demographics; age from the district pyramid; traits (temperament, honesty, ambition, sociability, risk); skills by career; a look derived from the person once (Landnám's "one person, one look").
 - **Schedules:** a template from job and household (work, school, sleep, errands); free time filled by utility over needs and relationships, where places advertise what they satisfy (The Sims' model; Space-Wrecked's utility scorer is the portfolio's seed). On screen, A* on the walk grid (2060TD's time-weighted pathfinding); off screen, jumps between blocks.
 - **Memory:** people remember what you did to and for them (Ludus's `REGARD`, about 30 kinds of act, capped per person).
+
+**Built in M0.4, the population harness** (`packages/sim/src/people/`, `tools/population`; docs/research/population.md):
+
+- **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md), until M2.2's careers and households replace them.
+- **Their hours** are each one of nine kinds (work, a break, sleep, the trip to work, rising, a meal, out, the evening, home). Each kind is pieces of the player's activities, so the needs are the player's needs at an hour's grain. Free time is the template's, not yet chosen by need.
+- **Their needs** are settled with the player's own math, once for each run of one activity.
+- **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 24 ties, and a full list lets a stranger take the place of someone met only once.
+- **Their state** is 54 numbers a person: six levels, and 24 ties of two numbers each. It sits in 24 shares, one moved on a whole day each game hour (D30), because the kernel copies a module's whole slice in every action that writes to it.
+- **What it costs**, with the CPU slowed four times in headless Chromium: 1,000 people take 4.2 ms an hour on average and 7.9 at the 95th, and a month passes in one action in about a second.
 
 ## Relationships
 
@@ -217,8 +226,8 @@ Base year 2025 dollars on a fixed in-game calendar. A per-district trend (growin
 ## Open questions
 
 1. Which needs show as meters and which only through mood and the chronicle.
-2. Whether tier-1 people run needs per game hour or per schedule block off screen (a cost question for M0.4).
-3. How much of the law is state-specific (theft thresholds, drug schedules, sentencing ranges), and which state the city borrows from.
-4. Whether children under 18 in the household are played at all, or only seen and raised.
-5. The tick and speeds (set from M1.8).
-6. Transit coverage by district, and whether the bicycle is a release-one verb.
+2. How much of the law is state-specific (theft thresholds, drug schedules, sentencing ranges), and which state the city borrows from.
+3. Whether children under 18 in the household are played at all, or only seen and raised.
+4. The tick and speeds (set from M1.8).
+5. Transit coverage by district, and whether the bicycle is a release-one verb.
+6. How a tier-1 person who is met is settled to the minute from their plan, and when a met person's free time stops following a template (M2.2).

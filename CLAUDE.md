@@ -46,6 +46,8 @@ pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public
 node packages/sim/test/week-bench.ts [seeds] [rounds]   # the week bench: µs a turn and a reduce, for Readings (500 seeds, 5 rounds)
 node apps/game/e2e/shots.ts [dir]   # after `pnpm build`: the art spike's screenshots and people's heights
 node apps/game/e2e/perf.ts [runs]   # after `pnpm build`: the spike's frame rate at 1× and 4× CPU, headless
+node tools/population/bench.ts [days] [sizes]      # the population harness in Node: tier-1 people at each cadence (30 days; 100,300,500,1000,3000)
+node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromium at 1× and 4× CPU
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -57,16 +59,18 @@ node apps/game/e2e/perf.ts [runs]   # after `pnpm build`: the spike's frame rate
 
 ```
 engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace
-packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, a placeholder job and rent, and the week bots
+packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, a placeholder job and rent,
+                    the week bots, and the tier-1 people (people/: the roster, their hours, hour plans, ties, shares)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
                     @lyl/stage/testing is a fake canvas for drawing tests
 apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. At M0.3 the art spike (src/spike/); dev/ holds the
                     character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
+tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
 docs/               design, decisions, voice, calibration, research
 ```
 
-Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the population bench, the content lint, calibration checks).
+Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the content lint, calibration checks).
 
 ## Writing
 

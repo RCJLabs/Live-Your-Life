@@ -194,6 +194,33 @@ Built with M0.1 in `packages/sim/src/calendar.ts`; Evan's to accept or change.
 
 **Options considered.** Replace the placeholder; chosen. A separate page under `/spikes/art/`, as Engine-Builder serves its 3D spike, kept out of the offline cache.
 
+### D30. Tier-1 people are moved on once a day, a twenty-fourth of them each hour. PROPOSED, 2026-10-19
+
+Built with M0.4 in `packages/sim/src/people/`; the readings are in [research/population.md](research/population.md). It answers DESIGN.md's open question on cadence. It is a cost choice, not a product one: off screen, nothing the player sees changes. Evan's to accept or change.
+
+**Proposal.** The people are kept in 24 shares. Each game hour one share is moved on a whole day, its needs settled once for each run of one activity (a schedule block), its ties from that day's meetings. On screen, a person runs every tick (DESIGN.md, People).
+
+**Why.** The kernel copies and freezes a module's whole slice in every action that writes to it. At 1,000 people with the CPU slowed four times, that copy is 15.4 ms of an hourly batch's 22. A share is a twenty-fourth of it. The staggered batch is 4.2 ms on average, 7.9 at the 95th; moving everyone every hour is 22 and 37.5, and a whole day at midnight 47 and 55. The levels and ties come out the same at every cadence; the tests hold them to that.
+
+**Cost.** A person off screen can be up to a day behind. When one is met, their state is settled to the minute from their plan, as the player's levels are (M2.2). Like the hourly cadence, it fires a timer every hour, so the engine's cap of 10,000 firings an advance means one action passes at most about 416 days.
+
+**Options considered.** Staggered; proposed. Everyone every game hour: DESIGN.md's first proposal, five times the cost at 1,000 people. Everyone once a day at midnight: one write a day, but the largest batch.
+
+### D31. The tier-1 count: 1,000. LOCKED, 2026-10-19 (Evan's call)
+
+M0.4's [you] gate. The readings are in [research/population.md](research/population.md), at D30's cadence, with the CPU slowed four times in headless Chromium.
+
+**Decision.** 1,000 tier-1 people (tune), the recommendation. It is the top of D10's range. Its batch is 7.9 ms at the 95th, a quarter of a 30 fps frame, and 18.4 ms at worst. A month passes in one action in 1.05 s, and the people take 187 kB of a save.
+
+**Consequence.** It is a ceiling, to re-measure at M2.2 when people hold their real state, and cut to 500 if that reading needs it.
+
+**Options considered.**
+
+- 500: 5.7 ms at the 95th, 10.6 at worst, 0.56 s a month, 93 kB. The most room for M2.2.
+- 1,000: recommended.
+- 3,000: 17.1 ms at the 95th, over a 60 fps frame already; 49.7 at worst; 2.87 s a month; 601 kB.
+- A few dozen, risk 2's fallback. Not needed: at 500 the batch is inside the frame budget (research/population.md, "Risk 2's verdict").
+
 ---
 
 ## Open items
@@ -207,7 +234,7 @@ Built with M0.1 in `packages/sim/src/calendar.ts`; Evan's to accept or change.
 | A domain of its own | ROADMAP open question 9, after D24 | `rcjlabs.github.io/Live-Your-Life/` |
 | The district trend (decline or growth) | ROADMAP ideas | on, seeded per city |
 | The tick and speeds | DESIGN.md, M1.8 | 1 tick = 1 game minute; speed 1 = 2 game minutes a second |
-| The tier-1 count | M0.4 | a few hundred to about a thousand |
+| The tier-1 cadence | D30 | as proposed: once a day each, a twenty-fourth of them each hour |
 | Engine proof status | D13 | not a proof; stage lives here |
 | Kits ported back to the engine | D13 | built here first |
 | Package id | D24, Engine-Builder's open question | `com.rcjlabs.liveyourlife` |

@@ -69,6 +69,39 @@ How to read this file:
     - Planted bugs: 28, 28 caught. The light test caught its bug only after it was made to require darkness halfway through dusk; the first version let a dusk that never darkens through.
 - **M0.4 The population harness (risk 2).** N named people with schedules, needs and relationships for 30 game days, at N = 100, 300, 1,000 and 3,000; ms per game minute in Node and in headless Chromium at 4× CPU throttle.
   - Done when: the readings are in the table [auto]; the tier-1 count is a decision in docs/decisions.md [you].
+  - **Done, 2026-10-19: both gates passed.** It was built alongside M0.3's open gates, on Evan's word ("Merge it and continue"). The readings are in Readings, and Evan set the tier-1 count at 1,000 (D31). The readings in full, and the case, are in [docs/research/population.md](docs/research/population.md).
+    - The people are pure modules in `packages/sim/src/people/`. Who they are comes from the seed, their hours from templates (tune), their needs from the player's own math, and their ties from meetings at shared places.
+    - The harness is `tools/population`: a Node bench, and the same code in a page that headless Chromium runs at full CPU and slowed four times. 500 joins the four sizes, because risk 2's kill criterion names it.
+    - Three cadences were measured. Moving everyone every game hour spends most of each batch in the kernel's copy of the slice: 15.4 of 22 ms at 1,000 people with the CPU slowed four times. Kept in 24 shares, one moved on a whole day each hour (D30, proposed), the batch is 4.2 ms on average and 7.9 at the 95th. The levels and ties are the same at every cadence.
+    - Risk 2 passes at that cadence. At 500 people the 95th is 5.7 ms and the worst 10.6, inside a frame.
+    - The needs math is now six times faster and the same to the unit. Health's walk allocates nothing and is bounded, so a slip in it fails the tests rather than hanging them.
+    - Two findings for the engine are open questions 14 and 15: the copy on every write, and the cap of 10,000 timer firings an advance.
+    - Planted bugs: 22, 22 caught. Two needed a change first.
+      - In health's walk, one wrong comparison hung the tests rather than failing them. The walk is now bounded.
+      - A night shift's morning moved to the wrong day, and no test saw it, because a week's hours still added up. A test now holds each shift to one run of hours.
+    - The planted bugs were:
+      - health counting a need out a minute late;
+      - health falling at one rate however many needs are out;
+      - hygiene at food's rate;
+      - a night shift running on into the wrong morning;
+      - everyone out twice as often;
+      - bedtime ignoring the trip to work;
+      - the shift pick stuck on the first;
+      - a person meeting themselves;
+      - a meeting on one list only;
+      - meetings in reverse order;
+      - a plan forgetting its weekday;
+      - the last run of an activity never settled;
+      - a long span keeping its first day's weekday;
+      - the start weekday taken as today's;
+      - shares overlapping;
+      - the effect named apart from its timer;
+      - the hourly timer ignoring the start minute;
+      - every staggered share due at midnight;
+      - a full list giving up ties met three times;
+      - the harness counting the first day's batches;
+      - the harness dividing by hours, not minutes;
+      - the sweep skipping the staggered cadence.
 
 ## Phase 1: The slice
 
@@ -144,6 +177,11 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Frame rate, art spike, headless (M0.3) | 60 fps at full CPU on every path. At 4× CPU, median 33.8 fps with the kept still picture by day (95th frame 49.9 ms), 19.1 at night, 14.1 with every piece drawn every frame | `node apps/game/e2e/perf.ts`: the page's Measure, 10 s at speed 1, headless Chromium 141 at 390×844 and 2×, no GPU, cloud container | 2026-10-19 | 3 runs each |
 | Game JS, gzip (M0.3) | 37.47 kB (100.13 kB raw), now with the stage and the spike; CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
 | Game precache (M0.3) | 16 entries, 144.76 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| Tier-1 people, a batch with the CPU slowed 4× (M0.4) | D30's staggered cadence: 1,000 people take 4.2 ms an hour on average, 7.9 at the 95th, 18.4 at worst; 500 people 2.9, 5.7, 10.6; 3,000 people 10.3, 17.1, 49.7. Everyone every hour, at 1,000: 22.0, 37.5, 64.3; everyone at midnight: 47.4, 54.8, 58.2. Per game minute at 1,000: 0.069 ms staggered, 0.366 every hour, 0.034 at midnight | `node tools/population/chromium.ts 30`: headless Chromium 141, the CPU throttled 4× by the DevTools protocol, cloud container, no GPU; the first game day left out | 2026-10-19 | 30 game days each: 696 batches, or 29 at midnight |
+| Tier-1 people at full CPU (M0.4) | 1,000 people, staggered: 0.79 ms an hour on average and 1.2 at the 95th in Node, 0.84 and 1.2 in Chromium. Everyone every hour: 5.0 and 7.9; 4.9 and 8.6 | `node tools/population/bench.ts 30`, Node 22.22.0; the Chromium run above at 1× | 2026-10-19 | 30 game days each |
+| The kernel's copy and freeze of one slice (M0.4) | 54,000 numbers (1,000 people): 3.0 ms at full CPU, 15.4 ms at 4×. A lean copy beside the kernel: 1.3 and 6.2 ms. One share of 24: 0.10 and 1.05 ms | the harness's split, timing the engine's own `cloneJson` and `freezeJson` in Chromium | 2026-10-19 | the median of 15 |
+| A month in one action, tier-1 people (M0.4) | at 4×: 1,000 people in 1.05 s staggered, 0.83 s at midnight, 1.82 s every hour; 3,000 people in 2.87 s staggered | the harness, after each 30-day run | 2026-10-19 | 1 each |
+| Tier-1 people in a save (M0.4) | 54 numbers a person: 187 kB of canonical JSON at 1,000 people, 601 kB at 3,000 | the harness, `canonicalJson` | 2026-10-19 | 1 each |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -163,13 +201,14 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M0.1 done. PR #1 merged as `4b4956e`; the deploy confirmed live; the page installed and opened offline on Evan's phone. The marker moves to M0.2.
 - 2026-10-19: M0.2 done. The six needs, a placeholder job and rent, as modules on the engine's kernel and economy kit; two week bots on the engine's runner, and the bench. 500 seeded weeks refuse nothing, 200 more that start before a rent day owe it and pay it off, and the needs match DESIGN.md's table exactly. Planted bugs: 18, 18 caught. The marker moves to M0.3.
 - 2026-10-19: M0.3 built. The stage, `@lyl/stage`, draws the city in code; the game's page is the art spike (D27–D29), with the tester brief and its screenshots in docs/research/art-spike.md. Planted bugs: 28, 28 caught. The [you] gates are open.
+- 2026-10-19: M0.4 done, built alongside M0.3's open gates on Evan's word. The tier-1 people (`packages/sim/src/people/`) and the population harness (`tools/population`), in Node and in headless Chromium. Three cadences measured; D30 proposes the staggered one, and risk 2 passes at it. Planted bugs: 22, 22 caught. Evan set the tier-1 count at 1,000 (D31). The marker stays on M0.3, whose gates are open.
 
 ## Open questions
 
 1. The title (D24).
 2. The city's name, the base year, and whether the district trend is on by default.
 3. The tick in game minutes and the speed steps (proposals in DESIGN.md), set from M1.8's reading.
-4. The tier-1 count (M0.4).
+4. Whether D31's 1,000 tier-1 people hold when M2.2 gives them their real state and choices, or the count drops to 500.
 5. Whether this game becomes an Engine-Builder proof, which would reopen that project's build order (3D before 2D).
 6. How the kits a life sim needs (needs and mood, relationships, schedules, careers, law) move back into Engine-Builder, and when.
 7. The package id scheme, shared with Engine-Builder's open question (`io.github.rcjlabs.*` or `com.rcjlabs.*`).
@@ -179,3 +218,5 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 11. The engine offers its stage-only verbs, `time/elapse` and `time/advance`, to bots with an empty payload. Elapse refuses it, and advance spends no time. This game's bots skip both (`STAGE_ONLY` in `packages/sim/src/bot.ts`). To raise in Engine-Builder: a way to mark a verb as never offered.
 12. Portrait or landscape for the city view. At 390 px portrait, two buildings in frame make people 23–25 px tall; landscape about 36 px (Readings). The stranger test says whether portrait is enough.
 13. The kept still picture is repainted whole on every pan, so a long drag may stutter on a slow phone at night. If the phone reading shows it: keep a margin round the screen in the layer, or repaint only the strip a pan uncovers.
+14. The engine copies a module's whole slice, element by element, in every action that writes to it, and freezes it again with a path built for every element. At 54,000 numbers that is 15.4 ms with the CPU slowed four times (Readings). D30's shares work round it here. To raise in Engine-Builder: copy arrays of numbers in one pass, and build a bad element's path only when there is one. A lean version beside the kernel was 2.5 times faster.
+15. The engine fires at most 10,000 timers in one advance. An hourly timer, as D30's is, caps one action at about 416 days, and D19's skip to an heir's 18th birthday passes years. Before M2.7: pass long skips in several actions, or catch the people up in one effect. Or raise in Engine-Builder a way to fire a repeating timer's missed periods at once.

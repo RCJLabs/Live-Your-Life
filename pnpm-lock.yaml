@@ -70,6 +70,19 @@ importers:
 
   packages/stage: {}
 
+  tools/population:
+    dependencies:
+      '@eb/core':
+        specifier: workspace:*
+        version: link:../../engine/packages/core
+      '@lyl/sim':
+        specifier: workspace:*
+        version: link:../../packages/sim
+    devDependencies:
+      vite:
+        specifier: 8.3.4
+        version: 8.3.4(@types/node@22.20.5)(terser@5.51.2)
+
   tools/purity:
     dependencies:
       '@eb/purity':
