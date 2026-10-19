@@ -32,7 +32,7 @@ describe('the walk grid', () => {
 
   it('opens a floor inside a building with an interior, its walls no step but at their doors', () => {
     const open = plan.buildings.filter((b) => b.interior);
-    expect(open.map((b) => b.template).sort()).toEqual(['apartment', 'diner']);
+    expect(open.map((b) => b.template).sort()).toEqual(['apartment', 'corner-shop', 'diner']);
     for (const b of open) {
       expect(costAt(b.door, b.y1 - WALL / 2)).toBe(GROUND_COST.floor);
       expect(costAt(b.door, b.y1 - 0.6)).toBe(GROUND_COST.floor);

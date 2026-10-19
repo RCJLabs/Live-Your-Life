@@ -35,7 +35,8 @@ export type DrawKind =
   | 'sink'
   | 'dish'
   | 'shelves'
-  | 'stairs';
+  | 'stairs'
+  | 'camera';
 
 export interface UseRecord {
   readonly side: Side;
@@ -44,12 +45,26 @@ export interface UseRecord {
   readonly pose: UsePose;
 }
 
+/** Whoever or whatever watches from a fixture (D45): a clerk from its use spot, or a camera from itself. */
+export interface WatchRecord {
+  readonly from: 'use' | 'itself';
+  /** All the way round, or within a quarter turn either side of the way it faces. */
+  readonly field: 'around' | 'ahead';
+  readonly range: number;
+  readonly who: 'clerk' | 'camera';
+}
+
 export interface FixtureRecord {
   readonly name: string;
   readonly draw: DrawKind;
   readonly width: number;
   readonly depth: number;
   readonly blocks: boolean;
+  /** Tall enough to hide someone behind it. */
+  readonly screens?: boolean;
+  /** The kind of goods a shop keeps on it (D48). */
+  readonly stock?: string;
+  readonly watch?: WatchRecord;
   readonly use?: UseRecord;
 }
 

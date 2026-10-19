@@ -179,6 +179,18 @@ Wages net of tax; rent, utilities, groceries, transit, phone, insurance, debt, f
 - A record (misdemeanour, felony) gates jobs, housing and licences by real-shaped rules; probation; expungement later.
 - Prison (D19): time passes with sparse choices: a job, visits, letters, a parole hearing, a standing meter with factions; health and skills drift. Outside, rent lapses, relationships cool, a business runs or fails without you.
 - The law career builds the same case files: patrol generates facts, detectives build files, federal work targets organizations.
+- **Built in M1.5: shoplifting** (`packages/sim/src/law/`; the corner shop's interior; `crime/`, `offence/`, `fence/` and `item/` records).
+  - **The shop.** A clerk at the till and a camera watch the corner shop. Who sees each shelf is worked out on the walk grid: straight lines from the till all round, and from the camera a quarter turn either side of the way it faces. Shelves and coolers hide you; the counter doesn't (D45).
+  - **The odds.** Taking from a shelf is held by the clerk at 45% where the clerk sees it, and 4% where nobody does. Where the camera sees it, it is known from the footage at 35%. Heat adds a point for every two, and halves in about a week. The odds are shown first and are the odds rolled.
+  - **Being caught.** Held, you wait 20 to 40 minutes for the police. Known from the footage, the shop reviews it at 23:00, and the police come 2 to 5 days later, at a time you are told. Either way:
+    - an appearance ticket with a court date 14 to 42 days on;
+    - the shop's civil demand: ten times the price, between $50 and $200, and the price if the goods are gone;
+    - a bar from the shop.
+  - **Court.** On the date you go between 08:00 and 12:00, or it is a warrant at midnight and an arrest days later at a time you are told, then twelve hours in the cells and the hearing. You plead:
+    - guilty: $200 fine and $125 costs;
+    - HYTA: on a first offence below 26, six months' probation with a check-in and a $30 fee every 30 days, and no record when done; a missed check-in or a new offence ends it and enters the conviction;
+    - not guilty: dismissed at 10% when you were held and 30% on footage.
+  - **Goods and the fence.** What you take goes in your bag, through the engine's inventory kit. Food can be eaten. The fence behind the diner, from 22:00 to midnight, pays a quarter of the price; 3% of sales come back to you as receiving stolen property.
 
 ## Health and body
 

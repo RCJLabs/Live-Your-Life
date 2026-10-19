@@ -1,0 +1,11 @@
+{
+  "name": "Receiving or concealing stolen property, $200 to $1,000",
+  "law": "MCL 750.535",
+  "under": 100000,
+  "priors": 5,
+  "days": 365,
+  "fineMax": 200000,
+  "timesValue": 3,
+  "fine": 50000,
+  "costs": 12500
+}

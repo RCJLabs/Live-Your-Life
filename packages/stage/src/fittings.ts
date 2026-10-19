@@ -96,7 +96,24 @@ const stairs: (f: Fixture) => Draw = (f) => (ctx, view) => {
   for (const s of steps) drawBox(ctx, view, s.box, { top: INSIDE.tread, left: INSIDE.riser, right: INSIDE.riser });
 };
 
+/** A dome camera under the ceiling on a short arm from the wall behind it (M1.5, D45). */
+const CAMERA_AT = 2.55;
+const camera: (f: Fixture) => Draw = (f) => (ctx, view) => {
+  const { depth } = extent(f);
+  slab(ctx, view, part(f, [-depth / 2, 0], [-0.03, 0.03], [CAMERA_AT + 0.05, CAMERA_AT + 0.1]), INSIDE.steelDark);
+  drawDrum(ctx, view, at(f, 0.02, 0), 0.08, CAMERA_AT - 0.04, CAMERA_AT + 0.05, INSIDE.white);
+  drawDisc(ctx, view, at(f, 0.02, 0), 0.06, CAMERA_AT - 0.05, INSIDE.steelDark);
+};
+
 /** The new kinds' drawings, and their heights for the depth sort. */
-export const FITTINGS = { shower, toilet, sink, dish, shelves, stairs } as const;
-export const FITTING_HEIGHT = { shower: 2, toilet: 0.8, sink: 1.02, dish: 1.55, shelves: 1.8, stairs: 2.9 } as const;
+export const FITTINGS = { shower, toilet, sink, dish, shelves, stairs, camera } as const;
+export const FITTING_HEIGHT = {
+  shower: 2,
+  toilet: 0.8,
+  sink: 1.02,
+  dish: 1.55,
+  shelves: 1.8,
+  stairs: 2.9,
+  camera: CAMERA_AT + 0.1,
+} as const;
 export const STAIRS_RISE = STEP_RISE;

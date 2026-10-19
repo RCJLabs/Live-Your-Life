@@ -77,8 +77,10 @@ export const steadyFor = (days: number, name = 'steady'): Policy => ({
 /** The steady bot for a week. */
 export const steadyPolicy: Policy = steadyFor(WEEK);
 
-/** Any playable offer, each as likely: what proves every offer is one the game accepts. */
-export const randomLifePolicy: Policy = {
-  name: 'random-life',
-  choose: (turn) => (done(turn, WEEK) ? null : turn.rng.pick(playable(turn))),
-};
+/** Any playable offer, each as likely, for `days` days: what proves every offer is one the game accepts. */
+export const randomFor = (days: number, name = 'random-life'): Policy => ({
+  name,
+  choose: (turn) => (done(turn, days) ? null : turn.rng.pick(playable(turn))),
+});
+
+export const randomLifePolicy: Policy = randomFor(WEEK);

@@ -1,0 +1,7 @@
+{
+  "name": "A candy bar",
+  "value": 199,
+  "max": 20,
+  "tags": ["groceries"],
+  "food": 5
+}

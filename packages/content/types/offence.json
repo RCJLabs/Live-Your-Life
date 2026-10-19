@@ -1,0 +1,55 @@
+{
+  "title": "Offence",
+  "description": "A crime as the state's law defines it (D46, D47): what it covers, the most it carries, and what a court in the slice imposes. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "law": {
+      "kind": "text",
+      "min": 1,
+      "max": 40,
+      "description": "The statute, as cited."
+    },
+    "under": {
+      "kind": "int",
+      "min": 1,
+      "description": "It covers goods worth less than this, in cents."
+    },
+    "priors": {
+      "kind": "int",
+      "min": 0,
+      "max": 5,
+      "description": "It covers someone with at most this many prior convictions."
+    },
+    "days": {
+      "kind": "int",
+      "min": 0,
+      "max": 3650,
+      "description": "The most days in jail it carries."
+    },
+    "fineMax": {
+      "kind": "int",
+      "min": 0,
+      "description": "The most it carries as a fine, in cents, or timesValue times the value if that is more."
+    },
+    "timesValue": {
+      "kind": "int",
+      "min": 0,
+      "max": 10
+    },
+    "fine": {
+      "kind": "int",
+      "min": 0,
+      "description": "The fine a court in the slice imposes on a conviction, in cents (tune)."
+    },
+    "costs": {
+      "kind": "int",
+      "min": 0,
+      "description": "Court costs and assessments on a conviction, in cents (tune)."
+    }
+  }
+}

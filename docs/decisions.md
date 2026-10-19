@@ -390,6 +390,68 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 
 **Options considered.** Kinds of act; chosen (recommended). Every act with its day, up to 30: a fuller chronicle, bigger saves, repeats piling up. A number only: the cheapest, with nothing to say what is between you.
 
+### D45. Shoplifting happens in the corner shop, a third walkable interior. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The corner shop gets an interior from the same records as the flat and the diner: aisles of shelves, a till, a clerk behind it. Who sees you depends on where you stand. This answers ROADMAP open question 20.
+
+**Proposed with it** (tune).
+
+- The clerk sees along the walk grid in straight lines from the till, and shelves block sight.
+- A camera covers cells of its own, fixed by the interior record.
+- The odds of being noticed come from what sees your cell: the clerk, a camera, both, or nothing. They are shown before you take anything, and they are the odds rolled.
+
+**Options considered.** A corner-shop interior; chosen (recommended). A counter scene (D18's fallback): cheaper, but sight lines become a number rather than a place.
+
+### D46. The law answers both ways, as it does in Michigan. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Caught in the act, the clerk holds you and the police write an appearance ticket with a court date. Seen only on camera, the police come later, at a time you are shown first (Spliceworld's rule: no ambush). Theft also leaves heat: what the shop remembers of you.
+
+**Proposed with it** (tune).
+
+- **When the police come.** Held in the act: they come in 20 to 40 minutes. Seen on camera: the shop reviews the footage at close, and a visit is scheduled 2 to 5 days later. You are told it is coming, and when.
+- **The court date.** The appearance ticket sets one 2 to 6 weeks on. Missing it is a bench warrant.
+- **Heat.** Heat at a shop raises its odds of noticing you, and halves every 7 days.
+- **The offence.** Goods under $200, with no prior conviction, are retail fraud in the third degree, a misdemeanour: up to 93 days, and a fine of $500 or three times the value, whichever is greater (MCL 750.356d). A prior conviction makes it the second degree.
+- **Civil demand.** Apart from the court, the shop can claim damages: the value of anything not recovered, plus ten times the retail price, at least $50 and at most $200 (MCL 600.2953). It comes as a letter, and an unpaid one goes to collections at M2's money.
+- **How often a thief is caught.** The figure usually cited is once in 48 thefts, with half of those caught handed to the police. It comes from shoplifters' own reports (NASP), so it is a weak anchor. A walkable shop with one clerk will catch more; the departure is written down beside it.
+
+**Found while building, proposed with it** (tune).
+
+- **The bar.** A shop that catches you, in the act or from the footage, bars you for good, as a trespass notice does. Without it, the thief bot was held at the same till twenty times in eight weeks and owed $15,000 in civil demands.
+- **What it is charged as.** A theft is charged when the ticket is written, from its value and the convictions already on the record: a prior conviction makes it the second degree (MCL 750.356d).
+- **One visit at a time.** A visit that falls while you are held or in court comes the next day instead, with a new notice. Otherwise an arrest could stack on a hold and leave no way out.
+
+**Options considered.** Both ways, as real; chosen (recommended). Only in the act: no delayed consequence, which D7 leans on. Only later: loses the moment of being held.
+
+### D47. A first offence is fined, or offered HYTA. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** At the court date you plead. A first offence under 26 is offered Michigan's Holmes Youthful Trainee Act: probation, and no public record once it is done. Otherwise, a later offence or a broken probation leaves a conviction on the record, with fines and costs.
+
+**Proposed with it** (tune).
+
+- The hearing is a scene at the courthouse, with its outcome shown as it would be decided. Its odds and costs come from the preview.
+- **HYTA.** Probation lasts 6 months with a monthly fee. A new offence or a missed check-in ends it, and the conviction enters.
+- **The record.** It is a fact the rest of the game can read: M2's hiring and housing read it.
+
+**Options considered.** A fine, or HYTA if offered; chosen (recommended). A fine and a record every time: harsher than Michigan treats an 18-year-old's first theft. Court as a summary letter: the cheapest, with no courthouse in the slice.
+
+### D48. Anything can be stolen, and a fence buys it. LOCKED, 2026-10-19 (Evan's call; I had recommended food and small goods, with no fence yet)
+
+**Decision.** The shop's goods are records with a retail price. What you take goes into an inventory: the engine's inventory kit. Food can be eaten. Anything can be sold to a fence for a share of its value.
+
+**Proposed with it** (tune).
+
+- **Who the fence is.** A person drawn from the seed, found at one place on the block at set hours. The place waits on M2.1's city, so for the slice it is the back of the diner's lot after close.
+- **The fence's share.** About a quarter of retail. The figure comes from a source in CALIBRATION.md, or is marked as a departure.
+- **Selling is a crime of its own.** Selling stolen goods has odds too, low for the slice. The fence's own risk waits on M2's crime ladder.
+- **Crime should never pay better than work (D7).** It is held to a reading, not assumed: the bots' sweeps compare a week of theft and fencing with a week of shifts, money against the expected fines, costs and lost shifts.
+
+**Found while building, proposed with it** (tune). Each shelf holds one line of goods, rotated by the block's seed, and every good is on one shelf. Offering every good on every shelf made a turn 62% dearer: the engine checks each option it offers, and the shop offered 53.
+
+**Why I recommended against.** A fence brings an economy the slice doesn't have: goods with prices, a buyer, a place, and the risk that crime pays. Evan chose it to open the crime ladder now.
+
+**Options considered.** Food and small goods, no fence (recommended): theft saves money rather than makes it. Anything, with a fence; chosen. Food only: theft only from need.
+
 ---
 
 ## Open items

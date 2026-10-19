@@ -1,0 +1,11 @@
+{
+  "name": "Retail fraud in the third degree",
+  "law": "MCL 750.356d",
+  "under": 20000,
+  "priors": 0,
+  "days": 93,
+  "fineMax": 50000,
+  "timesValue": 3,
+  "fine": 20000,
+  "costs": 12500
+}

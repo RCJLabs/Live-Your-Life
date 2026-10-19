@@ -80,7 +80,8 @@ export type FixtureKind =
   | 'sink'
   | 'dish'
   | 'shelves'
-  | 'stairs';
+  | 'stairs'
+  | 'camera';
 
 export type FloorKind = 'checker' | 'wood' | 'tile';
 

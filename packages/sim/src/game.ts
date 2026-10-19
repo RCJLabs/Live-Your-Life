@@ -1,8 +1,9 @@
 /**
  * The game as the engine runs it (engine/docs/specs/sim.md): the engine's time module on this
  * game's calendar, the economy kit holding the cash, the engine's logic module for rolls, the
- * clock, the player's needs and activities, the job, the people you know and the home. They
- * reach each other only through facts, effects and events.
+ * clock, the player's needs and activities, the job, the people you know, the home, and the law,
+ * with the inventory kit holding what you carry. They reach each other only through facts,
+ * effects and events.
  */
 import {
   createGame,
@@ -13,11 +14,12 @@ import {
   type ScheduleSpec,
   timeModule,
 } from '@eb/core';
-import { economyKit } from '@eb/kits';
+import { economyKit, inventoryKit } from '@eb/kits';
 import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToMidnight, minutesToNextMonth } from './calendar.ts';
 import { clockModule } from './clock.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
+import { lawModule } from './law/module.ts';
 import { lifeModule } from './life.ts';
 import { tiesModule } from './ties/module.ts';
 
@@ -39,12 +41,13 @@ export interface LifeOptions {
 export function startingTimers(start: LifeStart): ScheduleSpec[] {
   return [
     { timer: RENT_TIMER, after: { minutes: minutesToNextMonth(start) }, effects: [{ effect: 'rent-due' }] },
-    // Midnight: the job's postings and payday (job/shifts.ts), then the coworker's asks (ties/favours.ts).
+    // Midnight: the job's postings and payday (job/shifts.ts), the coworker's asks (ties/favours.ts),
+    // then heat, warrants and probation (law/police.ts).
     {
       timer: 'midnight',
       after: { minutes: minutesToMidnight(start) },
       every: { days: 1 },
-      effects: [{ effect: 'job-day' }, { effect: 'ties-day' }],
+      effects: [{ effect: 'job-day' }, { effect: 'ties-day' }, { effect: 'law-day' }],
     },
   ];
 }
@@ -55,6 +58,7 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
   const hire = options.career === undefined ? undefined : { career: options.career, start };
   return [
     timeModule({ calendar: lifeCalendar(start), realTime: REAL_TIME, timers: startingTimers(start) }),
+    inventoryKit,
     economyKit,
     logicModule,
     clockModule,
@@ -62,6 +66,7 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     jobModule(hire),
     tiesModule(hire),
     homeModule,
+    lawModule,
   ];
 }
 

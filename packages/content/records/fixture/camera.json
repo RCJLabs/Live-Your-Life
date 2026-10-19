@@ -1,0 +1,13 @@
+{
+  "name": "Security camera",
+  "draw": "camera",
+  "width": 0.25,
+  "depth": 0.25,
+  "blocks": false,
+  "watch": {
+    "from": "itself",
+    "field": "ahead",
+    "range": 8,
+    "who": "camera"
+  }
+}

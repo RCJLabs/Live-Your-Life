@@ -99,6 +99,27 @@ When a figure is softened or sharpened for play, it is written here with the rea
 - **Pay comes the Friday after the work, not a week or two later.** Most restaurants pay a week or two in arrears, so a new hire's first paycheck comes after ten days or more. The slice is one week, and it would see no pay at all.
 - **Withholding is not the tax owed.** A year's withholding is settled by a return, with a refund or a bill. The return is the money milestone's; until then, what is withheld is gone.
 
+## Theft and the law (M1.5, to fill)
+
+Figures found for D45–D48, from secondary sources. Each gets its primary source checked before it is built on: the legislature's site, the courts' benchbook, NASP's own pages. ROADMAP open question 21 names the same block on government sites.
+
+| Figure | Value | Source, as found | Status |
+| --- | --- | --- | --- |
+| Retail fraud, third degree | under $200 and no prior conviction; misdemeanour; up to 93 days, and a fine of $500 or 3× the value, whichever is greater | MCL 750.356d as summarised by FindLaw; the legislature's PDF of the statute was found but not read in full | to check |
+| Retail fraud, second degree | $200 to $1,000, or under $200 with a prior conviction; up to a year, and a fine of $2,000 or 3× the value | the same | to check: the penalty |
+| Receiving or concealing stolen property | under $200: a misdemeanour, 93 days, $500 or 3× the value; $200 to $1,000 or with a prior: a year, $2,000 or 3× | MCL 750.535, from memory of its structure; not found in a source | to check |
+| The fine and costs a court imposes on a plea | $200 fine and $125 costs (third degree), $500 and $125 (second) | none found; the statute gives only the most | (tune), a departure until sourced |
+| HYTA's probation | 6 months, a check-in every 30 days, $30 a month | none found | (tune) |
+| Civil demand | the value of unrecovered goods, plus 10× the retail price, at least $50 and at most $200 | MCL 600.2953, legislature PDF, summarised | to check |
+| HYTA | offences from 18 to 26 since 1 October 2021 (2020 PA 396); prosecutor's consent needed for some ages; the record is nonpublic during and after; not for offences punishable by life, or traffic offences | Michigan Judicial Institute's sentencing benchbook, 6.15; a law firm's summary | to check: the age floor and the consent rule |
+| How often shoplifters are caught | about once in 48 thefts, and handed to police in half of those | NASP, as quoted by local news and police leaflets; offenders' self-reports | weak anchor; the game departs from it |
+| What a fence pays | 10% to 25% of retail, usually toward the low end; about 30% at traditional venues, per an industry training manual | a Canadian police research project in NCJRS (1970s); a loss-prevention manual | old and regional; ¼ proposed (D48) |
+| A loaf of white bread, $2.34 | $1.87 a pound in 2025 (May: $1.876); a 20 oz loaf | BLS average price data, U.S. city average, via officialdata.org and BLS regional tables in search results | to check; no corner-shop markup applied |
+| Ground coffee, 12 oz, $6.14 | $8.18 a pound in 2025 | the same | to check |
+| Soup, a candy bar, razor cartridges, cold medicine, a phone charger, an energy drink, a soda | $2.19, $1.99, $19.99, $10.99, $14.99, $3.49, $2.49 | none found | (tune), departures until sourced |
+
+**In use (M1.5).** `records/offence/*.json`, `records/crime/shoplifting.json` (odds, demand, HYTA, court days), `records/fence/back-lot.json` (share, trouble) and `records/item/*.json` (prices). The odds of being noticed are the game's own (tune), set far above the once-in-48 anchor: one clerk in a small shop sees much of it, and that is the point of the sight lines.
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).

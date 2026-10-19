@@ -1,0 +1,53 @@
+{
+  "name": "Shoplifting",
+  "offences": ["retail-fraud-3", "retail-fraud-2"],
+  "bars": true,
+  "noticed": {
+    "clerk": 45,
+    "camera": 35,
+    "unseen": 4
+  },
+  "heat": {
+    "theft": 15,
+    "caught": 40,
+    "keep": 9057,
+    "per": 2
+  },
+  "open": {
+    "from": 7,
+    "to": 23
+  },
+  "review": 23,
+  "police": {
+    "min": 20,
+    "max": 40
+  },
+  "visit": {
+    "min": 2,
+    "max": 5
+  },
+  "court": {
+    "min": 14,
+    "max": 42
+  },
+  "hearing": {
+    "from": 8,
+    "to": 12
+  },
+  "contest": {
+    "held": 10,
+    "camera": 30
+  },
+  "hyta": {
+    "age": 26,
+    "days": 180,
+    "every": 30,
+    "fee": 3000
+  },
+  "demand": {
+    "times": 10,
+    "min": 5000,
+    "max": 20000
+  },
+  "jail": 720
+}

@@ -4,7 +4,7 @@
  * harness runs (M0.4); the block and its interiors (M1.1, M1.2); the job (M1.3). The plan is
  * ROADMAP.md; the design, docs/DESIGN.md.
  */
-export { REMEDY, RESERVE, randomLifePolicy, STAGE_ONLY, steadyFor, steadyPolicy, WEEK } from './bot.ts';
+export { REMEDY, RESERVE, randomFor, randomLifePolicy, STAGE_ONLY, steadyFor, steadyPolicy, WEEK } from './bot.ts';
 export {
   BASE_YEAR,
   DEFAULT_START,
@@ -81,6 +81,7 @@ export {
   WALL,
   type WallPlan,
 } from './city/rooms.ts';
+export { clear, inField, REACH, type ShopSight, type Spot, shopSight, type Watcher } from './city/sight.ts';
 export { DOORWAY, type Facing, FOOTPRINT, type PropKind, type PropPlan, streetProps } from './city/street.ts';
 export {
   CELL,
@@ -119,6 +120,21 @@ export {
 } from './job/records.ts';
 export { type JobSlice, type SignUp, skillOf } from './job/state.ts';
 export { type Paycheck, paycheck, payFor, withhold } from './job/withholding.ts';
+export { type LawState, lawModule } from './law/module.ts';
+export {
+  type CrimeRecord,
+  crimeOf,
+  type FenceRecord,
+  fenceOf,
+  type Good,
+  goodOf,
+  goodsOn,
+  type OffenceRecord,
+  offenceFor,
+  offenceOf,
+} from './law/records.ts';
+export { oddsAt, shopOn } from './law/shop.ts';
+export type { Case, Hold, LawSlice, Visit } from './law/state.ts';
 export { ACTIVITY_TIMER, type LifeSlice, levelsNow, lifeModule } from './life.ts';
 export {
   ACTIVITIES,
@@ -160,6 +176,7 @@ export {
 export { mix, type Person, type Roster, rosterOf } from './people/roster.ts';
 export { HOUSEHOLD, SHARED, SHIFTS, type ShiftTemplate, SLEEP, TIES } from './people/templates.ts';
 export { meet, TIE_ROW } from './people/ties.ts';
+export { thiefFor } from './thief.ts';
 export { familiarityOf, KEPT, type Memory, NEUTRAL, remember } from './ties/memory.ts';
 export { type Hired, tiesModule } from './ties/module.ts';
 export { type Coworker, daysOff, drawCoworker, fill, theirShift, works } from './ties/person.ts';

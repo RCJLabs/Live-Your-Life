@@ -3,5 +3,6 @@
   "draw": "fridge",
   "width": 0.9,
   "depth": 0.7,
-  "blocks": true
+  "blocks": true,
+  "screens": true
 }

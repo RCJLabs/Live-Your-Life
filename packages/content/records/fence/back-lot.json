@@ -1,0 +1,11 @@
+{
+  "name": "The fence behind the diner",
+  "names": "rust-belt",
+  "share": 25,
+  "hours": {
+    "from": 22,
+    "to": 24
+  },
+  "trouble": 3,
+  "offences": ["receiving-3", "receiving-2"]
+}

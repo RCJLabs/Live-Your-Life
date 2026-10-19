@@ -12,7 +12,7 @@ import type { Building, Facing, Fixture, FixtureKind, Frame } from './types.ts';
 
 const view: View = { ox: 400, oy: 300, u: 30, width: 800, height: 800 };
 const frame = (): Frame => ({ dark: 0, warm: 0, time: 1, lights: [], sleepers: new Map(), heads: new Map(), ink: 1 });
-const FITTINGS: FixtureKind[] = ['shower', 'toilet', 'sink', 'dish', 'shelves', 'stairs'];
+const FITTINGS: FixtureKind[] = ['shower', 'toilet', 'sink', 'dish', 'shelves', 'stairs', 'camera'];
 const FACINGS: Facing[] = ['n', 'e', 's', 'w'];
 
 /** Everything one fixture draws, call by call. */

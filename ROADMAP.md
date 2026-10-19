@@ -280,6 +280,47 @@ How to read this file:
       - Favours you ask: on a day they work; twice for a shift; the preview showing the base odds; odds deaf to regard; a cover that leaves the shift yours, or costs standing.
       - Event odds deaf to regard, or leaning the wrong way; the steady bot always taking the first choice.
 - **M1.5 One crime.** Shoplifting with the whole chain: witnesses, the odds shown, heat, a scheduled response the player sees first, charges, a fine or a record.
+  - Shoplifting is in the corner shop, a third walkable interior (D45). The law answers in the act or later, as in Michigan (D46). A first offence is fined, or offered HYTA (D47). Anything can be stolen, and a fence buys it (D48).
+  - Done when:
+    - 500 seeded weeks with a bot that doesn't steal, and eight-week lives with one that does and with the random bot (a court date is two to six weeks out): nothing offered is refused, and every step of the chain comes up (noticed, held, ticketed, seen on camera, visited, the court date, a plea, HYTA, a fine, a record, a missed date) [auto];
+    - the odds shown for taking an item, and for selling it, are the odds rolled in every state the sweeps reach [auto];
+    - who can see a cell matches a check of sight lines over 1,000 seeded shop interiors, and the shop meets M1.2's interior checks [auto];
+    - every timer the law sets is shown to the player when it is set, with its day [auto];
+    - eight weeks of stealing and fencing leave a life with less, after what is owed, than eight weeks of shifts at the median, as a reading over the sweeps (D7, D48) [auto];
+    - every fine, cost, threshold and the fence's share trace to a row in CALIBRATION.md [auto];
+    - the goods, the shop, the fence and the offence are content records that `eb validate` passes, seen failing on a planted bad record [auto];
+    - the week bench's cost per action is in Readings [auto].
+  - **Done, 2026-10-19: every gate passed**, each in `pnpm check` but the bench, which is in Readings.
+    - **The shop.** The corner shop has an interior: a shop floor, a stockroom and a WC. On the floor:
+      - wall shelves, a gondola and two coolers, each holding one line of goods;
+      - a till the clerk stands behind;
+      - a camera.
+
+      Fixtures now say whether they hide someone, what goods they hold, and who watches from them. The stage draws the camera.
+    - **Sight.** `city/sight.ts` works out who sees each shelf on the walk grid with integer lines. A floating-point reference agrees in every cell of 1,000 shops. Across those shops, 44% of shelves are seen by nobody, 22% by the camera only and 33% by both; every shop has one to four unseen shelves.
+    - **The law.** `packages/sim/src/law/` does the rest:
+      - taking from a shelf, at odds shown first and rolled with the engine's `roll`;
+      - heat;
+      - being held;
+      - the footage reviewed at close;
+      - police visits at times the player is told;
+      - tickets and the shop's civil demand by letter;
+      - the bar, and court with three pleas;
+      - HYTA, warrants and arrests, and paying;
+      - the fence, and eating stolen food.
+
+      It owns no money or goods: the economy kit and the engine's inventory kit, now on, do. Four record types: item (the kit's, with food), offence, crime, fence.
+    - **The thief bot** (`thief.ts`) steals instead of working: at most three thefts a day, where the odds are lowest. It sells, eats, goes to court, takes HYTA and pays. `randomFor(days)` plays the random bot for any length.
+    - Three things were found on the way (D46, D48):
+      - The thief was held at the same till twenty times in eight weeks and owed $15,000. A shop now bars you once it catches you, and a prior conviction makes a theft the second degree.
+      - An arrest could land on someone already held and leave them stuck with nothing offered. A visit that falls while you're held or in court now comes the next day, with a new notice.
+      - Offering every good on every shelf, 53 takes, made a turn with the bot choosing 62% dearer: the engine checks every option it offers. Each shelf now holds one line of goods, and a turn costs 188.2 µs, within the container's noise of M1.4's 172.8.
+    - Planted bugs: 40, 40 caught. The first run caught 37 of 41. One of the misses was a plant that changed nothing (shelves cut from what hides you, when they already block the floor), replaced by ignoring what hides you altogether. Three checks were missing and were added: sight past its range, which no shop's shape reaches; heat past 100 when held; a visit while held, not put off.
+      - The content: a clerk who notices 99 times in 100; a clerk who sees 70 m; an offence that is not there; a price changed without rebuilding the pack.
+      - Sight: lines rounded down; shelves seen over; a counter that blocks; a camera that sees all round; sight past its range.
+      - Taking: heat that changes no odds; the clerk's odds where only a camera sees; footage where no camera looks; a theft that adds no heat; heat past 100; a bar that bars nothing, or none after a ticket; the shop open at its closing hour; any verb while held; the police at once; a timer the player isn't told of; footage reviewed before close; police the same day.
+      - Tickets and court: goods kept; a demand outside its bounds; goods gone, not owed for; a court date a week on; a record that makes no second degree; HYTA twice, or at any age; one set of odds for any evidence; a missed check-in let go; probation kept through a new offence; a warrant a day late; no night in the cells; fines without costs; probation without its fee; a visit while held, not put off.
+      - The fence: its share rounded up; open an hour early; eating what isn't food; a sale never seen.
 - **M1.6 Living in it.** The HUD, tap-to-go, the map, the chronicle, the clock's speeds and pauses.
 - **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.
@@ -374,6 +415,14 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Game JS, gzip (M1.4) | the spike's page: 47.54 kB (29.29 kB, and chunks shared with the generated block: the stage and the seeded random numbers 17.95 kB, the projection 0.30 kB). The coworker's code is in the life game the spike's clock runs. The generated block adds 18.29 kB, loaded only at `?block=generated`: the planner, the walker and the content 15.41 kB, the walk grid and routes 2.88 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
 | Game precache (M1.4) | 21 entries, 223.18 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
 | The content pack (M1.4) | 83 records in 13 types, 30.1 kB, hash `7f75ad895f53b5cf` | `pnpm content` (`eb build`, with the game's facts) | 2026-10-19 | 1 build |
+| Kernel cost per action, with the law (M1.5) | reduce alone: median 62.3 µs an action (60.2–68.9), level with M1.4's 67.6. A turn with the steady bot choosing: 188.2 µs (188.1–200.0), within the container's noise of M1.4's 172.8. With every good on every shelf, 53 takes, it read 280.6 µs (265.4–303.9): the engine checks each option it offers. Eleven modules: M1.4's, the inventory kit and law | `node packages/sim/test/week-bench.ts`, 500 weeks and 57,276 actions a round, Node 22.22.0, cloud container | 2026-10-19 | 3 rounds; 5 before the change |
+| Who sees the shelves (M1.5) | of 9,000 shelves in 1,000 shops: nobody 3,995 (44%), the camera only 2,006 (22%), the camera and the clerk 2,994 (33%), the clerk only 5. Every shop has one to four shelves nobody sees. Before the camera was moved off the wall shelves' cells it saw 6% of them and 57% were unseen | a script over `shopSight`, seeds `sight-0` to `sight-999` | 2026-10-19 | 1,000 shops |
+| Eight weeks as a thief (M1.5) | net worth at the end, cash less what is owed: −$4,133 to −$547 (median −$579; 90th percentile −$548). Held in 299 of 300 lives and barred in all 300; 1,128 thefts, 1,100 sold; 582 tickets; HYTA in 300, a conviction in 245 cases, 37 dismissed; convictions at the end 0 to 7 (median 0). Nothing refused | `thiefFor(56)` over `playRun`, no job, seeds `read-thief-0` to `-299` | 2026-10-19 | 300 lives |
+| Eight weeks as the line cook (M1.5) | net worth at the end $2,667 to $3,539 (median $3,014); never near the law | `steadyFor(56)`, the same, seeds `read-steady-*` | 2026-10-19 | 300 lives |
+| Eight weeks at random (M1.5) | net worth −$2,515 to −$269 (median −$737). 750 thefts, held in 292 lives; 437 warrants, all arrested and heard; 87 on HYTA, 14 revoked. Nothing refused | `randomFor(56)` with the line cook, seeds `read-random-*` | 2026-10-19 | 300 lives |
+| Game JS, gzip (M1.5) | the spike's page: 55.38 kB (index 34.86 kB, and a chunk shared with the generated block, 20.52 kB: the records, the planner and the seeded random numbers). Up 7.8 kB from M1.4: the life game plans the block to find the shop, so the planner and the pack now load with the spike. The generated block adds 17.08 kB, loaded only at `?block=generated`: its scene 13.96 kB, the walk grid and routes 3.12 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M1.5) | 20 entries, 244.69 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The content pack (M1.5) | 105 records in 17 types, 34.7 kB, hash `78a30f0060b99d3d` | `pnpm content` (`eb build`, with the game's facts) | 2026-10-19 | 1 build |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -398,6 +447,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M1.2 done, alongside M0.3's open gates on Evan's word. The apartment house's ground floor is two studios off a stair hall (D34), and the diner has a back room and a back door (D35), both from fixture, room and interior records in `packages/content`. The walk grid opens their floors, and the stage cuts them room by room. A walker goes from a bed to the griddle and back at `?block=generated` (D36). Planted bugs: 32, 32 caught. The marker stays on M0.3.
 - 2026-10-19: M1.3 done, alongside M0.3's open gates on Evan's word. The city borrows Michigan's tax and law (D37). The line cook is the first career on the template: a career record, 14 shift events and 5 taxes in `packages/content`, and the job in `packages/sim/src/job/`. Shifts are posted on Thursdays and signed up for. Pay is withheld as a Michigan employer would (D38). Two no-shows in 28 days end the job (D39). A shift event stops the shift for a choice whose odds are the odds rolled (D40). The figures are from secondary sources, marked in CALIBRATION.md to check. Planted bugs: 48, 48 caught. The marker stays on M0.3.
 - 2026-10-19: M1.4 done, alongside M0.3's open gates on Evan's word. The other line cook is the first relationship (D41): drawn at hire from the seed and a name pool, beside you on five days in seven. Shift events they're part of, lateness, no-shows and favours both ways are acts they remember by kind (D42, D44), and regard sets the odds of what they'll do for you (D43). The ties module is `packages/sim/src/ties/`. Planted bugs: 40, 40 caught. The marker stays on M0.3.
+- 2026-10-19: M1.5 done, alongside M0.3's open gates on Evan's word. The first crime is shoplifting in the corner shop, a third walkable interior where who sees you is worked out on the walk grid (D45). The law answers in the act or later, at times you are told, with tickets, the shop's civil demand and a bar (D46). The court fines you, or offers HYTA on a first offence (D47). Anything can be stolen, and a fence buys it, yet eight weeks of theft leave a life poorer than eight weeks at the line (D48). The law is `packages/sim/src/law/`. Planted bugs: 40, 40 caught. The marker stays on M0.3.
 
 ## Open questions
 
@@ -433,3 +483,9 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 30. Nothing fades yet (D44): regard, familiarity and memories keep for good. M2.6's social verbs decide how they fade, and whether a kind of act forgotten from the 8 should still count.
 31. The coworker isn't one of the tier-1 people (`people/`). Their week comes from their seed alone, with no home, needs or evening. M2.2 makes them one, which must keep their days off what they were, or a save's coworker changes shifts on loading.
 32. The coworker's options and facts are read every turn, and that costs about 17% a turn (Readings). With one relationship it doesn't matter. With M2.6's dozens it will: offer the ties' actions only while something is asked or askable, or cache `job.ahead` for the turn.
+33. Where the player stands in the shop is the stage's (M1.6). The sim offers a take at every shelf and trusts the stage to send only the shelf the player is at. Until then nothing checks that you walked there, or how long it took.
+34. Being held, in the cells and in court pause the life with a mode, as a shift event does (open question 22). The stage must stop sending `time/elapse` in court. A hold allows it.
+35. The odds of being noticed are far above the once-in-48 anchor (CALIBRATION.md): about 4% unseen, 45% under the clerk's eye. Whether that is fair to a player is a playtest question (M1.9).
+36. A record now exists (`law.convictions`, and HYTA's nonpublic one), but nothing reads it yet. M2's hiring and housing do (D47).
+37. The civil demand is owed for good: a letter with no due date. Collections, and a court judgment for an unpaid demand, wait on M2's money.
+38. The fence is a name and an hour, not a person among the tier-1 people. M2.2 places them, and M2's crime ladder gives them their own risk.
