@@ -74,7 +74,7 @@ test.describe('the walker on the commute', () => {
     const round = await walkerOn(page, 'freeze=0');
     for (const leg of [0, 1, 3]) {
       const now = await walkerOn(page, `freeze=${middle(round, leg)}`);
-      expect(now.cut).toEqual(['apartment', 'diner']);
+      expect(now.cut).toEqual(['apartment', 'corner-shop', 'diner']);
     }
   });
 });

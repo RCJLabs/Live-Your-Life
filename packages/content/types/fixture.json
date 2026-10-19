@@ -3,7 +3,11 @@
   "description": "A kind of furniture or fitting a room can hold: which of the stage's drawings it is, its size, whether it takes up the floor, and how a person uses it.",
   "nameField": "name",
   "fields": {
-    "name": { "kind": "text", "min": 1, "max": 40 },
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 40
+    },
     "draw": {
       "kind": "enum",
       "values": [
@@ -26,12 +30,23 @@
         "sink",
         "dish",
         "shelves",
-        "stairs"
+        "stairs",
+        "camera"
       ],
       "description": "Which of the stage's drawings it is."
     },
-    "width": { "kind": "number", "min": 0.2, "max": 12, "description": "Across its front, in metres (tune)." },
-    "depth": { "kind": "number", "min": 0.2, "max": 8, "description": "From its front to its back, in metres (tune)." },
+    "width": {
+      "kind": "number",
+      "min": 0.2,
+      "max": 12,
+      "description": "Across its front, in metres (tune)."
+    },
+    "depth": {
+      "kind": "number",
+      "min": 0.2,
+      "max": 8,
+      "description": "From its front to its back, in metres (tune)."
+    },
     "blocks": {
       "kind": "bool",
       "description": "Whether it takes up the floor, so nobody steps where it stands. A rug does not."
@@ -54,7 +69,10 @@
         },
         "serves": {
           "kind": "list",
-          "of": { "kind": "enum", "values": ["sleep", "eat", "wash", "relax", "socialize", "work"] },
+          "of": {
+            "kind": "enum",
+            "values": ["sleep", "eat", "wash", "relax", "socialize", "work"]
+          },
           "min": 1,
           "description": "The activities it is a place for (DESIGN.md, Needs and mood)."
         },
@@ -62,6 +80,46 @@
           "kind": "enum",
           "values": ["stand", "sit", "eat", "lie", "cook"],
           "description": "Standing or cooking at that side, or sitting or lying on it."
+        }
+      }
+    },
+    "screens": {
+      "kind": "bool",
+      "optional": true,
+      "description": "Whether it stands tall enough to hide someone behind it from a clerk or a camera (D45). Shelves and fridges do; a counter does not."
+    },
+    "stock": {
+      "kind": "text",
+      "optional": true,
+      "min": 1,
+      "max": 24,
+      "description": "The kind of goods a shop keeps on it (D48): what someone standing at its front can take."
+    },
+    "watch": {
+      "kind": "group",
+      "optional": true,
+      "description": "Whoever or whatever watches from it (D45): a clerk from where they stand to use it, or a camera from itself.",
+      "fields": {
+        "from": {
+          "kind": "enum",
+          "values": ["use", "itself"],
+          "description": "Where the watching is from: the spot where a person uses it, or the fixture."
+        },
+        "field": {
+          "kind": "enum",
+          "values": ["around", "ahead"],
+          "description": "All the way round, as a clerk looks up; or within a quarter turn either side of the way it faces, as a camera does."
+        },
+        "range": {
+          "kind": "number",
+          "min": 1,
+          "max": 20,
+          "description": "How far it sees, in metres (tune)."
+        },
+        "who": {
+          "kind": "enum",
+          "values": ["clerk", "camera"],
+          "description": "What seeing you means: a clerk can hold you; a camera is reviewed at close (D46)."
         }
       }
     }

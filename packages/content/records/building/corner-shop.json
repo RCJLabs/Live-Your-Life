@@ -1,12 +1,22 @@
 {
   "name": "Corner shop",
   "use": "shop",
-  "width": { "min": 7, "max": 9 },
+  "width": {
+    "min": 7,
+    "max": 9
+  },
   "depth": 9,
-  "storeys": { "min": 2, "max": 2 },
+  "storeys": {
+    "min": 2,
+    "max": 2
+  },
   "storeyHeight": 3.4,
   "walls": ["#A0553F", "#E2D5BB", "#B9A48A"],
   "trim": "#CDBB9C",
-  "door": { "min": 0.68, "max": 0.8 },
-  "facade": "corner-store"
+  "door": {
+    "min": 0.68,
+    "max": 0.8
+  },
+  "facade": "corner-store",
+  "interior": "corner-shop"
 }

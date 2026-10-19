@@ -1,0 +1,7 @@
+{
+  "name": "An energy drink",
+  "value": 349,
+  "max": 20,
+  "tags": ["drinks"],
+  "food": 3
+}

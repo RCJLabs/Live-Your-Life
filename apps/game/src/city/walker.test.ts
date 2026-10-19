@@ -100,7 +100,7 @@ describe('the walker', () => {
         expect(cooking.has('apartment'), seed).toBe(false);
         checkedBehind++;
       }
-      expect([...cutFor(plan, scene.buildings, at(cook), true)].sort()).toEqual(['apartment', 'diner']);
+      expect([...cutFor(plan, scene.buildings, at(cook), true)].sort()).toEqual(['apartment', 'corner-shop', 'diner']);
       expect(cutFor(plan, scene.buildings, undefined, false).size).toBe(0);
     }
     expect(checkedBehind).toBeGreaterThan(20);

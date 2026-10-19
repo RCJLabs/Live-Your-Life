@@ -2,5 +2,6 @@
   "format": 1,
   "id": "live-your-life",
   "name": "Live Your Life",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "kits": ["inventory"]
 }

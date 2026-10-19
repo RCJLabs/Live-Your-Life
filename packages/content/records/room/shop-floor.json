@@ -1,0 +1,75 @@
+{
+  "name": "Shop floor",
+  "floor": "tile",
+  "walls": ["#E6DFC9"],
+  "fixtures": [
+    {
+      "fixture": "till",
+      "facing": "s",
+      "x": 2.8,
+      "line": -1.6,
+      "id": "till"
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "e",
+      "x": 0.25,
+      "line": 0.9
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "e",
+      "x": 0.25,
+      "line": 2.1
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "e",
+      "x": 0.25,
+      "line": 3.3
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "w",
+      "x": 3.0,
+      "line": 1.2
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "w",
+      "x": 3.0,
+      "line": 2.4
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "e",
+      "x": 3.5,
+      "line": 1.2
+    },
+    {
+      "fixture": "shop-shelves",
+      "facing": "e",
+      "x": 3.5,
+      "line": 2.4
+    },
+    {
+      "fixture": "cooler",
+      "facing": "s",
+      "x": -0.9,
+      "line": 0.35
+    },
+    {
+      "fixture": "cooler",
+      "facing": "s",
+      "x": -1.75,
+      "line": 0.35
+    },
+    {
+      "fixture": "camera",
+      "facing": "s",
+      "x": 1.4,
+      "line": 0.15,
+      "id": "camera"
+    }
+  ]
+}

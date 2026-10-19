@@ -1,0 +1,53 @@
+{
+  "title": "Fence",
+  "description": "Someone who buys stolen goods (D48): who they are drawn from, what share of retail they pay, when they're found, and the odds a sale comes back to you.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "names": {
+      "kind": "ref",
+      "to": "name-pool"
+    },
+    "share": {
+      "kind": "int",
+      "min": 1,
+      "max": 90,
+      "description": "Percent of the retail price they pay (tune)."
+    },
+    "hours": {
+      "kind": "group",
+      "description": "When they're found behind the diner.",
+      "fields": {
+        "from": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        },
+        "to": {
+          "kind": "int",
+          "min": 1,
+          "max": 24
+        }
+      }
+    },
+    "trouble": {
+      "kind": "int",
+      "min": 1,
+      "max": 95,
+      "description": "The odds in percent that a sale is seen and comes back to you (tune)."
+    },
+    "offences": {
+      "kind": "list",
+      "min": 1,
+      "of": {
+        "kind": "ref",
+        "to": "offence"
+      },
+      "description": "What selling stolen goods is charged as: the first that covers the value and your record."
+    }
+  }
+}

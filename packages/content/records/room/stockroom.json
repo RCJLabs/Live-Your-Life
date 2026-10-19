@@ -1,0 +1,19 @@
+{
+  "name": "Stockroom",
+  "floor": "tile",
+  "walls": ["#D8D5CC"],
+  "fixtures": [
+    {
+      "fixture": "shelves",
+      "facing": "s",
+      "x": 2.6,
+      "line": 0.27
+    },
+    {
+      "fixture": "shelves",
+      "facing": "n",
+      "x": 2.6,
+      "line": -0.27
+    }
+  ]
+}

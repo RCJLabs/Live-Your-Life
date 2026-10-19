@@ -1,0 +1,89 @@
+{
+  "name": "Corner shop",
+  "rooms": [
+    {
+      "id": "floor",
+      "room": "shop-floor",
+      "west": {
+        "from": "west",
+        "by": 0
+      },
+      "east": {
+        "from": "east",
+        "by": 0
+      },
+      "back": {
+        "from": "back",
+        "by": 2.4
+      },
+      "front": {
+        "from": "front",
+        "by": 0
+      }
+    },
+    {
+      "id": "stock",
+      "room": "stockroom",
+      "west": {
+        "from": "west",
+        "by": 0
+      },
+      "east": {
+        "from": "east",
+        "by": -1.6
+      },
+      "back": {
+        "from": "back",
+        "by": 0
+      },
+      "front": {
+        "from": "back",
+        "by": 2.4
+      }
+    },
+    {
+      "id": "wc",
+      "room": "wc",
+      "west": {
+        "from": "east",
+        "by": -1.6
+      },
+      "east": {
+        "from": "east",
+        "by": 0
+      },
+      "back": {
+        "from": "back",
+        "by": 0
+      },
+      "front": {
+        "from": "back",
+        "by": 2.4
+      }
+    }
+  ],
+  "doors": [
+    {
+      "room": "stock",
+      "side": "s",
+      "at": 0.2
+    },
+    {
+      "room": "wc",
+      "side": "w",
+      "at": 0.5
+    },
+    {
+      "room": "stock",
+      "side": "n",
+      "at": 0.2
+    }
+  ],
+  "units": [
+    {
+      "id": "shop",
+      "rooms": ["floor", "stock", "wc"],
+      "needs": ["work"]
+    }
+  ]
+}

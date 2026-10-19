@@ -1,0 +1,11 @@
+{
+  "name": "Retail fraud in the second degree",
+  "law": "MCL 750.356d",
+  "under": 100000,
+  "priors": 5,
+  "days": 365,
+  "fineMax": 200000,
+  "timesValue": 3,
+  "fine": 50000,
+  "costs": 12500
+}

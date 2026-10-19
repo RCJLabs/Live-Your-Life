@@ -1,0 +1,229 @@
+{
+  "title": "Crime",
+  "description": "A crime the player can commit, and how the world answers (D45–D47): the odds of being noticed by what sees you, heat, the police, the court date, and what a plea can bring.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "offences": {
+      "kind": "list",
+      "min": 1,
+      "of": {
+        "kind": "ref",
+        "to": "offence"
+      },
+      "description": "What it is charged as: the first that covers the value and the convictions already on your record."
+    },
+    "bars": {
+      "kind": "bool",
+      "description": "Whether a shop that catches you bars you from it for good, as a trespass notice does (tune)."
+    },
+    "noticed": {
+      "kind": "group",
+      "description": "The odds in percent of being noticed taking something, by what sees where you stand (D45). A camera's are the odds the footage is reviewed and you are known.",
+      "fields": {
+        "clerk": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        },
+        "camera": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        },
+        "unseen": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        }
+      }
+    },
+    "heat": {
+      "kind": "group",
+      "description": "What the shop remembers of you (D46): points added, and what is kept of them each day, in ten-thousandths.",
+      "fields": {
+        "theft": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "caught": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "keep": {
+          "kind": "int",
+          "min": 1,
+          "max": 9999
+        },
+        "per": {
+          "kind": "int",
+          "min": 1,
+          "max": 100,
+          "description": "Heat points for each point added to the odds of being noticed."
+        }
+      }
+    },
+    "open": {
+      "kind": "group",
+      "description": "The hours the shop is open.",
+      "fields": {
+        "from": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        },
+        "to": {
+          "kind": "int",
+          "min": 1,
+          "max": 24
+        }
+      }
+    },
+    "review": {
+      "kind": "int",
+      "min": 0,
+      "max": 23,
+      "description": "The hour, at or after closing, the day's footage is reviewed."
+    },
+    "police": {
+      "kind": "group",
+      "description": "Minutes until the police come when you are held.",
+      "fields": {
+        "min": {
+          "kind": "int",
+          "min": 1,
+          "max": 240
+        },
+        "max": {
+          "kind": "int",
+          "min": 1,
+          "max": 240
+        }
+      }
+    },
+    "visit": {
+      "kind": "group",
+      "description": "Days after the footage is reviewed until the police come.",
+      "fields": {
+        "min": {
+          "kind": "int",
+          "min": 1,
+          "max": 30
+        },
+        "max": {
+          "kind": "int",
+          "min": 1,
+          "max": 30
+        }
+      }
+    },
+    "court": {
+      "kind": "group",
+      "description": "Days from the ticket to the court date.",
+      "fields": {
+        "min": {
+          "kind": "int",
+          "min": 1,
+          "max": 120
+        },
+        "max": {
+          "kind": "int",
+          "min": 1,
+          "max": 120
+        }
+      }
+    },
+    "hearing": {
+      "kind": "group",
+      "description": "The hours the court sees people on its date.",
+      "fields": {
+        "from": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        },
+        "to": {
+          "kind": "int",
+          "min": 1,
+          "max": 24
+        }
+      }
+    },
+    "contest": {
+      "kind": "group",
+      "description": "The odds in percent of a not-guilty plea ending in dismissal, by the evidence.",
+      "fields": {
+        "held": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        },
+        "camera": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        }
+      }
+    },
+    "hyta": {
+      "kind": "group",
+      "description": "Michigan's Holmes Youthful Trainee Act (D47).",
+      "fields": {
+        "age": {
+          "kind": "int",
+          "min": 18,
+          "max": 30,
+          "description": "Offered below this age."
+        },
+        "days": {
+          "kind": "int",
+          "min": 30,
+          "max": 1095,
+          "description": "How long probation lasts."
+        },
+        "every": {
+          "kind": "int",
+          "min": 7,
+          "max": 90,
+          "description": "Days between check-ins."
+        },
+        "fee": {
+          "kind": "int",
+          "min": 0,
+          "description": "The probation fee at each check-in, in cents (tune)."
+        }
+      }
+    },
+    "demand": {
+      "kind": "group",
+      "description": "The shop's civil demand (MCL 600.2953): the retail price this many times, within these bounds, in cents.",
+      "fields": {
+        "times": {
+          "kind": "int",
+          "min": 1,
+          "max": 20
+        },
+        "min": {
+          "kind": "int",
+          "min": 0
+        },
+        "max": {
+          "kind": "int",
+          "min": 0
+        }
+      }
+    },
+    "jail": {
+      "kind": "int",
+      "min": 60,
+      "max": 2880,
+      "description": "Minutes held when picked up on a warrant, before the hearing."
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "A loaf of white bread",
+  "value": 234,
+  "max": 20,
+  "tags": ["groceries"],
+  "food": 20
+}

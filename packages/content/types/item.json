@@ -1,0 +1,13 @@
+{
+  "title": "Item",
+  "description": "Something you carry (M1.5): the shop's goods, priced at retail in cents (D48). The inventory kit's fields, and these.",
+  "fields": {
+    "food": {
+      "kind": "int",
+      "optional": true,
+      "min": 1,
+      "max": 60,
+      "description": "Points of the food need it gives when eaten; not food when left out (tune)."
+    }
+  }
+}

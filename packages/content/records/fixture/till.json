@@ -1,0 +1,19 @@
+{
+  "name": "Till counter",
+  "draw": "counter",
+  "width": 1.6,
+  "depth": 0.6,
+  "blocks": true,
+  "use": {
+    "side": "back",
+    "gap": 0.35,
+    "serves": ["work"],
+    "pose": "stand"
+  },
+  "watch": {
+    "from": "use",
+    "field": "around",
+    "range": 7,
+    "who": "clerk"
+  }
+}

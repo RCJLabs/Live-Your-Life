@@ -1,0 +1,9 @@
+{
+  "name": "Drinks cooler",
+  "draw": "fridge",
+  "width": 0.8,
+  "depth": 0.7,
+  "blocks": true,
+  "screens": true,
+  "stock": "drinks"
+}

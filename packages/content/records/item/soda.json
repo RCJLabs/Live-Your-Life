@@ -1,0 +1,7 @@
+{
+  "name": "A bottle of soda",
+  "value": 249,
+  "max": 20,
+  "tags": ["drinks"],
+  "food": 3
+}

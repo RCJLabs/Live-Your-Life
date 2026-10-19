@@ -164,6 +164,22 @@ export const lifeModule = defineModule<LifeSlice>({
   modes: {
     // Out in the city, with time running. The stage's elapse and the menus' verbs are allowed
     // here; a shift event's choice is allowed only in its own mode (the job's).
-    world: { actions: ['time/*', 'clock/*', 'life/*', 'home/*', 'job/sign-up', 'job/drop', 'ties/*'] },
+    world: {
+      actions: [
+        'time/*',
+        'clock/*',
+        'life/*',
+        'home/*',
+        'job/sign-up',
+        'job/drop',
+        'ties/*',
+        'law/take',
+        'law/attend',
+        'law/check-in',
+        'law/pay',
+        'law/sell',
+        'law/eat',
+      ],
+    },
   },
 });
