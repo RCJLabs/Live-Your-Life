@@ -74,10 +74,15 @@ const clamp = (level: number): number => Math.min(FULL, Math.max(0, level));
 export function settle(levels: Readonly<Levels>, activity: Activity, minutes: number): Levels {
   if (!Number.isSafeInteger(minutes) || minutes < 0) throw new Error(`needs: can't settle ${minutes} minutes`);
   const rates = UNIT_RATES[activity];
-  const out = { ...levels };
-  for (const need of MOVING) out[need] = clamp(levels[need] + rates[need] * minutes);
-  out.health = settleHealth(levels, rates, minutes);
-  return out;
+  // Written out need by need rather than looped, so the engine builds one shape of object.
+  return {
+    rest: clamp(levels.rest + rates.rest * minutes),
+    food: clamp(levels.food + rates.food * minutes),
+    hygiene: clamp(levels.hygiene + rates.hygiene * minutes),
+    company: clamp(levels.company + rates.company * minutes),
+    calm: clamp(levels.calm + rates.calm * minutes),
+    health: settleHealth(levels, rates, minutes),
+  };
 }
 
 /** Minutes until a need at `level`, moving at `rate` a minute, is at zero: 0 if it already is, never if it isn't falling. */
@@ -89,16 +94,24 @@ function emptyAfter(level: number, rate: number): number {
 
 // Health is piecewise: it recovers while nothing vital is empty, then falls faster for each vital
 // need that runs out. The minute each runs out is worked out from its rate, so the fall starts
-// when it would have, not at the next settle.
+// when it would have, not at the next settle. It walks from one such minute to the next without
+// building a list, because tier-1 people settle thousands of times a game hour (M0.4). There are
+// at most as many stretches as vital needs and one more, and the walk stops there: a slip in it
+// gives wrong levels, which the tests see, rather than a loop that never ends.
 function settleHealth(levels: Readonly<Levels>, rates: Readonly<Record<Moving, number>>, minutes: number): number {
-  const empties = VITAL.map((need) => emptyAfter(levels[need], rates[need]));
-  const marks = [...new Set([0, ...empties.filter((t) => t > 0 && t < minutes), minutes])].sort((a, b) => a - b);
   let health = levels.health;
-  for (let i = 0; i + 1 < marks.length; i++) {
-    const from = marks[i] as number;
-    const to = marks[i + 1] as number;
-    const out = empties.filter((t) => t <= from).length;
+  let from = 0;
+  for (let stretch = 0; stretch <= VITAL.length; stretch++) {
+    let out = 0;
+    let to = minutes;
+    for (const need of VITAL) {
+      const empty = emptyAfter(levels[need], rates[need]);
+      if (empty <= from) out++;
+      else if (empty < to) to = empty;
+    }
     health = clamp(health + (out === 0 ? RECOVERY : -PENALTY * out) * (to - from));
+    if (to >= minutes) break;
+    from = to;
   }
   return health;
 }
