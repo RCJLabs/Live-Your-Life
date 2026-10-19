@@ -66,8 +66,8 @@ engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core
 packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON (the street, facades, buildings
                     and blocks; since M1.2 fixtures, rooms and interiors; since M1.3 the career, shift events and taxes; since
                     M1.4 the name pool, acts and the favour; since M1.5 the shop's goods as the inventory kit's items, offences,
-                    the crime and the fence), checked by eb validate, built into pack.json by pnpm content; the package
-                    reads only the pack (pure)
+                    the crime and the fence; since M1.6 the chronicle's lines), checked by eb validate, built into pack.json
+                    by pnpm content; the package reads only the pack (pure)
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, rent, the week
                     bots, the job (job/, M1.3: the records, postings and sign-up, standing, shift events and their odds, pay and
                     withholding), the coworker (ties/, M1.4: who they are, their week, familiarity, regard and what they
@@ -75,12 +75,14 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     court, HYTA, the fence), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
                     hour plans, ties, shares), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5
-                    sight.ts, who sees where in a shop); test/slice.ts is the slice's life for tests and benches
+                    sight.ts, who sees where in a shop); since M1.6 you (you.ts) and the chronicle (chronicle.ts);
+                    test/slice.ts is the slice's life for tests and benches
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
                     @lyl/stage/testing is a fake canvas for drawing tests
-apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. At M0.3 the art spike (src/spike/), and M1.1's generated block
-                    at ?block=generated (src/city/, D33) with M1.2's interiors and the walker (D36); dev/ holds the character
-                    sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
+apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the page is the life (src/life/: the session, places,
+                    tap-to-go, the bar, the panel, menus, the map, D49–D52); M0.3's art spike is at ?spike (src/spike/), and
+                    M1.1's generated block at ?block=generated (src/city/, D33) with M1.2's interiors and the walker (D36);
+                    dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/content/      game.ts: the game's modules, which eb validate and eb build check the content's conditions against
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script

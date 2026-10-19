@@ -258,6 +258,15 @@ Walkable, generated from templates by building type, with cutaway walls when the
 - **Night** lays a dark layer, 74% at its deepest, over the picture, and lets light through at lit windows, lamps' pools, the signs and lit rooms. Everything lights at 30% dark, and twilight runs on placeholder times (CALIBRATION.md).
 - **Drawing.** The still picture is kept between frames. Each frame draws what moves over it, then, clipped to each mover, the still pieces the depth sort puts in front of it. This was 2.4 times faster with the CPU slowed four times (ROADMAP.md, Readings), and a browser check holds it to the full painter's order.
 
+**Built in M1.6, the life on the page** (`apps/game/src/life/`; D49–D52):
+
+- **Tap-to-go.** You tap a place, or the ground, and walk there by the walk grid's route at 3.9 m a stage second, three times a walking pace, with the clock running: the commute is about 20 game minutes (D49). The sim hears nothing until you arrive.
+- **Places.** Your flat's fixtures (one of the walk-up's, by the block's seed), the diner's, the shop's shelves with their goods, the fence behind the diner, and every front door. A place's menu offers what the game offers there now; a shelf's and the fence's show their odds from the preview.
+- **Time.** Speed 1 is 2 game minutes a second and speed 2 four times that, with Pause. The clock stops while the panel, a menu, the map or a choice is open, in a shift event, held, in the cells and in court. An activity's time passes as a fast-forward of up to three seconds with you in its pose.
+- **The bar** (D50): the time, the cash, the two lowest needs as meters with their word, Pause, the speed, a badge counting what waits on you, and the map. **The panel**: what waits, each with its day and what you can do about it now; the shifts posted; all six needs; the journal.
+- **The chronicle** (D52): each entry shows once at the foot of the screen, then stays in the journal, by day.
+- **The map** (D51): the block from above, its buildings named (a shop by its sign), you on it, and a button for each building.
+
 ## Saves
 
 The engine's model: a checksummed snapshot plus an action log, per-module migrations, slots, backups and quarantine, in IndexedDB with a localStorage fallback. The city is derived; saves hold the diffs and the people. A fixture from every version must load.

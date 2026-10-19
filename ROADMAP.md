@@ -332,6 +332,25 @@ How to read this file:
     - the map names every building and goes there on a tap [auto];
     - the page passes M0.1's mobile checks at 360 and 390 px in portrait and in landscape; the spike still passes its own at `?spike` [auto];
     - the frame rate with the life running is in Readings, headless at 1× and 4× CPU [auto], and on Evan's phone [you].
+  - **Built, 2026-10-19: every [auto] gate passed**, each in `pnpm check` but the frame rate, which is in Readings. The phone reading is Evan's [you].
+    - **The page.** The default page is the line cook's life on the block the law module draws. M0.3's spike is at `?spike` and M1.1's block at `?block=generated`, with their tests and scripts moved there. `apps/game/src/life/` is the life:
+      - **`session.ts`:** the sim's session; time out in the world only; the chronicle as it drains.
+      - **`places.ts`:** what can be done where.
+      - **`player.ts`:** tap-to-go at D49's pace.
+      - **`menus.ts`:** a place's menu, and the sheets for a shift event, the court and a hold, with the preview's odds.
+      - **`pending.ts` and `panel.ts`:** what waits on you.
+      - **`dom.ts`:** the bar and the toasts.
+      - **`map.ts`:** the map.
+      - **`main.ts`:** the glue.
+
+      An activity's time passes as a fast-forward of up to three seconds, with you in its pose.
+    - **The sim.** You get a name, from the seed and the name pool (`you.ts`). The chronicle (`chronicle.ts`) writes a line from a `line` record for every event a player would see: 33 lines. Events nobody writes down are listed with why, and a test fails on any other event without a line.
+    - **The stool** at the diner's counter serves socializing as well as eating, so every activity has a place.
+    - **A day by taps.** A browser test signs up for a shift, eats, sleeps until it, walks to the diner by the map, works it and answers its event, walks home and sleeps. The sim refuses nothing it is sent, and the journal tells it.
+    - Found on the way:
+      - A tap beside a fixture, where you stand to use it, missed: only its footprint counted. It counts now.
+      - The mode sheet worked out every option each frame, even out in the world, and the bar read seven facts each frame. With the CPU slowed four times that was 34.1 fps. Cut to a few times a second, it reads 40.6 (Readings).
+      - Two buildings were both "Storefront" on the map: a shop goes by its sign now.
 - **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.
 - **M1.9 The playtest gate.** A tester brief (Rule or Drool's TESTERS.md is the model); five strangers' sessions recorded.
@@ -478,24 +497,30 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 15. The engine fires at most 10,000 timers in one advance. An hourly timer, as D30's is, caps one action at about 416 days, and D19's skip to an heir's 18th birthday passes years. Before M2.7: pass long skips in several actions, or catch the people up in one effect. Or raise in Engine-Builder a way to fire a repeating timer's missed periods at once.
 16. How the city shows a street's near side under the fixed camera (D7, D32). Either cut its buildings to sill height while the player is on the street, as Project Zomboid hides what stands in front, or keep that side's lots low or open. M2.1's city decides.
 17. The longest walk on the block takes 6.35 ms to route in Node (Readings), about four times that on a slow phone: a dropped frame or so a tap. Before M1.6's tap-to-go: reuse A*'s buffers between routes, or route on a coarser graph of sidewalk lengths and crossings.
-18. How walking time meets the clock (D2, D36). The walker walks 1.3 m a stage second, and at speed 1 a stage second is 2 game minutes. So the 42.5 m commute takes about 65 game minutes on screen, where a real walk of it takes about half a minute. M1.6 decides: route time in game minutes at a real pace, with people moving faster on screen; the clock slowed while someone walks a short way; or a time tuned for play (D11).
+18. How walking time meets the clock (D2, D36). The walker walks 1.3 m a stage second, and at speed 1 a stage second is 2 game minutes. So the 42.5 m commute takes about 65 game minutes on screen, where a real walk of it takes about half a minute. M1.6 decides: route time in game minutes at a real pace, with people moving faster on screen; the clock slowed while someone walks a short way; or a time tuned for play (D11). **Answered by D49 (M1.6):** a brisk walk, three times a real pace, with the clock running; the commute is about 20 game minutes.
 19. A building without an interior can't be cut away, so it hides whoever walks behind it, in a gangway or a yard. With question 16, M2.1's city decides: a shell cut for every building, its walls low and no floor, or fading what stands in front, as Project Zomboid does.
 20. M1.5's shoplifting happens in the corner shop, which has no interior yet. D18 opens other businesses as a counter scene, but shoplifting needs shelves, a till and sight lines. M1.5 decides: a third interior from the same records, or the counter scene.
 21. Every wage and tax figure is from a secondary source, because the build environment can't reach irs.gov, ssa.gov, michigan.gov or bls.gov (CALIBRATION.md, In use). Either those domains are added to the environment's allowed list and the figures checked here, or Evan checks them by hand. May 2025's wage figures, the base year's, replace May 2024's either way.
-22. A shift event stops the clock with a mode that allows only a choice, so the stage's `time/elapse` is refused while one is up. M1.6's stage must stop sending time while the mode isn't `world`, or the replay log fills with refusals.
-23. Work in real time (M1.6). From the menu, work runs until the shift's end or its event, whichever comes first, so the routine stops for the event. A real-time "start working" verb needs the same end, or the event comes due while the stage's clock runs on through it.
+22. A shift event stops the clock with a mode that allows only a choice, so the stage's `time/elapse` is refused while one is up. M1.6's stage must stop sending time while the mode isn't `world`, or the replay log fills with refusals. **Answered (M1.6):** the page sends time only out in the world (`apps/game/src/life/session.ts`), and a test holds it to that in every mode.
+23. Work in real time (M1.6). From the menu, work runs until the shift's end or its event, whichever comes first, so the routine stops for the event. A real-time "start working" verb needs the same end, or the event comes due while the stage's clock runs on through it. **Answered (M1.6):** the menu's work runs to the shift's end or its event, a fast-forward with you at the griddle, as the bots' does.
 24. Skill is one count of practice minutes for the job held. When a second career shares a skill, as chef shares cooking with line cook (M2.5), skills become records of their own and practice is kept per skill.
 25. The diner never schedules past 40 hours a week, so FLSA's time and a half never arises. A career that schedules overtime, or an event that keeps someone late, needs it.
-26. Shift events tell what happened in the second person (`told`). The chronicle's third-person line for each outcome (VOICE.md) comes with M1.6's chronicle, and the voice pass on all of them with M2.10.
+26. Shift events tell what happened in the second person (`told`). The chronicle's third-person line for each outcome (VOICE.md) comes with M1.6's chronicle, and the voice pass on all of them with M2.10. **In part (M1.6):** the chronicle has one line for every shift event's outcome ("had to deal with the rush"). A line for each outcome waits for M2.10's voice pass.
 27. The engine's choice events (its M3.6) and standing (its M3.5) are planned, not built. This repo's deck, odds and outcomes are built here first (D13). Port them to the engine when it gets there, or move to the engine's.
-28. A favour they ask waits in the world with the clock running (M1.4). M1.6's HUD has to show it and the day it lapses, or a player who never opens the right panel only ever learns of it as "never answered".
-29. The chronicle's lines about the coworker (M1.6) are third person, where they would be the subject: "She covered..." against "They covered...". `fill()` dodges agreement by naming them. The chronicle needs a subject form that agrees with its verb, or the same rule of naming them.
+28. A favour they ask waits in the world with the clock running (M1.4). M1.6's HUD has to show it and the day it lapses, or a player who never opens the right panel only ever learns of it as "never answered". **Answered (M1.6):** the panel lists it with its day, and the badge counts it (D50).
+29. The chronicle's lines about the coworker (M1.6) are third person, where they would be the subject: "She covered..." against "They covered...". `fill()` dodges agreement by naming them. The chronicle needs a subject form that agrees with its verb, or the same rule of naming them. **Answered by D52:** lines name people, so no verb has to agree.
 30. Nothing fades yet (D44): regard, familiarity and memories keep for good. M2.6's social verbs decide how they fade, and whether a kind of act forgotten from the 8 should still count.
 31. The coworker isn't one of the tier-1 people (`people/`). Their week comes from their seed alone, with no home, needs or evening. M2.2 makes them one, which must keep their days off what they were, or a save's coworker changes shifts on loading.
 32. The coworker's options and facts are read every turn, and that costs about 17% a turn (Readings). With one relationship it doesn't matter. With M2.6's dozens it will: offer the ties' actions only while something is asked or askable, or cache `job.ahead` for the turn.
-33. Where the player stands in the shop is the stage's (M1.6). The sim offers a take at every shelf and trusts the stage to send only the shelf the player is at. Until then nothing checks that you walked there, or how long it took.
-34. Being held, in the cells and in court pause the life with a mode, as a shift event does (open question 22). The stage must stop sending `time/elapse` in court. A hold allows it.
+33. Where the player stands in the shop is the stage's (M1.6). The sim offers a take at every shelf and trusts the stage to send only the shelf the player is at. Until then nothing checks that you walked there, or how long it took. **In part (M1.6):** the page offers a take only at the shelf you have walked to, but the sim still takes the stage's word for it.
+34. Being held, in the cells and in court pause the life with a mode, as a shift event does (open question 22). The stage must stop sending `time/elapse` in court. A hold allows it. **Answered (M1.6):** the page sends no time in either; the wait for the police or the hearing is the life's own `law/wait`.
 35. The odds of being noticed are far above the once-in-48 anchor (CALIBRATION.md): about 4% unseen, 45% under the clerk's eye. Whether that is fair to a player is a playtest question (M1.9).
 36. A record now exists (`law.convictions`, and HYTA's nonpublic one), but nothing reads it yet. M2's hiring and housing do (D47).
 37. The civil demand is owed for good: a letter with no due date. Collections, and a court judgment for an unpaid demand, wait on M2's money.
 38. The fence is a name and an hour, not a person among the tier-1 people. M2.2 places them, and M2's crime ladder gives them their own risk.
+39. There is no "run to the next thing" yet (DESIGN.md's speed 3). Waiting for a shift means sleeping or sitting. Sleep is cut short at the shift's start, so you wake on time and then arrive late after the 20-minute walk. A "wait until" at home, or speed 3, settles it; M1.8's tap count will show what it costs.
+40. The journal, where you stand and your flat live in the page, not the save, so a reload loses them until M1.7. The journal can be rebuilt from the log; where you stand needs a place in the save.
+41. The camera follows you by panning, and each pan repaints the kept picture (question 13). The life reads 40.6 fps with the CPU slowed four times, against 56.4 for M1.2's block (Readings). Before M1.8's phone reading: follow in steps, or keep a margin round the screen in the layer.
+42. The life sends a `time/elapse` every frame, about 60 actions a second (question 10), and compacts its log at 600. M1.7's saves need the merge question 10 proposes.
+43. Your flat is the page's choice, from the block's seed. M2.2 gives people homes in the sim.
+44. The interface's words are in code (`apps/game/src/life/words.ts`, `pending.ts`, `menus.ts`), not content. The content lint and M2.10's voice pass need them as records, or at least scanned.
