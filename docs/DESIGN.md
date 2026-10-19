@@ -91,7 +91,7 @@ Three tiers (D10):
 | Tier | Who | Cadence | Count |
 | --- | --- | --- | --- |
 | 0 | the household | every tick | a few |
-| 1 | named, persistent people with jobs, schedules, homes, relationships, aging | off screen once a game day each, a twenty-fourth of them every game hour (D30); per tick on screen | 1,000 recommended (tune; D31, Evan's call) |
+| 1 | named, persistent people with jobs, schedules, homes, relationships, aging | off screen once a game day each, a twenty-fourth of them every game hour (D30); per tick on screen | 1,000 (tune; D31), re-measured at M2.2 |
 | 2 | district statistics: population by age and income, the job market, crime rates | per game day | the city |
 
 A tier-2 person who is met becomes tier 1 and stays.

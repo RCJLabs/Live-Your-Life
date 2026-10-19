@@ -206,11 +206,13 @@ Built with M0.4 in `packages/sim/src/people/`; the readings are in [research/pop
 
 **Options considered.** Staggered; proposed. Everyone every game hour: DESIGN.md's first proposal, five times the cost at 1,000 people. Everyone once a day at midnight: one write a day, but the largest batch.
 
-### D31. The tier-1 count. OPEN, 2026-10-19 (Evan's call)
+### D31. The tier-1 count: 1,000. LOCKED, 2026-10-19 (Evan's call)
 
 M0.4's [you] gate. The readings are in [research/population.md](research/population.md), at D30's cadence, with the CPU slowed four times in headless Chromium.
 
-**Recommendation: 1,000 (tune).** It is the top of D10's range. Its batch is 7.9 ms at the 95th, a quarter of a 30 fps frame, and 18.4 ms at worst. A month passes in one action in 1.05 s, and the people take 187 kB of a save. It is a ceiling to re-measure at M2.2, when people hold their real state, and to cut to 500 if that reading needs it.
+**Decision.** 1,000 tier-1 people (tune), the recommendation. It is the top of D10's range. Its batch is 7.9 ms at the 95th, a quarter of a 30 fps frame, and 18.4 ms at worst. A month passes in one action in 1.05 s, and the people take 187 kB of a save.
+
+**Consequence.** It is a ceiling, to re-measure at M2.2 when people hold their real state, and cut to 500 if that reading needs it.
 
 **Options considered.**
 
@@ -232,7 +234,6 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 | A domain of its own | ROADMAP open question 9, after D24 | `rcjlabs.github.io/Live-Your-Life/` |
 | The district trend (decline or growth) | ROADMAP ideas | on, seeded per city |
 | The tick and speeds | DESIGN.md, M1.8 | 1 tick = 1 game minute; speed 1 = 2 game minutes a second |
-| The tier-1 count | D31 | 1,000 recommended, from M0.4's readings |
 | The tier-1 cadence | D30 | as proposed: once a day each, a twenty-fourth of them each hour |
 | Engine proof status | D13 | not a proof; stage lives here |
 | Kits ported back to the engine | D13 | built here first |

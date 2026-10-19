@@ -69,7 +69,7 @@ How to read this file:
     - Planted bugs: 28, 28 caught. The light test caught its bug only after it was made to require darkness halfway through dusk; the first version let a dusk that never darkens through.
 - **M0.4 The population harness (risk 2).** N named people with schedules, needs and relationships for 30 game days, at N = 100, 300, 1,000 and 3,000; ms per game minute in Node and in headless Chromium at 4× CPU throttle.
   - Done when: the readings are in the table [auto]; the tier-1 count is a decision in docs/decisions.md [you].
-  - **Built, 2026-10-19, alongside M0.3's open gates, on Evan's word ("Merge it and continue"). The readings are in Readings; the tier-1 count is Evan's call (D31, 1,000 recommended).** The readings in full, and the case, are in [docs/research/population.md](docs/research/population.md).
+  - **Done, 2026-10-19: both gates passed.** It was built alongside M0.3's open gates, on Evan's word ("Merge it and continue"). The readings are in Readings, and Evan set the tier-1 count at 1,000 (D31). The readings in full, and the case, are in [docs/research/population.md](docs/research/population.md).
     - The people are pure modules in `packages/sim/src/people/`. Who they are comes from the seed, their hours from templates (tune), their needs from the player's own math, and their ties from meetings at shared places.
     - The harness is `tools/population`: a Node bench, and the same code in a page that headless Chromium runs at full CPU and slowed four times. 500 joins the four sizes, because risk 2's kill criterion names it.
     - Three cadences were measured. Moving everyone every game hour spends most of each batch in the kernel's copy of the slice: 15.4 of 22 ms at 1,000 people with the CPU slowed four times. Kept in 24 shares, one moved on a whole day each hour (D30, proposed), the batch is 4.2 ms on average and 7.9 at the 95th. The levels and ties are the same at every cadence.
@@ -201,14 +201,14 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M0.1 done. PR #1 merged as `4b4956e`; the deploy confirmed live; the page installed and opened offline on Evan's phone. The marker moves to M0.2.
 - 2026-10-19: M0.2 done. The six needs, a placeholder job and rent, as modules on the engine's kernel and economy kit; two week bots on the engine's runner, and the bench. 500 seeded weeks refuse nothing, 200 more that start before a rent day owe it and pay it off, and the needs match DESIGN.md's table exactly. Planted bugs: 18, 18 caught. The marker moves to M0.3.
 - 2026-10-19: M0.3 built. The stage, `@lyl/stage`, draws the city in code; the game's page is the art spike (D27–D29), with the tester brief and its screenshots in docs/research/art-spike.md. Planted bugs: 28, 28 caught. The [you] gates are open.
-- 2026-10-19: M0.4 built, alongside M0.3's open gates on Evan's word. The tier-1 people (`packages/sim/src/people/`) and the population harness (`tools/population`), in Node and in headless Chromium. Three cadences measured; D30 proposes the staggered one, and risk 2 passes at it. Planted bugs: 22, 22 caught. The [you] gate is open: the tier-1 count, D31, with 1,000 recommended.
+- 2026-10-19: M0.4 done, built alongside M0.3's open gates on Evan's word. The tier-1 people (`packages/sim/src/people/`) and the population harness (`tools/population`), in Node and in headless Chromium. Three cadences measured; D30 proposes the staggered one, and risk 2 passes at it. Planted bugs: 22, 22 caught. Evan set the tier-1 count at 1,000 (D31). The marker stays on M0.3, whose gates are open.
 
 ## Open questions
 
 1. The title (D24).
 2. The city's name, the base year, and whether the district trend is on by default.
 3. The tick in game minutes and the speed steps (proposals in DESIGN.md), set from M1.8's reading.
-4. The tier-1 count (D31; M0.4's readings recommend 1,000).
+4. Whether D31's 1,000 tier-1 people hold when M2.2 gives them their real state and choices, or the count drops to 500.
 5. Whether this game becomes an Engine-Builder proof, which would reopen that project's build order (3D before 2D).
 6. How the kits a life sim needs (needs and mood, relationships, schedules, careers, law) move back into Engine-Builder, and when.
 7. The package id scheme, shared with Engine-Builder's open question (`io.github.rcjlabs.*` or `com.rcjlabs.*`).

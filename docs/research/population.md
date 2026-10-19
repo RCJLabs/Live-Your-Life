@@ -3,7 +3,7 @@
 M0.4 measures what named people cost before the design depends on a number of them. It answers three things:
 
 - **Risk 2 in [BRAINSTORM.md](../BRAINSTORM.md)**, whose kill criterion was written before the harness: "the harness at N = 500 for 30 game days at 4× throttle stays inside the frame budget at speed 1. Fail → a few dozen named people plus statistics for release one."
-- **D10's tier-1 count**, "a few hundred to about a thousand (tune), set by the M0.4 reading". The count is Evan's call; this page gives the readings and a recommendation.
+- **D10's tier-1 count**, "a few hundred to about a thousand (tune), set by the M0.4 reading". The count was Evan's call, from the readings and the recommendation here: 1,000 (D31).
 - **DESIGN.md's open question on cadence**: whether tier-1 people run per game hour or per schedule block off screen.
 
 ## What runs
@@ -125,7 +125,9 @@ At 500 people, 30 game days, 4× CPU:
 
 The instrument is a container CPU slowed four times, not a phone. M0.3's phone reading, still open, will say how much of a frame the stage leaves.
 
-## The tier-1 count: Evan's call
+## The tier-1 count: 1,000, Evan's call
+
+Evan chose 1,000 on 2026-10-19 (D31), from these options.
 
 | Count | At 4×, staggered: 95th, worst | A month in one action | People in a save | Room for M2.2 |
 | --- | --- | --- | --- | --- |
