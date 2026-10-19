@@ -57,6 +57,20 @@ Tests the first year must pass, in the shape Landnám's balance bars take. Each 
 | B6 | A dealer at the street tier, over a year, earns less per hour than the median wage once arrests and lost time are counted | cruelty is never optimal, measured |
 | B7 | Nine in ten shoplifting events go undetected at the moment; most that are detected end in a fine or a misdemeanour, not prison | the odds shown match the real shape |
 
+## Placeholders
+
+Figures the sim uses before their ledger row is filled. None is a real figure. Each is replaced when its row is.
+
+| Figure | Value | In `packages/sim/src` | Replaced by |
+| --- | --- | --- | --- |
+| The hourly wage | $15, paid gross: no tax yet | `dials.ts`, `JOB` | the wages and tax rows, at M1.3's line cook |
+| The shift | Tuesday to Saturday, 15:00 to 23:00 | `dials.ts`, `JOB` | the career template, M1.3 |
+| Payday | Fridays at 23:30, for the minutes worked since the last | `dials.ts`, `PAYDAY` | the career template, M1.3 |
+| Rent | $550 a month, due on the 1st | `dials.ts`, `RENT` | the rent row, with housing |
+| A meal | $4 | `dials.ts`, `COSTS` | the grocery-basket row, with meals by cost and quality |
+| Cash at the start | $300 | `dials.ts`, `START_CASH` | the background pick (D21) |
+| How fast needs fall and recover | DESIGN.md's table, (tune) | `needs.ts`, `RATES` | the sleep row for rest; the others are tuned for play and written below as departures |
+
 ## Departures, on purpose
 
 None yet. When a figure is softened or sharpened for play, it is written here with the real figure beside it.

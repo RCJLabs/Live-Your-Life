@@ -84,6 +84,27 @@ export function lifeCalendar(start: LifeStart = DEFAULT_START): CalendarDef {
   };
 }
 
+/** Minutes from a start to the next time `weekday` reaches minute `at` of the day: a week, if that is now. */
+export function minutesToWeekday(start: LifeStart, weekday: (typeof WEEKDAYS)[number], at: number): number {
+  const today = weekdayIndex(start.year, dayOfYear(start));
+  const ahead = modulo(WEEKDAYS.indexOf(weekday) - today, 7) * MINUTES_PER_DAY + at - minuteOfDay(start);
+  return ahead > 0 ? ahead : ahead + 7 * MINUTES_PER_DAY;
+}
+
+/** Days from a day of a month to the 1st of the next: 29 from 2 June. */
+export function daysToNextMonth(month: string, dayOfMonth: number): number {
+  const found = MONTHS.find((m) => m.id === month);
+  if (found === undefined) throw new Error(`No month "${month}"`);
+  return found.days - dayOfMonth + 1;
+}
+
+/** Minutes from a start to midnight on the 1st of the next month. The month a life starts in is paid for. */
+export function minutesToNextMonth(start: LifeStart): number {
+  dayOfYear(start);
+  const month = MONTHS[start.month - 1] as (typeof MONTHS)[number];
+  return daysToNextMonth(month.id, start.day) * MINUTES_PER_DAY - minuteOfDay(start);
+}
+
 /** The day of the year a start falls on, from 0. */
 function dayOfYear(start: LifeStart): number {
   whole(start.year, 1, Number.MAX_SAFE_INTEGER, 'year');

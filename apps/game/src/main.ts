@@ -4,12 +4,13 @@
  * facts say. So the sim, the engine's kernel and the service worker are proven together before
  * any game exists. Nothing is saved.
  */
-import { createRecordStore, createSession } from '@eb/core';
-import { createLifeGame } from '@lyl/sim';
+import { createSession } from '@eb/core';
+import { createLifeGame, lifeSim } from '@lyl/sim';
 import { startPwa } from './pwa.ts';
 import './style.css';
 
-const sim = { content: createRecordStore({}) };
+// The game's own records: payday and rent fire as the clock runs, and they read the cash.
+const sim = lifeSim();
 const game = createLifeGame();
 const session = createSession(game, sim, game.init('placeholder', sim));
 

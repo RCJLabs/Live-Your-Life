@@ -45,6 +45,12 @@ importers:
 
   engine/packages/core: {}
 
+  engine/packages/kits:
+    dependencies:
+      '@eb/core':
+        specifier: workspace:*
+        version: link:../core
+
   engine/packages/purity: {}
 
   packages/sim:
@@ -52,6 +58,9 @@ importers:
       '@eb/core':
         specifier: workspace:*
         version: link:../../engine/packages/core
+      '@eb/kits':
+        specifier: workspace:*
+        version: link:../../engine/packages/kits
 
   tools/purity:
     dependencies:

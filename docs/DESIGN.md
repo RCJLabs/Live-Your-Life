@@ -54,16 +54,33 @@ Content that is never in, whatever the verb list says: sexual violence; minors i
 
 ## Needs and mood
 
-Six needs on 0–1 with real-shaped decay and recovery (tune):
+Six needs on 0–1 with real-shaped decay and recovery (tune). The id in brackets is the sim's; every level is how much of the thing you have, so a full bar is a met need, and full calm is no stress.
 
 | Need | Falls with | Recovers with | What it drives |
 | --- | --- | --- | --- |
-| Sleep | hours awake; debt accrues | sleep, by hours and quality | performance, health, mood |
-| Hunger | hours since a meal | meals, by cost and quality | energy, health |
-| Hygiene | time, work, weather | washing, laundry | social outcomes, work standing |
-| Social | days alone | time with people, by regard | mood, relationships |
-| Stress | work, money, law, grief | rest, leisure, people | health, mood, mistakes |
-| Health and fitness | age, illness, injury, habits | care, exercise, time | everything else |
+| Sleep (`rest`) | hours awake; debt accrues | sleep, by hours and quality | performance, health, mood |
+| Hunger (`food`) | hours since a meal | meals, by cost and quality | energy, health |
+| Hygiene (`hygiene`) | time, work, weather | washing, laundry | social outcomes, work standing |
+| Social (`company`) | days alone | time with people, by regard | mood, relationships |
+| Stress (`calm`) | work, money, law, grief | rest, leisure, people | health, mood, mistakes |
+| Health and fitness (`health`) | age, illness, injury, habits | care, exercise, time | everything else |
+
+**Rates, built in M0.2** (`packages/sim/src/needs.ts`; a test holds the code to this table). Percent an hour, by what the person is doing (tune):
+
+| Activity | rest | food | hygiene | company | calm |
+| --- | --- | --- | --- | --- | --- |
+| awake | -5 | -6.25 | -4 | -2 | 0 |
+| sleep | 12.5 | -2 | -1 | 0 | 4 |
+| eat | -5 | 100 | -4 | -2 | 2 |
+| wash | -5 | -6.25 | 400 | -2 | 2 |
+| relax | -4 | -6.25 | -4 | -2 | 10 |
+| socialize | -5 | -6.25 | -4 | 40 | 4 |
+| work | -6.5 | -8 | -6 | 2 | -4 |
+
+- Health recovers 0.5% an hour while neither food nor rest is at zero, and falls 4% an hour for each of them that is, from the minute it runs out.
+- A working day balances: 8 hours awake, an 8-hour shift and 8 hours asleep cost 130% of food (three meals give 150%), 88% of hygiene (one wash gives 100%) and 92% of rest (the sleep gives 100%), and leave company and calm where they started.
+- Health at zero has no consequence yet. Illness and death come with M2.7.
+- Levels are whole numbers (100% is 6,000,000 units, so 1% an hour is 1,000 a minute) and are settled, never ticked: the level at any minute is worked out from the last change of activity, so passing time costs nothing.
 
 Money is a resource, not a need. Mood is derived, never stored: it drifts toward a target built from needs, relationships, work fit and recent events, scaled by a temperament trait (Landnám's `minds.ts`). No "fun" or "bladder" meters: leisure feeds stress and social. Every tier-1 person runs the same needs at their tier's cadence.
 
@@ -105,6 +122,14 @@ Release one ships crime to crew, law to detective, food to chef. Medicine and fe
 ## Money
 
 Wages net of tax; rent, utilities, groceries, transit, phone, insurance, debt, fines, tuition, childcare. Banks, loans at real rates, credit as a score that gates rent and cars. Eviction, repossession and bankruptcy as processes with notice. A ledger the player can read. Every number formatted from the rules; none typed into text.
+
+**Built in M0.2, with placeholder figures** (`packages/sim/src/dials.ts`; not calibrated, and listed in [CALIBRATION.md](CALIBRATION.md)):
+
+- Cash is the engine's economy kit's resource, counted in whole cents, and never goes below zero.
+- One shift, Tuesday to Saturday from 15:00 to 23:00, at $15 an hour before tax. It is paid each Friday at 23:30 for the minutes worked since the last payday.
+- A meal costs $4, and is not offered without the cash.
+- Rent of $550 is due at midnight on the 1st; the month a life starts in is already paid. Rent that can't be paid is owed, not refused, and can be paid off once the cash covers all of it. Nothing follows from owing yet: part payments, the notice and eviction come with housing.
+- A life starts with $300.
 
 ## Crime, law and consequence
 
