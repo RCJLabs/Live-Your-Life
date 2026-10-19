@@ -322,6 +322,16 @@ How to read this file:
       - Tickets and court: goods kept; a demand outside its bounds; goods gone, not owed for; a court date a week on; a record that makes no second degree; HYTA twice, or at any age; one set of odds for any evidence; a missed check-in let go; probation kept through a new offence; a warrant a day late; no night in the cells; fines without costs; probation without its fee; a visit while held, not put off.
       - The fence: its share rounded up; open an hour early; eating what isn't food; a sale never seen.
 - **M1.6 Living in it.** The HUD, tap-to-go, the map, the chronicle, the clock's speeds and pauses.
+  - A brisk walk, and the clock runs while you walk (D49). One compact bar, with panels on tap (D50). The life is the page, with a map of the block (D51). A journal, each entry shown once as a line (D52).
+  - Done when:
+    - a browser test plays a day on the page by taps alone and nothing it sends is refused: wake, walk to the diner, sign up, work a shift and answer its event, walk home, eat and sleep [auto];
+    - a walk costs the game time D49 sets, and the sim is sent an activity only once the walker has arrived [auto];
+    - the clock stops in a menu, a choice, a hidden tab, held or in court, and the log holds no refused `time/elapse` [auto];
+    - every favour, notice, court date and shift waiting on the player is in the panel with its day, and the badge counts them [auto];
+    - every event the slice can raise that the player would see has a chronicle line, third person and past tense, that reads whole, seen failing on a planted missing line [auto];
+    - the map names every building and goes there on a tap [auto];
+    - the page passes M0.1's mobile checks at 360 and 390 px in portrait and in landscape; the spike still passes its own at `?spike` [auto];
+    - the frame rate with the life running is in Readings, headless at 1× and 4× CPU [auto], and on Evan's phone [you].
 - **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.
 - **M1.9 The playtest gate.** A tester brief (Rule or Drool's TESTERS.md is the model); five strangers' sessions recorded.
