@@ -244,6 +244,41 @@ How to read this file:
         - the clock running through a choice.
       - Life and the bot: activities offered past the next shift; work never clocked in; the bot never signing up, always taking the first choice, or paying rent with its last cash.
 - **M1.4 One relationship.** A coworker with familiarity, regard and a memory of acts.
+  - The coworker is the other line cook (D41). Your acts reach them through shift events and favours (D42). Regard changes what they'll do for you (D43). They remember kinds of act, as in Ludus (D44).
+  - Done when:
+    - 500 seeded weeks with the steady bot: nothing offered is refused, and familiarity grows in exactly the runs that share a shift with the coworker [auto];
+    - every kind of act comes up in the bots' sweeps, and each moves regard by its weight and is remembered by its kind, at most 8 kinds kept [auto];
+    - the odds shown for a cover and for a choice that leans on them are the odds rolled, in every state the sweeps reach [auto];
+    - a cover they give costs your standing nothing and the shift is theirs; one you give is yours and counts in your week [auto];
+    - the coworker comes from the seed and the name pool, the same for the same seed, and every line about them reads whole with each set of pronouns [auto];
+    - the name pool, the acts, the favour and the coworker's events are content records that `eb validate` passes, seen failing on a planted bad record [auto];
+    - the week bench's cost per action is in Readings [auto].
+  - **Done, 2026-10-19: every gate passed**, each in `pnpm check` but the bench, which is in Readings.
+    - `packages/content` gains three record types, and the career a crew:
+      - a name pool: first names with the pronouns that go with them, and last names;
+      - an act: how far it moves regard, and the line they remember it by;
+      - a favour: what they ask, and what is said either way;
+      - the crew: whom the pool, ages and favour come from, their days a week, how often they ask, the odds of a cover, familiarity's half, and the acts that lateness, a no-show and favours count as.
+
+      The records are a pool of 66 first names and 60 last, 17 acts, the cover favour, and 6 shift events drawn only while they're beside you. "The rush" and "Short-handed" are drawn only while they're not.
+    - The coworker is `packages/sim/src/ties/`, a module beside the job. It hears the job's events (worked, late, a no-show) and asks the job to take or give a shift. It never reads the job's slice. The job tells whether you're free on a day and which shifts are ahead.
+      - Who they are is drawn at hire. Their week is worked out from their seed, not stored, so the save carries who they are, minutes together, regard, at most 8 memories, and the days favours moved.
+      - An outcome in a shift event can name an act. It is remembered if they were beside you that day, and the choice's preview shows it.
+      - A favour they ask is a request waiting in the world, not a mode: the clock runs, and it lapses at the midnight before its shift.
+      - Asking them to cover rolls the engine's `roll` at the odds `oddsOf` gives, the function shift events use, and its preview shows them.
+    - The steady bot answers a request either way at random, first. The random bot asks for covers, answers or doesn't, and comes late on their shifts.
+    - Two things were found on the way:
+      - "The rush, together" had only chancy choices, which M1.3's check refuses (a certain choice comes first). Helping with their tickets was added as the first.
+      - A turn with the steady bot choosing went from 148.1 µs to 172.8: the ties module's options and facts are read every turn (Readings). Reduce held at 67.6.
+    - Planted bugs: 40, 40 caught. The first run caught 36; four checks were missing and were added: their week counted from day 0 rather than Monday, which a Monday start can't show; only the first `{name}` in a line filled; beside you off shift; and a request for a day you're not free.
+      - The content: a coworker event naming a fact the game lacks; an act past ±30; a pronoun the game has no forms for; an act changed without rebuilding the pack.
+      - The records: a crew's acts not checked; its ages out of order.
+      - Who they are: drawn older than the crew; one day off a week; their week from day 0; "his" filled as "him"; one `{name}` filled.
+      - What they remember: regard past 0 to 100; every kind kept; a repeat counted as the first; a repeat kept twice; familiarity rounded.
+      - Beside you: on a shift you took from them; off shift; familiarity from every shift; lateness unnoticed; an act remembered without them; acts in events never applied; the job not telling of lateness or of work.
+      - Favours they ask: for tomorrow; for a day you're not free; lapsing on its own day; the midnight not heard; a yes that never takes the shift, or leaves them on it; a yes offered when you're not free.
+      - Favours you ask: on a day they work; twice for a shift; the preview showing the base odds; odds deaf to regard; a cover that leaves the shift yours, or costs standing.
+      - Event odds deaf to regard, or leaning the wrong way; the steady bot always taking the first choice.
 - **M1.5 One crime.** Shoplifting with the whole chain: witnesses, the odds shown, heat, a scheduled response the player sees first, charges, a fine or a record.
 - **M1.6 Living in it.** The HUD, tap-to-go, the map, the chronicle, the clock's speeds and pauses.
 - **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
@@ -333,6 +368,12 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Game JS, gzip (M1.3) | the spike's page: 45.36 kB (27.11 kB, and chunks shared with the generated block: the stage and the seeded random numbers 17.95 kB, the projection 0.30 kB). The job's code and the engine's roll are in the life game the spike's clock runs. The generated block adds 15.55 kB, loaded only at `?block=generated`: the planner, the walker and the content 12.67 kB, the walk grid and routes 2.88 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
 | Game precache (M1.3) | 21 entries, 207.33 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
 | The content pack (M1.3) | 58 records in 10 types, 20.7 kB, hash `488253fa8d07d96b` | `pnpm content` (`eb build`, with the game's facts) | 2026-10-19 | 1 build |
+| Kernel cost per action, with the coworker (M1.4) | reduce alone: median 67.6 µs an action (62.4–74.8), level with M1.3's 67.1. A turn with the steady bot choosing: 172.8 µs (159.0–177.5), against M1.3's 148.1: more than the container's 15%, so the ties module's options and facts, read every turn, cost about 17%. Nine modules: M1.3's and ties | `node packages/sim/test/week-bench.ts`, 500 weeks and 57,276 actions a round, Node 22.22.0, cloud container | 2026-10-19 | 5 rounds |
+| The coworker in a steady week (M1.4) | beside you on a shift in 500 of 500 weeks; familiarity at the end 20 to 44 (median 37). Regard 26 to 92 (median 50). Kinds remembered 0 to 4 (median 1). 172 requests, 171 answered. Pronouns she 232, he 233, they 35, as the pool's 30, 30 and 6 | a script over `playRun`, seeds `week-0` to `week-499` | 2026-10-19 | 500 weeks |
+| The coworker in a random week (M1.4) | familiarity 0 to 27 (median 0): the random bot starts few shifts (42 in 200 weeks at M1.3). Regard 9 to 82 (median 38). 147 requests, 94 answered; 181 covers asked, 85 given. All 17 acts reached across these and the steady weeks; the odds shown were the odds rolled in every cover asked | the same, `randomLifePolicy`, seeds `ties-random-0` to `ties-random-299`, and `packages/sim/src/ties/week.test.ts` | 2026-10-19 | 300 weeks |
+| Game JS, gzip (M1.4) | the spike's page: 47.54 kB (29.29 kB, and chunks shared with the generated block: the stage and the seeded random numbers 17.95 kB, the projection 0.30 kB). The coworker's code is in the life game the spike's clock runs. The generated block adds 18.29 kB, loaded only at `?block=generated`: the planner, the walker and the content 15.41 kB, the walk grid and routes 2.88 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M1.4) | 21 entries, 223.18 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The content pack (M1.4) | 83 records in 13 types, 30.1 kB, hash `7f75ad895f53b5cf` | `pnpm content` (`eb build`, with the game's facts) | 2026-10-19 | 1 build |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -356,6 +397,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M1.1 done, alongside M0.3's open gates on Evan's word. The block is one side of one street (D32), generated from `packages/content`, the game's first content as an Engine-Builder project, checked in CI and built into a pack. The walk grid and its routes are in `packages/sim/src/city/`, and the stage draws facades from the grammar. The page stays M0.3's spike, with the generated block at `?block=generated` (D33). A golden test holds the spike to its drawing. Planted bugs: 23, 23 caught. The marker stays on M0.3.
 - 2026-10-19: M1.2 done, alongside M0.3's open gates on Evan's word. The apartment house's ground floor is two studios off a stair hall (D34), and the diner has a back room and a back door (D35), both from fixture, room and interior records in `packages/content`. The walk grid opens their floors, and the stage cuts them room by room. A walker goes from a bed to the griddle and back at `?block=generated` (D36). Planted bugs: 32, 32 caught. The marker stays on M0.3.
 - 2026-10-19: M1.3 done, alongside M0.3's open gates on Evan's word. The city borrows Michigan's tax and law (D37). The line cook is the first career on the template: a career record, 14 shift events and 5 taxes in `packages/content`, and the job in `packages/sim/src/job/`. Shifts are posted on Thursdays and signed up for. Pay is withheld as a Michigan employer would (D38). Two no-shows in 28 days end the job (D39). A shift event stops the shift for a choice whose odds are the odds rolled (D40). The figures are from secondary sources, marked in CALIBRATION.md to check. Planted bugs: 48, 48 caught. The marker stays on M0.3.
+- 2026-10-19: M1.4 done, alongside M0.3's open gates on Evan's word. The other line cook is the first relationship (D41): drawn at hire from the seed and a name pool, beside you on five days in seven. Shift events they're part of, lateness, no-shows and favours both ways are acts they remember by kind (D42, D44), and regard sets the odds of what they'll do for you (D43). The ties module is `packages/sim/src/ties/`. Planted bugs: 40, 40 caught. The marker stays on M0.3.
 
 ## Open questions
 
@@ -386,3 +428,8 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 25. The diner never schedules past 40 hours a week, so FLSA's time and a half never arises. A career that schedules overtime, or an event that keeps someone late, needs it.
 26. Shift events tell what happened in the second person (`told`). The chronicle's third-person line for each outcome (VOICE.md) comes with M1.6's chronicle, and the voice pass on all of them with M2.10.
 27. The engine's choice events (its M3.6) and standing (its M3.5) are planned, not built. This repo's deck, odds and outcomes are built here first (D13). Port them to the engine when it gets there, or move to the engine's.
+28. A favour they ask waits in the world with the clock running (M1.4). M1.6's HUD has to show it and the day it lapses, or a player who never opens the right panel only ever learns of it as "never answered".
+29. The chronicle's lines about the coworker (M1.6) are third person, where they would be the subject: "She covered..." against "They covered...". `fill()` dodges agreement by naming them. The chronicle needs a subject form that agrees with its verb, or the same rule of naming them.
+30. Nothing fades yet (D44): regard, familiarity and memories keep for good. M2.6's social verbs decide how they fade, and whether a kind of act forgotten from the 8 should still count.
+31. The coworker isn't one of the tier-1 people (`people/`). Their week comes from their seed alone, with no home, needs or evening. M2.2 makes them one, which must keep their days off what they were, or a save's coworker changes shifts on loading.
+32. The coworker's options and facts are read every turn, and that costs about 17% a turn (Readings). With one relationship it doesn't matter. With M2.6's dozens it will: offer the ties' actions only while something is asked or askable, or cache `job.ahead` for the turn.

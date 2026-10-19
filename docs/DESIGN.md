@@ -121,6 +121,17 @@ A tier-2 person who is met becomes tier 1 and stays.
 
 Per pair: familiarity, regard, attraction, resentment, and the memory above; ties grow from shared activity. Statuses as data: acquaintance, friend, dating, engaged, married, separated, divorced, estranged, enemy; family ties. Romance, affairs, breakups, custody and child support at real-shaped rates. Reputation by name and by district: standing changes prices, treatment and what people will do for you (Space-Wrecked's standing levels).
 
+- **Built in M1.4: the other line cook** (`packages/sim/src/ties/`; the crew in `career/line-cook.json`, with `name-pool/`, `act/` and `favour/` records).
+  - Who they are is drawn at hire from the seed and the name pool: a first name with the pronouns that go with it, a last name, an age from 19 to 52 (D41).
+  - They work five days a week. Their two days off are worked out from their own seed and the week, not stored. On a day they work and you're on, they're on your shift.
+  - Familiarity grows with minutes on the line beside them: half at 40 hours, 75 at 120.
+  - Regard runs from 0 to 100 and starts at 50. Each act moves it by its weight, from −15 for telling on them to +16 for covering their shift (D44). 17 kinds of act, each with the line they remember it by.
+  - What they remember is the last 8 kinds: the day each last happened and how many times.
+  - Acts come from choices in shift events they're part of, from being late or missing a shift of theirs, and from favours (D42).
+  - Favours: they ask on about one day in ten for one of their shifts 2 to 6 days on that you're free for. You can say yes or no until the day before; never answering counts too. You can ask them to cover one of yours on their day off, once a shift, at even odds and 50 points of regard either way (D43). Their yes costs your standing nothing.
+  - A shift event choice that leans on them, such as asking them to take your eggs, gains or loses its regard points with regard. The odds shown are the odds rolled.
+  - Lines about them use `{name}`, `{them}` and `{their}`. They name them rather than say "she" or "they", so no verb has to agree.
+
 ## Careers
 
 - **One template for every career** (D9): skills × effort × conditions → pay, standing, fatigue; ladders and pay bands as data; a shared pool of shift events by tag. The catalogue aims at 100+ careers by release one and 30 in the first year (tune).

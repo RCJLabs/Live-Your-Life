@@ -348,6 +348,48 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 - Told after the shift, for the chronicle: fewer taps, and no play.
 - Small events told and big ones asked, with a rule in each record for which is which.
 
+### D41. The slice's coworker is the other line cook. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The slice's one relationship is with the other line cook at the diner. Who they are comes from the seed: a name from the city's name pool, the pronouns that go with it, and an age.
+
+**Proposed with it** (tune).
+
+- They work five days a week, with two days off drawn from the seed each week.
+- The diner pairs its two cooks: on a day they work and you're on, they're on your shift. That is about five of your shifts in seven.
+- The shift events about them are drawn only while they're beside you, and they name them. "The rush" and "Short-handed" keep "the other cook" for the days they're off.
+
+**Why.** You share the line most days, and the shift events already had "the other cook" in them.
+
+**Options considered.** The other line cook; chosen (recommended). A server: tips, customers and the floor come with a server's career later. The owner: standing already stands for what the owner thinks of you.
+
+### D42. Your acts reach them through shift events and favours. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** What you choose in a shift event they're part of is an act they remember. So is not showing up for a shift they're on, or showing up late. And there are favours both ways: they ask you to cover a shift, and you can ask them to cover yours.
+
+**Proposed with it** (tune).
+
+- They ask on about one day in ten. The shift is one of theirs two to six days ahead, on a day you're free and with room in your week.
+- A request waits for your answer until the day before its shift. Never answering is an act of its own.
+- You can ask them to cover a shift of yours on one of their days off, before it starts, once for each shift. If they say yes, the shift is theirs and your standing loses nothing: a swap the owner doesn't mind.
+
+**Options considered.** Shift events and favours; chosen (recommended). Shift events only, with regard changing nothing yet. Events, favours and a verb to talk on a break or after a shift, the start of M2.6's social verbs.
+
+### D43. Regard changes what they'll do for you. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Regard sets the odds that they cover a shift you ask them to, and the odds of event choices that lean on them, such as asking them to take your eggs in a rush. Standing stays the owner's alone.
+
+**Proposed with it** (tune). Regard runs from 0 to 100 and starts at 50. A choice's odds gain a share of its regard points: all of them at 100, none at 50, and they lose all of them at 0. Asking for a cover starts from even odds, with 50 regard points either way. All odds stay between 5% and 95% (D40), and the preview the player sees is the roll's.
+
+**Options considered.** What they'll do for you; chosen (recommended). That and your standing, as the owner hears from them: closer to a real kitchen, but it counts one thing twice. Nothing yet: remembered and shown only, until M2.6.
+
+### D44. They remember kinds of act, as in Ludus. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Each act moves regard by its weight, every time it happens. It is remembered by its kind: what it was, the day it last happened, and how many times. A repeat counts up rather than piling up, and the last 8 kinds are kept. Each kind has the line they remember it by, such as "You covered her Saturday close." (Ludus's `REGARD` and `remember()`).
+
+**Proposed with it** (tune). Familiarity is apart from regard. It grows with minutes on the line beside them, more slowly the more there is: half at 40 hours. Nothing fades yet.
+
+**Options considered.** Kinds of act; chosen (recommended). Every act with its day, up to 30: a fuller chronicle, bigger saves, repeats piling up. A number only: the cheapest, with nothing to say what is between you.
+
 ---
 
 ## Open items
