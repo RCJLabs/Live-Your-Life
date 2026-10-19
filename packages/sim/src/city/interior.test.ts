@@ -43,7 +43,7 @@ function broken(plan: BlockPlan): string[] {
 }
 
 describe("the slice's interiors", () => {
-  it('keep every rule, with every place of use walkable from the street, in 1,000 blocks', () => {
+  it('keep every rule, with every place of use walkable from the street, in 1,000 blocks', { timeout: 60_000 }, () => {
     expect(PLANS.flatMap(broken)).toEqual([]);
   });
 

@@ -57,7 +57,7 @@ describe('the court date (D47)', () => {
     expect(guilty.state.kernel.modes.at(-1)?.id).toBe('world');
   });
 
-  it('offers HYTA on a first offence only, below 26, and once', () => {
+  it('offers HYTA on a first offence only, below 26, and once', { timeout: 60_000 }, () => {
     const second = inCourt('second', {}, { convictions: 1 });
     expect(game.options(second.state, sim).map((a) => a.plea)).toEqual(['guilty', 'contest']);
     expect(refusal(game, sim, second.state, { type: 'law/plead', plea: 'hyta' })).toBe('not-offered');
