@@ -1,0 +1,8 @@
+{
+  "name": "Kitchenette",
+  "draw": "kitchenette",
+  "width": 1.5,
+  "depth": 0.6,
+  "blocks": true,
+  "use": { "side": "front", "gap": 0.35, "serves": ["eat"], "pose": "cook" }
+}

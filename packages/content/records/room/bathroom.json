@@ -1,0 +1,10 @@
+{
+  "name": "Bathroom",
+  "floor": "tile",
+  "walls": ["#E4E8E6", "#D9E2E8"],
+  "fixtures": [
+    { "fixture": "shower", "facing": "e", "x": 0.47, "line": 0.47, "id": "shower" },
+    { "fixture": "toilet", "facing": "n", "x": 0.4, "line": -0.37 },
+    { "fixture": "sink", "facing": "n", "x": 1.2, "line": -0.25 }
+  ]
+}

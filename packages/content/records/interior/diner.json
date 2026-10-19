@@ -1,0 +1,35 @@
+{
+  "name": "Diner",
+  "rooms": [
+    {
+      "id": "dining",
+      "room": "diner-room",
+      "west": { "from": "west", "by": 0 },
+      "east": { "from": "east", "by": 0 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "front", "by": 0 }
+    },
+    {
+      "id": "back",
+      "room": "back-room",
+      "west": { "from": "west", "by": 0 },
+      "east": { "from": "west", "by": 4.2 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "back", "by": 3.45 }
+    },
+    {
+      "id": "wc",
+      "room": "wc",
+      "west": { "from": "west", "by": 0 },
+      "east": { "from": "west", "by": 1.7 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "back", "by": 2 }
+    }
+  ],
+  "doors": [
+    { "room": "back", "side": "e", "at": 0.3 },
+    { "room": "wc", "side": "s", "at": 0.5 },
+    { "room": "back", "side": "n", "at": 0.85 }
+  ],
+  "units": [{ "id": "diner", "rooms": ["dining", "back", "wc"], "needs": ["work", "eat"] }]
+}

@@ -31,6 +31,12 @@
       }
     },
     "facade": { "kind": "ref", "to": "facade" },
+    "interior": {
+      "kind": "ref",
+      "to": "interior",
+      "optional": true,
+      "description": "Its ground floor, walkable and cut away when someone is inside (D18). Without one it stays shut."
+    },
     "poleSign": {
       "kind": "group",
       "optional": true,

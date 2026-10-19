@@ -1,0 +1,6 @@
+{
+  "name": "Stair hall",
+  "floor": "wood",
+  "walls": ["#CFC4AE", "#C9CDB8"],
+  "fixtures": [{ "fixture": "stairs", "facing": "s", "at": 0.5, "line": 2.12 }]
+}

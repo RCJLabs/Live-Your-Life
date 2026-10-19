@@ -1,0 +1,8 @@
+{
+  "name": "Prep table",
+  "draw": "prep",
+  "width": 1.2,
+  "depth": 0.65,
+  "blocks": true,
+  "use": { "side": "front", "gap": 0.35, "serves": ["work"], "pose": "cook" }
+}

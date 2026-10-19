@@ -1,0 +1,16 @@
+{
+  "name": "Studio",
+  "floor": "wood",
+  "walls": ["#E8DFCC", "#DCE3E2", "#E9D9C1"],
+  "fixtures": [
+    { "fixture": "kitchenette", "facing": "s", "x": -0.8, "line": 0.32 },
+    { "fixture": "bed", "facing": "e", "x": 1.07, "line": 3.125, "id": "bed" },
+    { "fixture": "nightstand", "facing": "e", "x": 0.3, "line": 4.075 },
+    { "fixture": "table", "facing": "s", "x": 2.6, "line": 4.3 },
+    { "fixture": "chair", "facing": "s", "x": 2.6, "line": 3.625, "side": "left" },
+    { "fixture": "chair", "facing": "n", "x": 2.6, "line": 4.975, "side": "right" },
+    { "fixture": "rug", "facing": "s", "at": 0.5, "line": 7.35 },
+    { "fixture": "couch", "facing": "w", "x": -0.5, "line": 7.35 },
+    { "fixture": "tv", "facing": "e", "x": 0.3, "line": 7.35 }
+  ]
+}

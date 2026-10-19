@@ -1,0 +1,7 @@
+{
+  "name": "Sink",
+  "draw": "sink",
+  "width": 0.6,
+  "depth": 0.45,
+  "blocks": true
+}

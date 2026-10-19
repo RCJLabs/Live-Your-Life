@@ -173,6 +173,30 @@ Walking, bus, bicycle, rideshare, and owned cars with price, insurance, fuel, ma
 
 Walkable, generated from templates by building type, with cutaway walls when the player is inside or behind. Release one: homes, the restaurant, the precinct and courthouse, the hospital, the school. Other businesses open as a counter scene until their template exists. Fallback if the art spike fails its kill criterion: interiors as scenes inside the isometric city.
 
+**Built in M1.2, two interiors** (`packages/content`'s fixture, room and interior records; `packages/sim/src/city/`; D34–D36):
+
+- **The records.**
+  - A fixture is one of the stage's drawings, a size, whether it takes up the floor, and how it is used: from which side, how far out, for which activities, in which pose.
+  - A room places fixtures by rule in its own frame.
+  - An interior lays rooms out from its footprint's edges and the front door, a later room cut out of the earlier ones. It names the doors between rooms or out, and the units the rooms make, each with the activities it must have a place for.
+- **The flat** (D34) is a stair hall down the middle of the apartment house from the front door, with a studio either side. Each studio has a main room (bed, kitchenette, table, couch, television) and a bathroom (shower, toilet, sink). The second studio is the first mirrored. The apartment house is 10 to 11 m wide (tune).
+- **The diner** (D35):
+  - The line stands out from the back wall, the cook behind it facing the room.
+  - The counter has its stools, and the tables stand by the windows.
+  - A back room holds the dish pit and dry stores, with a staff toilet and a back door to the yard.
+- **Walking inside.**
+  - Walls and fixtures are no step.
+  - A doorway is open at the cells whose middles lie in it, so one 0.9 m wide (tune) always lets a walker through.
+  - A walk to a fixture ends in the nearest open cell on the side it is used from, in its room.
+  - Passages are a metre or more, so a row of open cells runs through them however the grid falls (tune).
+- **The cut**, for a building with rooms:
+  - each room's floor;
+  - the far walls, inside, in each room's colour;
+  - the inside walls, cut low with the near ones;
+  - a way out through a far wall, as an opening under a lintel.
+- **When a building is cut:** when the walls are down, when someone is inside it, or when a corner of them falls inside its outline on the screen and the depth sort puts it nearer.
+- **The walker** (D36) walks the commute round and round in stage seconds, at 1.3 m a second (tune), through the middle of every doorway.
+
 ## Presentation
 
 - Isometric 2D (D2), a fixed angle, zoom only (D7). Smooth vector drawn in code (D25): one renderer, one palette, one light direction.

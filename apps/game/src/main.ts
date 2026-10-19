@@ -78,6 +78,10 @@ function resize(): void {
 resize();
 window.addEventListener('resize', resize);
 
+/** The spike cuts both interiors or neither; the generated block also cuts where its walker is (D36). */
+const cutNow = (t: number): ReadonlySet<string> =>
+  generated ? generated.cutAt(looks.cook, t, state.cut) : state.cut ? INTERIORS : NONE;
+
 let heights: ReadonlyMap<string, number> = new Map();
 function render(): void {
   const light = daylight(clock.minuteOfDay);
@@ -86,8 +90,8 @@ function render(): void {
     ctx,
     viewOf(camera, size),
     size,
-    { cut: state.cut ? INTERIORS : NONE, bubbles: state.bubbles, dark: light.dark, warm: light.warm, time: state.time },
-    actorsAt(block, looks, state.time),
+    { cut: cutNow(state.time), bubbles: state.bubbles, dark: light.dark, warm: light.warm, time: state.time },
+    generated ? generated.actorsAt(looks.cook, state.time) : actorsAt(block, looks, state.time),
   );
   heights = drawn.heights;
   if (overlay && generated) overlay(ctx, viewOf(camera, size), generated.grid);
@@ -199,6 +203,19 @@ Object.assign(window, {
         buildings: generated.plan.buildings.map((b) => b.template),
         open: generated.plan.street.open,
       },
+    walker: () => {
+      const c = generated?.commute;
+      if (!generated || !c) return null;
+      const [now] = generated.actorsAt(looks.cook, state.time);
+      return {
+        unit: c.unit,
+        metres: c.metres,
+        round: c.round,
+        legs: c.legs.map((l) => ({ doing: l.doing, from: l.from, to: l.to })),
+        at: now && { x: now.x, y: now.y, pose: now.pose.kind },
+        cut: [...cutNow(state.time)].sort(),
+      };
+    },
   },
 });
 

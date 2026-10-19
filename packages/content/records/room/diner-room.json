@@ -1,0 +1,37 @@
+{
+  "name": "Diner",
+  "floor": "checker",
+  "walls": ["#E8DCC2"],
+  "fixtures": [
+    { "fixture": "fridge", "facing": "n", "x": 4.85, "line": 1.95 },
+    { "fixture": "griddle", "facing": "n", "x": 6.3, "line": 1.95, "id": "griddle" },
+    { "fixture": "prep-table", "facing": "n", "x": 7.85, "line": 1.95 },
+    { "fixture": "counter", "facing": "s", "span": { "from": 4.6, "to": -2.4 }, "line": 3.75 },
+    { "fixture": "stool", "facing": "n", "span": { "from": 4.8, "to": -2.6 }, "every": 0.85, "line": 4.45 },
+    {
+      "fixture": "table",
+      "facing": "s",
+      "span": { "from": 0.4, "to": 5.6 },
+      "every": 2.5,
+      "line": -1.4,
+      "width": 0.95,
+      "depth": 0.75
+    },
+    {
+      "fixture": "chair",
+      "facing": "s",
+      "span": { "from": 0.4, "to": 5.6 },
+      "every": 2.5,
+      "line": -2.12,
+      "side": "left"
+    },
+    {
+      "fixture": "chair",
+      "facing": "n",
+      "span": { "from": 0.4, "to": 5.6 },
+      "every": 2.5,
+      "line": -0.68,
+      "side": "right"
+    }
+  ]
+}

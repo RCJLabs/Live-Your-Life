@@ -29,6 +29,26 @@ export {
   planBlock,
   type StreetPlan,
 } from './city/block.ts';
+export { type FixturePlan, furnish, type UsePlan } from './city/furnish.ts';
+export { type InteriorPlan, planInterior, type UnitPlan } from './city/interior.ts';
+export { interiorProblems } from './city/interiorCheck.ts';
+export type {
+  DoorRecord,
+  DrawKind,
+  Edge,
+  FixtureRecord,
+  FixtureRule,
+  FloorKind,
+  InteriorRecord,
+  InteriorTemplates,
+  PlaceActivity,
+  RoomPlacement,
+  RoomRecord,
+  Side,
+  UnitRecord,
+  UsePose,
+  UseRecord,
+} from './city/interiorRecords.ts';
 export { type Route, route } from './city/path.ts';
 export {
   type Awning,
@@ -46,6 +66,19 @@ export {
   type Use,
   type WindowKind,
 } from './city/records.ts';
+export {
+  DOOR,
+  type DoorPlan,
+  FRONT_DOOR,
+  type Frame,
+  frameOf,
+  OUTSIDE,
+  type Rect,
+  type RoomPlan,
+  roomAt,
+  WALL,
+  type WallPlan,
+} from './city/rooms.ts';
 export { DOORWAY, type Facing, FOOTPRINT, type PropKind, type PropPlan, streetProps } from './city/street.ts';
 export {
   CELL,
@@ -57,6 +90,7 @@ export {
   groundAt,
   neighbours,
   reach,
+  useCell,
   type WalkGrid,
   walkGrid,
 } from './city/walk.ts';

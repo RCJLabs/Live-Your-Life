@@ -72,6 +72,14 @@ export const INSIDE = {
   couch: '#6F7F5A',
   screen: '#26282C',
   flame: '#F2A23A',
+  /** M1.2's rooms: a bathroom's and a back room's tile, porcelain, stairs, shelving and its stock. */
+  tile: '#DCE0DC',
+  grout: '#B9C0BD',
+  porcelain: '#F3F3EF',
+  tread: '#A57C52',
+  riser: '#D7C9AD',
+  wire: '#8A8F94',
+  stock: ['#C9A44C', '#B9473D', '#E3DCC9', '#5E7F64', '#7E8FA6'],
 } as const;
 
 export const STREET = {

@@ -1,0 +1,8 @@
+{
+  "name": "Chair",
+  "draw": "chair",
+  "width": 0.45,
+  "depth": 0.45,
+  "blocks": true,
+  "use": { "side": "left", "gap": 0.35, "serves": ["eat"], "pose": "eat" }
+}

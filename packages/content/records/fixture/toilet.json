@@ -1,0 +1,7 @@
+{
+  "name": "Toilet",
+  "draw": "toilet",
+  "width": 0.4,
+  "depth": 0.7,
+  "blocks": true
+}
