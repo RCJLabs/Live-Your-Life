@@ -102,3 +102,14 @@ export function waiting(life: Life): Waiting[] {
   const all = [...favour(life), ...law(life), ...shifts(life)];
   return all.sort((a, b) => (a.day ?? Number.POSITIVE_INFINITY) - (b.day ?? Number.POSITIVE_INFINITY));
 }
+
+/**
+ * D58: the line for the morning of a court date, while going is offered and before noon; null
+ * otherwise. The page shows it once a day.
+ */
+export function courtLine(life: Life, list: readonly Waiting[] = waiting(life)): string | null {
+  const today = life.fact('time.day') as number;
+  if ((life.fact('time.of-day') as number) >= 12 * 60) return null;
+  const due = list.some((w) => w.kind === 'court' && w.day === today && w.actions.length > 0);
+  return due ? 'You’re due in court this morning, by noon. Go from the panel.' : null;
+}

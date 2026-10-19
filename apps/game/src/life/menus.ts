@@ -21,9 +21,18 @@ export interface Item {
 export function itemsAt(life: Life, place: Place): Item[] {
   const options = life.options();
   if (place.kind === 'fixture') {
+    // D58: away from the diner during your shift, the bed says so; its sleep ends with the shift.
+    const due =
+      place.building !== 'diner' && life.fact('job.on-shift') === true
+        ? 'You’re due at the diner now. This sleep ends when your shift does.'
+        : undefined;
     return options
       .filter((a) => a.type === 'life/do' && place.serves?.includes(a.activity as never))
-      .map((a) => ({ label: doingText(String(a.activity), a.minutes as number), action: a }));
+      .map((a) => ({
+        label: doingText(String(a.activity), a.minutes as number),
+        action: a,
+        ...(due && a.activity === 'sleep' ? { note: due } : {}),
+      }));
   }
   if (place.kind === 'shelf' && place.take) {
     const take = options.find((a) => a.type === 'law/take' && a.spot === place.take?.spot);

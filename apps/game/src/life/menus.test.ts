@@ -51,4 +51,19 @@ describe('what a place offers (M1.6)', () => {
       a.all.filter((p) => p.building === 'apartment' && p.kind === 'fixture').every((p) => p.id.includes(`/${a.home}`)),
     ).toBe(true);
   });
+
+  it('says at the bed, during your shift, that you’re due at the diner, and its sleep ends with the shift (D58)', () => {
+    const { life, find } = setUp('due');
+    const sign = life.options().find((a) => a.type === 'job/sign-up');
+    life.act(sign as never);
+    const before = life.fact('job.next-shift-in') as number;
+    life.act({ type: 'time/advance', minutes: before + 30 });
+    expect(life.fact('job.on-shift')).toBe(true);
+    const [sleep] = itemsAt(life, find('Bed'));
+    expect(sleep?.action.minutes).toBe(life.fact('job.shift-left'));
+    expect(sleep?.note).toContain('due at the diner');
+    expect(itemsAt(life, find('Stool')).some((i) => i.note)).toBe(false);
+    const off = setUp('due-off');
+    expect(itemsAt(off.life, off.find('Bed'))[0]?.note).toBeUndefined();
+  });
 });
