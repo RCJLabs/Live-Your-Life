@@ -1,0 +1,11 @@
+{
+  "ground": "shop",
+  "bays": { "min": 2, "max": 3 },
+  "windows": ["single"],
+  "cornices": ["parapet", "band"],
+  "sills": true,
+  "sides": "party",
+  "sign": { "text": "GROCERY", "colour": "#F3EBD8", "ink": "#2E5D3A" },
+  "awnings": [{ "colour": "#2E5D3A", "stripe": "#E8DCC2" }],
+  "wear": { "min": 0, "max": 1 }
+}

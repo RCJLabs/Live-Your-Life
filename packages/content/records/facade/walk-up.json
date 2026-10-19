@@ -1,0 +1,9 @@
+{
+  "ground": "stoop",
+  "bays": { "min": 2, "max": 3 },
+  "windows": ["single", "pair"],
+  "cornices": ["band", "bracketed"],
+  "sills": true,
+  "sides": "windows",
+  "wear": { "min": 0, "max": 2 }
+}

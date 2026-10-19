@@ -7,3 +7,9 @@ packages:
   - engine/packages/core
   - engine/packages/kits
   - engine/packages/purity
+  # M1.1: the content pipeline. The compiler checks packages/content and builds its pack; eb is
+  # its command line. All four run at build time and in CI; the page loads only the pack.
+  - engine/packages/schema
+  - engine/packages/compiler
+  - engine/packages/script
+  - engine/tools/cli

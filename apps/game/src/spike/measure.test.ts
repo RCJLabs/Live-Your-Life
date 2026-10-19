@@ -31,7 +31,7 @@ describe('the frame-rate reading', () => {
 });
 
 describe('the address', () => {
-  it('defaults to the wide view, walls down, bubbles and controls on, the clock running', () => {
+  it("defaults to the spike's block in the wide view, walls down, bubbles and controls on, the clock running", () => {
     expect(readParams('')).toEqual({
       seed: 'rust-belt-1',
       at: null,
@@ -42,12 +42,16 @@ describe('the address', () => {
       hud: true,
       freeze: null,
       cache: true,
+      block: 'spike',
+      grid: false,
     });
   });
 
   it('reads every setting, and ignores what it cannot read', () => {
     expect(
-      readParams('?seed=abc&at=22:30&view=close&focus=apartment&walls=up&bubbles=0&hud=0&freeze=1.2&cache=0'),
+      readParams(
+        '?seed=abc&at=22:30&view=close&focus=apartment&walls=up&bubbles=0&hud=0&freeze=1.2&cache=0&block=generated&grid=1',
+      ),
     ).toEqual({
       seed: 'abc',
       at: { hour: 22, minute: 30 },
@@ -58,10 +62,13 @@ describe('the address', () => {
       hud: false,
       freeze: 1.2,
       cache: false,
+      block: 'generated',
+      grid: true,
     });
-    const odd = readParams('?at=25:00&view=sideways&freeze=soon');
+    const odd = readParams('?at=25:00&view=sideways&freeze=soon&block=city');
     expect(odd.at).toBeNull();
     expect(odd.framing).toBe('wide');
     expect(odd.freeze).toBeNull();
+    expect(odd.block).toBe('spike');
   });
 });

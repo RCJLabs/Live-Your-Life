@@ -1,0 +1,12 @@
+{
+  "name": "Row house",
+  "use": "home",
+  "width": { "min": 6, "max": 7.5 },
+  "depth": 8,
+  "storeys": { "min": 2, "max": 2 },
+  "storeyHeight": 2.9,
+  "walls": ["#A0553F", "#9DB0B7", "#B9A48A", "#E2D5BB"],
+  "trim": "#CDBB9C",
+  "door": { "min": 0.3, "max": 0.7 },
+  "facade": "walk-up"
+}

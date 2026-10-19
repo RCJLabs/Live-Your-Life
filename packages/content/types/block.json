@@ -1,0 +1,77 @@
+{
+  "title": "Block",
+  "description": "One side of one street (D32): how many lots, which buildings every block has, and what fills the rest.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "street": { "kind": "ref", "to": "street" },
+    "lots": {
+      "kind": "group",
+      "fields": { "min": { "kind": "int", "min": 1, "max": 20 }, "max": { "kind": "int", "min": 1, "max": 20 } }
+    },
+    "needs": {
+      "kind": "list",
+      "of": { "kind": "ref", "to": "building" },
+      "min": 1,
+      "description": "Buildings every block has, once each: the slice's home, restaurant and shop."
+    },
+    "ends": {
+      "kind": "list",
+      "of": { "kind": "ref", "to": "building" },
+      "optional": true,
+      "description": "Of those, the ones that stand at an end of the row, as a corner shop does."
+    },
+    "fill": {
+      "kind": "map",
+      "key": { "kind": "ref", "to": "building" },
+      "of": { "kind": "int", "min": 1, "max": 100 },
+      "description": "What stands on the other lots, by weight."
+    },
+    "vacant": {
+      "kind": "group",
+      "optional": true,
+      "description": "Empty lots among the rest: how often, by weight beside the fill, and how wide.",
+      "fields": {
+        "weight": { "kind": "int", "min": 1, "max": 100 },
+        "width": {
+          "kind": "group",
+          "fields": {
+            "min": { "kind": "number", "min": 3, "max": 40 },
+            "max": { "kind": "number", "min": 3, "max": 40 }
+          }
+        }
+      }
+    },
+    "gap": {
+      "kind": "group",
+      "description": "Between buildings: a gangway, in metres.",
+      "fields": { "min": { "kind": "number", "min": 0, "max": 6 }, "max": { "kind": "number", "min": 0, "max": 6 } }
+    },
+    "backRow": {
+      "kind": "group",
+      "label": "Back row",
+      "description": "Across the alley, the next street's buildings, seen from the back: the city goes on.",
+      "fields": {
+        "width": {
+          "kind": "group",
+          "fields": {
+            "min": { "kind": "number", "min": 3, "max": 40 },
+            "max": { "kind": "number", "min": 3, "max": 40 }
+          }
+        },
+        "gap": {
+          "kind": "group",
+          "fields": { "min": { "kind": "number", "min": 0, "max": 6 }, "max": { "kind": "number", "min": 0, "max": 6 } }
+        },
+        "depth": { "kind": "number", "min": 3, "max": 30 },
+        "storeys": {
+          "kind": "group",
+          "fields": { "min": { "kind": "int", "min": 1, "max": 6 }, "max": { "kind": "int", "min": 1, "max": 6 } }
+        },
+        "storeyHeight": { "kind": "number", "min": 2.4, "max": 6 },
+        "walls": { "kind": "list", "of": { "kind": "colour" }, "min": 1 },
+        "trim": { "kind": "colour" }
+      }
+    }
+  }
+}

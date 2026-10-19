@@ -1,0 +1,46 @@
+{
+  "title": "Building",
+  "description": "A kind of building a lot can hold: its size, its walls, and its facade's rules. The seed picks within them.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "use": {
+      "kind": "enum",
+      "values": ["home", "restaurant", "shop"],
+      "description": "What it is for, so a block can ask for the slice's home, restaurant and shop."
+    },
+    "width": {
+      "kind": "group",
+      "description": "Its front, in metres (tune).",
+      "fields": { "min": { "kind": "number", "min": 3, "max": 40 }, "max": { "kind": "number", "min": 3, "max": 40 } }
+    },
+    "depth": { "kind": "number", "min": 3, "max": 30 },
+    "storeys": {
+      "kind": "group",
+      "fields": { "min": { "kind": "int", "min": 1, "max": 6 }, "max": { "kind": "int", "min": 1, "max": 6 } }
+    },
+    "storeyHeight": { "kind": "number", "min": 2.4, "max": 6, "label": "Storey height" },
+    "walls": { "kind": "list", "of": { "kind": "colour" }, "min": 1 },
+    "trim": { "kind": "colour" },
+    "door": {
+      "kind": "group",
+      "description": "Where the front door is, as a share of the width from the west wall.",
+      "fields": {
+        "min": { "kind": "number", "min": 0.1, "max": 0.9 },
+        "max": { "kind": "number", "min": 0.1, "max": 0.9 }
+      }
+    },
+    "facade": { "kind": "ref", "to": "facade" },
+    "poleSign": {
+      "kind": "group",
+      "optional": true,
+      "label": "Pole sign",
+      "description": "A sign on a pole by the curb, as a roadside diner has.",
+      "fields": {
+        "text": { "kind": "text", "min": 1, "max": 8 },
+        "colour": { "kind": "colour" },
+        "ink": { "kind": "colour" }
+      }
+    }
+  }
+}

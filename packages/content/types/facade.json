@@ -1,0 +1,55 @@
+{
+  "title": "Facade",
+  "description": "The rules a building's street face is laid out by (DESIGN.md, Presentation): how its ground floor meets the street, the bays and windows of the storeys above, the cornice, the sign, the wear. The seed picks within them, so no two fronts need match.",
+  "fields": {
+    "ground": {
+      "kind": "enum",
+      "values": ["diner", "shop", "stoop"],
+      "description": "A diner's band of glass, a shopfront, or a door up a step with windows beside it."
+    },
+    "bays": {
+      "kind": "group",
+      "description": "Window bays across each storey above the ground floor.",
+      "fields": { "min": { "kind": "int", "min": 0, "max": 8 }, "max": { "kind": "int", "min": 0, "max": 8 } }
+    },
+    "windows": {
+      "kind": "list",
+      "of": { "kind": "enum", "values": ["single", "pair"] },
+      "min": 1,
+      "description": "A bay holds one window, or a pair of narrow ones."
+    },
+    "cornices": {
+      "kind": "list",
+      "of": { "kind": "enum", "values": ["band", "bracketed", "parapet"] },
+      "min": 1,
+      "description": "What caps the front: a plain band, a band on brackets, or a parapet wall."
+    },
+    "sills": { "kind": "bool", "description": "Stone sills under the upper windows and lintels over them." },
+    "sides": {
+      "kind": "enum",
+      "values": ["party", "windows"],
+      "description": "Blank party walls, or windows down the sides of a building that stands free."
+    },
+    "sign": {
+      "kind": "group",
+      "optional": true,
+      "description": "Painted over the ground floor. Words for what the place is, never a real name (the out list).",
+      "fields": {
+        "text": { "kind": "text", "min": 1, "max": 14 },
+        "colour": { "kind": "colour" },
+        "ink": { "kind": "colour" }
+      }
+    },
+    "awnings": {
+      "kind": "list",
+      "optional": true,
+      "of": { "kind": "group", "fields": { "colour": { "kind": "colour" }, "stripe": { "kind": "colour" } } },
+      "description": "An awning over the shopfront, one of these."
+    },
+    "wear": {
+      "kind": "group",
+      "description": "0 kept up; 1 streaked and patched; 2 upper windows boarded.",
+      "fields": { "min": { "kind": "int", "min": 0, "max": 2 }, "max": { "kind": "int", "min": 0, "max": 2 } }
+    }
+  }
+}

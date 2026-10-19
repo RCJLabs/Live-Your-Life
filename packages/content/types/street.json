@@ -1,0 +1,47 @@
+{
+  "title": "Street",
+  "description": "A street's cross-section, north to south, and what stands along it. Metres, and every one (tune): distances are set for play, not measured (D11).",
+  "fields": {
+    "lotDepth": {
+      "kind": "number",
+      "min": 6,
+      "max": 40,
+      "label": "Lot depth",
+      "description": "Lots run south from the alley to here, where the buildings' fronts stand."
+    },
+    "sidewalk": { "kind": "number", "min": 1, "max": 8, "description": "In front of the lots." },
+    "curb": { "kind": "number", "min": 0.05, "max": 0.4 },
+    "roadway": { "kind": "number", "min": 4, "max": 20 },
+    "open": {
+      "kind": "group",
+      "label": "Open side",
+      "description": "Across the street, the side nearest the camera, kept open so nothing hides the street (D32).",
+      "fields": {
+        "sidewalk": { "kind": "number", "min": 1, "max": 8 },
+        "depth": { "kind": "number", "min": 2, "max": 30, "description": "The verge or car park beyond the sidewalk." },
+        "kinds": { "kind": "list", "of": { "kind": "enum", "values": ["verge", "car-park"] }, "min": 1 }
+      }
+    },
+    "alley": { "kind": "number", "min": 2, "max": 8, "description": "Behind the lots." },
+    "yards": {
+      "kind": "number",
+      "min": 0,
+      "max": 20,
+      "description": "Beyond the alley, the next street's yards; then its buildings, seen from the back."
+    },
+    "run": {
+      "kind": "number",
+      "min": 0,
+      "max": 40,
+      "description": "Street past the lots at each end, so a pan never runs out of street."
+    },
+    "lampEvery": {
+      "kind": "number",
+      "min": 4,
+      "max": 60,
+      "label": "A lamp every",
+      "description": "Along each curb, the open side's offset by half."
+    },
+    "trees": { "kind": "int", "min": 0, "max": 40, "description": "Trees on the open side, when it is a verge." }
+  }
+}

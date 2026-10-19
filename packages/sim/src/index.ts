@@ -19,6 +19,47 @@ export {
   SEASONS,
   WEEKDAYS,
 } from './calendar.ts';
+export {
+  type BackPlan,
+  type BlockPlan,
+  type BuildingPlan,
+  between,
+  type FacadePlan,
+  type LotPlan,
+  planBlock,
+  type StreetPlan,
+} from './city/block.ts';
+export { type Route, route } from './city/path.ts';
+export {
+  type Awning,
+  type BlockRecord,
+  type BlockTemplates,
+  type BuildingRecord,
+  blockTemplates,
+  type CorniceKind,
+  type FacadeRecord,
+  type GroundKind,
+  type OpenKind,
+  type Paint,
+  type Range,
+  type StreetRecord,
+  type Use,
+  type WindowKind,
+} from './city/records.ts';
+export { DOORWAY, type Facing, FOOTPRINT, type PropKind, type PropPlan, streetProps } from './city/street.ts';
+export {
+  CELL,
+  cellAt,
+  centreOf,
+  doorStep,
+  GROUND_COST,
+  type Ground,
+  groundAt,
+  neighbours,
+  reach,
+  type WalkGrid,
+  walkGrid,
+} from './city/walk.ts';
 export { clockModule, minutesUntil } from './clock.ts';
 export { LIFE_CONTENT, lifeSim } from './content.ts';
 export * from './dials.ts';
