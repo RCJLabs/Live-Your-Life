@@ -124,6 +124,18 @@ Per pair: familiarity, regard, attraction, resentment, and the memory above; tie
 ## Careers
 
 - **One template for every career** (D9): skills × effort × conditions → pay, standing, fatigue; ladders and pay bands as data; a shared pool of shift events by tag. The catalogue aims at 100+ careers by release one and 30 in the first year (tune).
+- **Built in M1.3: the line cook** (`packages/content/records/career/line-cook.json`, `packages/sim/src/job/`).
+  - The diner runs two shifts a day, 06:00 to 14:00 and 14:00 to 22:00. Each Thursday it posts next week's: 3 to 6 of them by standing, one a day.
+  - You sign up from tomorrow on, five a week at most, and can drop a shift a day or more ahead for a point of standing.
+  - Standing runs from 0 to 100 and starts at 50 (D39):
+    - a whole shift on time adds 2;
+    - more than 5 minutes late takes 4;
+    - more than 30 minutes missed once there takes 6;
+    - a no-show takes 15 and is a warning, and two warnings in 28 days end the job;
+    - so does standing at 0.
+  - Skill is 100 × practice ÷ (practice + 400 hours), practice being the minutes worked and what some outcomes add. Fatigue is the rest need: it lowers the odds of a chancy choice.
+  - In about half of shifts, an event stops the work at a minute drawn when you sign up (D40). A choice is certain, or has odds from a base, skill and tiredness, between 5% and 95%. The preview and the roll come from the same function.
+  - Missing so far: effort as a choice, ladders and promotion (M2.5), and the labour market (M2.3).
 - **The labor market** (Gridiron Eras' employer model): employers hold expectations against your real ability; heat gets you fired and resets per employer; reputation gets you hired and follows you; AI peers create vacancies; firing moves you, it never ends the game.
 - **Signature careers with their own loop** (D14):
 
@@ -143,7 +155,7 @@ Wages net of tax; rent, utilities, groceries, transit, phone, insurance, debt, f
 **Built in M0.2, with placeholder figures** (`packages/sim/src/dials.ts`; not calibrated, and listed in [CALIBRATION.md](CALIBRATION.md)):
 
 - Cash is the engine's economy kit's resource, counted in whole cents, and never goes below zero.
-- One shift, Tuesday to Saturday from 15:00 to 23:00, at $15 an hour before tax. It is paid each Friday at 23:30 for the minutes worked since the last payday.
+- Since M1.3, the line cook earns $14.73 an hour, Michigan's 25th percentile for restaurant cooks. Pay comes each Friday at 06:00 for every minute worked since the last payday. Federal income tax, Social Security, Medicare, Michigan's tax and the city's are withheld as a Michigan employer withheld them in 2025 (D37, D38). A full week of five shifts is $589.20 gross and $486.55 take-home. The sources are in CALIBRATION.md.
 - A meal costs $4, and is not offered without the cash.
 - Rent of $550 is due at midnight on the 1st; the month a life starts in is already paid. Rent that can't be paid is owed, not refused, and can be paid off once the cash covers all of it. Nothing follows from owing yet: part payments, the notice and eviction come with housing.
 - A life starts with $300.
@@ -258,7 +270,7 @@ Base year 2025 dollars on a fixed in-game calendar. A per-district trend (growin
 ## Open questions
 
 1. Which needs show as meters and which only through mood and the chronicle.
-2. How much of the law is state-specific (theft thresholds, drug schedules, sentencing ranges), and which state the city borrows from.
+2. How much of the law is state-specific (theft thresholds, drug schedules, sentencing ranges). The state is Michigan (D37).
 3. Whether children under 18 in the household are played at all, or only seen and raised.
 4. The tick and speeds (set from M1.8).
 5. Transit coverage by district, and whether the bicycle is a release-one verb.

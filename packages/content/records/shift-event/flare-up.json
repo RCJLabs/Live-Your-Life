@@ -1,0 +1,32 @@
+{
+  "name": "A flare-up",
+  "tags": ["kitchen"],
+  "weight": 2,
+  "prompt": "The fryer flares. A sheet of flame climbs the back of the hood.",
+  "choices": [
+    {
+      "id": "out",
+      "text": "Get everyone out and pull the extinguisher",
+      "outcome": {
+        "told": "The extinguisher leaves powder on everything. The owner closes for the rest of the day and sends everyone home.",
+        "home": true,
+        "needs": { "calm": -10 }
+      }
+    },
+    {
+      "id": "smother",
+      "text": "Shut off the gas and smother it with a lid",
+      "odds": { "base": 55, "skill": 35, "tired": 30 },
+      "outcome": {
+        "told": "You get the lid on and the gas off. The hood is black, but the diner stays open.",
+        "standing": 3,
+        "needs": { "calm": -10 }
+      },
+      "failure": {
+        "told": "The flame catches your sleeve before the lid goes on. The owner wraps your arm and sends you home.",
+        "home": true,
+        "needs": { "health": -12, "calm": -20 }
+      }
+    }
+  ]
+}

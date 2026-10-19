@@ -1,0 +1,33 @@
+{
+  "name": "Short-handed",
+  "tags": ["food-service"],
+  "weight": 6,
+  "prompt": "The other cook called off. It's you and the owner on the line until close.",
+  "choices": [
+    {
+      "id": "station",
+      "text": "Keep to your station and call out what you can't cover",
+      "outcome": {
+        "told": "You call out what you can't get to, and the owner covers it. It's slow, but nothing goes wrong.",
+        "standing": 1,
+        "needs": { "calm": -5 }
+      }
+    },
+    {
+      "id": "both",
+      "text": "Take the grill and the fryer both",
+      "odds": { "base": 40, "skill": 45, "tired": 30 },
+      "outcome": {
+        "told": "You run both stations until close. At the end the owner says you did all right.",
+        "standing": 4,
+        "practice": 45,
+        "needs": { "rest": -5 }
+      },
+      "failure": {
+        "told": "You fall six tickets behind. The owner takes the fryer back without a word.",
+        "standing": -1,
+        "needs": { "calm": -15, "rest": -5 }
+      }
+    }
+  ]
+}

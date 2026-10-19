@@ -1,0 +1,29 @@
+{
+  "name": "Nodding off",
+  "tags": ["work"],
+  "weight": 8,
+  "when": "life.need(need: rest) < 25",
+  "prompt": "You read the same ticket three times and still couldn't say what's on it.",
+  "choices": [
+    {
+      "id": "break",
+      "text": "Ask for ten minutes in the back",
+      "outcome": {
+        "told": "You sit on a milk crate by the back door for ten minutes. It helps a little.",
+        "standing": -2,
+        "needs": { "rest": 3, "calm": 5 }
+      }
+    },
+    {
+      "id": "push",
+      "text": "Keep going",
+      "odds": { "base": 70, "skill": 10, "tired": 60 },
+      "outcome": { "told": "You get through the next hour on coffee and the radio.", "needs": { "rest": -3 } },
+      "failure": {
+        "told": "A burger goes out with no patty. The server brings it back, and the owner sees.",
+        "standing": -4,
+        "needs": { "calm": -10 }
+      }
+    }
+  ]
+}

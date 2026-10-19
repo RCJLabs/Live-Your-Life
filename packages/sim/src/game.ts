@@ -1,15 +1,23 @@
 /**
  * The game as the engine runs it (engine/docs/specs/sim.md): the engine's time module on this
- * game's calendar, the economy kit holding the cash, the clock, the player's needs and activities,
- * the job and the home. They reach each other only through facts and effects.
+ * game's calendar, the economy kit holding the cash, the engine's logic module for rolls, the
+ * clock, the player's needs and activities, the job and the home. They reach each other only
+ * through facts and effects.
  */
-import { createGame, type Game, type RealTime, type ScheduleSpec, timeModule } from '@eb/core';
+import {
+  createGame,
+  type Game,
+  logicModule,
+  type Module,
+  type RealTime,
+  type ScheduleSpec,
+  timeModule,
+} from '@eb/core';
 import { economyKit } from '@eb/kits';
-import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToNextMonth, minutesToWeekday } from './calendar.ts';
+import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToMidnight, minutesToNextMonth } from './calendar.ts';
 import { clockModule } from './clock.ts';
-import { PAYDAY } from './dials.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
-import { jobModule } from './job.ts';
+import { jobModule } from './job/module.ts';
 import { lifeModule } from './life.ts';
 
 /**
@@ -22,32 +30,38 @@ export const REAL_TIME: RealTime = { msPerTick: 500, maxElapseMs: 2000 };
 
 export interface LifeOptions {
   readonly start?: LifeStart;
+  /** The career record a life starts hired into: the slice's is `line-cook`. Without one, no job. */
+  readonly career?: string;
 }
 
-/** The timers a life starts with: the first payday, then weekly, and the first rent. */
+/** The timers a life starts with: the first rent, and every midnight's upkeep. */
 export function startingTimers(start: LifeStart): ScheduleSpec[] {
   return [
-    {
-      timer: 'payday',
-      after: { minutes: minutesToWeekday(start, PAYDAY.weekday, PAYDAY.at) },
-      every: { weeks: 1 },
-      effects: [{ effect: 'payday' }],
-    },
     { timer: RENT_TIMER, after: { minutes: minutesToNextMonth(start) }, effects: [{ effect: 'rent-due' }] },
+    // Midnight: the job's postings and payday (job/shifts.ts).
+    {
+      timer: 'midnight',
+      after: { minutes: minutesToMidnight(start) },
+      every: { days: 1 },
+      effects: [{ effect: 'job-day' }],
+    },
+  ];
+}
+
+/** The modules of a life, in the order they start: what `eb validate` checks content's facts against. */
+export function lifeModules(options: LifeOptions = {}): Module[] {
+  const start = options.start ?? DEFAULT_START;
+  return [
+    timeModule({ calendar: lifeCalendar(start), realTime: REAL_TIME, timers: startingTimers(start) }),
+    economyKit,
+    logicModule,
+    clockModule,
+    lifeModule,
+    jobModule(options.career === undefined ? undefined : { career: options.career, start }),
+    homeModule,
   ];
 }
 
 export function createLifeGame(options: LifeOptions = {}): Game {
-  const start = options.start ?? DEFAULT_START;
-  return createGame({
-    modules: [
-      timeModule({ calendar: lifeCalendar(start), realTime: REAL_TIME, timers: startingTimers(start) }),
-      economyKit,
-      clockModule,
-      lifeModule,
-      jobModule,
-      homeModule,
-    ],
-    start: 'world',
-  });
+  return createGame({ modules: lifeModules(options), start: 'world' });
 }

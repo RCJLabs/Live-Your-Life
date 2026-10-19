@@ -84,12 +84,11 @@ export function lifeCalendar(start: LifeStart = DEFAULT_START): CalendarDef {
   };
 }
 
-/** Minutes from a start to the next time `weekday` reaches minute `at` of the day: a week, if that is now. */
-export function minutesToWeekday(start: LifeStart, weekday: (typeof WEEKDAYS)[number], at: number): number {
-  const today = weekdayIndex(start.year, dayOfYear(start));
-  const ahead = modulo(WEEKDAYS.indexOf(weekday) - today, 7) * MINUTES_PER_DAY + at - minuteOfDay(start);
-  return ahead > 0 ? ahead : ahead + 7 * MINUTES_PER_DAY;
-}
+/** The weekday a start falls on, from Monday (0). */
+export const weekdayOf = (start: LifeStart): number => weekdayIndex(start.year, dayOfYear(start));
+
+/** Minutes from a start to the next midnight. */
+export const minutesToMidnight = (start: LifeStart): number => MINUTES_PER_DAY - minuteOfDay(start);
 
 /** Days from a day of a month to the 1st of the next: 29 from 2 June. */
 export function daysToNextMonth(month: string, dayOfMonth: number): number {

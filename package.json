@@ -12,13 +12,13 @@
     "dev": "pnpm --filter @lyl/game dev",
     "build": "pnpm --filter @lyl/game build",
     "typecheck": "pnpm -r --filter './packages/**' --filter './apps/**' --filter './tools/**' --if-present typecheck && tsc -p tsconfig.tests.json",
-    "lint": "biome check . && node tools/purity/src/cli.ts && pnpm eb validate packages/content",
+    "lint": "biome check . && node tools/purity/src/cli.ts && pnpm eb validate packages/content --types tools/content/game.ts",
     "format": "biome check --write .",
     "test": "vitest run",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm e2e",
     "e2e": "playwright test",
     "eb": "node engine/tools/cli/src/cli.ts",
-    "content": "pnpm eb build packages/content --out packages/content/pack.json"
+    "content": "pnpm eb build packages/content --types tools/content/game.ts --out packages/content/pack.json"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

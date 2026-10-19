@@ -1,0 +1,5 @@
+{
+  "name": "City income tax, resident, one exemption",
+  "deduction": 60000,
+  "brackets": [{ "over": 0, "rate": 100 }]
+}

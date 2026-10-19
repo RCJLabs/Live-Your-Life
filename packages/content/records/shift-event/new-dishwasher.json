@@ -1,0 +1,30 @@
+{
+  "name": "The new dishwasher",
+  "tags": ["food-service"],
+  "weight": 5,
+  "prompt": "The new dishwasher doesn't know where anything goes. The bus tubs are stacking up by the pit.",
+  "choices": [
+    {
+      "id": "head-down",
+      "text": "Keep cooking",
+      "outcome": {
+        "told": "The tubs stack up until the owner sees them and shows him herself.",
+        "needs": { "calm": -3 }
+      }
+    },
+    {
+      "id": "show",
+      "text": "Show him the racks between tickets",
+      "odds": { "base": 50, "skill": 30, "tired": 20 },
+      "outcome": {
+        "told": "Within the hour he has the racks going in the right order. He thanks you on his way out.",
+        "standing": 2,
+        "needs": { "company": 10 }
+      },
+      "failure": {
+        "told": "Your tickets back up while you're at the pit. The owner asks what you're doing off the line.",
+        "standing": -2
+      }
+    }
+  ]
+}

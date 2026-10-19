@@ -1,0 +1,32 @@
+{
+  "name": "A burn",
+  "tags": ["kitchen"],
+  "weight": 6,
+  "prompt": "You reach across the flat-top for the spatula, and the inside of your forearm touches the edge.",
+  "choices": [
+    {
+      "id": "cool",
+      "text": "Hold it under cold water for ten minutes",
+      "outcome": {
+        "told": "The burn stays a pink stripe. The tickets wait while you stand at the sink.",
+        "standing": -1,
+        "needs": { "health": -2 }
+      }
+    },
+    {
+      "id": "keep-going",
+      "text": "Keep cooking and see to it after",
+      "odds": { "base": 60, "skill": 10, "tired": 30 },
+      "outcome": {
+        "told": "It blisters by the end of the shift, but the line keeps moving.",
+        "practice": 10,
+        "needs": { "health": -4 }
+      },
+      "failure": {
+        "told": "Within the hour the blister has opened. The owner sends you home to get it seen to.",
+        "home": true,
+        "needs": { "health": -10, "calm": -5 }
+      }
+    }
+  ]
+}

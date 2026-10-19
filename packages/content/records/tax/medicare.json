@@ -1,0 +1,5 @@
+{
+  "name": "Medicare, 2025",
+  "deduction": 0,
+  "brackets": [{ "over": 0, "rate": 145 }]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "A lost ticket",
+  "tags": ["kitchen"],
+  "weight": 5,
+  "prompt": "A server asks where table six's order is. You've never seen a ticket for table six.",
+  "choices": [
+    {
+      "id": "start",
+      "text": "Start it now",
+      "outcome": {
+        "told": "You start it now. It goes out twelve minutes late, and the server says sorry to the table.",
+        "needs": { "calm": -5 }
+      }
+    },
+    {
+      "id": "look",
+      "text": "Look for the ticket first",
+      "odds": { "base": 40, "skill": 30, "tired": 30 },
+      "outcome": {
+        "told": "It's under the rail, behind another one. Table six has its food eight minutes later.",
+        "practice": 5
+      },
+      "failure": {
+        "told": "You don't find it. By the time you start, table six has been waiting half an hour.",
+        "standing": -2,
+        "needs": { "calm": -10 }
+      }
+    }
+  ]
+}

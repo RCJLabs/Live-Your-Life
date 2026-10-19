@@ -1,8 +1,8 @@
 /**
  * The numbers Phase 0 runs on, each with what it means and why it is set there (Dirtbag's
- * sim/dials.ts). All are (tune), and none is calibrated: docs/CALIBRATION.md's ledger isn't filled
- * yet, and lists these as placeholders. The job and the rent move into content with the career
- * template (M1.3) and housing.
+ * sim/dials.ts). All are (tune), and none is calibrated: docs/CALIBRATION.md lists these as
+ * placeholders. The job moved into content with the career template (M1.3); the rent moves with
+ * housing.
  */
 import type { Activity, Levels } from './needs.ts';
 import { PERCENT } from './needs.ts';
@@ -46,20 +46,6 @@ export const COSTS: Readonly<Record<Activity, number>> = {
 
 /** The longest an activity may be asked to last: a day. */
 export const MAX_ACTIVITY_MINUTES = 24 * 60;
-
-/**
- * The one job of Phase 0: a line cook's evening shift, Tuesday to Saturday, 15:00 to 23:00, at
- * $15.00 an hour. A wage that divides by 60 pays whole cents a minute, so pay is exact.
- */
-export const JOB = {
-  wagePerHour: 15 * CENTS,
-  days: ['tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
-  from: 15 * 60,
-  minutes: 8 * 60,
-} as const;
-
-/** Paid every Friday at 23:30, after the Friday shift: everything worked since the last payday. */
-export const PAYDAY = { weekday: 'friday', at: 23 * 60 + 30 } as const;
 
 /** A room in a shared house, due at midnight on the 1st of each month. */
 export const RENT = 550 * CENTS;

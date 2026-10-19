@@ -1,23 +1,24 @@
 /**
- * `node packages/sim/test/week-bench.ts [seeds] [rounds]`: the readings behind M0.2's gate (ROADMAP
- * Readings). Each round plays the week sweep with the steady bot and times it per turn (options,
- * the bot's facts and reduce together), then replays every run's log and times reduce alone.
- * Defaults: 500 seeds, 5 rounds.
+ * `node packages/sim/test/week-bench.ts [seeds] [rounds]`: the readings behind M0.2's gate and
+ * M1.3's (ROADMAP Readings). Each round plays the week sweep with the steady bot, the line cook
+ * hired at the start, and times it per turn (options, the bot's facts and reduce together), then
+ * replays every run's log and times reduce alone. Defaults: 500 seeds, 5 rounds.
  */
 import { performance } from 'node:perf_hooks';
 import { type Action, playRun, seedsOf, sweep } from '@eb/core';
-import { createLifeGame, lifeSim, steadyPolicy } from '../src/index.ts';
+import { steadyPolicy } from '../src/index.ts';
+import { sliceGame, sliceSim } from './slice.ts';
 
 const seedCount = Number(process.argv[2] ?? 500);
 const rounds = Number(process.argv[3] ?? 5);
-const game = createLifeGame();
-const sim = lifeSim();
+const game = sliceGame();
+const sim = sliceSim();
 const seeds = seedsOf(seedCount, 'week');
 const median = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] as number;
 
 const logs: { seed: string; log: readonly Action[] }[] = seeds.map((seed) => ({
   seed,
-  log: playRun(game, sim, { seed, policy: steadyPolicy, maxTurns: 2000 }).log,
+  log: playRun(game, sim, { seed, policy: steadyPolicy, maxTurns: 3000 }).log,
 }));
 const actions = logs.reduce((n, run) => n + run.log.length, 0);
 
@@ -26,7 +27,7 @@ const replayMs: number[] = [];
 let turns = 0;
 for (let round = 0; round < rounds; round++) {
   const t0 = performance.now();
-  const { report } = sweep(game, sim, { seeds, policy: steadyPolicy, maxTurns: 2000 });
+  const { report } = sweep(game, sim, { seeds, policy: steadyPolicy, maxTurns: 3000 });
   sweepMs.push(performance.now() - t0);
   turns = report.turns === null ? 0 : report.turns.mean * report.runs;
   if (report.refused.count > 0 || report.ends.stopped !== seedCount) {

@@ -1,9 +1,10 @@
 /**
  * @lyl/sim: the game's rules, as modules on Engine-Builder's kernel. The calendar and the clock
- * (M0.1); needs, activities, the job, rent and the week bots (M0.2); the tier-1 people the
- * population harness runs (M0.4). The plan is ROADMAP.md; the design, docs/DESIGN.md.
+ * (M0.1); needs, activities, rent and the week bots (M0.2); the tier-1 people the population
+ * harness runs (M0.4); the block and its interiors (M1.1, M1.2); the job (M1.3). The plan is
+ * ROADMAP.md; the design, docs/DESIGN.md.
  */
-export { REMEDY, randomLifePolicy, STAGE_ONLY, steadyPolicy, WEEK } from './bot.ts';
+export { REMEDY, RESERVE, randomLifePolicy, STAGE_ONLY, steadyFor, steadyPolicy, WEEK } from './bot.ts';
 export {
   BASE_YEAR,
   DEFAULT_START,
@@ -13,11 +14,12 @@ export {
   MINUTES_PER_DAY,
   MINUTES_PER_HOUR,
   MONTHS,
+  minutesToMidnight,
   minutesToNextMonth,
-  minutesToWeekday,
   PHASES,
   SEASONS,
   WEEKDAYS,
+  weekdayOf,
 } from './calendar.ts';
 export {
   type BackPlan,
@@ -97,9 +99,26 @@ export {
 export { clockModule, minutesUntil } from './clock.ts';
 export { LIFE_CONTENT, lifeSim } from './content.ts';
 export * from './dials.ts';
-export { createLifeGame, type LifeOptions, REAL_TIME, startingTimers } from './game.ts';
+export { createLifeGame, type LifeOptions, lifeModules, REAL_TIME, startingTimers } from './game.ts';
 export { type HomeSlice, homeModule, RENT_TIMER } from './home.ts';
-export { type JobSlice, jobModule, payFor } from './job.ts';
+export { drawFrom, LEAST, MOST, oddsOf } from './job/events.ts';
+export { type Hire, jobModule } from './job/module.ts';
+export { PERIODS } from './job/pay.ts';
+export {
+  type CareerRecord,
+  type Choice,
+  careerOf,
+  eventsFor,
+  type Odds,
+  type Outcome,
+  type ShiftEventRecord,
+  type ShiftKind,
+  shiftEventOf,
+  type TaxRecord,
+  taxOf,
+} from './job/records.ts';
+export { type JobSlice, type SignUp, skillOf } from './job/state.ts';
+export { type Paycheck, paycheck, payFor, withhold } from './job/withholding.ts';
 export { ACTIVITY_TIMER, type LifeSlice, levelsNow, lifeModule } from './life.ts';
 export {
   ACTIVITIES,

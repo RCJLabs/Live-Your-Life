@@ -1,8 +1,20 @@
 import { type Action, createRecordStore, type GameState, type SimContext, type TimeSlice } from '@eb/core';
 import { describe, expect, it } from 'vitest';
+import {
+  advance,
+  play,
+  refusal as refusalIn,
+  signUp,
+  sliceSim,
+  TEST_COOK,
+  testCook,
+  tickOf,
+  withCareer,
+} from '../test/slice.ts';
 import { lifeSim } from './content.ts';
 import { COSTS, START_CASH } from './dials.ts';
 import { createLifeGame } from './game.ts';
+import { payFor } from './job/withholding.ts';
 
 const sim = lifeSim();
 const broke: SimContext = { content: createRecordStore({ resource: { cash: { name: 'Cash', start: 0, min: 0 } } }) };
@@ -85,31 +97,33 @@ describe('doing things', () => {
 });
 
 describe('work', () => {
-  // Monday is a day off; Tuesday's shift runs 15:00 to 23:00.
-  const tuesdayAt = (hour: number) =>
-    run(
-      fresh(),
-      { type: 'clock/wait-until', hour: 15 },
-      { type: 'clock/wait-until', hour: 15 },
-      ...(hour === 15 ? [] : [{ type: 'clock/wait-until', hour }]),
-    ).state;
+  // The test cook, signed up for Tuesday's shift, 15:00 to 23:00.
+  const cook = createLifeGame({ career: TEST_COOK });
+  const cookSim = sliceSim(withCareer(testCook()));
+  const signed = play(cook, cookSim, cook.init('work', cookSim), signUp(1)).state;
+  const tuesdayAt = (hour: number) => play(cook, cookSim, signed, advance(tickOf(1, hour))).state;
 
   it('is not offered off shift, and is refused there', () => {
-    const monday = fresh();
-    expect(game.options(monday, sim).some((a) => a.activity === 'work')).toBe(false);
-    expect(refusal(monday, doing('work', 60))).toBe('not-on-shift');
+    for (const [g, s, state] of [
+      [game, sim, fresh()],
+      [cook, cookSim, signed],
+    ] as const) {
+      expect(g.options(state, s).some((a) => a.activity === 'work')).toBe(false);
+      expect(refusalIn(g, s, state, doing('work', 60))).toBe('not-on-shift');
+    }
   });
 
   it('is offered for the rest of the shift, and refused past its end', () => {
-    expect(game.options(tuesdayAt(15), sim)).toContainEqual(doing('work', 480));
-    expect(game.options(tuesdayAt(19), sim)).toContainEqual(doing('work', 240));
-    expect(refusal(tuesdayAt(19), doing('work', 241))).toBe('past-the-shift');
+    expect(cook.options(tuesdayAt(15), cookSim)).toContainEqual(doing('work', 480));
+    expect(cook.options(tuesdayAt(19), cookSim)).toContainEqual(doing('work', 240));
+    expect(refusalIn(cook, cookSim, tuesdayAt(19), doing('work', 241))).toBe('past-the-shift');
   });
 
   it('hands the minutes worked to the job when the shift ends', () => {
-    const { state } = run(tuesdayAt(15), doing('work', 480));
-    expect(fact(state, 'clock.hour')).toBe(23);
-    expect(fact(state, 'job.unpaid')).toBe(480 * 25);
-    expect(fact(state, 'job.on-shift')).toBe(false);
+    const { state, fact: read } = play(cook, cookSim, tuesdayAt(15), doing('work', 480));
+    expect(read('clock.hour')).toBe(23);
+    expect(read('job.unpaid')).toBe(payFor(480, testCook().wage));
+    expect(state.life).toMatchObject({ activity: 'awake' });
+    expect(read('job.on-shift')).toBe(false);
   });
 });

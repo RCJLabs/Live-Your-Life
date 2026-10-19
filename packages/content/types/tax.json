@@ -1,0 +1,39 @@
+{
+  "title": "Tax",
+  "description": "A tax withheld from pay (D38), the way payroll works it out: a paycheck's pay as a year's, less a yearly deduction, taxed in brackets, and a share of that for the paycheck. Traced in CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 60 },
+    "deduction": {
+      "kind": "int",
+      "min": 0,
+      "max": 100000000,
+      "description": "Cents a year taken off pay before the brackets: the W-4's $8,600, an exemption."
+    },
+    "brackets": {
+      "kind": "list",
+      "min": 1,
+      "max": 12,
+      "description": "From the lowest, each starting where the last ends. The first starts at 0.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "over": {
+            "kind": "int",
+            "min": 0,
+            "max": 10000000000,
+            "description": "Cents a year, after the deduction, where its rate starts."
+          },
+          "rate": { "kind": "int", "min": 0, "max": 10000, "description": "In hundredths of a percent: 620 is 6.2%." }
+        }
+      }
+    },
+    "cap": {
+      "kind": "int",
+      "optional": true,
+      "min": 1,
+      "max": 10000000000,
+      "description": "The most pay taxed in a calendar year, in cents: Social Security's wage base."
+    }
+  }
+}
