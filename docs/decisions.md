@@ -170,6 +170,30 @@ Built with M0.1 in `packages/sim/src/calendar.ts`; Evan's to accept or change.
 
 **Options considered.** This proposal. A leap-year calendar of the game's own, which duplicates the engine's and needs a rule for 29 February birthdays. Astronomical seasons (21 March and so on), which put the first cold weeks of December in fall.
 
+### D27. The art spike builds two interiors: a diner and a studio flat. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** M0.3's scope named one interior with a cutaway. It builds two, both from templates.
+
+**Why.** The kill criterion asks a stranger to find someone working and someone sleeping, and those happen in different buildings. The second interior is a second template, not a second system.
+
+**Options considered.** Two interiors; chosen. One, the diner, with the sleeper outside on a bench, which reads as homelessness and is a tone choice. One, the flat, with the worker outside at the diner's door, a weaker reading of "working".
+
+### D28. How the art spike's kill criterion is judged. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The game as designed, with bubbles on. One stranger's answers decide, as the criterion is written; up to three are asked and each is recorded. A screenshot with posture only, no bubbles, is shown first and recorded as a second reading.
+
+**Why.** DESIGN.md gives emotion to posture, bubbles and the chronicle, not to faces, and speech bubbles are part of Dirtbag's Mix (D25). Showing posture only first keeps the bubbles from leading that answer.
+
+**Options considered.** Bubbles on, one stranger; chosen. Posture only, a stricter test of the figures alone. Bubbles on with three strangers who must all pass, a stronger reading that changes the criterion as written.
+
+### D29. The art spike replaces the placeholder page. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The game's page becomes the spike: the block, full screen, with its controls.
+
+**Why.** The installed app opens to it, which is the simplest way to take the fps reading on a phone and to show a stranger. Whatever the kill criterion decides, the isometric city view stays (D18's fallback moves only interiors into scenes), so the page is not thrown away.
+
+**Options considered.** Replace the placeholder; chosen. A separate page under `/spikes/art/`, as Engine-Builder serves its 3D spike, kept out of the offline cache.
+
 ---
 
 ## Open items

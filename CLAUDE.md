@@ -35,14 +35,17 @@ A life sim in a fictional Rust Belt city: isometric, drawn in code, for the brow
 git clone --recurse-submodules https://github.com/RCJLabs/Live-Your-Life   # an existing clone: git submodule update --init
 pnpm install
 pnpm dev          # the game at http://localhost:5173
-pnpm check        # typecheck → lint → test → build (what CI runs)
+pnpm check        # typecheck → lint → test → build → e2e (what CI runs)
 pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
 pnpm lint         # Biome, then the purity check over this repo's eb.pure packages (tools/purity)
 pnpm test         # Vitest
 pnpm build        # apps/game/dist; LYL_BASE sets the base path (CI uses /Live-Your-Life/)
+pnpm e2e          # Playwright against `vite preview` of the build, under LYL_BASE
 pnpm format       # Biome autofix
 pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public/icons/icon.svg; the PNGs are committed
 node packages/sim/test/week-bench.ts [seeds] [rounds]   # the week bench: µs a turn and a reduce, for Readings (500 seeds, 5 rounds)
+node apps/game/e2e/shots.ts [dir]   # after `pnpm build`: the art spike's screenshots and people's heights
+node apps/game/e2e/perf.ts [runs]   # after `pnpm build`: the spike's frame rate at 1× and 4× CPU, headless
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -55,12 +58,15 @@ node packages/sim/test/week-bench.ts [seeds] [rounds]   # the week bench: µs a 
 ```
 engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, a placeholder job and rent, and the week bots
-apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. So far a placeholder page that runs the clock
+packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
+                    @lyl/stage/testing is a fake canvas for drawing tests
+apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. At M0.3 the art spike (src/spike/); dev/ holds the
+                    character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 docs/               design, decisions, voice, calibration, research
 ```
 
-Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/stage` (the isometric renderer, Canvas2D, drawn in code), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the population bench, the content lint, calibration checks).
+Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the population bench, the content lint, calibration checks).
 
 ## Writing
 

@@ -61,15 +61,16 @@ Tests the first year must pass, in the shape Landnám's balance bars take. Each 
 
 Figures the sim uses before their ledger row is filled. None is a real figure. Each is replaced when its row is.
 
-| Figure | Value | In `packages/sim/src` | Replaced by |
+| Figure | Value | Where | Replaced by |
 | --- | --- | --- | --- |
-| The hourly wage | $15, paid gross: no tax yet | `dials.ts`, `JOB` | the wages and tax rows, at M1.3's line cook |
-| The shift | Tuesday to Saturday, 15:00 to 23:00 | `dials.ts`, `JOB` | the career template, M1.3 |
-| Payday | Fridays at 23:30, for the minutes worked since the last | `dials.ts`, `PAYDAY` | the career template, M1.3 |
-| Rent | $550 a month, due on the 1st | `dials.ts`, `RENT` | the rent row, with housing |
-| A meal | $4 | `dials.ts`, `COSTS` | the grocery-basket row, with meals by cost and quality |
-| Cash at the start | $300 | `dials.ts`, `START_CASH` | the background pick (D21) |
-| How fast needs fall and recover | DESIGN.md's table, (tune) | `needs.ts`, `RATES` | the sleep row for rest; the others are tuned for play and written below as departures |
+| The hourly wage | $15, paid gross: no tax yet | `packages/sim/src/dials.ts`, `JOB` | the wages and tax rows, at M1.3's line cook |
+| The shift | Tuesday to Saturday, 15:00 to 23:00 | `packages/sim/src/dials.ts`, `JOB` | the career template, M1.3 |
+| Payday | Fridays at 23:30, for the minutes worked since the last | `packages/sim/src/dials.ts`, `PAYDAY` | the career template, M1.3 |
+| Rent | $550 a month, due on the 1st | `packages/sim/src/dials.ts`, `RENT` | the rent row, with housing |
+| A meal | $4 | `packages/sim/src/dials.ts`, `COSTS` | the grocery-basket row, with meals by cost and quality |
+| Cash at the start | $300 | `packages/sim/src/dials.ts`, `START_CASH` | the background pick (D21) |
+| Twilight | dark from 19:45 to 22:00, light from 04:30 to 06:30, every day: a June evening | `packages/stage/src/light.ts`, `TWILIGHT` | sunrise and sunset for the city's latitude, by date |
+| How fast needs fall and recover | DESIGN.md's table, (tune) | `packages/sim/src/needs.ts`, `RATES` | the sleep row for rest; the others are tuned for play and written below as departures |
 
 ## Departures, on purpose
 

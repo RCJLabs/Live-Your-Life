@@ -166,6 +166,22 @@ Walkable, generated from templates by building type, with cutaway walls when the
 - Mobile first: 360 and 390 px portrait, landscape, 44 px targets.
 - Sound: synthesized, as in every earlier game.
 
+**Built in M0.3, the art spike** (`packages/stage`; docs/research/art-spike.md):
+
+- **The view** is a true orthographic camera, 45° round and 30° down. A ground tile is a diamond twice as wide as tall, and a vertical metre draws √1.5 times a ground step. A tile is a metre.
+- **People** are a 3D skeleton viewed through the same camera, so every facing comes free.
+  - Knees and elbows bend by two-bone IK toward a pole.
+  - The head and limbs are drawn about a sixth larger than life, as a comic figure is (tune). The figures stand at true scale against the buildings.
+  - Poses are targets for the hips, feet and hands: stand, walk, sit, eat, lie, cook, argue.
+- **The ink** (the Mix): people and bubbles are inked; buildings, ground and furniture are flat colour shaded by one sun. The ink is 0.7 to 1.6 px, heavier closer in.
+- **The cutaway**:
+  - Near walls are cut to 0.55 m, below a standing person's hips, with a gap at the door.
+  - The far walls stand a storey high, showing their inside.
+  - Storeys above and roofs are hidden.
+  - Only a building with an interior template is ever cut (D18).
+- **Night** lays a dark layer, 74% at its deepest, over the picture, and lets light through at lit windows, lamps' pools, the signs and lit rooms. Everything lights at 30% dark, and twilight runs on placeholder times (CALIBRATION.md).
+- **Drawing.** The still picture is kept between frames. Each frame draws what moves over it, then, clipped to each mover, the still pieces the depth sort puts in front of it. This was 2.4 times faster with the CPU slowed four times (ROADMAP.md, Readings), and a browser check holds it to the full painter's order.
+
 ## Saves
 
 The engine's model: a checksummed snapshot plus an action log, per-module migrations, slots, backups and quarantine, in IndexedDB with a localStorage fallback. The city is derived; saves hold the diffs and the people. A fixture from every version must load.
