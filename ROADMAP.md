@@ -173,6 +173,76 @@ How to read this file:
       - The stage: inside walls drawn full height; no opening for a way out; far walls one colour; tile laid as boards; two fittings alike; a building in front of someone, or behind them, claimed to hide them.
       - The walker and the page: their own building not cut away; off the middle of doorways; asleep in the neighbour's bed; at a run; walls planned thicker than they are drawn; the page cutting by the walls button alone.
 - **M1.3 One job.** Line cook on the career template: shifts posted weekly, sign-up, pay, standing, fatigue; a shared pool of shift events by tag.
+  - The city borrows Michigan's tax and law (D37). Pay is withheld as a Michigan employer withholds it (D38). Two no-shows in 28 days end the job (D39). A shift event pauses the shift for a choice (D40).
+  - Done when:
+    - 500 seeded weeks with the steady bot: every week finishes, nothing offered is refused, and in every run the bot signs up, works and is paid [auto];
+    - every shift event comes up, and every choice is taken, in the bots' sweeps [auto];
+    - the odds a choice shows are the odds it rolls, in every state the sweeps reach [auto];
+    - the standing rules hold: being late costs standing, a no-show warns, a second within 28 days lets you go, a warning lapses after 28 days, and standing at 0 lets you go [auto];
+    - pay is the wage times the minutes worked, and each tax withheld matches its table to the cent in worked examples [auto];
+    - the career, the events and the taxes are content records that `eb validate` passes, their conditions checked against the game's facts, seen failing on a planted bad record [auto];
+    - the wage and every tax record trace to a row in CALIBRATION.md [auto];
+    - the week bench's cost per action, with the job, is in Readings [auto].
+  - **Done, 2026-10-19: every gate passed**, each in `pnpm check` but the bench, which is in Readings.
+    - `packages/content` gains three record types:
+      - a career: where it is worked, the wage, the shifts and when they are posted, the week's limit, payday, the taxes withheld, standing's steps, skill, and the event tags it draws;
+      - a shift event: tags, a weight, a condition, the prompt, and two to four choices, each certain or with odds, with what follows;
+      - a tax, in brackets over a yearly deduction, as payroll works it out.
+
+      The records are the line cook at the diner, 14 shift events, and 5 taxes. `eb validate` and `eb build` now check conditions against the game's own facts (`tools/content/game.ts`), so a misspelt fact fails as E012, where before it passed as written.
+    - The job is `packages/sim/src/job/`. It replaces M0.2's placeholder, keeps its id and facts, and reads the career from the pack.
+      - The diner posts next week's shifts on Thursdays, more at higher standing, one a day. You sign up from tomorrow on, five a week at most. A shift's timers are set at its midnight (Readings has why).
+      - Working is still the life module's: it tells the job when work starts, to know whether you were late, and how long it went.
+      - Standing, warnings and letting go follow D39. Skill grows with practice, more slowly the more there is.
+      - Pay is every minute worked since the last Friday, less the five taxes (D38). A test works the line cook's full week by hand from Publication 15-T: $589.20 gross, $102.65 withheld, $486.55 net.
+    - A shift's event, if it has one, is due at a minute drawn when you sign up. Work is offered until then, so the routine stops there. The event pushes a mode that allows only a choice, and the clock stops. The choice's odds come from one function for the preview and the roll, and the roll is the engine's `roll` (D40). Outcomes move standing, practice and needs, or send you home.
+    - The steady bot signs up for every shift it can, works however tired, takes event choices at random, and keeps a week of meals back before paying what it owes. A random bot no-shows its way out of half its jobs.
+    - The rent sweep now runs two weeks. Someone hired the day before rent is due can't pay it from the first Friday's pay, which covers two or three shifts.
+    - Three things were found on the way:
+      - Signing up set a shift's two timers a week ahead, so the time module's slice carried about twenty, and the kernel copies it on every action. Reduce went from 48.9 µs an action to 89.5. Setting each shift's timers at its own midnight brought it to 58.9–67.1 (Readings).
+      - The steady bot, hired the day before rent was due, paid every cent it had the moment it could and then couldn't buy food. Health ended under 18% in a tenth of its fortnights. It now keeps a week of meals back.
+      - Biome refuses an object with a `then` property, which a preview's outcomes were, so a choice's outcomes are `outcome` and `failure`.
+    - Planted bugs: 48, 48 caught. The first run caught 45 of 46.
+      - Two checks were missing and were added:
+        - a week counted from the start rather than from Monday, which a Monday start can't show, so a test now starts on a Thursday;
+        - a need left over full by an outcome. That plant turned out to be no bug: the next settle clamps it, so it was dropped.
+      - The content: a condition naming a fact the game lacks (`eb validate` with the game's facts); an event changed without rebuilding the pack.
+      - The records: a missing tax, a certain choice after a chancy one, odds without a failure, and brackets out of order, each let through.
+      - Withholding and pay:
+        - withholding rounded down;
+        - the deduction ignored;
+        - Social Security past its wage base;
+        - a bracket's rate on the whole year's pay;
+        - pay rounded to the nearest cent;
+        - 26 paychecks a year;
+        - pay owed not cleared;
+        - Social Security's year never turning;
+        - no final pay after being let go.
+      - Postings: shifts posted for today; as many at any standing; next week's a day late; a day's postings kept past its midnight; next week not posted when hired on the posting day.
+      - Signing up: a sixth shift in a week; weeks counted from the start.
+      - Shifts and standing:
+        - five minutes late counted late;
+        - half an hour off counted as leaving early;
+        - minutes worked not credited;
+        - a second no-show only warned;
+        - a warning lapsing a minute late;
+        - kept on at standing 0;
+        - a shift dropped within a day;
+        - the day's shift never set.
+      - Shift events:
+        - odds past 5 to 95;
+        - tiredness raising the odds;
+        - the preview showing the base odds;
+        - the deck repeating;
+        - events drawn whatever their condition, or whatever their tags;
+        - an event for someone not at work;
+        - work running past its event;
+        - sent home but kept on shift;
+        - an outcome's needs not felt;
+        - an outcome's practice counted twice;
+        - the mode left on after a choice;
+        - the clock running through a choice.
+      - Life and the bot: activities offered past the next shift; work never clocked in; the bot never signing up, always taking the first choice, or paying rent with its last cash.
 - **M1.4 One relationship.** A coworker with familiarity, regard and a memory of acts.
 - **M1.5 One crime.** Shoplifting with the whole chain: witnesses, the odds shown, heat, a scheduled response the player sees first, charges, a fine or a record.
 - **M1.6 Living in it.** The HUD, tap-to-go, the map, the chronicle, the clock's speeds and pauses.
@@ -255,6 +325,14 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Game JS, gzip (M1.2) | the spike's page: 41.21 kB (22.96 kB, and chunks shared with the generated block: the stage and the seeded random numbers 17.95 kB, the projection 0.30 kB). The generated block adds 11.61 kB, loaded only at `?block=generated`: the planner, the walker and the content 8.73 kB, the walk grid and routes 2.88 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
 | Game precache (M1.2) | 21 entries, 182.36 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
 | The content pack (M1.2) | 38 records in 7 types, 9.3 kB, hash `162584fa7720cc51` | `pnpm content` (`eb build`) | 2026-10-19 | 1 build |
+| Kernel cost per action, with the job (M1.3) | reduce alone: median 67.1 µs an action (62.0–73.6); an earlier run of the same reduce code read 58.9 (57.3–66.4), so the container varies by about 15%. A turn with the steady bot choosing: 148.1 µs (142.5–167.5). Before each shift's timers were set at its own midnight: 89.5 µs and 174.2 µs. Eight modules: time, the economy kit, the engine's logic, clock, life, job, home | `node packages/sim/test/week-bench.ts`, 500 weeks and 57,440 actions a round, Node 22.22.0, cloud container | 2026-10-19 | 5 rounds |
+| A week as the line cook, steady bot (M1.3) | 115 turns a week (91 to 138). 4 shifts worked in every week, all the first week posts from Tuesday. 1,010 events in 2,000 shifts. Late 31 times; never left early; never let go. Standing at the end 46 to 64 (median 57); skill 5 to 7. Paid on the Friday $58.64 to $306.26 net (median $210.13), from $64.07 to $353.52 gross. Cash at the end $298.64 to $554.26 (median $450.13), from $300. Health 70% to 100% (10th percentile 90%) | a script over `playRun`, seeds `week-0` to `week-499`, as the week test plays them | 2026-10-19 | 500 weeks |
+| A week as the line cook, random bot (M1.3) | let go in 101 of 200 weeks, for two no-shows; 42 shifts started | the same, seeds `random-0` to `random-199` | 2026-10-19 | 200 weeks |
+| Hired the day before rent is due (M1.3) | from Monday 30 June: rent owed at the end of the first week in 200 of 200, since the first Friday pays Tuesday to Thursday; paid off within two weeks in 200 of 200, health at the end 76% to 100% (10th percentile 88%). Before the bot kept a week of meals back, health ended under 18% in a tenth of runs | the same, `steadyFor(14)`, seeds `rent-0` to `rent-199` | 2026-10-19 | 200 fortnights |
+| Shift events in the bots' weeks (M1.3) | all 28 choices of the 14 events taken; the rarest, pushing on while nodding off, 4 times. The odds shown were the odds rolled in all 634 choices | a script playing `steadyPolicy` and `randomLifePolicy` turn by turn, with a preview before each choice | 2026-10-19 | 300 weeks each |
+| Game JS, gzip (M1.3) | the spike's page: 45.36 kB (27.11 kB, and chunks shared with the generated block: the stage and the seeded random numbers 17.95 kB, the projection 0.30 kB). The job's code and the engine's roll are in the life game the spike's clock runs. The generated block adds 15.55 kB, loaded only at `?block=generated`: the planner, the walker and the content 12.67 kB, the walk grid and routes 2.88 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M1.3) | 21 entries, 207.33 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The content pack (M1.3) | 58 records in 10 types, 20.7 kB, hash `488253fa8d07d96b` | `pnpm content` (`eb build`, with the game's facts) | 2026-10-19 | 1 build |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -277,6 +355,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M0.4 done, built alongside M0.3's open gates on Evan's word. The tier-1 people (`packages/sim/src/people/`) and the population harness (`tools/population`), in Node and in headless Chromium. Three cadences measured; D30 proposes the staggered one, and risk 2 passes at it. Planted bugs: 22, 22 caught. Evan set the tier-1 count at 1,000 (D31). The marker stays on M0.3, whose gates are open.
 - 2026-10-19: M1.1 done, alongside M0.3's open gates on Evan's word. The block is one side of one street (D32), generated from `packages/content`, the game's first content as an Engine-Builder project, checked in CI and built into a pack. The walk grid and its routes are in `packages/sim/src/city/`, and the stage draws facades from the grammar. The page stays M0.3's spike, with the generated block at `?block=generated` (D33). A golden test holds the spike to its drawing. Planted bugs: 23, 23 caught. The marker stays on M0.3.
 - 2026-10-19: M1.2 done, alongside M0.3's open gates on Evan's word. The apartment house's ground floor is two studios off a stair hall (D34), and the diner has a back room and a back door (D35), both from fixture, room and interior records in `packages/content`. The walk grid opens their floors, and the stage cuts them room by room. A walker goes from a bed to the griddle and back at `?block=generated` (D36). Planted bugs: 32, 32 caught. The marker stays on M0.3.
+- 2026-10-19: M1.3 done, alongside M0.3's open gates on Evan's word. The city borrows Michigan's tax and law (D37). The line cook is the first career on the template: a career record, 14 shift events and 5 taxes in `packages/content`, and the job in `packages/sim/src/job/`. Shifts are posted on Thursdays and signed up for. Pay is withheld as a Michigan employer would (D38). Two no-shows in 28 days end the job (D39). A shift event stops the shift for a choice whose odds are the odds rolled (D40). The figures are from secondary sources, marked in CALIBRATION.md to check. Planted bugs: 48, 48 caught. The marker stays on M0.3.
 
 ## Open questions
 
@@ -300,3 +379,10 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 18. How walking time meets the clock (D2, D36). The walker walks 1.3 m a stage second, and at speed 1 a stage second is 2 game minutes. So the 42.5 m commute takes about 65 game minutes on screen, where a real walk of it takes about half a minute. M1.6 decides: route time in game minutes at a real pace, with people moving faster on screen; the clock slowed while someone walks a short way; or a time tuned for play (D11).
 19. A building without an interior can't be cut away, so it hides whoever walks behind it, in a gangway or a yard. With question 16, M2.1's city decides: a shell cut for every building, its walls low and no floor, or fading what stands in front, as Project Zomboid does.
 20. M1.5's shoplifting happens in the corner shop, which has no interior yet. D18 opens other businesses as a counter scene, but shoplifting needs shelves, a till and sight lines. M1.5 decides: a third interior from the same records, or the counter scene.
+21. Every wage and tax figure is from a secondary source, because the build environment can't reach irs.gov, ssa.gov, michigan.gov or bls.gov (CALIBRATION.md, In use). Either those domains are added to the environment's allowed list and the figures checked here, or Evan checks them by hand. May 2025's wage figures, the base year's, replace May 2024's either way.
+22. A shift event stops the clock with a mode that allows only a choice, so the stage's `time/elapse` is refused while one is up. M1.6's stage must stop sending time while the mode isn't `world`, or the replay log fills with refusals.
+23. Work in real time (M1.6). From the menu, work runs until the shift's end or its event, whichever comes first, so the routine stops for the event. A real-time "start working" verb needs the same end, or the event comes due while the stage's clock runs on through it.
+24. Skill is one count of practice minutes for the job held. When a second career shares a skill, as chef shares cooking with line cook (M2.5), skills become records of their own and practice is kept per skill.
+25. The diner never schedules past 40 hours a week, so FLSA's time and a half never arises. A career that schedules overtime, or an event that keeps someone late, needs it.
+26. Shift events tell what happened in the second person (`told`). The chronicle's third-person line for each outcome (VOICE.md) comes with M1.6's chronicle, and the voice pass on all of them with M2.10.
+27. The engine's choice events (its M3.6) and standing (its M3.5) are planned, not built. This repo's deck, odds and outcomes are built here first (D13). Port them to the engine when it gets there, or move to the engine's.

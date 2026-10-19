@@ -263,6 +263,91 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 
 **Options considered.** One walker on the commute; chosen. Nobody until M1.6, with the routes checked only in tests.
 
+### D37. The city borrows Michigan's tax and law. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The fictional city is in Michigan for everything a state decides: the minimum wage now, income tax from M1.3, and the theft law M1.5's shoplifting follows.
+
+**What follows.** Michigan's minimum wage was $12.48 an hour from 21 February 2025, so bar B2's floor is that. Its income tax is a flat 4.25%, less $5,800 a year for each exemption. About two dozen Michigan cities levy an income tax of their own under the Uniform City Income Tax Act, most of them the old industrial ones, and the city is one of them (D38). The line cook's wage comes from Michigan's restaurant cooks (CALIBRATION.md).
+
+**Options considered.**
+
+- Ohio, recommended: several Rust Belt metros of the right size, $10.70 in 2025, no state tax to $26,050 and 2.75% above it, and city income taxes everywhere.
+- Michigan; chosen. A higher wage floor makes bar B2 harder to meet than in Ohio.
+- Pennsylvania: the federal $7.25, a flat 3.07%, local wage taxes.
+- Indiana: the federal $7.25, about 3% flat, a tax in every county.
+
+### D38. Pay is withheld from M1.3: federal, Social Security, Medicare, Michigan and the city. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Each paycheck withholds what a Michigan employer withheld in 2025:
+
+- federal income tax, by the IRS's percentage method for automated payroll (Publication 15-T), standard withholding;
+- Social Security, 6.2% of pay up to $176,100 a year;
+- Medicare, 1.45%;
+- Michigan's income tax, 4.25% of pay less the exemption;
+- the city's income tax.
+
+**Proposed with it.**
+
+- The city levies the Act's standard rates: 1% of a resident's pay less $600 a year, half that for people who work there and live outside. Most Michigan cities with the tax use them; Detroit's 2.4% and Grand Rapids' 1.5% are the exceptions (tune).
+- The player files single with one exemption: an 18-year-old with no dependants.
+- The taxes are content records (`packages/content/records/tax/`), and a career names the ones its employer withholds.
+- Withholding is not the tax owed. The return, with its refund or bill, comes with the money milestone. The extra 0.9% Medicare on pay over $200,000 a year isn't withheld; nobody in the slice comes near it.
+
+**Why.** Rent is paid from take-home pay. For the line cook it is about a sixth under gross (CALIBRATION.md).
+
+**Cost.** The figures come from secondary sources. The build environment can't reach irs.gov, ssa.gov, michigan.gov or bls.gov, so each figure is marked in CALIBRATION.md to check against its primary source.
+
+**Options considered.** Withhold now; chosen (recommended). Gross pay until the money milestone, written down as a departure, with the slice's money about 15% rich until then.
+
+### D39. Two no-shows in 28 days end the job. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** A no-show, a shift signed up for and never started, is a warning. A second within 28 days, and you're let go. A warning lapses 28 days after it was given. Being late costs standing, but it isn't a no-show.
+
+**Proposed with it** (tune). These are the employer's habits, tuned for play; there is nothing to calibrate them against.
+
+- Standing runs from 0 to 100 and starts at 50.
+  - A whole shift worked on time adds 2.
+  - Starting more than 5 minutes late takes 4.
+  - Missing more than 30 minutes of a shift once there takes 6: leaving early, or a long break.
+  - A no-show takes 15.
+  - Dropping a shift a day or more ahead takes 1.
+- Standing at 0 also ends the job, so lateness adds up to something.
+- Standing sets how many shifts you're offered: 3 a week at 0, 6 at 100.
+- Let go means let go in M1.3. Finding the next job is M2.3's labour market.
+
+**Options considered.** Two in 28 days; chosen (recommended), as in VOICE.md's "Two no-shows in a month". Three, as in Dirtbag: two warnings, then the third. One, and the job ends at once.
+
+### D40. A shift event pauses the shift for a choice. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Mid-shift, the routine stops (DESIGN.md: interruptions are the play) and you choose. Each choice shows its odds and what it risks. You go back to work when you choose to.
+
+**Proposed with it** (tune).
+
+- At most one event a shift, in about half of them, at a minute drawn when you sign up.
+- The pool is shared by tag (D9):
+  - a career lists the tags it draws from, and an event the tags it belongs to;
+  - an event's condition (`when`) is checked against the game's facts when it is drawn;
+  - events are weighted and drawn without repeats until every event the career can draw has come up: a deck, as in Rule or Drool.
+- A choice is either certain or has odds, between 5% and 95%:
+  - a base chance;
+  - points added at full skill;
+  - points taken away when exhausted.
+
+  The preview a player is shown and the roll come from the same function, and the roll is the engine's `roll`.
+- Certain choices are listed before chancy ones, so the gamble is never the first thing a thumb lands on (Landnám's rule).
+- An outcome can:
+  - change standing, skill, needs and cash;
+  - send you home, with nothing lost for the rest of the shift.
+- The events are drafts for the voice pass (M2.10).
+
+**Why.** Dirtbag's audit found that random effects on a shift, unannounced, "read as arbitrary".
+
+**Options considered.**
+
+- A choice that pauses the shift; chosen (recommended).
+- Told after the shift, for the chronicle: fewer taps, and no play.
+- Small events told and big ones asked, with a rule in each record for which is which.
+
 ---
 
 ## Open items
@@ -282,6 +367,7 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 | Package id | D24, Engine-Builder's open question | `com.rcjlabs.liveyourlife` |
 | Licence | none | all rights reserved |
 | The slice's crime | DESIGN.md | shoplifting |
+| The state for tax and law | D37 | Michigan |
 
 ## Open questions
 
