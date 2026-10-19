@@ -158,7 +158,7 @@ describe('a shift', () => {
 describe('no-shows and warnings (D39)', () => {
   it('warns at the first, and lets you go at a second within 28 days', () => {
     const first = afterShift(play(game, sim, fresh(), signUp(1), signUp(3), signUp(5)).state, 1);
-    expect(first.of('job/no-show')).toEqual([{ type: 'job/no-show', day: 1, warnings: 1 }]);
+    expect(first.of('job/no-show')).toEqual([{ type: 'job/no-show', day: 1, shift: 'evening', warnings: 1 }]);
     expect(first.fact('job.standing')).toBe(35);
     expect(first.fact('job.warnings')).toBe(1);
     const second = afterShift(first.state, 3);
@@ -177,7 +177,7 @@ describe('no-shows and warnings (D39)', () => {
     };
     const first = afterShift(play(game, sim, fresh(), signUp(1)).state, 1).state;
     const lapsed = noShow(first, 29);
-    expect(lapsed.of('job/no-show')).toEqual([{ type: 'job/no-show', day: 29, warnings: 1 }]);
+    expect(lapsed.of('job/no-show')).toEqual([{ type: 'job/no-show', day: 29, shift: 'evening', warnings: 1 }]);
     expect(lapsed.fact('job.employed')).toBe(true);
     expect(noShow(first, 28).fact('job.employed')).toBe(false);
   });

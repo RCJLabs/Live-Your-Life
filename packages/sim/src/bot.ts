@@ -43,7 +43,8 @@ const firstOf = (...choices: (Action | undefined)[]): Action | undefined => choi
 
 /**
  * Keeps a life steady for `days` days: a shift event's choice when one is up, taken at random,
- * as a player who reads each one fresh might; then every shift it can sign up for; rent owed,
+ * as a player who reads each one fresh might; a favour asked of it, answered either way at
+ * random; then every shift it can sign up for; rent owed,
  * once a week of meals can be kept back; food about to run out; the shift, however tired; sleep
  * when nearly out of it, or at night; the lowest need; and otherwise passes the time one of a few
  * ways. The menu ends each activity by the next shift's start, so it is late only when a need
@@ -56,7 +57,9 @@ export const steadyFor = (days: number, name = 'steady'): Policy => ({
     const offered = playable(turn);
     if (turn.mode.id === 'shift-event') return turn.rng.pick(offered);
     const lowest = turn.fact('life.lowest') as Need;
+    const answers = offered.filter((a) => a.type === 'ties/answer');
     const chosen = firstOf(
+      answers.length > 0 ? turn.rng.pick(answers) : undefined,
       offered.find((a) => a.type === 'job/sign-up'),
       cash(turn) - owed(turn) >= RESERVE ? offered.find((a) => a.type === 'home/pay-owed') : undefined,
       level(turn, 'food') < 15 ? doing(offered, 'eat') : undefined,

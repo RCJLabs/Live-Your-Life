@@ -35,7 +35,14 @@
             "fields": {
               "base": { "kind": "int", "min": 0, "max": 100 },
               "skill": { "kind": "int", "min": 0, "max": 100 },
-              "tired": { "kind": "int", "min": 0, "max": 100 }
+              "tired": { "kind": "int", "min": 0, "max": 100 },
+              "regard": {
+                "kind": "int",
+                "optional": true,
+                "min": 0,
+                "max": 100,
+                "description": "For a choice that leans on the person beside you (D43): added at their full regard, taken away at none."
+              }
             }
           },
           "outcome": {
@@ -62,6 +69,12 @@
                 "key": { "kind": "enum", "values": ["rest", "food", "hygiene", "company", "calm", "health"] },
                 "of": { "kind": "int", "min": -50, "max": 50 },
                 "description": "Points each need gains or loses."
+              },
+              "act": {
+                "kind": "ref",
+                "to": "act",
+                "optional": true,
+                "description": "What the person beside you remembers of it (D42)."
               }
             }
           },
@@ -79,7 +92,8 @@
                 "optional": true,
                 "key": { "kind": "enum", "values": ["rest", "food", "hygiene", "company", "calm", "health"] },
                 "of": { "kind": "int", "min": -50, "max": 50 }
-              }
+              },
+              "act": { "kind": "ref", "to": "act", "optional": true }
             }
           }
         }

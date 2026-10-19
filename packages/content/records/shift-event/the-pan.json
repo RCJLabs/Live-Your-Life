@@ -1,0 +1,26 @@
+{
+  "name": "The pan",
+  "tags": ["kitchen"],
+  "weight": 4,
+  "when": "ties.beside and job.skill < 50",
+  "prompt": "{name} watches you turn eggs with the spatula, then shows you how to do it with a flick of the pan.",
+  "choices": [
+    {
+      "id": "learn",
+      "text": "Let {them} show you",
+      "outcome": {
+        "told": "It takes four tries and one egg on the floor. By the fifth you have it.",
+        "practice": 30,
+        "act": "listened"
+      }
+    },
+    {
+      "id": "own-way",
+      "text": "Do it your way",
+      "outcome": {
+        "told": "You keep the spatula. {name} shrugs.",
+        "act": "brushed-off"
+      }
+    }
+  ]
+}

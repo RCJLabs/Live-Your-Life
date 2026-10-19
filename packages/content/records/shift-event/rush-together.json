@@ -1,0 +1,63 @@
+{
+  "name": "The rush, together",
+  "tags": ["kitchen"],
+  "weight": 8,
+  "when": "ties.beside",
+  "prompt": "Eleven tickets on the rail. {name} is on the grill beside you with as many of {their} own.",
+  "choices": [
+    {
+      "id": "help",
+      "text": "Take some of {name}'s tickets as well as yours",
+      "outcome": {
+        "told": "You take three of {their} tickets. Yours run late, and {name} sees why.",
+        "practice": 10,
+        "needs": {
+          "calm": -8
+        },
+        "act": "helped"
+      }
+    },
+    {
+      "id": "own",
+      "text": "Keep to your own tickets",
+      "odds": {
+        "base": 55,
+        "skill": 35,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "You get through yours. Nothing comes back.",
+        "standing": 1,
+        "practice": 20
+      },
+      "failure": {
+        "told": "Two of yours go out cold.",
+        "standing": -2,
+        "needs": {
+          "calm": -10
+        }
+      }
+    },
+    {
+      "id": "ask",
+      "text": "Ask {name} to take your eggs",
+      "odds": {
+        "base": 40,
+        "skill": 0,
+        "tired": 0,
+        "regard": 40
+      },
+      "outcome": {
+        "told": "{name} takes the eggs without a word. The rail clears by half past.",
+        "act": "leaned-on-them"
+      },
+      "failure": {
+        "told": "{name} shakes {their} head. There's no room on {their} side either.",
+        "standing": -2,
+        "needs": {
+          "calm": -5
+        }
+      }
+    }
+  ]
+}

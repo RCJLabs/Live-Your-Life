@@ -14,9 +14,15 @@ import { careerFor, type JobContext, type JobSlice, moveStanding, shiftNow, skil
 export const LEAST = 5;
 export const MOST = 95;
 
-/** The chance in percent: the base, plus skill's share of its points, less tiredness's share of its. */
-export function oddsOf(odds: Odds, skill: number, rest: number): number {
-  const chance = odds.base + Math.floor((odds.skill * skill) / 100) - Math.floor((odds.tired * (100 - rest)) / 100);
+/**
+ * The chance in percent: the base, plus skill's share of its points, less tiredness's share of
+ * its, and for a choice that leans on someone, their regard's share: all of it at 100, none at
+ * 50, all of it taken away at 0 (D43).
+ */
+export function oddsOf(odds: Odds, skill: number, rest: number, regard = 50): number {
+  const leaning = odds.regard === undefined ? 0 : Math.floor((odds.regard * (regard - 50)) / 50);
+  const chance =
+    odds.base + Math.floor((odds.skill * skill) / 100) - Math.floor((odds.tired * (100 - rest)) / 100) + leaning;
   return Math.min(MOST, Math.max(LEAST, chance));
 }
 
@@ -26,7 +32,8 @@ type Reader = Pick<JobContext, 'content' | 'fact'> & { read(): DeepReadonly<JobS
 function chanceNow(reader: Reader, odds: Odds): number {
   const slice = reader.read();
   const skill = skillOf(slice.practice, careerFor(reader.content, slice).skill.half);
-  return oddsOf(odds, skill, reader.fact('life.need', { need: 'rest' }) as number);
+  const regard = odds.regard === undefined ? 50 : (reader.fact('ties.regard') as number);
+  return oddsOf(odds, skill, reader.fact('life.need', { need: 'rest' }) as number, regard);
 }
 
 /**
@@ -84,6 +91,8 @@ const stakes = (o: Outcome) => ({
   practice: o.practice ?? 0,
   home: o.home ?? false,
   needs: o.needs ?? {},
+  // What the coworker would remember of it, if they are there to see (D42).
+  act: o.act ?? null,
 });
 
 /** `shift-choice`: the choice made, rolled if it has odds. Its preview is what the player is shown. */
@@ -117,6 +126,8 @@ export function shiftOutcome(ctx: JobContext, effect: Readonly<Record<string, un
   const { event, day, choice } = picked(ctx, effect);
   const failed = effect.failed === true;
   const o = (failed ? choice.failure : choice.outcome) as Outcome;
+  // Remembered first, while the shift is still theirs and yours: an outcome can send you home.
+  if (o.act) ctx.apply({ effect: 'shift-act', act: o.act, day });
   if (o.practice) ctx.write().practice += o.practice;
   if (o.needs) ctx.apply({ effect: 'adjust-needs', needs: o.needs });
   if (o.home) {

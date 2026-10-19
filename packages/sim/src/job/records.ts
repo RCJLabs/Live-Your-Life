@@ -7,6 +7,7 @@
 import type { Condition, RecordStore } from '@eb/core';
 import { MINUTES_PER_DAY } from '../calendar.ts';
 import type { Need } from '../needs.ts';
+import type { Crew } from '../ties/records.ts';
 
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
@@ -43,6 +44,8 @@ export interface CareerRecord {
   readonly standing: StandingRules;
   readonly warnings: { readonly letGoAt: number; readonly lapse: number };
   readonly skill: { readonly half: number };
+  /** Who works beside you (D41), when anyone does. */
+  readonly crew?: Crew;
   readonly events: { readonly tags: readonly string[]; readonly chance: number };
 }
 
@@ -52,12 +55,16 @@ export interface Outcome {
   readonly practice?: number;
   readonly home?: boolean;
   readonly needs?: Readonly<Partial<Record<Need, number>>>;
+  /** What the person beside you remembers of it (D42). */
+  readonly act?: string;
 }
 
 export interface Odds {
   readonly base: number;
   readonly skill: number;
   readonly tired: number;
+  /** For a choice that leans on the person beside you: added at their full regard, taken away at none (D43). */
+  readonly regard?: number;
 }
 
 export interface Choice {
