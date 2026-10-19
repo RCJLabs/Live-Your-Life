@@ -4,7 +4,8 @@
  * it owes once a week of meals is kept back, eats, works, sleeps, and sees to its lowest need;
  * otherwise it lets the clock run at speed 2, as a player waiting would. Unlike the headless
  * bot it has to get there: it walks to the diner when a shift is near, since the walk takes
- * time the menu doesn't know about (ROADMAP open question 39). The thief takes once from a shelf
+ * time the menu doesn't know about (ROADMAP open question 39), and it doesn't go to bed with a
+ * shift near; and it goes to court on the day, from the panel. The thief takes once from a shelf
  * on the first day, then lives the same way until the case is over.
  */
 import { type Need, REMEDY, RESERVE } from '@lyl/sim';
@@ -34,6 +35,8 @@ async function intent(d: Driver, profile: Profile, took: boolean): Promise<Inten
   const need = (n: Need) => d.fact<number>('life.need', { need: n });
   const cash = await d.fact<number>('economy.amount', { resource: 'cash' });
   const owed = await d.fact<number>('home.owed');
+  // Court is attended from the panel on the day: a date missed is a warrant (law/court.ts).
+  if (has(offers, 'law/attend')) return { kind: 'panel', tab: 'waiting', action: 'law/attend' };
   if (has(offers, 'ties/answer')) return { kind: 'panel', tab: 'waiting', action: 'ties/answer' };
   if (has(offers, 'job/sign-up')) return { kind: 'panel', tab: 'week', action: 'job/sign-up' };
   if (cash - owed >= RESERVE && has(offers, 'home/pay-owed'))
@@ -46,8 +49,11 @@ async function intent(d: Driver, profile: Profile, took: boolean): Promise<Inten
   if (next !== undefined && next <= SET_OFF && (await d.building()) !== 'diner') return { kind: 'commute' };
   const rest = await need('rest');
   if (rest < 10 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
+  // Not off to bed with a shift near: the walk home outlasts the nap, and a bed reached after the
+  // shift starts offers a whole night's sleep through it (ROADMAP open question 50).
+  const due = next !== undefined && next <= SET_OFF + 30;
   const night = (await d.fact<string>('time.phase')) === 'night';
-  if (night && rest < 70 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
+  if (night && !due && rest < 70 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
   const lowest = await d.fact<Need>('life.lowest');
   if ((await need(lowest)) < 40 && has(offers, 'life/do', REMEDY[lowest]))
     return { kind: 'do', activity: REMEDY[lowest] };
@@ -102,6 +108,10 @@ async function take(d: Driver): Promise<boolean> {
 /** One step of play. Returns whether the thief has made its one try. */
 export async function step(d: Driver, profile: Profile, took: boolean): Promise<boolean> {
   const next = await intent(d, profile, took);
+  if (process.env.BOT_TRACE) {
+    const clock = await d.page.locator('#when').textContent();
+    console.log(`trace ${clock} ${await d.building()} ${JSON.stringify(next)}`);
+  }
   switch (next.kind) {
     case 'choice':
       await d.tap('#choice button');
