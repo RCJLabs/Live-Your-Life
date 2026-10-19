@@ -1,0 +1,7 @@
+{
+  "name": "Stairs",
+  "draw": "stairs",
+  "width": 1,
+  "depth": 4.2,
+  "blocks": true
+}

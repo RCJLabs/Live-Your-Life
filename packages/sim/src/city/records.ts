@@ -5,6 +5,13 @@
  * here, once, as the templates are read.
  */
 import type { RecordStore } from '@eb/core';
+import {
+  type FixtureRecord,
+  type InteriorRecord,
+  type InteriorTemplates,
+  type RoomRecord,
+  readInterior,
+} from './interiorRecords.ts';
 
 export interface Range {
   readonly min: number;
@@ -65,6 +72,7 @@ export interface BuildingRecord {
   readonly door: Range;
   readonly facade: string;
   readonly poleSign?: Paint;
+  readonly interior?: string;
 }
 
 export interface BackRowRecord {
@@ -90,7 +98,7 @@ export interface BlockRecord {
 }
 
 /** A block's record with everything it names, read and checked. */
-export interface BlockTemplates {
+export interface BlockTemplates extends InteriorTemplates {
   readonly id: string;
   readonly block: BlockRecord;
   readonly street: StreetRecord;
@@ -130,12 +138,18 @@ export function blockTemplates(store: RecordStore, id: string): BlockTemplates {
   }
   const buildings = new Map<string, BuildingRecord>();
   const facades = new Map<string, FacadeRecord>();
+  const inside = {
+    interiors: new Map<string, InteriorRecord>(),
+    rooms: new Map<string, RoomRecord>(),
+    fixtures: new Map<string, FixtureRecord>(),
+  };
   for (const name of [...block.needs, ...Object.keys(block.fill)]) {
     const b = store.getOrThrow<BuildingRecord>('building', name);
     const facade = store.getOrThrow<FacadeRecord>('facade', b.facade);
     checkBuilding(name, b, facade);
     buildings.set(name, b);
     facades.set(b.facade, facade);
+    if (b.interior) readInterior(store, b.interior, inside);
   }
-  return { id, block, street: store.getOrThrow<StreetRecord>('street', block.street), buildings, facades };
+  return { id, block, street: store.getOrThrow<StreetRecord>('street', block.street), buildings, facades, ...inside };
 }

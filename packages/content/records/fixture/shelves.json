@@ -1,0 +1,7 @@
+{
+  "name": "Dry-goods shelves",
+  "draw": "shelves",
+  "width": 1.2,
+  "depth": 0.5,
+  "blocks": true
+}

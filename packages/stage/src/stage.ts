@@ -11,19 +11,19 @@
  * painter's order, every piece every frame, which the kept picture must match.
  */
 import { drawBubbles } from './bubble.ts';
-import { buildingPieces } from './building.ts';
+import { buildingPieces, heightOf } from './building.ts';
 import { fixturePiece } from './furniture.ts';
 import { type Box3, box, overlaps, type Pt } from './geom.ts';
 import { drawGround } from './ground.ts';
-import { nearness, screenRect, type View } from './iso.ts';
+import { nearness, project, screenRect, type View } from './iso.ts';
 import { LIGHTS_ON } from './light.ts';
 import { compositeNight, drawDusk, type Layer, paintNight, readyLayer, type Size } from './night.ts';
 import { GROUND } from './palette.ts';
-import { drawPerson, squareScale } from './person/draw.ts';
+import { drawPerson, hull, squareScale } from './person/draw.ts';
 import { rig } from './person/rig.ts';
 import { propPiece } from './props.ts';
 import { drawRoomFloor } from './rooms.ts';
-import { before, insertPiece, type Ordered, orderPieces, type Piece, slotOf, unitRect } from './sort.ts';
+import { before, behind, insertPiece, type Ordered, orderPieces, type Piece, slotOf, unitRect } from './sort.ts';
 import type { Actor, Building, Frame, Light, Scene } from './types.ts';
 
 export interface Moment {
@@ -66,6 +66,46 @@ export function occludersOf(order: Ordered, mover: Piece): Piece[] {
   return order.pieces.filter(
     (still, i) => overlaps(reachRect, order.rects[i] as typeof reachRect) && before(mover, still),
   );
+}
+
+const UNIT_VIEW: View = { u: 1, ox: 0, oy: 0, width: 0, height: 0 };
+
+const cornersOf = (b: Box3): Pt[] => {
+  const out: Pt[] = [];
+  for (const x of [b.x0, b.x1])
+    for (const y of [b.y0, b.y1]) for (const z of [b.z0, b.z1]) out.push(project(UNIT_VIEW, { x, y, z }));
+  return out;
+};
+
+/** Whether a point lies inside a convex outline, its corners in order either way round. */
+function within(outline: readonly Pt[], p: Pt): boolean {
+  let turn = 0;
+  for (let i = 0; i < outline.length; i++) {
+    const a = outline[i] as Pt;
+    const b = outline[(i + 1) % outline.length] as Pt;
+    const side = Math.sign((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x));
+    if (side === 0) continue;
+    if (turn === 0) turn = side;
+    else if (side !== turn) return false;
+  }
+  return true;
+}
+
+/**
+ * The buildings that stand in front of a box on the screen, hiding some of whoever is in it: what a
+ * cutaway opens when someone is behind a building (DESIGN.md, Interiors). A building hides them
+ * when the depth sort puts it nearer and a corner of their box falls inside its outline.
+ */
+export function hiding(buildings: readonly Building[], who: Box3): string[] {
+  const theirs = cornersOf(who);
+  return buildings
+    .filter((b) => {
+      const whole = box(b.x0, b.y0, 0, b.x1, b.y1, heightOf(b));
+      if (behind(who, whole) !== true) return false;
+      const outline = hull(cornersOf(whole));
+      return theirs.some((p) => within(outline, p));
+    })
+    .map((b) => b.id);
 }
 
 export class Stage {

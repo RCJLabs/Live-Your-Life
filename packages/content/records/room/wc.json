@@ -1,0 +1,9 @@
+{
+  "name": "Staff toilet",
+  "floor": "tile",
+  "walls": ["#E4E8E6"],
+  "fixtures": [
+    { "fixture": "toilet", "facing": "s", "x": 0.45, "line": 0.37 },
+    { "fixture": "sink", "facing": "w", "x": -0.25, "line": 0.5 }
+  ]
+}

@@ -1,12 +1,13 @@
 {
   "name": "Apartment house",
   "use": "home",
-  "width": { "min": 8, "max": 9.5 },
+  "width": { "min": 10, "max": 11 },
   "depth": 9,
   "storeys": { "min": 3, "max": 3 },
   "storeyHeight": 3,
   "walls": ["#A0553F", "#9DB0B7"],
   "trim": "#CDBB9C",
   "door": { "min": 0.5, "max": 0.5 },
-  "facade": "walk-up"
+  "facade": "walk-up",
+  "interior": "walk-up"
 }

@@ -3,6 +3,8 @@
  * flat colour, placed by its template's rules. A kitchen reads by its flames, pans and steam;
  * a bedroom by its pillow and blanket, with the sleeper under it.
  */
+
+import { FITTING_HEIGHT, FITTINGS } from './fittings.ts';
 import { at, drawDisc, drawDrum, extent, part, slab } from './fixture.ts';
 import { box } from './geom.ts';
 import { nearness, project } from './iso.ts';
@@ -202,6 +204,7 @@ const DRAWS: Readonly<Record<Fixture['kind'], (f: Fixture) => Draw>> = {
   tv,
   rug: () => () => {},
   kitchenette,
+  ...FITTINGS,
 };
 
 const HEIGHT: Readonly<Record<Fixture['kind'], number>> = {
@@ -219,6 +222,7 @@ const HEIGHT: Readonly<Record<Fixture['kind'], number>> = {
   tv: 1.15,
   rug: 0.01,
   kitchenette: 2.1,
+  ...FITTING_HEIGHT,
 };
 
 /** A fixture as a piece for the depth sort. Rugs lie in the floor pass instead. */

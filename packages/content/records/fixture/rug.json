@@ -1,0 +1,7 @@
+{
+  "name": "Rug",
+  "draw": "rug",
+  "width": 2,
+  "depth": 1.6,
+  "blocks": false
+}

@@ -5,6 +5,9 @@
  * never stored: Landnám's rule, if a fact can be computed it does not go in the save.
  */
 import type { BlockPlan, BuildingPlan, StreetPlan } from './block.ts';
+import type { FixturePlan } from './furnish.ts';
+import type { InteriorPlan } from './interior.ts';
+import { type DoorPlan, type Rect, roomAt, WALL } from './rooms.ts';
 import { FOOTPRINT } from './street.ts';
 
 /** A cell's side, in metres (tune). */
@@ -18,6 +21,8 @@ export const GROUND_COST = {
   roadway: 1.4,
   verge: 1.2,
   'car-park': 1,
+  /** Inside a building with an interior (M1.2). */
+  floor: 1,
 } as const;
 export type Ground = keyof typeof GROUND_COST;
 
@@ -43,14 +48,51 @@ export function groundAt(s: StreetPlan, y: number): Ground {
   return s.open;
 }
 
-/** Marks every cell a rectangle overlaps as no step. Touching an edge is not overlapping, so a door's sidewalk stays open. */
-function block(grid: WalkGrid, x0: number, y0: number, x1: number, y1: number): void {
+/** Every cell a rectangle overlaps. Touching an edge is not overlapping, so a door's sidewalk stays open. */
+function eachCell(grid: WalkGrid, x0: number, y0: number, x1: number, y1: number, fn: (cell: number) => void): void {
   const c0 = Math.max(0, Math.floor((x0 - grid.x0) / CELL));
   const c1 = Math.min(grid.width - 1, Math.ceil((x1 - grid.x0) / CELL) - 1);
   const r0 = Math.max(0, Math.floor((y0 - grid.y0) / CELL));
   const r1 = Math.min(grid.height - 1, Math.ceil((y1 - grid.y0) / CELL) - 1);
-  for (let r = r0; r <= r1; r++)
-    for (let c = c0; c <= c1; c++) grid.cost[r * grid.width + c] = Number.POSITIVE_INFINITY;
+  for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) fn(r * grid.width + c);
+}
+
+function block(grid: WalkGrid, x0: number, y0: number, x1: number, y1: number): void {
+  eachCell(grid, x0, y0, x1, y1, (cell) => {
+    grid.cost[cell] = Number.POSITIVE_INFINITY;
+  });
+}
+
+/**
+ * Blocks a wall's cells, all but those whose middle lies in a doorway on its line. A doorway
+ * narrower than two cells might hold no whole cell between its jambs; it always holds a middle.
+ */
+function blockWall(grid: WalkGrid, w: Rect, doors: readonly DoorPlan[]): void {
+  const along = w.x1 - w.x0 >= w.y1 - w.y0 ? 'x' : 'y';
+  const line = along === 'x' ? (w.y0 + w.y1) / 2 : (w.x0 + w.x1) / 2;
+  const through = doors.filter((d) => d.along === along && Math.abs((along === 'x' ? d.y : d.x) - line) < WALL / 2);
+  eachCell(grid, w.x0, w.y0, w.x1, w.y1, (cell) => {
+    const c = centreOf(grid, cell);
+    const at = along === 'x' ? c.x : c.y;
+    if (through.some((d) => Math.abs(at - (along === 'x' ? d.x : d.y)) <= d.width / 2)) return;
+    grid.cost[cell] = Number.POSITIVE_INFINITY;
+  });
+}
+
+/** A building with an interior: its floor open, its walls and fixtures in the way, its doorways through. */
+function openFloor(grid: WalkGrid, b: BuildingPlan, inside: InteriorPlan): void {
+  eachCell(grid, b.x0, b.y0, b.x1, b.y1, (cell) => {
+    grid.cost[cell] = GROUND_COST.floor;
+  });
+  const outer: Rect[] = [
+    { x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y0 + WALL },
+    { x0: b.x0, y0: b.y1 - WALL, x1: b.x1, y1: b.y1 },
+    { x0: b.x0, y0: b.y0, x1: b.x0 + WALL, y1: b.y1 },
+    { x0: b.x1 - WALL, y0: b.y0, x1: b.x1, y1: b.y1 },
+  ];
+  for (const w of [...outer, ...inside.walls]) blockWall(grid, w, inside.doors);
+  for (const f of inside.fixtures)
+    if (f.blocks) block(grid, f.x - f.w / 2, f.y - f.d / 2, f.x + f.w / 2, f.y + f.d / 2);
 }
 
 export function walkGrid(plan: BlockPlan): WalkGrid {
@@ -70,7 +112,10 @@ export function walkGrid(plan: BlockPlan): WalkGrid {
     const step = GROUND_COST[groundAt(s, s.alley + (r + 0.5) * CELL)];
     cost.fill(step, r * width, (r + 1) * width);
   }
-  for (const b of plan.buildings) block(grid, b.x0, b.y0, b.x1, b.y1);
+  for (const b of plan.buildings) {
+    if (b.interior) openFloor(grid, b, b.interior);
+    else block(grid, b.x0, b.y0, b.x1, b.y1);
+  }
   for (const p of plan.props) {
     const f = FOOTPRINT[p.kind];
     block(grid, p.x - f.w / 2, p.y - f.d / 2, p.x + f.w / 2, p.y + f.d / 2);
@@ -91,6 +136,33 @@ export function centreOf(grid: WalkGrid, cell: number): { x: number; y: number }
 
 /** Where a building's door meets the sidewalk: the first cell out from its front. */
 export const doorStep = (b: BuildingPlan): { x: number; y: number } => ({ x: b.door, y: b.y1 + CELL / 2 });
+
+/** How far from where a person stands to use a fixture the cell a route ends in may be, in metres (tune). */
+const USE_REACH = 1;
+
+/**
+ * The cell a route to a fixture ends in: the open cell nearest where its user stands, on that side
+ * of it, in its room and within `USE_REACH`; −1 if there is none.
+ */
+export function useCell(grid: WalkGrid, inside: InteriorPlan, f: FixturePlan): number {
+  const u = f.use;
+  if (!u) return -1;
+  const edge = { n: f.y - f.d / 2, s: f.y + f.d / 2, w: f.x - f.w / 2, e: f.x + f.w / 2 }[u.from];
+  let best = -1;
+  let nearest = USE_REACH * USE_REACH;
+  eachCell(grid, u.x - USE_REACH, u.y - USE_REACH, u.x + USE_REACH, u.y + USE_REACH, (cell) => {
+    if ((grid.cost[cell] as number) === Number.POSITIVE_INFINITY) return;
+    const c = centreOf(grid, cell);
+    const past = { n: c.y < edge, s: c.y > edge, w: c.x < edge, e: c.x > edge }[u.from];
+    if (!past || roomAt(inside.rooms, c.x, c.y)?.id !== f.room) return;
+    const far = (c.x - u.x) * (c.x - u.x) + (c.y - u.y) * (c.y - u.y);
+    if (far < nearest) {
+      nearest = far;
+      best = cell;
+    }
+  });
+  return best;
+}
 
 /**
  * The cells a walker can step to from a cell, eight ways: a diagonal only when both cells beside

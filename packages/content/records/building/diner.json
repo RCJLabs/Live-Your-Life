@@ -9,5 +9,6 @@
   "trim": "#CDD2D6",
   "door": { "min": 0.66, "max": 0.78 },
   "facade": "diner-front",
-  "poleSign": { "text": "EAT", "colour": "#C9473A", "ink": "#FFFDF5" }
+  "poleSign": { "text": "EAT", "colour": "#C9473A", "ink": "#FFFDF5" },
+  "interior": "diner"
 }

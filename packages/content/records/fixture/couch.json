@@ -1,0 +1,8 @@
+{
+  "name": "Couch",
+  "draw": "couch",
+  "width": 1.9,
+  "depth": 0.85,
+  "blocks": true,
+  "use": { "side": "front", "gap": 0.35, "serves": ["relax"], "pose": "sit" }
+}

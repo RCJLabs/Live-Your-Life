@@ -1,0 +1,7 @@
+{
+  "name": "Table",
+  "draw": "table",
+  "width": 0.8,
+  "depth": 0.8,
+  "blocks": true
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Bed",
+  "draw": "bed",
+  "width": 1.4,
+  "depth": 2,
+  "blocks": true,
+  "use": { "side": "right", "gap": 0.35, "serves": ["sleep"], "pose": "lie" }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "Walk-up, ground floor",
+  "rooms": [
+    {
+      "id": "hall",
+      "room": "stair-hall",
+      "west": { "from": "door", "by": -0.75 },
+      "east": { "from": "door", "by": 0.75 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "front", "by": 0 }
+    },
+    {
+      "id": "west",
+      "room": "studio",
+      "west": { "from": "west", "by": 0 },
+      "east": { "from": "door", "by": -0.75 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "front", "by": 0 }
+    },
+    {
+      "id": "west-bath",
+      "room": "bathroom",
+      "west": { "from": "west", "by": 0 },
+      "east": { "from": "west", "by": 2.3 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "back", "by": 2.3 }
+    },
+    {
+      "id": "east",
+      "room": "studio",
+      "mirror": true,
+      "west": { "from": "door", "by": 0.75 },
+      "east": { "from": "east", "by": 0 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "front", "by": 0 }
+    },
+    {
+      "id": "east-bath",
+      "room": "bathroom",
+      "mirror": true,
+      "west": { "from": "east", "by": -2.3 },
+      "east": { "from": "east", "by": 0 },
+      "back": { "from": "back", "by": 0 },
+      "front": { "from": "back", "by": 2.3 }
+    }
+  ],
+  "doors": [
+    { "room": "west", "side": "e", "at": 0.6 },
+    { "room": "east", "side": "w", "at": 0.6 },
+    { "room": "west-bath", "side": "e", "at": 0.55 },
+    { "room": "east-bath", "side": "w", "at": 0.55 }
+  ],
+  "units": [
+    { "id": "west", "rooms": ["west", "west-bath"], "needs": ["sleep", "eat", "wash", "relax"] },
+    { "id": "east", "rooms": ["east", "east-bath"], "needs": ["sleep", "eat", "wash", "relax"] }
+  ]
+}

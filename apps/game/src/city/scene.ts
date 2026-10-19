@@ -1,8 +1,8 @@
 /**
  * M1.1's generated block on the page (`?block=generated`, D33): the sim's plan from the seed and
  * packages/content, turned into what the stage draws. The plan decides; this only paints it:
- * ground patches and marks from the street's lines, buildings and props as the stage's pieces.
- * Nobody stands in it yet: the six people are the spike's.
+ * ground patches and marks from the street's lines, buildings, their interiors (M1.2) and props as
+ * the stage's pieces.
  */
 import { contentStore } from '@lyl/content';
 import {
@@ -15,22 +15,44 @@ import {
   walkGrid,
 } from '@lyl/sim';
 import {
+  type Actor,
   BUILDING,
   type Building,
   type Curb,
   GROUND,
   type Ground,
+  type Interior,
+  type Look,
   type Mark,
   type Patch,
   type Prop,
   type Scene,
 } from '@lyl/stage';
 import type { Block } from '../spike/block.ts';
+import { type Commute, commuteFor, cutFor, walkerAt } from './walker.ts';
 
 const TEMPLATES = blockTemplates(contentStore(), 'slice');
 
+/** A building's planned ground floor as the stage draws it: rooms, inside walls, ways out and fixtures. */
+function interiorOf(b: BuildingPlan): Interior | null {
+  const i = b.interior;
+  const first = i?.rooms[0];
+  if (!i || !first) return null;
+  return {
+    floor: first.floor,
+    wall: first.wall,
+    door: b.door - b.x0,
+    fixtures: i.fixtures.map((f) => ({ id: f.id, kind: f.draw, x: f.x, y: f.y, w: f.w, d: f.d, facing: f.facing })),
+    rooms: i.rooms.map((r) => ({ x0: r.x0, y0: r.y0, x1: r.x1, y1: r.y1, floor: r.floor, wall: r.wall })),
+    partitions: i.walls.map((w) => ({ x0: w.x0, y0: w.y0, x1: w.x1, y1: w.y1, face: w.face })),
+    // The front door is the stage's own gap; the others are the record's ways out.
+    doors: i.doors.slice(1).flatMap((d) => (d.wall ? [{ x: d.x, y: d.y, width: d.width, wall: d.wall }] : [])),
+  };
+}
+
 function buildingOf(b: BuildingPlan): Building {
   const f = b.facade;
+  const interior = interiorOf(b);
   return {
     id: b.id,
     kind: b.template,
@@ -56,6 +78,7 @@ function buildingOf(b: BuildingPlan): Building {
       ...(f.sign ? { sign: { text: f.sign.text, color: f.sign.colour, ink: f.sign.ink } } : {}),
       ...(f.awning ? { awning: { color: f.awning.colour, stripe: f.awning.stripe } } : {}),
     },
+    ...(interior ? { interior } : {}),
   };
 }
 
@@ -133,6 +156,12 @@ function needed(buildings: readonly Building[], template: string): Building {
 export interface GeneratedBlock extends Block {
   readonly plan: BlockPlan;
   readonly grid: WalkGrid;
+  /** The walker's round (D36), or null if no route joins the bed to the griddle. */
+  readonly commute: Commute | null;
+  /** Who is on the block at stage time t, in a look: the walker. */
+  readonly actorsAt: (look: Look, t: number) => Actor[];
+  /** What is cut away at stage time t: every interior with the walls down, else where the walker is. */
+  readonly cutAt: (look: Look, t: number, down: boolean) => ReadonlySet<string>;
 }
 
 /** The generated block for a seed, shaped as the spike's page expects a block to be. */
@@ -146,6 +175,9 @@ export function generatedBlock(seed: string): GeneratedBlock {
     props: plan.props.map(propOf),
     bounds: { x0: s.xa + 4, y0: 2, x1: s.xb - 4, y1: s.openFront + 1.5 },
   };
+  const grid = walkGrid(plan);
+  const commute = commuteFor(plan, grid, seed);
+  const actorsAt = (look: Look, t: number): Actor[] => (commute ? [walkerAt(commute, look, t)] : []);
   return {
     scene,
     people: [],
@@ -156,6 +188,9 @@ export function generatedBlock(seed: string): GeneratedBlock {
     },
     curb: s.curb,
     plan,
-    grid: walkGrid(plan),
+    grid,
+    commute,
+    actorsAt,
+    cutAt: (look, t, down) => cutFor(plan, fronts, actorsAt(look, t)[0], down),
   };
 }

@@ -1,0 +1,8 @@
+{
+  "name": "Shower",
+  "draw": "shower",
+  "width": 0.9,
+  "depth": 0.9,
+  "blocks": true,
+  "use": { "side": "front", "gap": 0.35, "serves": ["wash"], "pose": "stand" }
+}

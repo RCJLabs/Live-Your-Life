@@ -1,0 +1,90 @@
+{
+  "title": "Interior",
+  "description": "A building's ground floor: rooms laid out in its footprint, the doors between them, and the homes or businesses they make.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "rooms": {
+      "kind": "list",
+      "min": 1,
+      "description": "In order. A later room is cut out of the earlier ones it overlaps, so the first is usually the whole floor.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "id": { "kind": "text", "min": 1, "max": 24 },
+          "room": { "kind": "ref", "to": "room" },
+          "mirror": {
+            "kind": "bool",
+            "optional": true,
+            "description": "Its fixtures mirrored, west for east, as the second flat of a pair is."
+          },
+          "west": {
+            "kind": "group",
+            "description": "Its west wall: metres east of the floor's west wall, its east wall or the front door.",
+            "fields": {
+              "from": { "kind": "enum", "values": ["west", "east", "door"] },
+              "by": { "kind": "number", "min": -30, "max": 30 }
+            }
+          },
+          "east": {
+            "kind": "group",
+            "fields": {
+              "from": { "kind": "enum", "values": ["west", "east", "door"] },
+              "by": { "kind": "number", "min": -30, "max": 30 }
+            }
+          },
+          "back": {
+            "kind": "group",
+            "description": "Its back wall: metres south of the floor's back wall, or of its front wall.",
+            "fields": {
+              "from": { "kind": "enum", "values": ["back", "front"] },
+              "by": { "kind": "number", "min": -30, "max": 30 }
+            }
+          },
+          "front": {
+            "kind": "group",
+            "fields": {
+              "from": { "kind": "enum", "values": ["back", "front"] },
+              "by": { "kind": "number", "min": -30, "max": 30 }
+            }
+          }
+        }
+      }
+    },
+    "doors": {
+      "kind": "list",
+      "description": "Doors besides the building's front door: in a room's wall, a share of the way along it from its west or back end. One in an outside wall is a way out.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "room": { "kind": "text", "min": 1, "max": 24 },
+          "side": { "kind": "enum", "values": ["n", "e", "s", "w"] },
+          "at": { "kind": "number", "min": 0, "max": 1 },
+          "width": {
+            "kind": "number",
+            "optional": true,
+            "min": 0.7,
+            "max": 2,
+            "description": "Its opening, in metres."
+          }
+        }
+      }
+    },
+    "units": {
+      "kind": "list",
+      "min": 1,
+      "description": "The homes or businesses on the floor, and what each must have a place for. Rooms in none, like a stair hall, are shared.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "id": { "kind": "text", "min": 1, "max": 24 },
+          "rooms": { "kind": "list", "of": { "kind": "text", "min": 1, "max": 24 }, "min": 1 },
+          "needs": {
+            "kind": "list",
+            "of": { "kind": "enum", "values": ["sleep", "eat", "wash", "relax", "socialize", "work"] }
+          }
+        }
+      }
+    }
+  }
+}

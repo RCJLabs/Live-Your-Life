@@ -1,0 +1,7 @@
+{
+  "name": "Television",
+  "draw": "tv",
+  "width": 1.1,
+  "depth": 0.45,
+  "blocks": true
+}

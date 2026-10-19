@@ -1,0 +1,69 @@
+{
+  "title": "Fixture",
+  "description": "A kind of furniture or fitting a room can hold: which of the stage's drawings it is, its size, whether it takes up the floor, and how a person uses it.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "draw": {
+      "kind": "enum",
+      "values": [
+        "stove",
+        "fridge",
+        "prep",
+        "counter",
+        "stool",
+        "booth",
+        "table",
+        "chair",
+        "bed",
+        "nightstand",
+        "couch",
+        "tv",
+        "rug",
+        "kitchenette",
+        "shower",
+        "toilet",
+        "sink",
+        "dish",
+        "shelves",
+        "stairs"
+      ],
+      "description": "Which of the stage's drawings it is."
+    },
+    "width": { "kind": "number", "min": 0.2, "max": 12, "description": "Across its front, in metres (tune)." },
+    "depth": { "kind": "number", "min": 0.2, "max": 8, "description": "From its front to its back, in metres (tune)." },
+    "blocks": {
+      "kind": "bool",
+      "description": "Whether it takes up the floor, so nobody steps where it stands. A rug does not."
+    },
+    "use": {
+      "kind": "group",
+      "optional": true,
+      "description": "How a person uses it: from which side, how far out, for what, and how the stage draws them doing it.",
+      "fields": {
+        "side": {
+          "kind": "enum",
+          "values": ["front", "back", "left", "right"],
+          "description": "Where a person goes to use it, as it faces: left and right are its own."
+        },
+        "gap": {
+          "kind": "number",
+          "min": 0.1,
+          "max": 1.5,
+          "description": "How far out from that side they stand, in metres."
+        },
+        "serves": {
+          "kind": "list",
+          "of": { "kind": "enum", "values": ["sleep", "eat", "wash", "relax", "socialize", "work"] },
+          "min": 1,
+          "description": "The activities it is a place for (DESIGN.md, Needs and mood)."
+        },
+        "pose": {
+          "kind": "enum",
+          "values": ["stand", "sit", "eat", "lie", "cook"],
+          "description": "Standing or cooking at that side, or sitting or lying on it."
+        }
+      }
+    }
+  }
+}

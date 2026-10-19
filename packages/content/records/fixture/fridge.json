@@ -1,0 +1,7 @@
+{
+  "name": "Reach-in fridge",
+  "draw": "fridge",
+  "width": 0.9,
+  "depth": 0.7,
+  "blocks": true
+}

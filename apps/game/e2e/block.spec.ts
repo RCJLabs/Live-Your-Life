@@ -14,8 +14,11 @@ interface Drawn {
   readonly open: string;
 }
 
-const blockOf = (page: import('@playwright/test').Page) =>
-  page.evaluate(() => (window as unknown as { __lyl: { block: () => Drawn | null } }).__lyl.block());
+/** The block the page drew, once its script has run: the generated block loads after the page does. */
+const blockOf = async (page: import('@playwright/test').Page) => {
+  await page.waitForFunction(() => (window as unknown as { __lyl?: unknown }).__lyl !== undefined);
+  return page.evaluate(() => (window as unknown as { __lyl: { block: () => Drawn | null } }).__lyl.block());
+};
 
 for (const screen of SCREENS) {
   test.describe(`the generated block, ${screen.name}`, () => {

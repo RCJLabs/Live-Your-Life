@@ -74,7 +74,15 @@ export type FixtureKind =
   | 'couch'
   | 'tv'
   | 'rug'
-  | 'kitchenette';
+  | 'kitchenette'
+  | 'shower'
+  | 'toilet'
+  | 'sink'
+  | 'dish'
+  | 'shelves'
+  | 'stairs';
+
+export type FloorKind = 'checker' | 'wood' | 'tile';
 
 export interface Fixture {
   readonly id: string;
@@ -88,12 +96,48 @@ export interface Fixture {
   readonly facing: Facing;
 }
 
+/** One room's floor and the colour of its walls inside (M1.2). */
+export interface Room {
+  readonly x0: number;
+  readonly y0: number;
+  readonly x1: number;
+  readonly y1: number;
+  readonly floor: FloorKind;
+  readonly wall: string;
+}
+
+/** A stretch of inside wall, cut low with the rest when its building is. */
+export interface Partition {
+  readonly x0: number;
+  readonly y0: number;
+  readonly x1: number;
+  readonly y1: number;
+  /** The colour of the side the camera sees: south of a wall that runs east-west, east of one that runs north-south. */
+  readonly face: string;
+}
+
+/** A way out besides the front door: a door in a far wall, a gap in a near one. */
+export interface SideDoor {
+  /** The middle of its opening. */
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly wall: Facing;
+}
+
 export interface Interior {
-  readonly floor: 'checker' | 'wood';
+  readonly floor: FloorKind;
   readonly wall: string;
   readonly fixtures: readonly Fixture[];
   /** The front door's middle, metres east of the building's west wall; the cut leaves a gap there. */
   readonly door: number;
+  /**
+   * Rooms with floors and walls of their own, in order, a later one over the earlier ones it
+   * overlaps (M1.2). Without them the floor is one room in `floor` and `wall`, as M0.3's spike's.
+   */
+  readonly rooms?: readonly Room[];
+  readonly partitions?: readonly Partition[];
+  readonly doors?: readonly SideDoor[];
 }
 
 export interface Building {

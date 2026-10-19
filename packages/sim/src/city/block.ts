@@ -9,6 +9,7 @@
  * the street and its open side lie south of them, nearest the camera.
  */
 import { Rng } from '@eb/core';
+import { type InteriorPlan, planInterior } from './interior.ts';
 import type {
   Awning,
   BlockTemplates,
@@ -58,6 +59,8 @@ export interface BuildingPlan {
   readonly door: number;
   readonly facade: FacadePlan;
   readonly poleSign?: Paint;
+  /** Its ground floor, when its record has one (M1.2); without one it stays shut. */
+  readonly interior?: InteriorPlan;
 }
 
 export interface LotPlan {
@@ -157,7 +160,7 @@ function buildingOf(t: BlockTemplates, rng: Rng, template: string, id: string, x
   const b = t.buildings.get(template) as BuildingRecord;
   const width = between(rng, b.width);
   const front = t.street.lotDepth;
-  return {
+  const plan: BuildingPlan = {
     id,
     template,
     use: b.use,
@@ -171,6 +174,7 @@ function buildingOf(t: BlockTemplates, rng: Rng, template: string, id: string, x
     facade: facadeOf(rng.fork('facade'), b, t.facades.get(b.facade) as FacadeRecord),
     ...(b.poleSign ? { poleSign: b.poleSign } : {}),
   };
+  return b.interior ? { ...plan, interior: planInterior(t, b.interior, plan, rng.fork('interior')) } : plan;
 }
 
 function lotsOf(t: BlockTemplates, rng: Rng): LotPlan[] {

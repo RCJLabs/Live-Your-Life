@@ -1,0 +1,89 @@
+{
+  "title": "Room",
+  "description": "A kind of room: its floor, its walls, and the fixtures placed in it by rule. Places are in the room's own frame: metres from its back (north) wall and from its west wall, inside its walls.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "floor": { "kind": "enum", "values": ["checker", "wood", "tile"] },
+    "walls": {
+      "kind": "list",
+      "of": { "kind": "colour" },
+      "min": 1,
+      "description": "Colours for the inside of its walls; the seed picks one."
+    },
+    "fixtures": {
+      "kind": "list",
+      "description": "Each placed by its rule: a line out from the back wall, and a place across: x, at or span.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "fixture": { "kind": "ref", "to": "fixture" },
+          "facing": { "kind": "enum", "values": ["n", "e", "s", "w"], "description": "Which way its front faces." },
+          "line": {
+            "kind": "number",
+            "min": -20,
+            "max": 20,
+            "description": "Metres from the back wall to its middle; negative counts from the front wall."
+          },
+          "x": {
+            "kind": "number",
+            "optional": true,
+            "min": -20,
+            "max": 20,
+            "description": "Metres from the west wall to its middle; negative counts from the east wall."
+          },
+          "at": {
+            "kind": "number",
+            "optional": true,
+            "min": 0,
+            "max": 1,
+            "description": "Or a share of the room's width, from the west wall to its middle."
+          },
+          "span": {
+            "kind": "group",
+            "optional": true,
+            "description": "Or stretched between two places, in metres from the west wall (negative from the east); with every, repeated between them instead.",
+            "fields": {
+              "from": { "kind": "number", "min": -20, "max": 20 },
+              "to": { "kind": "number", "min": -20, "max": 20 }
+            }
+          },
+          "every": {
+            "kind": "number",
+            "optional": true,
+            "min": 0.3,
+            "max": 10,
+            "description": "Repeated along its span, one every so many metres."
+          },
+          "width": {
+            "kind": "number",
+            "optional": true,
+            "min": 0.2,
+            "max": 12,
+            "description": "Its width here, when not the fixture's own."
+          },
+          "depth": {
+            "kind": "number",
+            "optional": true,
+            "min": 0.2,
+            "max": 8,
+            "description": "Its depth here, when not the fixture's own."
+          },
+          "id": {
+            "kind": "text",
+            "optional": true,
+            "min": 1,
+            "max": 24,
+            "description": "A name a person can find it by: the griddle, the bed."
+          },
+          "side": {
+            "kind": "enum",
+            "optional": true,
+            "values": ["front", "back", "left", "right"],
+            "description": "Where a person goes to use it here, when not the fixture's own side."
+          }
+        }
+      }
+    }
+  }
+}

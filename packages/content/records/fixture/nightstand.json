@@ -1,0 +1,7 @@
+{
+  "name": "Nightstand",
+  "draw": "nightstand",
+  "width": 0.45,
+  "depth": 0.4,
+  "blocks": true
+}

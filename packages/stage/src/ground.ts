@@ -9,6 +9,7 @@ import { project, type View } from './iso.ts';
 import { faceLight, TOP } from './light.ts';
 import { INSIDE } from './palette.ts';
 import { fillShape, poly } from './shape.ts';
+import type { FloorKind } from './types.ts';
 
 export interface Patch {
   readonly x0: number;
@@ -93,9 +94,17 @@ export function drawFloor(
   ctx: CanvasRenderingContext2D,
   view: View,
   area: { x0: number; y0: number; x1: number; y1: number },
-  kind: 'checker' | 'wood',
+  kind: FloorKind,
 ): void {
   const z = 0.02;
+  if (kind === 'tile') {
+    drawPatch(ctx, view, { ...area, color: INSIDE.tile }, z);
+    for (let x = area.x0 + 0.3; x < area.x1 - 1e-9; x += 0.3)
+      drawMark(ctx, view, { x0: x, y0: area.y0, x1: x, y1: area.y1, width: 0.015, color: INSIDE.grout });
+    for (let y = area.y0 + 0.3; y < area.y1 - 1e-9; y += 0.3)
+      drawMark(ctx, view, { x0: area.x0, y0: y, x1: area.x1, y1: y, width: 0.015, color: INSIDE.grout });
+    return;
+  }
   if (kind === 'wood') {
     drawPatch(ctx, view, { ...area, color: INSIDE.wood }, z);
     for (let x = area.x0 + 0.6; x < area.x1; x += 0.6) {

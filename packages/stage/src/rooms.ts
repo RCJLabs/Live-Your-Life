@@ -13,7 +13,9 @@ import type { Building, Frame } from './types.ts';
 export function drawRoomFloor(ctx: CanvasRenderingContext2D, view: View, b: Building, frame: Frame): void {
   const interior = b.interior;
   if (!interior) return;
-  drawFloor(ctx, view, { x0: b.x0 + WALL, y0: b.y0 + WALL, x1: b.x1 - WALL, y1: b.y1 - WALL }, interior.floor);
+  const inside = { x0: b.x0 + WALL, y0: b.y0 + WALL, x1: b.x1 - WALL, y1: b.y1 - WALL };
+  // Each room's floor in turn, a later room's over the earlier one it is cut out of; the walls stand on the seams.
+  for (const r of interior.rooms ?? [{ ...inside, floor: interior.floor }]) drawFloor(ctx, view, r, r.floor);
   for (const f of interior.fixtures) {
     if (f.kind !== 'rug') continue;
     const edge = { x0: f.x - f.w / 2, y0: f.y - f.d / 2, x1: f.x + f.w / 2, y1: f.y + f.d / 2 };

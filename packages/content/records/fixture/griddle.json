@@ -1,0 +1,8 @@
+{
+  "name": "Griddle",
+  "draw": "stove",
+  "width": 1.6,
+  "depth": 0.8,
+  "blocks": true,
+  "use": { "side": "front", "gap": 0.35, "serves": ["work"], "pose": "cook" }
+}

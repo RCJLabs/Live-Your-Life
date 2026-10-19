@@ -1,0 +1,8 @@
+{
+  "name": "Stool",
+  "draw": "stool",
+  "width": 0.4,
+  "depth": 0.4,
+  "blocks": true,
+  "use": { "side": "back", "gap": 0.35, "serves": ["eat"], "pose": "eat" }
+}
