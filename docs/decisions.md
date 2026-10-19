@@ -527,6 +527,28 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Measure first; chosen (recommended). Build speed 3 first: one round fewer, but the reading never shows what it saves.
 
+### D57. An alarm: what you do ends in time to walk to work. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Sleep, and every other activity, ends a walk's time before your next shift, not at its start. M1.8's reading put the steady player late for all 12 of its shifts, by 7 to 85 minutes, because sleep ran to the shift's start and the walk to the diner takes about 20 game minutes (D49); the thief, living the same way, was let go.
+
+**Proposed with it** (tune).
+- **The walk set aside is 30 game minutes**, the longest flat-to-diner walk the slice's blocks give (12 to 30). The sim doesn't know where your flat is yet (ROADMAP open question 43); when it does, the walk is your own.
+- **Within the walk of a shift**, an activity still runs to the shift's start: being late is then a choice made with the clock in view.
+
+**Options considered.** An alarm; chosen (recommended). Speed 3, run to the next thing: larger, touches the loop and the bar; still possible later. Both now. Leave lateness to the player: realistic, but the reading says a steady player is fired within weeks without knowing why.
+
+### D58. The bed and the court say when you're due. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** During a shift, the bed's menu says you're due at the diner, and sleep ends when the shift does rather than running through it to the next one. On the morning of a court date, a line says you're due in court by noon, and to go from the panel. Both traps caught the browser bot (ROADMAP open questions 50, 51).
+
+**Options considered.** Each was offered on its own, or neither until the playtests; both were chosen (recommended).
+
+### D59. The tap budget waits for the playtests. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The bot's taps a day are kept as a reading, not a gate, until M1.9's playtests give a player's number to set it from. The reading is a median of 16 taps a day, 29 at most, against Dirtbag's 20.
+
+**Options considered.** A median of 20 or fewer with no day over 35 (recommended): today's reading passes and a change that adds taps fails. Hold today's 16 and 30. Decide after the playtests; chosen.
+
 ---
 
 ## Open items
