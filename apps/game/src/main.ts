@@ -30,8 +30,12 @@ if (params.at) clock.jump(params.at.hour, params.at.minute);
 const main = document.querySelector('main') as HTMLElement;
 const canvas = document.getElementById('city') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-const night = document.createElement('canvas');
-const stage = new Stage(block.scene, { canvas: night, ctx: night.getContext('2d') as CanvasRenderingContext2D });
+/** An offscreen canvas for the stage's kept layers: the still picture, the night, its glows. */
+const layer = () => {
+  const c = document.createElement('canvas');
+  return { canvas: c, ctx: c.getContext('2d') as CanvasRenderingContext2D };
+};
+const stage = new Stage(block.scene, layer, { cache: params.cache });
 const limits = limitsFor(block);
 
 const state = {

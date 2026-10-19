@@ -29,6 +29,32 @@ for (const screen of SCREENS) {
   });
 }
 
+/** The canvas as the average colour of each 8×8 block: small enough to compare two pictures. */
+const blocks = (page: import('@playwright/test').Page) =>
+  page.evaluate(() => {
+    const c = document.getElementById('city') as HTMLCanvasElement;
+    const { data, width, height } = (c.getContext('2d') as CanvasRenderingContext2D).getImageData(
+      0,
+      0,
+      c.width,
+      c.height,
+    );
+    const out: number[] = [];
+    for (let by = 0; by + 8 <= height; by += 8) {
+      for (let bx = 0; bx + 8 <= width; bx += 8) {
+        let sum = 0;
+        for (let y = by; y < by + 8; y++) {
+          for (let x = bx; x < bx + 8; x++) {
+            const i = (y * width + x) * 4;
+            sum += (data[i] ?? 0) + (data[i + 1] ?? 0) + (data[i + 2] ?? 0);
+          }
+        }
+        out.push(sum / 64);
+      }
+    }
+    return out;
+  });
+
 test.describe('on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
 
@@ -64,6 +90,21 @@ test.describe('on a phone', () => {
     await page.waitForTimeout(1500);
     await expect(page.locator('#when')).toHaveText(held ?? '');
     expect(errors).toEqual([]);
+  });
+
+  test('keeps a still picture that matches painting everything every frame', async ({ page }) => {
+    for (const at of ['13:00', '22:30']) {
+      await page.goto(`./?at=${at}&freeze=1.2&hud=0`);
+      await page.waitForTimeout(300);
+      const kept = await blocks(page);
+      await page.goto(`./?at=${at}&freeze=1.2&hud=0&cache=0`);
+      await page.waitForTimeout(300);
+      const full = await blocks(page);
+      const worst = Math.max(...kept.map((v, i) => Math.abs(v - (full[i] ?? 0))));
+      // Edges drawn twice inside a mover's clip anti-alias a shade darker: about 13 at most
+      // (of 765). A piece drawn in the wrong order differs by 60 to 240.
+      expect(worst, `at ${at}, a block differs by ${worst.toFixed(1)}`).toBeLessThan(40);
+    }
   });
 
   test('asks nothing of another site, and opens offline once it has loaded', async ({ page, context, baseURL }) => {

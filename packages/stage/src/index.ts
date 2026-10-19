@@ -17,6 +17,7 @@ export * from './person/look.ts';
 export * from './person/poses.ts';
 export * from './person/rig.ts';
 export * from './props.ts';
+export * from './rooms.ts';
 export * from './shape.ts';
 export * from './sort.ts';
 export * from './stage.ts';

@@ -41,11 +41,14 @@ describe('the address', () => {
       bubbles: true,
       hud: true,
       freeze: null,
+      cache: true,
     });
   });
 
   it('reads every setting, and ignores what it cannot read', () => {
-    expect(readParams('?seed=abc&at=22:30&view=close&focus=apartment&walls=up&bubbles=0&hud=0&freeze=1.2')).toEqual({
+    expect(
+      readParams('?seed=abc&at=22:30&view=close&focus=apartment&walls=up&bubbles=0&hud=0&freeze=1.2&cache=0'),
+    ).toEqual({
       seed: 'abc',
       at: { hour: 22, minute: 30 },
       framing: 'close',
@@ -54,6 +57,7 @@ describe('the address', () => {
       bubbles: false,
       hud: false,
       freeze: 1.2,
+      cache: false,
     });
     const odd = readParams('?at=25:00&view=sideways&freeze=soon');
     expect(odd.at).toBeNull();

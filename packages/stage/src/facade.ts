@@ -6,6 +6,7 @@
  */
 import { type Face, faceRect, patch } from './box.ts';
 import type { View } from './iso.ts';
+import { LIGHTS_ON } from './light.ts';
 import { BUILDING, LIT } from './palette.ts';
 import { paintText } from './text.ts';
 import type { Building, Frame } from './types.ts';
@@ -13,8 +14,6 @@ import type { Building, Frame } from './types.ts';
 const WIN_W = 1.0;
 const WIN_H = 1.45;
 const SILL = 0.9;
-/** How dark it must be before windows light. */
-const LIGHTS_ON = 0.3;
 
 type Ctx = CanvasRenderingContext2D;
 

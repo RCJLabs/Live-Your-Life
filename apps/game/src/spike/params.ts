@@ -17,6 +17,8 @@ export interface Params {
   readonly hud: boolean;
   /** Stage seconds to hold still at, for screenshots. */
   readonly freeze: number | null;
+  /** Keep the still picture between frames; `cache=0` repaints everything, to compare. */
+  readonly cache: boolean;
 }
 
 export const DEFAULT_SEED = 'rust-belt-1';
@@ -43,5 +45,6 @@ export function readParams(search: string): Params {
     bubbles: q.get('bubbles') !== '0',
     hud: q.get('hud') !== '0',
     freeze: freeze !== null && Number.isFinite(Number(freeze)) ? Number(freeze) : null,
+    cache: q.get('cache') !== '0',
   };
 }

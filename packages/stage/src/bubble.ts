@@ -4,9 +4,12 @@
  * that stays readable however far the camera is out.
  */
 import type { Pt } from './geom.ts';
+import type { View } from './iso.ts';
 import { ACCENT, CREAM, INK } from './palette.ts';
+import { squareScale } from './person/draw.ts';
+import { speaking, TURN } from './person/poses.ts';
 import { type Shape, trace } from './shape.ts';
-import type { BubbleKind } from './types.ts';
+import type { Actor, BubbleKind, Frame } from './types.ts';
 
 /** A bubble's size in CSS pixels for a figure drawn at `scale` pixels a metre, kept readable. */
 export const bubbleSize = (scale: number): number => Math.min(26, Math.max(15, 0.5 * scale));
@@ -89,4 +92,16 @@ export function drawBubble(
 ): void {
   if (kind === 'argue') drawArgue(ctx, head, size, t, ink);
   else drawSleep(ctx, head, size, t, ink);
+}
+
+/** Every bubble, over the finished picture: a shout only on whoever holds the floor. */
+export function drawBubbles(ctx: CanvasRenderingContext2D, view: View, frame: Frame, actors: readonly Actor[]): void {
+  const size = bubbleSize(squareScale(view));
+  for (const a of actors) {
+    const head = frame.heads.get(a.id);
+    if (!head || !a.bubble) continue;
+    if (a.bubble === 'argue' && !speaking(a.pose)) continue;
+    const since = a.bubble === 'argue' ? (a.pose.t + (a.pose.kind === 'answer' ? TURN : 0)) % TURN : a.pose.t;
+    drawBubble(ctx, a.bubble, head, size, since, frame.ink);
+  }
 }

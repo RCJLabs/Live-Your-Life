@@ -7,6 +7,7 @@ import { lit } from './color.ts';
 import { drawDisc, drawDrum } from './fixture.ts';
 import { box } from './geom.ts';
 import { project } from './iso.ts';
+import { LIGHTS_ON } from './light.ts';
 import { LIT, STREET } from './palette.ts';
 import { disc, fillShape } from './shape.ts';
 import type { Piece } from './sort.ts';
@@ -37,7 +38,7 @@ function lamp(p: Prop): Piece {
       ),
       STREET.pole,
     );
-    const on = frame.dark > 0.25;
+    const on = frame.dark > LIGHTS_ON;
     drawBox(ctx, view, box(head.x - 0.25, head.y - 0.14, LAMP_H - 0.22, head.x + 0.25, head.y + 0.14, LAMP_H - 0.06), {
       top: STREET.lampHead,
       left: on ? LIT : STREET.lampHead,
@@ -103,7 +104,7 @@ function poleSign(p: Prop): Piece {
     : box(p.x - 0.12, p.y - 0.95, h - 1.3, p.x + 0.12, p.y + 0.95, h);
   const draw: Draw = (ctx, view, frame) => {
     drawBox(ctx, view, box(p.x - 0.09, p.y - 0.09, 0, p.x + 0.09, p.y + 0.09, h - 1.3), STREET.pole);
-    const on = frame.dark > 0.25;
+    const on = frame.dark > LIGHTS_ON;
     const color = p.sign?.color ?? '#C9473A';
     drawBox(ctx, view, sign, on ? LIT : color);
     const face = broadSouth ? leftFace(sign) : rightFace(sign);

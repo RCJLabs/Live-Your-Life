@@ -6,6 +6,7 @@
 import { at, drawDisc, drawDrum, extent, part, slab } from './fixture.ts';
 import { box } from './geom.ts';
 import { nearness, project } from './iso.ts';
+import { LIGHTS_ON } from './light.ts';
 import { INSIDE, LIT } from './palette.ts';
 import { drawPerson } from './person/draw.ts';
 import { rig } from './person/rig.ts';
@@ -156,8 +157,8 @@ const nightstand: (f: Fixture) => Draw = (f) => (ctx, view, frame) => {
   slab(ctx, view, part(f, [-depth / 2, depth / 2], [-width / 2, width / 2], [0, 0.55]), INSIDE.bedFrame);
   const c = at(f, 0, 0);
   drawDrum(ctx, view, c, 0.06, 0.55, 0.78, INSIDE.steelDark);
-  drawDrum(ctx, view, c, 0.15, 0.78, 0.98, frame.dark > 0.3 ? LIT : INSIDE.sheet);
-  if (frame.dark > 0.3)
+  drawDrum(ctx, view, c, 0.15, 0.78, 0.98, frame.dark > LIGHTS_ON ? LIT : INSIDE.sheet);
+  if (frame.dark > LIGHTS_ON)
     frame.lights.push({ kind: 'pool', at: project(view, { ...c, z: 0.6 }), radius: 2.2 * view.u, strength: 0.75 });
 };
 
@@ -173,8 +174,8 @@ const tv: (f: Fixture) => Draw = (f) => (ctx, view, frame) => {
   const { depth, width } = extent(f);
   slab(ctx, view, part(f, [-depth / 2, depth / 2], [-width / 2, width / 2], [0, 0.5]), INSIDE.bedFrame);
   const screen = part(f, [-0.04, 0.04], [-width / 2 + 0.1, width / 2 - 0.1], [0.55, 1.15]);
-  slab(ctx, view, screen, frame.dark > 0.3 ? '#9FC3E0' : INSIDE.screen);
-  if (frame.dark > 0.3)
+  slab(ctx, view, screen, frame.dark > LIGHTS_ON ? '#9FC3E0' : INSIDE.screen);
+  if (frame.dark > LIGHTS_ON)
     frame.lights.push({ kind: 'pool', at: project(view, at(f, 0.6, 0, 0.8)), radius: 1.6 * view.u, strength: 0.55 });
 };
 
@@ -225,5 +226,7 @@ export function fixturePiece(f: Fixture): Piece {
   return {
     box: box(f.x - f.w / 2, f.y - f.d / 2, 0, f.x + f.w / 2, f.y + f.d / 2, HEIGHT[f.kind]),
     draw: DRAWS[f.kind](f),
+    // A griddle's flames and steam move; everything else in a room keeps still.
+    moving: f.kind === 'stove',
   };
 }

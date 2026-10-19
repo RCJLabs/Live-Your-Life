@@ -13,8 +13,10 @@ const none = { top: 0, bottom: 0 };
 
 function draw(framing: 'wide' | 'close' | 'block', minute: number, cut: boolean, t: number) {
   const main = fakeCanvas();
-  const layer = fakeCanvas();
-  const stage = new Stage(block.scene, { canvas: layer.canvas as HTMLCanvasElement, ctx: layer.ctx });
+  const stage = new Stage(block.scene, () => {
+    const layer = fakeCanvas();
+    return { canvas: layer.canvas as HTMLCanvasElement, ctx: layer.ctx };
+  });
   const camera = frame(block, framing, 'diner', cut, phone, none);
   const light = daylight(minute);
   return stage.render(

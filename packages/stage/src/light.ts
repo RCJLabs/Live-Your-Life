@@ -20,6 +20,9 @@ export const LEFT: Vec3 = { x: 0, y: 1, z: 0 };
 /** The face toward +x, on the right of a box on screen. */
 export const RIGHT: Vec3 = { x: 1, y: 0, z: 0 };
 
+/** How dark it must be before windows, lamps and rooms light up: one threshold, so a cached picture knows when to change. */
+export const LIGHTS_ON = 0.3;
+
 export interface Daylight {
   /** 0 by day, 1 at full night: how much of the night colour lies over the scene. */
   readonly dark: number;

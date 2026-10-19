@@ -18,6 +18,8 @@ export interface Piece {
   readonly draw: (ctx: CanvasRenderingContext2D, view: View, frame: Frame) => void;
   /** For boxes that pass through each other: the larger draws later. */
   readonly bias?: number;
+  /** It moves (a griddle's flames, a person): drawn every frame, never kept in the still picture. */
+  readonly moving?: boolean;
 }
 
 const UNIT: View = { u: 1, ox: 0, oy: 0, width: 0, height: 0 };
@@ -38,7 +40,8 @@ const middle = (b: Box3) => ({ x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2, z: (b
 
 const keyOf = (p: Piece): number => nearness(middle(p.box)) + (p.bias ?? 0);
 
-const before = (a: Piece, b: Piece): boolean => behind(a.box, b.box) ?? keyOf(a) <= keyOf(b);
+/** Whether `a` draws before `b`: the painter's order for any two pieces. */
+export const before = (a: Piece, b: Piece): boolean => behind(a.box, b.box) ?? keyOf(a) <= keyOf(b);
 
 /** Pieces in the order they draw, with what the sort needs to slot more in. */
 export interface Ordered {
@@ -84,11 +87,12 @@ export function orderPieces(input: readonly Piece[]): Ordered {
 }
 
 /**
- * Slots a moving piece into an order: after the last piece it must draw in front of, so a
+ * Where a moving piece goes in an order: after the last piece it must draw in front of, so a
  * person passes behind a wall and in front of the stove. If no place satisfies every piece
  * (only interpenetrating boxes make that), it draws in front of all that must be behind it.
+ * Every piece from that place on that overlaps it on screen draws in front of it.
  */
-export function insertPiece(ordered: Ordered, piece: Piece): void {
+export function slotOf(ordered: Ordered, piece: Piece): number {
   const rect = screenRect(UNIT, piece.box);
   let lastBehind = -1;
   let firstFront = ordered.pieces.length;
@@ -97,7 +101,15 @@ export function insertPiece(ordered: Ordered, piece: Piece): void {
     if (before(other, piece)) lastBehind = Math.max(lastBehind, i);
     else firstFront = Math.min(firstFront, i);
   });
-  const at = lastBehind >= 0 ? lastBehind + 1 : firstFront;
-  ordered.pieces.splice(at, 0, piece);
-  ordered.rects.splice(at, 0, rect);
+  return lastBehind >= 0 ? lastBehind + 1 : firstFront;
 }
+
+/** Slots a moving piece into an order, in place. */
+export function insertPiece(ordered: Ordered, piece: Piece): void {
+  const at = slotOf(ordered, piece);
+  ordered.pieces.splice(at, 0, piece);
+  ordered.rects.splice(at, 0, screenRect(UNIT, piece.box));
+}
+
+/** A piece's rectangle in the order's own screen units, for overlap tests against `Ordered.rects`. */
+export const unitRect = (b: Box3): Rect => screenRect(UNIT, b);

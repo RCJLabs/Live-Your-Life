@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { fakeCanvas } from '../test/fakeCanvas.ts';
 import { viewOf } from './camera.ts';
+import { box } from './geom.ts';
 import { BUILDING, CLOTH, HAIR, INSIDE, SHOES, SKIN } from './palette.ts';
 import type { Look } from './person/look.ts';
 import type { PoseKind } from './person/poses.ts';
-import { Stage } from './stage.ts';
+import { orderPieces } from './sort.ts';
+import { occludersOf, Stage } from './stage.ts';
 import type { Actor, Building, Fixture, FixtureKind, Prop, PropKind, Scene } from './types.ts';
 
 const KINDS: FixtureKind[] = [
@@ -127,14 +129,34 @@ const actors = (t: number): Actor[] => [
 
 const size = { width: 390, height: 844, dpr: 2 };
 
-function render(moment: { cut: boolean; dark: number; warm: number; t: number; bubbles: boolean }) {
+type Fakes = ReturnType<typeof fakeCanvas>;
+
+/** A stage drawing into fakes: the frame's canvas, and the layers it keeps (still, night, glow). */
+function fakeStage(cache = true) {
+  const layers: Fakes[] = [];
+  const stage = new Stage(
+    scene,
+    () => {
+      const layer = fakeCanvas();
+      layers.push(layer);
+      return { canvas: layer.canvas as HTMLCanvasElement, ctx: layer.ctx };
+    },
+    { cache },
+  );
+  return { stage, layers };
+}
+
+const calls = (fakes: readonly Fakes[], name: string) => fakes.reduce((n, f) => n + (f.counts.get(name) ?? 0), 0);
+
+function render(
+  moment: { cut: boolean; dark: number; warm: number; t: number; bubbles: boolean },
+  made = fakeStage(),
+  camera = { cx: 12, cy: 6, u: 18 },
+) {
   const main = fakeCanvas();
-  const layer = fakeCanvas();
-  const stage = new Stage(scene, { canvas: layer.canvas as HTMLCanvasElement, ctx: layer.ctx });
-  const view = viewOf({ cx: 12, cy: 6, u: 18 }, size);
-  const drawn = stage.render(
+  const drawn = made.stage.render(
     main.ctx,
-    view,
+    viewOf(camera, size),
     size,
     {
       cut: moment.cut ? new Set(['room', 'house']) : new Set(),
@@ -145,7 +167,8 @@ function render(moment: { cut: boolean; dark: number; warm: number; t: number; b
     },
     actors(moment.t),
   );
-  return { main, layer, drawn };
+  const [still, night] = made.layers as [Fakes, Fakes, Fakes];
+  return { main, still, night, all: [main, ...made.layers], drawn };
 }
 
 describe('drawing a scene', () => {
@@ -156,9 +179,11 @@ describe('drawing a scene', () => {
   ] as const) {
     for (const cut of [true, false]) {
       it(`draws every fixture, prop and pose with finite numbers: ${name}, walls ${cut ? 'cut' : 'whole'}`, () => {
-        for (const t of [0, 0.37, 1.9, 4.4]) {
-          const { main } = render({ cut, ...light, t, bubbles: true });
-          expect(main.counts.get('fill') ?? 0).toBeGreaterThan(cut ? 300 : 150);
+        for (const cache of [true, false]) {
+          for (const t of [0, 0.37, 1.9, 4.4]) {
+            const { all } = render({ cut, ...light, t, bubbles: true }, fakeStage(cache));
+            expect(calls(all, 'fill')).toBeGreaterThan(cut ? 300 : 150);
+          }
         }
       });
     }
@@ -177,11 +202,41 @@ describe('drawing a scene', () => {
 
   it('paints the signs, and lets the night through only where there is light', () => {
     const day = render({ cut: false, dark: 0, warm: 0, t: 1, bubbles: false });
-    expect(day.main.texts).toContain('DINER');
-    expect(day.main.texts).toContain('EAT');
-    expect(day.layer.counts.get('fillRect') ?? 0).toBe(0);
+    expect(day.still.texts).toContain('DINER');
+    expect(day.still.texts).toContain('EAT');
+    expect(day.night.counts.get('fillRect') ?? 0).toBe(0);
+    // By day the frame copies the still picture; at night, the night and its glows too.
+    expect(day.main.counts.get('drawImage')).toBe(1);
     const night = render({ cut: true, dark: 1, warm: 0, t: 1, bubbles: false });
-    expect(night.layer.counts.get('fillRect') ?? 0).toBeGreaterThan(3);
-    expect(night.main.counts.get('drawImage')).toBe(1);
+    expect(night.night.counts.get('fillRect') ?? 0).toBeGreaterThan(3);
+    expect(night.main.counts.get('drawImage')).toBe(3);
+  });
+
+  it('keeps the still picture while the camera and light hold, and repaints it when they change', () => {
+    const made = fakeStage();
+    const moment = { cut: true, dark: 0, warm: 0, t: 1, bubbles: true };
+    const first = render(moment, made);
+    const fills = first.still.counts.get('fill') ?? 0;
+    expect(fills).toBeGreaterThan(200);
+    const again = render({ ...moment, t: 1.5 }, made);
+    // The people moved; the still picture was not touched.
+    expect(again.still.counts.get('fill') ?? 0).toBe(fills);
+    expect(again.drawn.pieces).toBeLessThan(first.drawn.pieces);
+    render(moment, made, { cx: 12.5, cy: 6, u: 18 });
+    expect(again.still.counts.get('fill') ?? 0).toBeGreaterThan(fills);
+  });
+
+  it('draws again over a person only the still pieces in front of all of them', () => {
+    const order = orderPieces(
+      Object.values({
+        back: { box: box(0, 0, 0, 16, 0.15, 4), draw: () => {} },
+        front: { box: box(0.15, 7.85, 0, 15.85, 8, 0.55), draw: () => {} },
+        far: { box: box(30, 0, 0, 31, 1, 1), draw: () => {} },
+      }),
+    );
+    const person = { box: box(4, 4, 0, 4.36, 4.36, 1.75), draw: () => {} };
+    const front = occludersOf(order, person);
+    // The cut-down front wall is in front; the back wall behind; the far box off to the side.
+    expect(front.map((p) => p.box.y0)).toEqual([7.85]);
   });
 });

@@ -56,6 +56,17 @@ How to read this file:
 - **M0.3 The art spike (risk 1 in BRAINSTORM.md).** ← **CURRENT MILESTONE** One city block, one interior with a cutaway, six procedural people with facings and outfits, walking and sitting, day and night, at 390 px.
   - The kill criterion, written before the spike: a stranger, from a 390 px screenshot, can tell who is working, sleeping or arguing, and which building is the restaurant.
   - Done when: the screenshots and the stranger's answers are in Readings with the date [you]; fps at speed 1 on Evan's phone is in Readings [you]; the decision (continue, or interiors as scenes) is in docs/decisions.md [you].
+  - **Built, 2026-10-19. The three gates are Evan's and are open.** The tester brief, its screenshots and the phone reading's steps are in [docs/research/art-spike.md](docs/research/art-spike.md).
+    - The game's page is the spike (D29). One street, three lots and two interiors (D27) come from a seed and templates; six people are scripted; the sim keeps the clock. `@lyl/stage` draws it.
+    - People are 23–25 CSS px tall in the wide framing at 390 px, which holds the diner and the flat side by side; 33–40 px close up on one building; 35–38 px in landscape (Readings). Climbing World Traveler found 60 px too small to read moves.
+    - In headless Chromium with the CPU slowed four times, the page draws 33.8 fps by day and 19.1 at night, against 14.1 when every piece is drawn every frame. The still picture is kept between frames, and only the people, the griddle and what stands in front of them are drawn again; a browser check holds the kept picture to the full one. The phone reading is the gate.
+    - Checks:
+      - unit tests of the projection, camera, light and sort;
+      - whole scenes drawn into a fake canvas that fails on any non-finite number;
+      - tests of the block's generator;
+      - Playwright in CI with Engine-Builder's checks: errors, overflow at 360 and 390 px and in landscape, 44 px targets, axe;
+      - the controls, offline, nothing asked of another site.
+    - Planted bugs: 28, 28 caught. The light test caught its bug only after it was made to require darkness halfway through dusk; the first version let a dusk that never darkens through.
 - **M0.4 The population harness (risk 2).** N named people with schedules, needs and relationships for 30 game days, at N = 100, 300, 1,000 and 3,000; ms per game minute in Node and in headless Chromium at 4× CPU throttle.
   - Done when: the readings are in the table [auto]; the tier-1 count is a decision in docs/decisions.md [you].
 
@@ -129,6 +140,12 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | A week of life, steady bot (M0.2) | 103.4 turns a week (95% 102.9–103.9; 88 to 131); 499 different end states; no refusals; health at the end 94–100%; cash at the end $484.00–$712.75, from $300 | the runner's `sweep` and `formatSweep`, `seedsOf(500, 'week')` | 2026-10-19 | 500 weeks |
 | A week of life, random bot (M0.2) | 25.9 turns a week (13 to 42); no refusals; health at the end 0% at the median (13% at most), since nothing follows from it yet | the same, `seedsOf(200, 'random')` | 2026-10-19 | 200 weeks |
 | Rent in the first week, steady bot (M0.2) | from Monday 30 June: rent came due and was paid off in every run, no refusals, health at the end 93–100%, cash at the end $31.50–$162.75. From Sunday 29 June: 19 runs still owed it at the end, and one, paying it off down to $2, could not buy a meal and fell to 23% health | the runner's `sweep`, `seedsOf(500, 'rent')`, from each start | 2026-10-19 | 500 weeks each |
+| People's height, art spike (M0.3) | wide framing at 390×844, the diner and the flat side by side: 23–25 CSS px; close on one building: 33–40; landscape at 844×390: 35–38 | `node apps/game/e2e/shots.ts`: the stage's own measure of each standing figure, seed `rust-belt-1` | 2026-10-19 | 4 standing people a frame |
+| Frame rate, art spike, headless (M0.3) | 60 fps at full CPU on every path. At 4× CPU, median 33.8 fps with the kept still picture by day (95th frame 49.9 ms), 19.1 at night, 14.1 with every piece drawn every frame | `node apps/game/e2e/perf.ts`: the page's Measure, 10 s at speed 1, headless Chromium 141 at 390×844 and 2×, no GPU, cloud container | 2026-10-19 | 3 runs each |
+| Game JS, gzip (M0.3) | 37.47 kB (100.13 kB raw), now with the stage and the spike; CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M0.3) | 16 entries, 144.76 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
+| Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
 | Kernel reduce, borrowed (Engine-Builder); re-taken here as "Kernel cost per action (M0.2)" | 20–40 µs per action on the test game; 193 µs a turn with four kits | `packages/core/test/salvage-bench.ts`, Node 22, cloud container | 2026-10-17 and 18 | 5 runs each |
 | Taps per day of a life sim, borrowed (Dirtbag) | 20 taps a day, 3 a trip, map plus scenes | Dirtbag's e2e bot on its build, per its ROADMAP | before 2026-10-18 | 5 days |
@@ -145,6 +162,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M0.1 built. The pnpm workspace, with Engine-Builder pinned at `ca92793` as a submodule; `@lyl/sim` with the game's calendar (D26, proposed) and the clock on the engine's time module; the purity check; the placeholder PWA, which runs the clock; CI with the Pages deploy and the live `version.json` confirm. The [you] gate is open.
 - 2026-10-19: M0.1 done. PR #1 merged as `4b4956e`; the deploy confirmed live; the page installed and opened offline on Evan's phone. The marker moves to M0.2.
 - 2026-10-19: M0.2 done. The six needs, a placeholder job and rent, as modules on the engine's kernel and economy kit; two week bots on the engine's runner, and the bench. 500 seeded weeks refuse nothing, 200 more that start before a rent day owe it and pay it off, and the needs match DESIGN.md's table exactly. Planted bugs: 18, 18 caught. The marker moves to M0.3.
+- 2026-10-19: M0.3 built. The stage, `@lyl/stage`, draws the city in code; the game's page is the art spike (D27–D29), with the tester brief and its screenshots in docs/research/art-spike.md. Planted bugs: 28, 28 caught. The [you] gates are open.
 
 ## Open questions
 
@@ -159,3 +177,5 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 9. A domain of its own (`*.rcjlabs.com`) before M1.7's saves and Phase 3's TWA. `rcjlabs.github.io` is one origin for every RCJ Labs project site, so its storage is shared, and `assetlinks.json` can't sit at its root. It waits on the title (D24).
 10. The replay log at frame rate. The stage sends one `time/elapse` a frame, so a session logs about 60 actions a second. Before M1.7's saves: merge consecutive elapses in the log, or send time less often and let the stage interpolate.
 11. The engine offers its stage-only verbs, `time/elapse` and `time/advance`, to bots with an empty payload. Elapse refuses it, and advance spends no time. This game's bots skip both (`STAGE_ONLY` in `packages/sim/src/bot.ts`). To raise in Engine-Builder: a way to mark a verb as never offered.
+12. Portrait or landscape for the city view. At 390 px portrait, two buildings in frame make people 23–25 px tall; landscape about 36 px (Readings). The stranger test says whether portrait is enough.
+13. The kept still picture is repainted whole on every pan, so a long drag may stutter on a slow phone at night. If the phone reading shows it: keep a margin round the screen in the layer, or repaint only the strip a pan uncovers.

@@ -29,7 +29,10 @@ describe('the light', () => {
       expect(dark).toBeLessThanOrEqual(last);
       last = dark;
     }
+    // Halfway through each twilight it is half dark: a twilight that never darkens fails here.
     const mid = (TWILIGHT.duskFrom + TWILIGHT.duskTo) / 2;
+    expect(daylight(mid).dark).toBeCloseTo(0.5, 6);
+    expect(daylight((TWILIGHT.dawnFrom + TWILIGHT.dawnTo) / 2).dark).toBeCloseTo(0.5, 6);
     expect(daylight(mid).warm).toBeCloseTo(1, 6);
     expect(daylight(mid + 30).warm).toBeLessThan(1);
   });

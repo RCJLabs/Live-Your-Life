@@ -58,7 +58,7 @@ export default defineConfig(({ command, isPreview }) => ({
         id: BASE,
         name: 'Live Your Life',
         short_name: 'Live Your Life',
-        description: 'A life sim in a fictional Rust Belt city. Design phase: the clock runs, nothing to play yet.',
+        description: 'A life sim in a fictional Rust Belt city. Design phase: an art test of one city block.',
         start_url: BASE,
         scope: BASE,
         display: 'standalone',
