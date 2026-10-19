@@ -1,0 +1,13 @@
+{
+  "name": "@lyl/purity-lint",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Holds this repo's eb.pure packages to Engine-Builder's purity rules (@eb/purity).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@eb/purity": "workspace:*"
+  }
+}

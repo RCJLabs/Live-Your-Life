@@ -1,0 +1,69 @@
+# CLAUDE.md — Live Your Life (working title)
+
+A life sim in a fictional Rust Belt city: isometric, drawn in code, for the browser (PWA) and Google Play (TWA). The plan is [ROADMAP.md](ROADMAP.md), the design is [docs/DESIGN.md](docs/DESIGN.md), and settled choices are in [docs/decisions.md](docs/decisions.md). Where this file and the docs disagree, the docs win; fix whichever is wrong. Solo dev (Evan, RCJ Labs).
+
+## Sessions
+
+- **Start at the CURRENT MILESTONE marker** in ROADMAP.md and work only on that milestone. Ideas outside it go under their phase in ROADMAP.md ("Ideas, not yet in a milestone"), not into code.
+- **Propose a plan** before changes that span several files.
+- **Done means the milestone's gates pass**, not that its scope list is ticked. Update the marker, the Readings table and any decision you made in the same change, and add a changelog line.
+- **Decisions are Evan's** when they shape the product: scope, tone, what is in and out, the title, licences, domains, store listings. Put each one to Evan with a recommendation. Record the answer in docs/decisions.md with the date and the options considered.
+
+## Rules
+
+- **The sim decides; the stage renders.**
+  - The rules live in packages marked `"eb": { "pure": true }`, built on Engine-Builder's kernel (`engine/`, a pinned submodule). They may not use the DOM, `Math.random`, `Date`, timers, `Intl`, transcendental `Math` (`sin`, `pow`, `exp`…) or `**`.
+  - Isometric projection, movement, driving and anything at frame rate live in the stage and reach the sim as facts (arrived, collided, picked up). A replay re-runs actions, not frames.
+  - The engine's purity lint enforces this; never weaken a rule to get past it.
+- **Content is data.** Careers, events, places, templates, laws and dialogue are JSON validated by schemas, never closures. If adding content needs an engine edit, the engine is wrong: fix the engine.
+- **Nothing is placed by hand.** The city, its lots, buildings, interiors and people come from the seed and templates. The few institutions that are authored are listed in docs/DESIGN.md when it happens. Dirtbag v0.956 died on 1,134 hand-placed props (docs/research/portfolio-survey.md).
+- **Saves never break.** Every change to a save's shape bumps the version, adds a migration, and adds a fixture saved by the old version that must still load. Storage keys are never renamed. A save that won't load is quarantined, never overwritten.
+- **Numbers are readings.** Record the instrument, the date and N in ROADMAP.md's Readings. Measure before tuning. A number marked (tune) in the docs is a proposal, and a borrowed reading is re-taken here before anything is built on it.
+- **A check counts once it has been seen failing.** Break the thing it guards once, watch it go red, restore.
+- **Odds on screen are the odds rolled.** Chances, costs and outcomes shown to the player come from the same preview the sim uses. No hand-typed numbers in text.
+- **The world answers like the real one.** Wages, rents, prices, sentences and recovery times trace to docs/CALIBRATION.md. A departure from the real figure is written beside it.
+- **The voice is docs/VOICE.md.** Second person in the interface, third-person past tense in the chronicle, earnest, never glamorising. Every player-facing string follows it.
+- **The out list is a content rule.** No sexual violence; no minors in sexual or violent content; no real people, brands, companies or places; nothing for real money. A content lint with a blocklist enforces the names.
+- **Mobile first.** Check at 360 and 390 px wide in portrait, and in landscape. Touch targets at least 44 px, safe-area insets, no horizontal overflow, no hover-only actions. Tap-to-go before any stick.
+- **Offline always.** No runtime network calls, analytics or CDNs. The stores' own billing on the device is the stores'.
+- **Assets carry their provenance.** Art and sound are code. Anything that is not logs its source, licence, prompt and hand edits. No NC, ND or SA licences.
+- **Small files.** Aim for under ~300 lines and no function over ~60. Split by role (`sim`, `content`, `stage`, `ui`, `platform`), not by size.
+
+## Commands
+
+```sh
+git clone --recurse-submodules https://github.com/RCJLabs/Live-Your-Life   # an existing clone: git submodule update --init
+pnpm install
+pnpm dev          # the game at http://localhost:5173
+pnpm check        # typecheck → lint → test → build (what CI runs)
+pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
+pnpm lint         # Biome, then the purity check over this repo's eb.pure packages (tools/purity)
+pnpm test         # Vitest
+pnpm build        # apps/game/dist; LYL_BASE sets the base path (CI uses /Live-Your-Life/)
+pnpm format       # Biome autofix
+pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public/icons/icon.svg; the PNGs are committed
+```
+
+- Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
+- **The engine is a submodule** at `engine/`, pinned to a commit. Move it on purpose, in a commit of its own, saying what changed upstream: `git -C engine fetch origin main && git -C engine checkout <sha> && pnpm install && pnpm check`. Only the engine packages listed in `pnpm-workspace.yaml` join this workspace; add one when a milestone needs it. Never edit files under `engine/` from here: change the engine in its own repo.
+- `@playwright/test` is pinned to 1.56.1 because that matches the Chromium preinstalled in Claude Code's cloud containers (Engine-Builder's reason).
+- CI (`.github/workflows/ci.yml`) runs the same checks on every push and pull request. On `main` it deploys `apps/game/dist` to GitHub Pages, waits until the live `version.json` names the commit, then runs the engine's site-check on the live page. Pages needs one setting, by hand: Settings → Pages → Build and deployment → Source: GitHub Actions.
+
+## Layout
+
+```
+engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core and @eb/purity join the workspace
+packages/sim/       the rules: modules on @eb/core (pure). So far the calendar and the clock
+apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. So far a placeholder page that runs the clock
+tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
+docs/               design, decisions, voice, calibration, research
+```
+
+Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/stage` (the isometric renderer, Canvas2D, drawn in code), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the week bot, the population bench, the content lint, calibration checks).
+
+## Writing
+
+- Plain words, short sentences, no hype. Name the actual thing ("the facade grammar"), not a category ("the system").
+- Comments say why, not what. Credit a pattern's source repo when it is ported ("from dirtbag's presence.ts").
+- Every doc ends with its open questions, if it has any.
+- No model names or tool attributions in docs, code comments or data files.

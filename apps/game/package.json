@@ -1,0 +1,23 @@
+{
+  "name": "@lyl/game",
+  "private": true,
+  "version": "0.0.1",
+  "description": "The game's PWA shell. At M0.1, a placeholder page that runs the game's clock.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
+    "icons": "node scripts/icons.ts"
+  },
+  "dependencies": {
+    "@eb/core": "workspace:*",
+    "@lyl/sim": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "8.3.4",
+    "vite-plugin-pwa": "2.0.0",
+    "workbox-window": "7.4.1"
+  }
+}

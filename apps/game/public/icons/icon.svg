@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Live Your Life</title>
+  <!-- A brick storefront on a corner lot at dusk, in 2:1 isometric. Everything sits inside the
+       maskable safe zone (a circle of radius 205 around the centre). -->
+  <rect width="512" height="512" rx="96" fill="#1d2433"/>
+  <circle cx="370" cy="120" r="22" fill="#f4e7c6"/>
+  <g stroke="#1b1b1f" stroke-width="8" stroke-linejoin="round">
+    <polygon points="116,330 256,260 396,330 256,400" fill="#8d96a0"/>
+    <polygon points="136,330 256,390 256,250 136,190" fill="#7f3226"/>
+    <polygon points="256,390 376,330 376,190 256,250" fill="#b04a35"/>
+    <polygon points="136,190 256,250 376,190 256,130" fill="#4a505e"/>
+  </g>
+  <polygon points="160,190 256,238 352,190 256,142" fill="#3a3f4b"/>
+  <g stroke="#1b1b1f" stroke-width="5" stroke-linejoin="round">
+    <polygon points="160,265 190,280 190,245 160,230" fill="#263041"/>
+    <polygon points="208,289 238,304 238,269 208,254" fill="#f2c66d"/>
+    <polygon points="184,354 208,366 208,313 184,301" fill="#3b2a22"/>
+    <polygon points="280,301 310,286 310,251 280,266" fill="#263041"/>
+    <polygon points="328,277 358,262 358,227 328,242" fill="#263041"/>
+    <polygon points="280,364 358,325 358,286 280,325" fill="#f2c66d"/>
+  </g>
+</svg>

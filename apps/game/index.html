@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1d2433" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="A life sim in a fictional Rust Belt city. Design phase: the clock runs, nothing to play yet." />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <title>Live Your Life</title>
+  </head>
+  <body>
+    <main class="page">
+      <img class="mark" src="/icons/icon.svg" alt="" width="112" height="112" />
+      <h1>Live Your Life</h1>
+      <p class="note">Working title</p>
+      <p class="pitch">
+        A life sim in a fictional Rust Belt city where you can do nearly anything a person can do, and the world
+        answers the way the real one would.
+      </p>
+      <section class="clock" aria-label="The game's clock">
+        <p class="when" id="when">&nbsp;</p>
+        <p class="part" id="part">&nbsp;</p>
+        <button class="button" id="pause" type="button">Pause</button>
+      </section>
+      <p class="status">
+        Nothing to play yet. This is the game's clock, running on its own rules, in your browser. It works offline once
+        installed, and it saves nothing.
+      </p>
+      <p class="build" id="build"></p>
+      <p class="links"><a href="https://github.com/RCJLabs/Live-Your-Life">The design, on GitHub</a></p>
+    </main>
+    <div class="update" id="update" hidden>
+      <span>A new version is ready.</span>
+      <button class="button" id="update-now" type="button">Update</button>
+    </div>
+    <noscript>Live Your Life needs JavaScript.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
