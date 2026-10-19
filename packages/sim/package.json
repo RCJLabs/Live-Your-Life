@@ -15,6 +15,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@eb/core": "workspace:*"
+    "@eb/core": "workspace:*",
+    "@eb/kits": "workspace:*"
   }
 }

@@ -5,4 +5,5 @@ packages:
   # Engine-Builder's packages, from the pinned submodule (decisions.md, D13). Only the ones this
   # repo uses, so the engine's editor, its 3D spike and their dependencies stay out.
   - engine/packages/core
+  - engine/packages/kits
   - engine/packages/purity

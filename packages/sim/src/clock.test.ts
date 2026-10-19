@@ -1,9 +1,10 @@
-import { type Action, createRecordStore, createSession, type GameState, stateHash, type TimeSlice } from '@eb/core';
+import { type Action, createSession, type GameState, stateHash, type TimeSlice } from '@eb/core';
 import { describe, expect, it } from 'vitest';
 import { minutesUntil } from './clock.ts';
+import { lifeSim } from './content.ts';
 import { createLifeGame } from './game.ts';
 
-const sim = { content: createRecordStore({}) };
+const sim = lifeSim();
 const game = createLifeGame();
 const fresh = () => game.init('m0-1', sim);
 const tick = (state: GameState) => (state.time as TimeSlice).tick;
@@ -30,8 +31,14 @@ describe('minutesUntil', () => {
 });
 
 describe('the clock', () => {
-  it('allows only time and clock actions out in the world', () => {
-    expect(game.allowedActions(fresh())).toEqual(['clock/wait-until', 'time/advance', 'time/elapse']);
+  it('allows the time, clock, life and home actions out in the world, and no shop actions', () => {
+    expect(game.allowedActions(fresh())).toEqual([
+      'clock/wait-until',
+      'home/pay-owed',
+      'life/do',
+      'time/advance',
+      'time/elapse',
+    ]);
   });
 
   it('reads the hour and minute of the day', () => {

@@ -47,8 +47,5 @@ export const clockModule = defineModule<Record<string, never>>({
       label: 'minute of the hour',
     },
   },
-  modes: {
-    // Out in the city with time running. The life modules add their actions here as they arrive.
-    world: { actions: ['time/*', 'clock/*'] },
-  },
+  // The world mode, which allows these actions, is the life module's: it is the game's main mode.
 });

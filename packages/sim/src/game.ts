@@ -1,10 +1,16 @@
 /**
  * The game as the engine runs it (engine/docs/specs/sim.md): the engine's time module on this
- * game's calendar, and the clock. Needs, money and people join this list in M0.2.
+ * game's calendar, the economy kit holding the cash, the clock, the player's needs and activities,
+ * the job and the home. They reach each other only through facts and effects.
  */
-import { createGame, type Game, type RealTime, timeModule } from '@eb/core';
-import { DEFAULT_START, type LifeStart, lifeCalendar } from './calendar.ts';
+import { createGame, type Game, type RealTime, type ScheduleSpec, timeModule } from '@eb/core';
+import { economyKit } from '@eb/kits';
+import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToNextMonth, minutesToWeekday } from './calendar.ts';
 import { clockModule } from './clock.ts';
+import { PAYDAY } from './dials.ts';
+import { homeModule, RENT_TIMER } from './home.ts';
+import { jobModule } from './job.ts';
+import { lifeModule } from './life.ts';
 
 /**
  * Wall-clock time into game time at speed 1: half a second a game minute, so a day lasts 12
@@ -18,9 +24,30 @@ export interface LifeOptions {
   readonly start?: LifeStart;
 }
 
+/** The timers a life starts with: the first payday, then weekly, and the first rent. */
+export function startingTimers(start: LifeStart): ScheduleSpec[] {
+  return [
+    {
+      timer: 'payday',
+      after: { minutes: minutesToWeekday(start, PAYDAY.weekday, PAYDAY.at) },
+      every: { weeks: 1 },
+      effects: [{ effect: 'payday' }],
+    },
+    { timer: RENT_TIMER, after: { minutes: minutesToNextMonth(start) }, effects: [{ effect: 'rent-due' }] },
+  ];
+}
+
 export function createLifeGame(options: LifeOptions = {}): Game {
+  const start = options.start ?? DEFAULT_START;
   return createGame({
-    modules: [timeModule({ calendar: lifeCalendar(options.start ?? DEFAULT_START), realTime: REAL_TIME }), clockModule],
+    modules: [
+      timeModule({ calendar: lifeCalendar(start), realTime: REAL_TIME, timers: startingTimers(start) }),
+      economyKit,
+      clockModule,
+      lifeModule,
+      jobModule,
+      homeModule,
+    ],
     start: 'world',
   });
 }
