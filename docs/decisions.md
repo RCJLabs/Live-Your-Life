@@ -86,7 +86,7 @@ Numbers here are proposals unless ROADMAP.md's Readings say otherwise. Paths in 
 
 **Options considered.** The sim as modules and kits on `@eb/core` from the first commit, with the isometric renderer, input and UI here until the engine's Phase 4 (runtime UI) and Phase 7 (2D stages) catch up; chosen. Standalone, like Dirtbag: fastest to a loop, the shared core rebuilt a twenty-first time. Waiting for the engine and building the game in its editor.
 
-**Consequences.** The purity rules apply to the sim. The first slice is bot-playable headless with `eb sim`. Content is JSON validated by schemas. The engine's packages are private and export raw TypeScript, so it comes in as a pinned git submodule in a pnpm workspace, and its purity lint runs over this repo's pure packages. Open: whether this game becomes an engine proof, which would reopen Engine-Builder's build order (3D before 2D); which kits a life sim lacks and when they move back.
+**Consequences.** The purity rules apply to the sim. The first slice is bot-playable headless with `eb sim`. Content is JSON validated by schemas. The engine's packages are private and export raw TypeScript, so it comes in as a pinned git submodule in a pnpm workspace. Built 2026-10-19 (M0.1): pinned at `ca92793`; only the engine packages this repo uses join the workspace. The engine's lint-boundaries resolves the engine's own root, so `tools/purity` applies the same rules (`@eb/purity`) to this repo's pure packages. Open: whether this game becomes an engine proof, which would reopen Engine-Builder's build order (3D before 2D); which kits a life sim lacks and when they move back.
 
 ### D14. Signature careers for release one: crime, law, food and business, medicine. LOCKED, 2026-10-18 (Evan's call)
 
@@ -152,6 +152,24 @@ Numbers here are proposals unless ROADMAP.md's Readings say otherwise. Paths in 
 
 **Options considered.** Smooth vector; chosen: it scales freely for the zoom-only camera, the comic line and flat colour exist in Dirtbag's painters, and aging and outfits are parameters. Pixel art rendered procedurally: the classic isometric register, integer zoom steps and pixel snapping, harder to draw in code at variety.
 
+### D26. The calendar: 365-day years, four parts of the day, meteorological seasons. PROPOSED, 2026-10-19
+
+Built with M0.1 in `packages/sim/src/calendar.ts`; Evan's to accept or change.
+
+**Proposal.**
+- One tick is one game minute, read through the engine's calendars.
+- Every year has 365 days, with the real months; there is no 29 February.
+- Parts of the day: morning from 06:00, afternoon from 12:00, evening from 18:00, night from 22:00 through to 06:00.
+- Seasons by the weather, not the solstices: spring from 1 March, summer from 1 June, fall from 1 September, winter from 1 December.
+- Weekdays are anchored on 1 January 2025, a Wednesday.
+- A default life starts on Monday 2 June 2025 at 07:00, the first weekday after a school year ends (tune). A background pick (D21) will set its own start.
+
+**Why.** The engine's calendars have no leap years by design: whole-number arithmetic, the same on every device (engine `docs/specs/time.md`). Working around that would mean a calendar of the game's own beside the engine's. Meteorological seasons are the ones weather follows, and the body model reads the cold.
+
+**Cost.** Weekdays match the real ones until 2028's skipped 29 February, then run a day early for each one skipped. Nobody in the game is born on 29 February.
+
+**Options considered.** This proposal. A leap-year calendar of the game's own, which duplicates the engine's and needs a rule for 29 February birthdays. Astronomical seasons (21 March and so on), which put the first cold weeks of December in fall.
+
 ---
 
 ## Open items
@@ -160,7 +178,9 @@ Numbers here are proposals unless ROADMAP.md's Readings say otherwise. Paths in 
 | --- | --- | --- |
 | The title | D24 | "Live Your Life" |
 | The city's name | D15 | none |
-| The base year and calendar | D15 | 2025 dollars, a fixed in-game calendar |
+| The base year | D15 | 2025 dollars |
+| The calendar | D26 | as proposed: 365-day years, four parts of the day, meteorological seasons |
+| A domain of its own | ROADMAP open question 9, after D24 | `rcjlabs.github.io/Live-Your-Life/` |
 | The district trend (decline or growth) | ROADMAP ideas | on, seeded per city |
 | The tick and speeds | DESIGN.md, M1.8 | 1 tick = 1 game minute; speed 1 = 2 game minutes a second |
 | The tier-1 count | M0.4 | a few hundred to about a thousand |

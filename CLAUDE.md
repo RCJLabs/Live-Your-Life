@@ -31,20 +31,35 @@ A life sim in a fictional Rust Belt city: isometric, drawn in code, for the brow
 
 ## Commands
 
-None yet. Phase 0 of ROADMAP.md adds the workspace, the engine submodule, the checks and the harnesses, and fills this section with them.
+```sh
+git clone --recurse-submodules https://github.com/RCJLabs/Live-Your-Life   # an existing clone: git submodule update --init
+pnpm install
+pnpm dev          # the game at http://localhost:5173
+pnpm check        # typecheck → lint → test → build (what CI runs)
+pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
+pnpm lint         # Biome, then the purity check over this repo's eb.pure packages (tools/purity)
+pnpm test         # Vitest
+pnpm build        # apps/game/dist; LYL_BASE sets the base path (CI uses /Live-Your-Life/)
+pnpm format       # Biome autofix
+pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public/icons/icon.svg; the PNGs are committed
+```
 
-## Layout (planned; settled in Phase 0)
+- Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
+- **The engine is a submodule** at `engine/`, pinned to a commit. Move it on purpose, in a commit of its own, saying what changed upstream: `git -C engine fetch origin main && git -C engine checkout <sha> && pnpm install && pnpm check`. Only the engine packages listed in `pnpm-workspace.yaml` join this workspace; add one when a milestone needs it. Never edit files under `engine/` from here: change the engine in its own repo.
+- `@playwright/test` is pinned to 1.56.1 because that matches the Chromium preinstalled in Claude Code's cloud containers (Engine-Builder's reason).
+- CI (`.github/workflows/ci.yml`) runs the same checks on every push and pull request. On `main` it deploys `apps/game/dist` to GitHub Pages, waits until the live `version.json` names the commit, then runs the engine's site-check on the live page. Pages needs one setting, by hand: Settings → Pages → Build and deployment → Source: GitHub Actions.
+
+## Layout
 
 ```
-engine/             Engine-Builder, a git submodule pinned to a commit
-packages/sim/       the rules: modules and kits on @eb/core (pure)
-packages/content/   careers, events, places, templates, laws as JSON, with schemas
-packages/stage/     the isometric renderer: Canvas2D, drawn in code
-packages/ui/        panels, the chronicle, the map, input
-apps/game/          the PWA shell: Vite, the service worker, saves, the gate
-tools/              harnesses: the week bot, the population bench, the content lint, calibration checks
+engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core and @eb/purity join the workspace
+packages/sim/       the rules: modules on @eb/core (pure). So far the calendar and the clock
+apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. So far a placeholder page that runs the clock
+tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 docs/               design, decisions, voice, calibration, research
 ```
+
+Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/stage` (the isometric renderer, Canvas2D, drawn in code), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the week bot, the population bench, the content lint, calibration checks).
 
 ## Writing
 

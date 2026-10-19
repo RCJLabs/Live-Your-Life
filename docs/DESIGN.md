@@ -49,6 +49,8 @@ Content that is never in, whatever the verb list says: sexual violence; minors i
 - The clock runs while the player is in the world and pauses on any menu, dialogue, a hidden tab and the home screen. Nothing passes while the app is closed (D3).
 - Routines: sleep, shifts, school and commutes are blocks that run at speed 3 by default and stop on an interruption. Yesterday can be replayed as a plan (Dirtbag).
 - Fast-forward yields to the page between game hours (Gridiron Eras' 17.8 s lesson).
+- **The calendar** (D26, proposed; built in M0.1). Every year has 365 days, because the engine's calendars have no leap years; weekdays match the real ones until 2028, then run a day early per skipped 29 February. Morning from 06:00, afternoon from 12:00, evening from 18:00, night from 22:00. Seasons by the weather: spring from 1 March, summer 1 June, fall 1 September, winter 1 December.
+- **Who owns time** (built in M0.1). The engine's time module owns the tick, timers and wall-clock time (`time/elapse`, at 500 ms a game minute with a 2 s cap, tune). This game's clock module adds hour and minute facts and one verb, wait until a time of day. The stage scales or stops the milliseconds it passes for speeds and pauses, so speed is never in the save.
 
 ## Needs and mood
 

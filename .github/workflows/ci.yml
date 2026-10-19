@@ -1,0 +1,113 @@
+# Verifies every push and pull request. On main it also deploys the exact dist/ that passed,
+# then waits for the live site to serve this commit. Adapted from Engine-Builder's ci.yml.
+#
+# One-time setup, by hand, in the repo's Settings (until then the deploy job fails):
+#   Pages -> Build and deployment -> Source: "GitHub Actions".
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Superseded PR runs are cancelled; runs on main finish so a deployment is never cut off.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # Pages serves a project site under the repo's name until it has a domain of its own
+      # (ROADMAP.md, open questions). The build's asset URLs and the PWA's scope follow it.
+      LYL_BASE: /${{ github.event.repository.name }}/
+    steps:
+      # The engine is a submodule pinned to a commit (decisions.md, D13); it is public.
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      # Reads the pnpm version from package.json's packageManager field.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+
+      # The dist/ that passed every check above is the one that gets deployed. An artifact
+      # deploy is served as-is (no Jekyll), so no .nojekyll is needed.
+      - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: apps/game/dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+
+  confirm:
+    needs: deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      # A green deploy job only says the upload worked. This waits until the live
+      # version.json names this commit, so "deployed" means people are getting it.
+      - name: Live site serves this commit
+        env:
+          SITE: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          for attempt in $(seq 1 30); do
+            live=$(curl -fsS "${SITE}version.json?attempt=${attempt}" | jq -r .sha || true)
+            if [ "$live" = "$GITHUB_SHA" ]; then
+              echo "live site serves $live"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::${SITE}version.json never showed $GITHUB_SHA (last seen: ${live:-nothing})"
+          exit 1
+
+      # version.json can be right while the page can't start: a build for the wrong base path
+      # uploads fine. The engine's site-check loads what the live page loads, the service worker
+      # included, and fails on anything missing, mistyped or from another site.
+      - name: Live page loads its files
+        env:
+          SITE: ${{ needs.deploy.outputs.page_url }}
+        run: node engine/tools/site-check/src/cli.ts "$SITE"

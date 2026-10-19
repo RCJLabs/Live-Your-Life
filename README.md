@@ -2,9 +2,22 @@
 
 A life sim in a fictional Rust Belt city where you can do nearly anything a person can do, and the world answers the way the real one would. Isometric, drawn in code, for the browser as a PWA and for Google Play as a TWA. Solo dev (Evan, RCJ Labs).
 
-**Status: design phase. No code yet.** The game is being written down first, the way every RCJ Labs game is: decisions dated, numbers as readings, scope cut before a line of code.
+**Status: Phase 0, foundations. Nothing to play yet.** The design is written down (decisions dated, numbers as readings, scope cut before code). The workspace is built on Engine-Builder's kernel, with the game's calendar and clock and the checks (M0.1). The placeholder page runs that clock in the browser and works offline.
 
 Start at eighteen with what your family gave you. Work, study, cook, steal, police, heal; rent, buy, marry, raise; age, die, and hand the city to your heir.
+
+## Run it
+
+Node 22.18+ and pnpm 10 are required; Corepack picks up the pinned pnpm.
+
+```sh
+git clone --recurse-submodules https://github.com/RCJLabs/Live-Your-Life
+pnpm install
+pnpm dev      # the game at http://localhost:5173
+pnpm check    # everything CI runs: typecheck, lint, tests, build
+```
+
+The rest of the commands are in `CLAUDE.md`.
 
 ## Where things are
 
@@ -17,7 +30,10 @@ Start at eighteen with what your family gave you. Work, study, cook, steal, poli
 | `docs/VOICE.md` | How the game speaks |
 | `docs/CALIBRATION.md` | Where the numbers come from |
 | `docs/research/portfolio-survey.md` | What the earlier RCJ Labs games already prove, and what they lend this one |
-| `CLAUDE.md` | Session rules |
+| `CLAUDE.md` | Session rules and commands |
+| `packages/sim/` | The rules, on Engine-Builder's kernel |
+| `apps/game/` | The PWA |
+| `engine/` | Engine-Builder, a submodule pinned to a commit |
 
 ## Rules in one breath
 

@@ -19,7 +19,14 @@ How to read this file:
   - `apps/game`: a placeholder PWA page with `version.json`, deployed to GitHub Pages by Actions, the deploy confirmed against the live `version.json` (Dirtbag's and Engine-Builder's pattern).
   - CLAUDE.md's Commands section.
   - Done when: `pnpm check` is green in CI [auto]; the purity lint has been seen failing on a planted `Math.random` in `packages/sim`, then restored [auto]; the placeholder page is live, installs, and opens offline on Evan's phone [you].
-- **M0.2 Kernel modules.** Time (a day in game minutes, advanced by actions), needs (the six in DESIGN.md), money (wages in, rent out), as modules on the engine's kernel; a week bot through `eb sim`.
+  - **Built, 2026-10-19. The [auto] gates pass; the [you] gate waits on Evan.**
+    - The engine is pinned at `ca92793` (its M3.4). Only `@eb/core` and `@eb/purity` join the workspace.
+    - The clock is the engine's time module on this game's calendar (`packages/sim/src/calendar.ts`, D26), plus a `clock` module of its own: hour and minute facts, and the verb "wait until a time of day". The engine's time module already owned the tick, timers and wall-clock time, so a second clock would have been a copy.
+    - The engine's lint-boundaries resolves the engine's own root and can't be pointed here, so `tools/purity` applies the same rules (`@eb/purity`) to this repo's pure packages. It was seen failing on a `Math.random` planted in `packages/sim/src/clock.ts`, then restored; its test builds a workspace with one planted case per rule and runs on every push.
+    - Planted bugs: 8 (the lint gate, the weekday anchor, the weekday rotation, a phase edge, a season start, waiting at the same time of day, the minute bound, the speed), 8 caught.
+    - The page runs the clock in the browser through a session, the stage passing each frame's milliseconds as `time/elapse`. Headless Chromium passed 15 checks on `vite preview`, including offline reload, no overflow at 360 and 390 px and in landscape, and nothing requested from another site; the engine's site-check passed on the same build.
+    - Waiting on Evan: merge to `main`; set Settings → Pages → Source to "GitHub Actions"; then install the page on a phone and open it offline.
+- **M0.2 Kernel modules.** Needs (the six in DESIGN.md) and money (wages in, rent out) as modules beside the clock; a week bot through `eb sim`, which brings the engine's CLI and its packages into the workspace.
   - Done when: the bot finishes 500 seeded weeks headless with no refused action it cannot recover from [auto]; needs decay and recovery match the (tune) table within a stated tolerance [auto]; the kernel's cost per action is in Readings [auto].
 - **M0.3 The art spike (risk 1 in BRAINSTORM.md).** One city block, one interior with a cutaway, six procedural people with facings and outfits, walking and sitting, day and night, at 390 px.
   - The kill criterion, written before the spike: a stranger, from a 390 px screenshot, can tell who is working, sleeping or arguing, and which building is the restaurant.
@@ -85,10 +92,13 @@ Steam through Dirtbag's Electron shell. Other cities as places. Whatever Phase 4
 
 ## Readings
 
-Nothing has been measured in this repository yet. The rows below are borrowed from the earlier games and say where from. Each is re-taken here before anything is built on it.
+Rows marked "borrowed" come from the earlier games and say where from. Each is re-taken here before anything is built on it.
 
 | Reading | Value | Instrument | Date | N |
 | --- | --- | --- | --- | --- |
+| Game JS, gzip (M0.1 placeholder) | 13.08 kB (35.51 kB raw) for the page, the engine's kernel and time module, and the clock; workbox-window 2.20 kB; CSS 0.71 kB | `vite build` output | 2026-10-19 | 1 build |
+| Game precache (M0.1) | 16 entries, 80.04 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
 | Kernel reduce, borrowed (Engine-Builder) | 20–40 µs per action on the test game; 193 µs a turn with four kits | `packages/core/test/salvage-bench.ts`, Node 22, cloud container | 2026-10-17 and 18 | 5 runs each |
 | Taps per day of a life sim, borrowed (Dirtbag) | 20 taps a day, 3 a trip, map plus scenes | Dirtbag's e2e bot on its build, per its ROADMAP | before 2026-10-18 | 5 days |
 | Real-time 2D on a slow CPU, borrowed (2060TD) | 40 fps at 4× CPU slowdown, about 11 units on the field | `scripts/perf.mjs`, headless Chromium, per its ROADMAP | before 2026-10-18 | 1 battle |
@@ -101,6 +111,7 @@ Nothing has been measured in this repository yet. The rows below are borrowed fr
 ## Changelog
 
 - 2026-10-19: The design docs: BRAINSTORM.md, decisions D1–D25, DESIGN.md, VOICE.md, CALIBRATION.md, the portfolio survey, and this roadmap. No code.
+- 2026-10-19: M0.1 built. The pnpm workspace, with Engine-Builder pinned at `ca92793` as a submodule; `@lyl/sim` with the game's calendar (D26, proposed) and the clock on the engine's time module; the purity check; the placeholder PWA, which runs the clock; CI with the Pages deploy and the live `version.json` confirm. The [you] gate is open.
 
 ## Open questions
 
@@ -112,3 +123,5 @@ Nothing has been measured in this repository yet. The rows below are borrowed fr
 6. How the kits a life sim needs (needs and mood, relationships, schedules, careers, law) move back into Engine-Builder, and when.
 7. The package id scheme, shared with Engine-Builder's open question (`io.github.rcjlabs.*` or `com.rcjlabs.*`).
 8. The licence. Until decided, all rights reserved.
+9. A domain of its own (`*.rcjlabs.com`) before M1.7's saves and Phase 3's TWA. `rcjlabs.github.io` is one origin for every RCJ Labs project site, so its storage is shared, and `assetlinks.json` can't sit at its root. It waits on the title (D24).
+10. The replay log at frame rate. The stage sends one `time/elapse` a frame, so a session logs about 60 actions a second. Before M1.7's saves: merge consecutive elapses in the log, or send time less often and let the stage interpolate.

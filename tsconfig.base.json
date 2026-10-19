@@ -1,0 +1,4 @@
+{
+  "//": "The engine's compiler rules, unchanged: the engine ships as TypeScript source, so its files compile inside this repo's typecheck and must meet the same rules.",
+  "extends": "./engine/tsconfig.base.json"
+}
