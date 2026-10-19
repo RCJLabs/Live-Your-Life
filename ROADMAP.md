@@ -356,7 +356,16 @@ How to read this file:
       - The session: time sent in any mode; part of a minute dropped; nothing written to the journal.
       - What waits and what a place offers: the police's first visit left out; what waits out of order; a place offering what it doesn't serve; a shelf's odds typed rather than previewed.
       - On the page, by the browser tests: a menu before you arrive; the clock running in the panel, or when paused; a walk at a real pace; the map leaving out the row houses; a badge that counts nothing; buttons under 44 px.
-- **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
+- **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture. On `life.rcjlabs.com` (D53), saved automatically, a slot a life (D54).
+  - **Done when:**
+    - the page saves after every action but time passing, every game hour and when hidden, and a reload brings back the day, the money, the journal and the place you last reached [auto];
+    - a reload can't undo an outcome: a roll taken and reloaded stands [auto];
+    - three slots each hold a life, listed with its name, day and money; a life can be ended to free its slot [auto];
+    - a save that won't load is quarantined and the player is told, never overwritten; one damaged by hand shows it [auto];
+    - the first fixture, saved by this build from a bot's week, still loads with nothing skipped or changed, seen failing on a slice changed without a migration [auto];
+    - time reaches the sim in whole game minutes, not every frame (open questions 10 and 42) [auto];
+    - a save's size, and its write and load times, are in Readings [auto];
+    - the live page is served from `life.rcjlabs.com` at `/`, and the deploy's checks pass there [auto, once Evan has set the domain].
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.
 - **M1.9 The playtest gate.** A tester brief (Rule or Drool's TESTERS.md is the model); five strangers' sessions recorded.
 

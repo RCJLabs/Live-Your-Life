@@ -491,6 +491,26 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A journal plus one-line toasts; chosen (recommended). A running feed of the last three entries over the city: keeps the drama in view, but covers the picture on a phone. The journal only: quietest, and entries are easy to miss.
 
+### D53. The game lives on life.rcjlabs.com, before any save is kept. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Saves wait for a domain of the game's own, and the domain carries no title: `life.rcjlabs.com`, served from the root path. A browser keeps storage per origin, so a save made on `rcjlabs.github.io` would stay behind when the game moved, and the TWA's `assetlinks.json` has to sit at an origin's root (ROADMAP open question 9). A subdomain without the title outlives any change to it (D24).
+
+**Proposed with it.**
+- **The ids in storage.** Saves are kept under the engine's keys, `eb/live-your-life/full/`, from the project's id. Storage keys are never renamed, so these stay whatever the game is called.
+- **The switch.** Evan adds the record (`life` CNAME `rcjlabs.github.io.`) and sets the custom domain in the repo's Pages settings; the build's base path becomes `/`.
+
+**Options considered.** Saves on `rcjlabs.github.io` now, with save codes to carry a life across later: saves sooner, one manual step for each player at the move. Saves there with a warning they may reset: least work, loses testers' lives at the move. The domain first; chosen. Then: a subdomain without the title; chosen (recommended). One named for the title: reads better in a listing, moves again if the title changes. Settle the title first: M1.7 waits on it.
+
+### D54. Saves are automatic, and a slot is one life. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** There is no saving or loading by hand. The game saves after everything the player does and as time passes, so what happened stands: a conviction or a bad roll can't be undone by loading an earlier save, which is what D7's consequences rest on. Three slots hold three separate lives.
+
+**Proposed with it** (tune).
+- **When it saves.** After every action but time passing; every game hour; and when the page is hidden or closed.
+- **Ending a life.** A slot's life can be ended from the start screen, after a confirm, to free the slot.
+
+**Options considered.** Autosave only, a few lives; chosen (recommended). Autosave plus saves by hand: familiar from The Sims, and every bad roll is undoable. Autosave with one point a day to go back to: still lets a player dodge an arrest.
+
 ---
 
 ## Open items
@@ -501,7 +521,7 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 | The city's name | D15 | none |
 | The base year | D15 | 2025 dollars |
 | The calendar | D26 | as proposed: 365-day years, four parts of the day, meteorological seasons |
-| A domain of its own | ROADMAP open question 9, after D24 | `rcjlabs.github.io/Live-Your-Life/` |
+| A domain of its own | D53 | `life.rcjlabs.com` |
 | The district trend (decline or growth) | ROADMAP ideas | on, seeded per city |
 | The tick and speeds | DESIGN.md, M1.8 | 1 tick = 1 game minute; speed 1 = 2 game minutes a second |
 | The tier-1 cadence | D30 | as proposed: once a day each, a twenty-fourth of them each hour |
