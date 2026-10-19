@@ -1,0 +1,143 @@
+{
+  "title": "Career",
+  "description": "A job on the career template (D9): where it is worked, what it pays, the shifts its employer runs and posts, how standing moves, how long its skill takes to learn, and which shift events it draws.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "place": { "kind": "ref", "to": "building", "description": "The kind of building it is worked in." },
+    "wage": {
+      "kind": "int",
+      "min": 1,
+      "max": 100000,
+      "description": "Cents an hour, before tax. Traced in CALIBRATION.md."
+    },
+    "shifts": {
+      "kind": "list",
+      "min": 1,
+      "max": 6,
+      "description": "The shifts it runs on every day it is open, by when they start and how long they last.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "id": { "kind": "text", "min": 1, "max": 24 },
+          "hour": { "kind": "int", "min": 0, "max": 23 },
+          "minute": { "kind": "int", "min": 0, "max": 59 },
+          "minutes": { "kind": "int", "min": 60, "max": 720 }
+        }
+      }
+    },
+    "open": {
+      "kind": "list",
+      "min": 1,
+      "max": 7,
+      "description": "The days it runs its shifts.",
+      "of": {
+        "kind": "enum",
+        "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+      }
+    },
+    "posting": {
+      "kind": "group",
+      "description": "The day next week's shifts go up, Monday to Sunday, and how many you're offered: the fewest at standing 0, the most at 100, one a day.",
+      "fields": {
+        "weekday": {
+          "kind": "enum",
+          "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        },
+        "fewest": { "kind": "int", "min": 0, "max": 7 },
+        "most": { "kind": "int", "min": 0, "max": 7 }
+      }
+    },
+    "perWeek": {
+      "kind": "int",
+      "min": 1,
+      "max": 7,
+      "label": "Shifts a week",
+      "description": "The most shifts you may take from Monday to Sunday."
+    },
+    "pay": {
+      "kind": "group",
+      "description": "Payday, once a week, for every minute worked since the last.",
+      "fields": {
+        "weekday": {
+          "kind": "enum",
+          "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        },
+        "hour": { "kind": "int", "min": 0, "max": 23 },
+        "minute": { "kind": "int", "min": 0, "max": 59 }
+      }
+    },
+    "withholding": {
+      "kind": "list",
+      "of": { "kind": "ref", "to": "tax" },
+      "description": "The taxes the employer withholds from pay (D38)."
+    },
+    "standing": {
+      "kind": "group",
+      "description": "How standing moves, from 0 to 100 (D39, tune). At 0 you're let go.",
+      "fields": {
+        "start": { "kind": "int", "min": 1, "max": 100 },
+        "shift": { "kind": "int", "min": 0, "max": 20, "description": "Added for a whole shift worked on time." },
+        "lateAfter": {
+          "kind": "int",
+          "min": 0,
+          "max": 60,
+          "label": "Late after",
+          "description": "Minutes after a shift's start that still count as on time."
+        },
+        "late": { "kind": "int", "min": 0, "max": 50, "description": "Taken for starting later than that." },
+        "missedAfter": {
+          "kind": "int",
+          "min": 0,
+          "max": 240,
+          "label": "Missed after",
+          "description": "Minutes of a shift that can go unworked, once you're there, before it counts as leaving early."
+        },
+        "leftEarly": { "kind": "int", "min": 0, "max": 50, "label": "Left early" },
+        "noShow": { "kind": "int", "min": 0, "max": 100, "label": "No-show" },
+        "dropBefore": {
+          "kind": "int",
+          "min": 0,
+          "max": 10080,
+          "label": "Drop before",
+          "description": "Minutes before its start that a shift can still be dropped."
+        },
+        "drop": { "kind": "int", "min": 0, "max": 50, "description": "Taken for dropping a shift." }
+      }
+    },
+    "warnings": {
+      "kind": "group",
+      "description": "A no-show is a warning (D39).",
+      "fields": {
+        "letGoAt": {
+          "kind": "int",
+          "min": 1,
+          "max": 5,
+          "label": "Let go at",
+          "description": "Warnings at once that end the job."
+        },
+        "lapse": { "kind": "int", "min": 1, "max": 365, "description": "Days a warning lasts." }
+      }
+    },
+    "skill": {
+      "kind": "group",
+      "description": "Skill grows with practice, every minute worked and some outcomes, and comes more slowly the more there is: 100 × practice ÷ (practice + half).",
+      "fields": {
+        "half": {
+          "kind": "int",
+          "min": 60,
+          "max": 1000000,
+          "description": "Minutes of practice to reach half skill."
+        }
+      }
+    },
+    "events": {
+      "kind": "group",
+      "description": "The shift events it draws (D40).",
+      "fields": {
+        "tags": { "kind": "list", "min": 1, "of": { "kind": "text", "min": 1, "max": 24 } },
+        "chance": { "kind": "int", "min": 0, "max": 100, "description": "Percent of shifts with one." }
+      }
+    }
+  }
+}

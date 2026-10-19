@@ -1,0 +1,29 @@
+{
+  "name": "A regular",
+  "tags": ["food-service"],
+  "weight": 5,
+  "prompt": "A regular at the counter wants her hash browns the way the old cook made them. Nobody wrote down how.",
+  "choices": [
+    {
+      "id": "usual",
+      "text": "Make them your way",
+      "outcome": { "told": "She eats them. She doesn't say anything about them either way." }
+    },
+    {
+      "id": "work-it-out",
+      "text": "Ask her questions and try to get them right",
+      "odds": { "base": 30, "skill": 50, "tired": 20 },
+      "outcome": {
+        "told": "Extra onion, cooked dark, pressed flat. She nods at you on her way out.",
+        "standing": 2,
+        "practice": 20,
+        "needs": { "calm": 5 }
+      },
+      "failure": {
+        "told": "She sends them back twice. The third time she says they'll do.",
+        "practice": 10,
+        "needs": { "calm": -5 }
+      }
+    }
+  ]
+}

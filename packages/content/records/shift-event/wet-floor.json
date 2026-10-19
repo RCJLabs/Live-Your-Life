@@ -1,0 +1,26 @@
+{
+  "name": "A wet floor",
+  "tags": ["kitchen"],
+  "weight": 5,
+  "prompt": "You turn with a full pan of hash browns, and your foot finds the wet patch by the dish pit.",
+  "choices": [
+    {
+      "id": "let-go",
+      "text": "Let the pan go",
+      "outcome": {
+        "told": "The pan clatters across the tiles. You lose the hash browns and keep your feet.",
+        "standing": -1
+      }
+    },
+    {
+      "id": "save-it",
+      "text": "Try to keep the pan and your feet",
+      "odds": { "base": 55, "skill": 15, "tired": 40 },
+      "outcome": { "told": "You catch yourself on the counter. The hash browns stay in the pan.", "practice": 5 },
+      "failure": {
+        "told": "You go down on one knee, and the pan goes anyway. The knee swells by the end of the shift.",
+        "needs": { "health": -8, "calm": -10 }
+      }
+    }
+  ]
+}

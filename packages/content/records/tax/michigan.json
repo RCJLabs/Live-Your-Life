@@ -1,0 +1,5 @@
+{
+  "name": "Michigan income tax, one exemption, 2025",
+  "deduction": 580000,
+  "brackets": [{ "over": 0, "rate": 425 }]
+}

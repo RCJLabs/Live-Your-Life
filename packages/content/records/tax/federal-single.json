@@ -1,0 +1,14 @@
+{
+  "name": "Federal income tax, single, standard withholding, 2025",
+  "deduction": 860000,
+  "brackets": [
+    { "over": 0, "rate": 0 },
+    { "over": 640000, "rate": 1000 },
+    { "over": 1832500, "rate": 1200 },
+    { "over": 5487500, "rate": 2200 },
+    { "over": 10975000, "rate": 2400 },
+    { "over": 20370000, "rate": 3200 },
+    { "over": 25692500, "rate": 3500 },
+    { "over": 63275000, "rate": 3700 }
+  ]
+}

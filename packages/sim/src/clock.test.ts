@@ -31,10 +31,12 @@ describe('minutesUntil', () => {
 });
 
 describe('the clock', () => {
-  it('allows the time, clock, life and home actions out in the world, and no shop actions', () => {
+  it("allows the time, clock, life, home and job actions out in the world, and no shift event's choice", () => {
     expect(game.allowedActions(fresh())).toEqual([
       'clock/wait-until',
       'home/pay-owed',
+      'job/drop',
+      'job/sign-up',
       'life/do',
       'time/advance',
       'time/elapse',

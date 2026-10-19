@@ -15,11 +15,13 @@ import { COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './d
 import {
   ACTIVITIES,
   type Activity,
+  FULL,
   isActivity,
   type Levels,
   lowest,
   NEEDS,
   type Need,
+  PERCENT,
   percentOf,
   settle,
 } from './needs.ts';
@@ -76,6 +78,24 @@ function begin(ctx: ModuleContext<LifeSlice>, activity: Activity, minutes: numbe
     effects: [{ effect: 'end-activity' }],
   });
   ctx.emit('started', { activity, minutes });
+  // The job hears the first start on a shift, to know whether you were late (D39).
+  if (activity === 'work') ctx.apply({ effect: 'clock-in' });
+}
+
+/** A need's level moved by whole percent, kept from empty to full: what a shift event does to you (D40). */
+function adjustNeeds(ctx: ModuleContext<LifeSlice>, needs: unknown): void {
+  if (typeof needs !== 'object' || needs === null) throw new Error('adjust-needs: "needs" maps needs to percent');
+  const now = tickOf(ctx);
+  const slice = ctx.write();
+  const levels = levelsNow(slice, now);
+  for (const [need, by] of Object.entries(needs)) {
+    if (!(NEEDS as readonly string[]).includes(need) || !whole(by, -100, 100)) {
+      throw new Error(`adjust-needs: ${need} by ${String(by)}`);
+    }
+    levels[need as Need] = Math.min(FULL, Math.max(0, levels[need as Need] + by * PERCENT));
+  }
+  slice.levels = levels;
+  slice.asOf = now;
 }
 
 // No return type: `return ctx.refuse(…)` tells TypeScript the handler stops there (engine sim.md).
@@ -100,16 +120,19 @@ export const lifeModule = defineModule<LifeSlice>({
   actions: {
     do: {
       run: (ctx, action) => doActivity(ctx, action.activity, action.minutes),
-      // What a menu offers now: each activity for its usual time, the meal only if it can be
-      // paid for, and work only during a shift, for the rest of it.
+      // What a menu offers now: each activity for its usual time, or until the next shift if that
+      // comes first; the meal only if it can be paid for; and work only during a shift, for the
+      // rest of it or until something on it needs you.
       options: (view) => {
         const cash = view.fact('economy.amount', { resource: 'cash' }) as number;
+        const soon = view.fact('job.next-shift-in') as number | undefined;
         const offered: { activity: Activity; minutes: unknown }[] = [];
         for (const activity of ACTIVITIES) {
           if (activity === 'work') {
             if (view.fact('job.on-shift') === true) offered.push({ activity, minutes: view.fact('job.shift-left') });
           } else if (COSTS[activity] <= cash) {
-            offered.push({ activity, minutes: STANDARD_MINUTES[activity] });
+            const usual = STANDARD_MINUTES[activity];
+            offered.push({ activity, minutes: soon === undefined ? usual : Math.min(usual, soon) });
           }
         }
         return offered;
@@ -118,6 +141,7 @@ export const lifeModule = defineModule<LifeSlice>({
   },
   effects: {
     'end-activity': (ctx) => stop(ctx),
+    'adjust-needs': (ctx, effect) => adjustNeeds(ctx, effect.needs),
   },
   facts: {
     need: {
@@ -138,7 +162,8 @@ export const lifeModule = defineModule<LifeSlice>({
     },
   },
   modes: {
-    // Out in the city, with time running. The stage's elapse and the menus' verbs are allowed here.
-    world: { actions: ['time/*', 'clock/*', 'life/*', 'home/*'] },
+    // Out in the city, with time running. The stage's elapse and the menus' verbs are allowed
+    // here; a shift event's choice is allowed only in its own mode (the job's).
+    world: { actions: ['time/*', 'clock/*', 'life/*', 'home/*', 'job/sign-up', 'job/drop'] },
   },
 });

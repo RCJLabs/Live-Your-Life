@@ -1,0 +1,19 @@
+{
+  "name": "A plate that came back",
+  "tags": ["food-service"],
+  "weight": 4,
+  "when": "life.need(need: food) < 60",
+  "prompt": "A burger came back wrong, and nobody will eat it now. The owner lets the cooks have plates like that.",
+  "choices": [
+    {
+      "id": "eat",
+      "text": "Eat it standing up",
+      "outcome": { "told": "You eat it in six bites by the dish pit.", "needs": { "food": 25 } }
+    },
+    {
+      "id": "leave",
+      "text": "Leave it",
+      "outcome": { "told": "It goes in the bin." }
+    }
+  ]
+}

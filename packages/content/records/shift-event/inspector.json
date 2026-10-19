@@ -1,0 +1,30 @@
+{
+  "name": "The inspector",
+  "tags": ["food-service"],
+  "weight": 3,
+  "prompt": "A county health inspector comes in with a clipboard. The owner tells everyone to keep working.",
+  "choices": [
+    {
+      "id": "keep",
+      "text": "Keep working your station",
+      "outcome": {
+        "told": "She writes for a while and leaves. The owner reads what she wrote and puts it in the drawer."
+      }
+    },
+    {
+      "id": "fix",
+      "text": "Fix what you know is wrong first: the cooler door, the uncovered tub",
+      "odds": { "base": 50, "skill": 35, "tired": 20 },
+      "outcome": {
+        "told": "She checks the cooler last. It's shut, and everything in it is labelled. The owner sees.",
+        "standing": 3,
+        "practice": 10
+      },
+      "failure": {
+        "told": "Two orders burn on the flat-top while you're at the cooler, and she writes that down too.",
+        "standing": -2,
+        "needs": { "calm": -10 }
+      }
+    }
+  ]
+}

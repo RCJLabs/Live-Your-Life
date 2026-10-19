@@ -1,0 +1,24 @@
+{
+  "name": "Sent back",
+  "tags": ["kitchen"],
+  "weight": 8,
+  "prompt": "A server brings a plate back to the pass. Over medium, the customer says, and these eggs are over hard.",
+  "choices": [
+    {
+      "id": "remake",
+      "text": "Remake it",
+      "outcome": { "told": "You crack two more eggs. The new plate goes out four minutes later.", "practice": 10 }
+    },
+    {
+      "id": "send-it",
+      "text": "Tell the server the eggs are right",
+      "odds": { "base": 35, "skill": 30, "tired": 0 },
+      "outcome": { "told": "The server takes it back out. The customer eats it.", "needs": { "calm": 5 } },
+      "failure": {
+        "told": "The customer asks for the owner. The owner remakes the plate herself and looks at you while she does it.",
+        "standing": -3,
+        "needs": { "calm": -10 }
+      }
+    }
+  ]
+}

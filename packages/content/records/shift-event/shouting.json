@@ -1,0 +1,24 @@
+{
+  "name": "A shouting customer",
+  "tags": ["food-service"],
+  "weight": 4,
+  "prompt": "A man at the counter is shouting about how long his food is taking. He's looking at you through the pass.",
+  "choices": [
+    {
+      "id": "cook",
+      "text": "Keep cooking",
+      "outcome": { "told": "You keep cooking. The server deals with him.", "needs": { "calm": -5 } }
+    },
+    {
+      "id": "answer",
+      "text": "Tell him it's coming",
+      "odds": { "base": 55, "skill": 0, "tired": 30 },
+      "outcome": { "told": "He sits back down. His food is up four minutes later.", "needs": { "calm": 2 } },
+      "failure": {
+        "told": "He tells you what he thinks of you, loud enough for the whole counter. The owner comes out to deal with him.",
+        "standing": -2,
+        "needs": { "calm": -15 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "The knife",
+  "tags": ["kitchen"],
+  "weight": 5,
+  "when": "job.skill < 40",
+  "prompt": "You're dicing onions fast because the rail is full, and the knife skips on the board.",
+  "choices": [
+    {
+      "id": "slow",
+      "text": "Slow down",
+      "outcome": {
+        "told": "You slow down. Two tickets wait, and the onions come out even.",
+        "standing": -1,
+        "practice": 10
+      }
+    },
+    {
+      "id": "pace",
+      "text": "Keep the pace",
+      "odds": { "base": 50, "skill": 45, "tired": 30 },
+      "outcome": { "told": "The onions are done before the rush.", "practice": 20 },
+      "failure": {
+        "told": "The knife takes the tip of your thumb. Ten minutes and a paper towel later you're back on the line.",
+        "needs": { "health": -6, "calm": -10 }
+      }
+    }
+  ]
+}

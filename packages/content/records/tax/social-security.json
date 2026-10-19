@@ -1,0 +1,6 @@
+{
+  "name": "Social Security, 2025",
+  "deduction": 0,
+  "brackets": [{ "over": 0, "rate": 620 }],
+  "cap": 17610000
+}

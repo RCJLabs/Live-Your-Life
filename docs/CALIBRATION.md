@@ -10,7 +10,7 @@ The method is Gridiron Eras': pick a real range, run many seeded lives, check th
 | --- | --- | --- |
 | Base year | 2025 dollars, a fixed in-game calendar | default unless vetoed (D15) |
 | Metro class | a Rust Belt or Midwest city of 250k–400k | D15 |
-| State for law and tax | to pick: one state's theft thresholds, drug schedules, sentencing ranges, income tax | open question in DESIGN.md |
+| State for law and tax | Michigan: its minimum wage, income tax and city income tax now, its theft law at M1.5 | D37 |
 
 ## The ledger
 
@@ -18,8 +18,8 @@ Rows to fill before the system that uses them is built. "Source family" names wh
 
 | What | Source family | Used by | Filled |
 | --- | --- | --- | --- |
-| Wages by career, hourly and annual, by percentile | federal occupational wage statistics for the metro class | careers, the labor market | no |
-| Minimum wage | the chosen state | careers | no |
+| Wages by career, hourly and annual, by percentile | federal occupational wage statistics for the metro class | careers, the labor market | the line cook only (M1.3) |
+| Minimum wage | the chosen state | careers | yes (M1.3) |
 | Rent by bedrooms and district | federal fair market rents for a comparable metro; local listings for spread | housing | no |
 | Utilities, phone, internet | consumer expenditure surveys | money | no |
 | A grocery basket by household size | federal food-plan costs | hunger, money | no |
@@ -28,7 +28,7 @@ Rows to fill before the system that uses them is built. "Source family" names wh
 | Health insurance premiums, deductibles; costs of an ER visit, a clinic visit, a prescription, with and without insurance | national health expenditure and hospital price data | health, money | no |
 | Childcare by age | state market-rate surveys | family, money | no |
 | Tuition: community college, in-state university, professional school | published tuition tables | education | no |
-| Federal and state income tax, FICA | the tax tables for the base year | money | no |
+| Federal and state income tax, FICA | the tax tables for the base year | money | withholding (M1.3); the return is the money milestone's |
 | Loan and credit-card rates by credit band | federal consumer credit data | money | no |
 | Fines: shoplifting, traffic, DUI | the chosen state's schedules | law | no |
 | Bail schedules and bond fees | the chosen county's schedule | law | no |
@@ -42,6 +42,20 @@ Rows to fill before the system that uses them is built. "Source family" names wh
 | Addiction onset and relapse rates by substance | public health surveys | health | no |
 | Marriage, divorce, birth rates by age | vital statistics | relationships, family | no |
 | Time use by activity for employed adults | the federal time-use survey | schedules, the tick | no |
+
+## In use
+
+Figures the sim runs on now, with where each lives and where it comes from. Every one is from a secondary source: the build environment can't reach irs.gov, ssa.gov, michigan.gov or bls.gov (D38). Each is to be checked against the primary named beside it before it is built on further, and a test holds the records named here to this table.
+
+| Figure | Value | Record | Source, as read on 2026-10-19 | Primary to check |
+| --- | --- | --- | --- | --- |
+| The line cook's wage | $14.73 an hour, before tax: the 25th percentile of Michigan's restaurant cooks, $30,640 a year at 2,080 hours, for a hire with no experience (tune). The median is $17.58 | `career/line-cook.json`, `wage` | WageDex, "Cooks, Restaurant, Michigan" (wagedex.com/jobs/cooks-restaurant/michigan), citing the federal occupational wage survey for May 2024 | BLS OEWS, SOC 35-2014, Michigan, May 2024; and May 2025, the base year's, which replaces it |
+| Michigan's minimum wage | $12.48 an hour from 21 February 2025 ($10.56 before). Checked by a test against every career | — | Michigan's Department of Labor and Economic Opportunity, news release of 1 October 2024; Fox 2 Detroit. Senate Bill 8 (2025) changed the later years; 2026's figure is reported as $13.73 and is not used | michigan.gov/leo, the minimum wage schedule |
+| Federal income tax withholding, single, standard | after $8,600 a year: 0% to $6,400; 10% to $18,325; 12% to $54,875; 22% to $109,750; 24% to $203,700; 32% to $256,925; 35% to $632,750; 37% above. A test holds the tax at the start of each row to the table's $0, $0, $1,192.50, $5,578.50, $17,651.00, $40,199.00, $57,231.00 and $188,769.75 | `tax/federal-single.json` | IRS Publication 15-T for 2025 (December 2024), Worksheet 1A and its annual table: the $6,400 row as quoted in search results; the rows above it are 2025's brackets from the IRS's release of Rev. Proc. 2024-40, plus $6,400. The One Big Beautiful Bill Act's later changes to 2025 change the return, not 2025's withholding | irs.gov/pub/irs-pdf/p15t.pdf |
+| Social Security | 6.2% of pay up to $176,100 a year | `tax/social-security.json` | the Social Security Administration's release of October 2024, as the Journal of Accountancy and The Tax Adviser reported it | ssa.gov, the contribution and benefit base |
+| Medicare | 1.45% of all pay. The extra 0.9% on pay over $200,000 a year is not withheld: no career in the slice comes near it | `tax/medicare.json` | the same | ssa.gov; IRS Publication 15 |
+| Michigan income tax withholding | 4.25% of pay less $5,800 a year for each exemption; the player claims one | `tax/michigan.json` | Michigan Treasury's calendar-year tax information (2025: 4.25%, $5,800), as quoted in search results; Bloomberg Tax on the 2025 withholding guide, Form 446 | michigan.gov/taxes, Form 446 for 2025 |
+| The city's income tax, resident | 1% of pay less $600 a year for each exemption: the Uniform City Income Tax Act's standard rates (D38). Detroit levies 2.4% and Grand Rapids 1.5%; most others levy 1% | `tax/city-resident.json` | National Tax Tools and Richify's tables of Michigan city income taxes | the Act (MCL 141.501 and after); Michigan Treasury's city income tax pages |
 
 ## Realism bars
 
@@ -63,9 +77,9 @@ Figures the sim uses before their ledger row is filled. None is a real figure. E
 
 | Figure | Value | Where | Replaced by |
 | --- | --- | --- | --- |
-| The hourly wage | $15, paid gross: no tax yet | `packages/sim/src/dials.ts`, `JOB` | the wages and tax rows, at M1.3's line cook |
-| The shift | Tuesday to Saturday, 15:00 to 23:00 | `packages/sim/src/dials.ts`, `JOB` | the career template, M1.3 |
-| Payday | Fridays at 23:30, for the minutes worked since the last | `packages/sim/src/dials.ts`, `PAYDAY` | the career template, M1.3 |
+| The diner's habits | two shifts a day, 06:00 to 14:00 and 14:00 to 22:00, every day; next week's posted on Thursdays, 3 to 6 shifts by standing; at most 5 a week, which keeps a cook under the 40 hours that would mean overtime; paid on Fridays at 06:00 | `career/line-cook.json` | none: an employer's habits, tuned for play. Michigan has no law on when shifts are posted |
+| Standing, warnings and skill | the steps in D39; skill at half after 400 hours of practice | `career/line-cook.json` | none: tuned for play (D39) |
+| Shift events | one in about half of shifts; their odds and outcomes | `shift-event/` | none: tuned for play, and their words are drafts for the voice pass (D40) |
 | Rent | $550 a month, due on the 1st | `packages/sim/src/dials.ts`, `RENT` | the rent row, with housing |
 | A meal | $4 | `packages/sim/src/dials.ts`, `COSTS` | the grocery-basket row, with meals by cost and quality |
 | Cash at the start | $300 | `packages/sim/src/dials.ts`, `START_CASH` | the background pick (D21) |
@@ -80,10 +94,15 @@ Figures the sim uses before their ledger row is filled. None is a real figure. E
 
 ## Departures, on purpose
 
-None yet. When a figure is softened or sharpened for play, it is written here with the real figure beside it.
+When a figure is softened or sharpened for play, it is written here with the real figure beside it.
+
+- **Pay comes the Friday after the work, not a week or two later.** Most restaurants pay a week or two in arrears, so a new hire's first paycheck comes after ten days or more. The slice is one week, and it would see no pay at all.
+- **Withholding is not the tax owed.** A year's withholding is settled by a return, with a refund or a bill. The return is the money milestone's; until then, what is withheld is gone.
 
 ## Open questions
 
-1. Which state the city borrows for law and tax.
+1. Which state the city borrows for law and tax. Answered: Michigan (D37).
 2. Whether rents and wages are drawn from one comparable city or from the class average.
 3. How often the ledger is re-checked against newer data, and whether a later base year ever replaces 2025 in a save.
+4. Every figure in use is from a secondary source (In use). They are checked against their primaries once the build environment can reach them, or by hand.
+5. Whether a new hire's wage is the 25th percentile, or nearer the 10th ($13.84), for someone of eighteen with no experience.
