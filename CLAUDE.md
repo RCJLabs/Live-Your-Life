@@ -50,7 +50,7 @@ node tools/population/bench.ts [days] [sizes]      # the population harness in N
 node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromium at 1× and 4× CPU
 pnpm eb validate packages/content   # the engine's checks on the content (part of pnpm lint)
 pnpm content      # rebuild packages/content/pack.json after changing a record; a test fails until you do
-node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block, lay its walk grid, route across it
+node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -63,16 +63,18 @@ node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms t
 ```
 engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace, and
                     since M1.1 the content pipeline: @eb/schema, @eb/compiler, @eb/script and @eb/cli (build time and CI only)
-packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON, checked by eb validate, built
-                    into pack.json by pnpm content; the package reads only the pack (pure)
+packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON (the street, facades, buildings and
+                    blocks; since M1.2 fixtures, rooms and interiors), checked by eb validate, built into pack.json by pnpm content;
+                    the package reads only the pack (pure)
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, a placeholder job and rent,
                     the week bots, the tier-1 people (people/: the roster, their hours, hour plans, ties, shares), and the block
-                    (city/: the templates, the plan, street furniture, the walk grid, routes)
+                    (city/: the templates, the plan, street furniture, the walk grid, routes, and since M1.2 the interiors: rooms,
+                    walls and doors, fixtures, and their checks)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
                     @lyl/stage/testing is a fake canvas for drawing tests
 apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. At M0.3 the art spike (src/spike/), and M1.1's generated block
-                    at ?block=generated (src/city/, D33); dev/ holds the character sheet and the bench (pnpm dev, then
-                    /dev/figures.html); e2e/ the Playwright specs
+                    at ?block=generated (src/city/, D33) with M1.2's interiors and the walker (D36); dev/ holds the character
+                    sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
 docs/               design, decisions, voice, calibration, research

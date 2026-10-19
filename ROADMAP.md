@@ -133,6 +133,45 @@ How to read this file:
       - The facades: pairs drawn as single windows; nothing ever boarded up; a shop's sign behind its awning; the spike's apartment house losing its side windows.
       - The page: a door drawn from the street's origin; a car park painted as grass.
 - **M1.2 Two interiors.** The apartment and the restaurant from templates, walkable, with cutaway walls.
+  - The flat is a ground-floor studio with a bathroom, off the stair hall (D34). The diner keeps its line and counter and gains a back room with a back door (D35). One person walks the commute on the generated block (D36).
+  - Done when:
+    - 1,000 seeded blocks: no fixture stands over another, a wall or a doorway, and every fixture's place of use joins the street on the walk grid [auto];
+    - every flat has a place to sleep, eat, wash and relax, and every diner a place to work and to eat, read from the fixtures' records [auto];
+    - the same seed gives the same interiors [auto];
+    - every fixture, room and interior is a content record that `eb validate` passes, seen failing on a planted bad record [auto];
+    - at `?block=generated` the walker goes from the bed to the griddle and back on the walk grid's routes, and the building they are in is cut away [auto];
+    - the generated block passes the page's browser checks at 360 and 390 px and in landscape [auto];
+    - its frame rate at 4× CPU, with the walker moving, is in Readings [auto];
+    - the spike's page is unchanged, by the golden test [auto].
+  - **Done, 2026-10-19: every gate passed**, each in `pnpm check` but the frame rate, which is in Readings.
+    - `packages/content` gains three record types: 19 fixtures, 6 rooms and 2 interiors.
+      - A fixture is one of the stage's drawings, its size, whether it takes up the floor, and how a person uses it: from which side, for which of M0.2's activities, in which pose.
+      - A room places its fixtures by rule.
+      - An interior lays rooms out from the footprint's edges and the front door, a later room cut out of the earlier ones. It names the doors and the homes or businesses its rooms make.
+    - The planner joins the block's in `packages/sim/src/city/`: rooms, the inside walls where they meet, the doors cut out of them, the fixtures, and where each is used from. The walk grid opens a building with an interior: its walls and fixtures are in the way, and a doorway is open at the cells whose middles lie in it.
+    - The flat is a stair hall between two studios, each a main room and a bathroom, and the walker lives in one by the seed (D34). The diner keeps its line, counter and tables and gains a back room with the dish pit, dry stores and a staff toilet, and a back door to the yard (D35). The apartment house is 10 to 11 m wide now, not 8 to 9.5, to fit the flats.
+    - 1,000 seeded blocks keep every rule. Rooms cover the floor and doors join two rooms. No fixture stands over another, a wall or a doorway. Every unit has its places, and every place of use can be walked to from the street and is reached from the side it is used from.
+    - The stage cuts a building with rooms its own way:
+      - each room's floor;
+      - the far walls in each room's colour;
+      - the inside walls cut low;
+      - a way out through a far wall as an opening under a lintel.
+    - Six fittings join the furniture kit: a shower, a toilet, a sink, a dish pit, shelving and stairs. The spike's one-room interiors draw as before, by the golden test.
+    - The walker (D36) gets up in their flat, walks to the griddle, cooks, walks home and sleeps, round and round, at 1.3 m a stage second. With the walls up, the building they are in or behind is cut away.
+    - Two problems were found on the way:
+      - The depth sort drew the diner's back wall over the walker as they came in through the back door. A door painted on a solid wall leaves the walker inside the wall's box, where the sort can't order them. Ways out through far walls are now openings, and the walker keeps to the middle of every doorway.
+      - Testing who a building hides by screen rectangles let the tall apartment house claim it hid the cook. The test is now whether a corner of the cook falls inside the building's outline. In one seed the house really does hide the griddle: it stands 1.6 m east of the diner and is 9.25 m tall, so it is cut away.
+    - Planted bugs: 32, 32 caught. The first run caught 25 of 33.
+      - Five checks were missing and were added: a wall left standing across a later room; a fixture used from inside itself; a walk ending behind a fixture whose front is walled off; a tiled floor laid as checker; two fittings drawn alike.
+      - One plant was aimed at the wrong test, and one at a line Biome had reflowed. One drew the same picture by another path, so it was dropped as no bug.
+      - The content: a room naming a fixture that isn't there; an interior changed without rebuilding the pack.
+      - The records: a door or a unit naming a room the interior lacks; a fixture placed two ways; a room in two units.
+      - The rooms: a later room not cut out of an earlier one; doorways not cut from the walls; a wall left across a later room; the front door opening onto the street from both sides.
+      - The fixtures: a mirrored flat's fixtures not turned, or used from the wrong hand; a user standing at a fixture's middle.
+      - The checks: fixtures in front of doors, overlapping fixtures, and a need with no place, each let through.
+      - The walk grid: doorways blocked; fixtures walked through; a building with an interior shut; a walk ended on a fixture's far side.
+      - The stage: inside walls drawn full height; no opening for a way out; far walls one colour; tile laid as boards; two fittings alike; a building in front of someone, or behind them, claimed to hide them.
+      - The walker and the page: their own building not cut away; off the middle of doorways; asleep in the neighbour's bed; at a run; walls planned thicker than they are drawn; the page cutting by the walls button alone.
 - **M1.3 One job.** Line cook on the career template: shifts posted weekly, sign-up, pay, standing, fatigue; a shared pool of shift events by tag.
 - **M1.4 One relationship.** A coworker with familiarity, regard and a memory of acts.
 - **M1.5 One crime.** Shoplifting with the whole chain: witnesses, the odds shown, heat, a scheduled response the player sees first, charges, a fine or a record.
@@ -211,6 +250,11 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Game JS, gzip (M1.1) | the spike's page: 39.51 kB (36.00 kB, and chunks shared with the generated block: the seeded random numbers 3.21 kB, the projection 0.30 kB). The generated block adds 5.72 kB, loaded only at `?block=generated`. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
 | Game precache (M1.1) | 21 entries, 160.89 KiB, the generated block's chunks among them | vite-plugin-pwa build log | 2026-10-19 | 1 build |
 | The content pack (M1.1) | 11 records in 4 types, 3.0 kB, hash `b8bc4b46bd1c3e4c` | `pnpm content` (`eb build`) | 2026-10-19 | 1 build |
+| A block with its interiors (M1.2) | planning a block and its two interiors: 0.129 ms; laying its walk grid: 0.105 ms, 13,531 cells; routing the longest walk: 7.01 ms, 96.6 m; routing the commute, the first flat's bed to the griddle: 0.96 ms, 42.5 m | `node packages/sim/test/block-bench.ts`, Node 22.22.0, cloud container; medians of 5 rounds | 2026-10-19 | 1,000 blocks a round |
+| Frame rate, generated block with the walker, headless (M1.2) | 60.0 fps at full CPU by day, 59.8 at night. At 4× CPU, 56.4 fps by day (95th frame 33.3 ms, worst 33.4) and 32.2 at night (95th 50.0 ms, worst 66.7; runs 31.1 to 34.1). The walker walks through the 10 s measured, with the walls down, so the still picture holds and the cost is the walker and the night pass | `node apps/game/e2e/perf.ts 3 generated`: the page's Measure, 10 s at speed 1, headless Chromium 141 at 390×844 and 2×, no GPU, cloud container | 2026-10-19 | 3 runs each |
+| Game JS, gzip (M1.2) | the spike's page: 41.21 kB (22.96 kB, and chunks shared with the generated block: the stage and the seeded random numbers 17.95 kB, the projection 0.30 kB). The generated block adds 11.61 kB, loaded only at `?block=generated`: the planner, the walker and the content 8.73 kB, the walk grid and routes 2.88 kB. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M1.2) | 21 entries, 182.36 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The content pack (M1.2) | 38 records in 7 types, 9.3 kB, hash `162584fa7720cc51` | `pnpm content` (`eb build`) | 2026-10-19 | 1 build |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -232,6 +276,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M0.3 built. The stage, `@lyl/stage`, draws the city in code; the game's page is the art spike (D27–D29), with the tester brief and its screenshots in docs/research/art-spike.md. Planted bugs: 28, 28 caught. The [you] gates are open.
 - 2026-10-19: M0.4 done, built alongside M0.3's open gates on Evan's word. The tier-1 people (`packages/sim/src/people/`) and the population harness (`tools/population`), in Node and in headless Chromium. Three cadences measured; D30 proposes the staggered one, and risk 2 passes at it. Planted bugs: 22, 22 caught. Evan set the tier-1 count at 1,000 (D31). The marker stays on M0.3, whose gates are open.
 - 2026-10-19: M1.1 done, alongside M0.3's open gates on Evan's word. The block is one side of one street (D32), generated from `packages/content`, the game's first content as an Engine-Builder project, checked in CI and built into a pack. The walk grid and its routes are in `packages/sim/src/city/`, and the stage draws facades from the grammar. The page stays M0.3's spike, with the generated block at `?block=generated` (D33). A golden test holds the spike to its drawing. Planted bugs: 23, 23 caught. The marker stays on M0.3.
+- 2026-10-19: M1.2 done, alongside M0.3's open gates on Evan's word. The apartment house's ground floor is two studios off a stair hall (D34), and the diner has a back room and a back door (D35), both from fixture, room and interior records in `packages/content`. The walk grid opens their floors, and the stage cuts them room by room. A walker goes from a bed to the griddle and back at `?block=generated` (D36). Planted bugs: 32, 32 caught. The marker stays on M0.3.
 
 ## Open questions
 
@@ -252,3 +297,6 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 15. The engine fires at most 10,000 timers in one advance. An hourly timer, as D30's is, caps one action at about 416 days, and D19's skip to an heir's 18th birthday passes years. Before M2.7: pass long skips in several actions, or catch the people up in one effect. Or raise in Engine-Builder a way to fire a repeating timer's missed periods at once.
 16. How the city shows a street's near side under the fixed camera (D7, D32). Either cut its buildings to sill height while the player is on the street, as Project Zomboid hides what stands in front, or keep that side's lots low or open. M2.1's city decides.
 17. The longest walk on the block takes 6.35 ms to route in Node (Readings), about four times that on a slow phone: a dropped frame or so a tap. Before M1.6's tap-to-go: reuse A*'s buffers between routes, or route on a coarser graph of sidewalk lengths and crossings.
+18. How walking time meets the clock (D2, D36). The walker walks 1.3 m a stage second, and at speed 1 a stage second is 2 game minutes. So the 42.5 m commute takes about 65 game minutes on screen, where a real walk of it takes about half a minute. M1.6 decides: route time in game minutes at a real pace, with people moving faster on screen; the clock slowed while someone walks a short way; or a time tuned for play (D11).
+19. A building without an interior can't be cut away, so it hides whoever walks behind it, in a gangway or a yard. With question 16, M2.1's city decides: a shell cut for every building, its walls low and no floor, or fading what stands in front, as Project Zomboid does.
+20. M1.5's shoplifting happens in the corner shop, which has no interior yet. D18 opens other businesses as a counter scene, but shoplifting needs shelves, a till and sight lines. M1.5 decides: a third interior from the same records, or the counter scene.

@@ -235,6 +235,34 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 
 **Options considered.** Keep the spike for now; chosen. Replace it now, with the spike kept at `?spike=1` and the tester brief's links changed to it.
 
+### D34. The slice's flat is a ground-floor studio with a bathroom, off the stair hall. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The player's apartment is a studio on the apartment house's ground floor: one main room with a bed, a kitchenette, a table and a couch, and a bathroom with a shower. It opens off the building's stair hall. The stairs are drawn, but nobody climbs them yet.
+
+**Layout, proposed with it.** The hall runs from the front door to the back, down the middle of the building, with a studio on either side. The player's is one of the two, by the seed. The other is a neighbour's, furnished from the same rooms.
+
+**Why.** It is the smallest home that is real. M0.2's wash gets its shower. Someone at the wage floor rents a studio or a room, not a one-bedroom (CALIBRATION.md, bar B2). And a ground floor needs no levels in the walk grid or the cutaway.
+
+**Options considered.** A ground-floor studio with a bathroom; chosen. A ground-floor one-bedroom: roomier, but more than bar B2 says the floor of the market affords alone. A studio upstairs, up walkable stairs: it needs a cutaway by storey and a walk grid with levels. The hospital and school will need those later, but they would make M1.2 about twice the work (an estimate).
+
+### D35. The diner keeps its line and counter and gains a back room with a back door. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The diner keeps the spike's room: the kitchen line behind the counter, stools along it, tables by the windows. Behind it is a back room with the dish pit and dry storage, a staff toilet, and a back door to the yard and the alley, for staff and deliveries.
+
+**Why.** It is where M1.3's line cook works, and it is how a real diner's back of house runs: staff come and go by the back, the dishes are washed there and the stock is kept there. The back door also gives the alley a second way in, for deliveries and later for crime.
+
+**Options considered.** The line, the counter and a back room; chosen. The spike's one room, with everyone using the front door. A closed kitchen, the line behind a wall with a pass window and a swing door; the cutaway would show it anyway.
+
+### D36. One walker on the commute at `?block=generated`. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** A person from the seed walks from the flat's bed to the diner's griddle and back on the walk grid's routes. The building they are inside or behind is cut away.
+
+**Proposed with it.** They walk at a walking pace in the stage's seconds, not the game's minutes, until M1.6 settles how walking time and the clock relate (ROADMAP, open questions).
+
+**Why.** It shows in the browser that both interiors can be walked, door to door, and it gives a frame-rate reading with someone moving. M1.6's tap-to-go reuses the route following.
+
+**Options considered.** One walker on the commute; chosen. Nobody until M1.6, with the routes checked only in tests.
+
 ---
 
 ## Open items
