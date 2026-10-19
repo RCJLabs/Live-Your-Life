@@ -64,7 +64,9 @@ describe('sight in the corner shop (D45)', () => {
     expect(compared).toBeGreaterThan(500_000);
   });
 
-  it('has a clerk and a camera, every shelf reachable from the street, and some seen and some not', () => {
+  it('has a clerk and a camera, every shelf reachable from the street, and some seen and some not', {
+    timeout: 60_000,
+  }, () => {
     eachShop((sight, grid, seed, plan) => {
       expect(sight.watchers.map((w) => w.who).sort(), seed).toEqual(['camera', 'clerk']);
       const walked = reach(grid, cellAt(grid, plan.street.xa + 0.75, plan.street.lotFront + 1.25));

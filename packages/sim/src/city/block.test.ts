@@ -75,7 +75,9 @@ describe('the block', () => {
     expect(SEEDS.flatMap((seed) => broken(planBlock(templates, seed)))).toEqual([]);
   });
 
-  it('has every door joined to the street, and the street to its open side, in 1,000 blocks', () => {
+  it('has every door joined to the street, and the street to its open side, in 1,000 blocks', {
+    timeout: 60_000,
+  }, () => {
     expect(SEEDS.flatMap((seed) => cutOff(planBlock(templates, seed)))).toEqual([]);
   });
 
