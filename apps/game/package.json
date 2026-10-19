@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@eb/core": "workspace:*",
+    "@eb/platform": "workspace:*",
     "@lyl/content": "workspace:*",
     "@lyl/sim": "workspace:*",
     "@lyl/stage": "workspace:*"

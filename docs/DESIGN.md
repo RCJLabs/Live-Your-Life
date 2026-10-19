@@ -271,6 +271,16 @@ Walkable, generated from templates by building type, with cutaway walls when the
 
 The engine's model: a checksummed snapshot plus an action log, per-module migrations, slots, backups and quarantine, in IndexedDB with a localStorage fallback. The city is derived; saves hold the diffs and the people. A fixture from every version must load.
 
+**Built in M1.7** (`apps/game/src/life/keeper.ts`, `lives.ts`; D53, D54):
+
+- **Where.** `life.rcjlabs.com`, under the engine's keys `eb/live-your-life/full/`, with IndexedDB first, then localStorage, then memory. Storage persistence is asked for at the first save.
+- **When.** After every action but time passing, every game hour, on reaching a place, and when the page is hidden or closed. Saves queue, so two never cross. There is no saving or loading by hand: a slot is a life, and what happened stands.
+- **Your lives.** Three slots. The first visit starts a life in the first; after that the page opens on the list: each life's name, date and money, to go on with or to end for good, with a confirm. The panel's "Your lives" goes back to it.
+- **What a save holds.** The engine's snapshot and the actions since, compacted at 200. Beside it, the place you last reached (in its summary) and the journal, one key a day, each entry the event and the step it happened at. A load drops entries past the saved step, and a day that won't read costs only that day.
+- **When a save won't load.** The engine copies it aside and tries the save before; if that loads, the life goes on and a line says so. If neither does, the list says the life couldn't be loaded and that a copy was kept, and the slot can be ended to free it.
+- **Time in the log.** The page sends time in whole game minutes, so a session logs about two actions a second at speed 1, not one a frame.
+- **The first fixture.** `packages/sim/test/fixtures/saves/life-v1.json`, a bot's week saved by this build, must load with nothing skipped and every slice in today's shape.
+
 ## Editions and the gate (D17)
 
 The free edition is the first in-game year, whole, with a last card at the birthday. The full game unlocks once, on the web and through Play Billing with the acknowledger. Content past the first year lives in `*.full` modules with `*.demo` twins, and CI diffs the builds. Steam later through the Electron shell.

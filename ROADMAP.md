@@ -356,7 +356,32 @@ How to read this file:
       - The session: time sent in any mode; part of a minute dropped; nothing written to the journal.
       - What waits and what a place offers: the police's first visit left out; what waits out of order; a place offering what it doesn't serve; a shelf's odds typed rather than previewed.
       - On the page, by the browser tests: a menu before you arrive; the clock running in the panel, or when paused; a walk at a real pace; the map leaving out the row houses; a badge that counts nothing; buttons under 44 px.
-- **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
+- **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture. On `life.rcjlabs.com` (D53), saved automatically, a slot a life (D54).
+  - **Done when:**
+    - the page saves after every action but time passing, every game hour and when hidden, and a reload brings back the day, the money, the journal and the place you last reached [auto];
+    - a reload can't undo an outcome: a roll taken and reloaded stands [auto];
+    - three slots each hold a life, listed with its name, day and money; a life can be ended to free its slot [auto];
+    - a save that won't load is quarantined and the player is told, never overwritten; one damaged by hand shows it [auto];
+    - the first fixture, saved by this build from a bot's week, still loads with nothing skipped or changed, seen failing on a slice changed without a migration [auto];
+    - time reaches the sim in whole game minutes, not every frame (open questions 10 and 42) [auto];
+    - a save's size, and its write and load times, are in Readings [auto];
+    - the live page is served from `life.rcjlabs.com` at `/`, and the deploy's checks pass there [auto, once Evan has set the domain].
+  - **Built, 2026-10-19: every [auto] gate passed** in `pnpm check` but the readings, which are in Readings, and the live domain, which waits on Evan's DNS record and the Pages setting (D53).
+    - **The saves.** `apps/game/src/life/`:
+      - **`keeper.ts`:** three slots on the engine's `@eb/platform` (IndexedDB, then localStorage, then memory), with its backups and quarantine. Beside each save, the journal a key a day, and the place you last reached in its summary.
+      - **`lives.ts`:** your lives, each to go on with or end for good after a confirm.
+      - **`main.ts`:** the start. The first visit starts a life at once; after that the page opens on your lives. `?seed=` plays an unsaved life, for tests and readings.
+      - **`play.ts`:** the page that was `main.ts`. It saves after every choice, every game hour, on reaching a place and when hidden.
+    - **The session** sends time in whole game minutes, and keeps each journal entry's event and step, so a load rebuilds the journal in today's words.
+    - **The first fixture.** `packages/sim/test/fixtures/saves/life-v1.json`, the random bot's week from `fixture-24` (shifts signed, a case on file, the coworker's memories, goods in the bag), written by `test/fixture.ts`. `save.test.ts` loads it with nothing skipped and every slice in today's shape, and to its saved state while the content is the one it was saved with (open question 48).
+    - **The domain.** The build's base path is `/`, and CI builds for it. Evan adds `life` CNAME `rcjlabs.github.io.` and sets the custom domain in Settings → Pages; the deploy's `page_url`, which the confirm job checks, then names it.
+    - Found on the way:
+      - A damaged last save went on from the one before without a word: a line says so now.
+      - A journal day that wouldn't read failed the whole load, and a refused journal write was thrown rather than told: both are caught now.
+      - A new life's seed is random, so the browser tests that walk the block play `?seed=life-1`, unsaved, as the frame rate script does.
+    - Planted bugs: 13, 13 caught. The first run caught 11. The test of a refused save let the journal's write through, and the reload test compared where you stood with the place it had recorded, which the plant left stale. Both were tightened, and the two planted again and caught.
+      - The fixture and the keeper: a slice changed without a migration; journal entries past the save kept; the journal never written; where you were not kept; a torn journal day costing the life; a refused write thrown, not told; time sent every frame.
+      - On the page, by the browser tests: no save after a choice; the place you reached not recorded; a failed load played as a new life; a backup used without saying so; a life ended with no confirm; buttons under 44 px on your lives.
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.
 - **M1.9 The playtest gate.** A tester brief (Rule or Drool's TESTERS.md is the model); five strangers' sessions recorded.
 
@@ -462,6 +487,11 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Game JS, gzip (M1.6) | the life's page: about 78.8 kB (the life 9.55 kB, the block's scene 15.00, the stage 20.57, the sim and records 28.99, the projection 3.18, the loader 1.48). The spike at `?spike`: about 59.7 kB. CSS 1.58 kB. Vite's chunk names don't follow the code's folders, so the split is read from the build log | `vite build` | 2026-10-19 | 1 build |
 | Game precache (M1.6) | 25 entries, 274.85 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
 | The content pack (M1.6) | 138 records in 18 types, 37.9 kB, hash `0b75d724de0fc3b0` | `pnpm content` (`eb build`, with the game's facts) | 2026-10-19 | 1 build |
+| A save (M1.7) | 4.8 kB for a new life run 10 s at speed 2: the state 1.96 kB and a log of 80 actions. The first fixture, a bot's week with 16 actions in its log: 3.8 kB. The log is compacted at 200 actions; at about 35 bytes an action, an estimate not a reading, a save tops out near 9 kB until the state grows | `node apps/game/e2e/saves-bench.ts 20 10`, headless Chromium 141 at 390×844; `test/fixture.ts` | 2026-10-19 | 1 life |
+| Saving and loading a life (M1.7) | Write to IndexedDB: median 3.0 ms (95th 10.2) at full CPU; 28.2 ms (95th 63.1) with the CPU slowed four times. Load, checked and replayed: 5.4 ms (95th 9.5); 32.9 ms (95th 49.8). On the page's thread (open question 45) | `node apps/game/e2e/saves-bench.ts 20 10`, headless Chromium 141, cloud container, no GPU | 2026-10-19 | 20 each |
+| Frame rate, the life (M1.7) | 60.0 fps at full CPU. With the CPU slowed four times: 42.1 fps (95th 50.0 ms, worst 83.3; runs 39.1 to 44.9), with time sent once a game minute and the saves on. Inside M1.6's spread of 37.1 to 45.6, so no change is claimed | `node apps/game/e2e/perf.ts 3 "the life"`, `?seed=life-1` | 2026-10-19 | 3 runs each |
+| Game JS, gzip (M1.7) | the life's page: about 84.6 kB, up 5.8 kB, in the life's own chunk, now 15.36 kB: the saves (`@eb/platform`), the keeper and your lives. How much of it is the engine's isn't split out. CSS 1.70 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M1.7) | 25 entries, 290.72 KiB | vite-plugin-pwa build log | 2026-10-19 | 1 build |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -488,6 +518,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M1.4 done, alongside M0.3's open gates on Evan's word. The other line cook is the first relationship (D41): drawn at hire from the seed and a name pool, beside you on five days in seven. Shift events they're part of, lateness, no-shows and favours both ways are acts they remember by kind (D42, D44), and regard sets the odds of what they'll do for you (D43). The ties module is `packages/sim/src/ties/`. Planted bugs: 40, 40 caught. The marker stays on M0.3.
 - 2026-10-19: M1.5 done, alongside M0.3's open gates on Evan's word. The first crime is shoplifting in the corner shop, a third walkable interior where who sees you is worked out on the walk grid (D45). The law answers in the act or later, at times you are told, with tickets, the shop's civil demand and a bar (D46). The court fines you, or offers HYTA on a first offence (D47). Anything can be stolen, and a fence buys it, yet eight weeks of theft leave a life poorer than eight weeks at the line (D48). The law is `packages/sim/src/law/`. Planted bugs: 40, 40 caught. The marker stays on M0.3.
 - 2026-10-19: M1.6 built, alongside M0.3's open gates on Evan's word; its phone reading is Evan's. The page is the life now, played by taps: walk the block at a brisk pace with the clock running (D49), one bar with panels on tap (D50), the map of the block (D51), and the chronicle as a journal with one-line toasts (D52). The spike is at `?spike`. You have a name, and every event a player would see has a line. Planted bugs: 20, 20 caught. The marker stays on M0.3.
+- 2026-10-19: M1.7 built, alongside M0.3's open gates on Evan's word. The game moves to `life.rcjlabs.com` before any save is kept (D53), and saves itself: three lives to a device, saved after every choice and as time passes, with no going back within a life (D54). The journal and where you were come back with it. A save that won't load is kept aside and said so. The first fixture save must keep loading. Planted bugs: 13, 13 caught. The marker stays on M0.3; the live domain waits on Evan's DNS record.
 
 ## Open questions
 
@@ -499,8 +530,8 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 6. How the kits a life sim needs (needs and mood, relationships, schedules, careers, law) move back into Engine-Builder, and when.
 7. The package id scheme, shared with Engine-Builder's open question (`io.github.rcjlabs.*` or `com.rcjlabs.*`).
 8. The licence. Until decided, all rights reserved.
-9. A domain of its own (`*.rcjlabs.com`) before M1.7's saves and Phase 3's TWA. `rcjlabs.github.io` is one origin for every RCJ Labs project site, so its storage is shared, and `assetlinks.json` can't sit at its root. It waits on the title (D24).
-10. The replay log at frame rate. The stage sends one `time/elapse` a frame, so a session logs about 60 actions a second. Before M1.7's saves: merge consecutive elapses in the log, or send time less often and let the stage interpolate.
+9. A domain of its own (`*.rcjlabs.com`) before M1.7's saves and Phase 3's TWA. `rcjlabs.github.io` is one origin for every RCJ Labs project site, so its storage is shared, and `assetlinks.json` can't sit at its root. It waits on the title (D24). **Answered by D53 (M1.7):** `life.rcjlabs.com`, a subdomain without the title, before any save is kept.
+10. The replay log at frame rate. The stage sends one `time/elapse` a frame, so a session logs about 60 actions a second. Before M1.7's saves: merge consecutive elapses in the log, or send time less often and let the stage interpolate. **Answered (M1.7):** the page sends time in whole game minutes, about two actions a second at speed 1.
 11. The engine offers its stage-only verbs, `time/elapse` and `time/advance`, to bots with an empty payload. Elapse refuses it, and advance spends no time. This game's bots skip both (`STAGE_ONLY` in `packages/sim/src/bot.ts`). To raise in Engine-Builder: a way to mark a verb as never offered.
 12. Portrait or landscape for the city view. At 390 px portrait, two buildings in frame make people 23–25 px tall; landscape about 36 px (Readings). The stranger test says whether portrait is enough.
 13. The kept still picture is repainted whole on every pan, so a long drag may stutter on a slow phone at night. If the phone reading shows it: keep a margin round the screen in the layer, or repaint only the strip a pan uncovers.
@@ -530,8 +561,13 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 37. The civil demand is owed for good: a letter with no due date. Collections, and a court judgment for an unpaid demand, wait on M2's money.
 38. The fence is a name and an hour, not a person among the tier-1 people. M2.2 places them, and M2's crime ladder gives them their own risk.
 39. There is no "run to the next thing" yet (DESIGN.md's speed 3). Waiting for a shift means sleeping or sitting. Sleep is cut short at the shift's start, so you wake on time and then arrive late after the 20-minute walk. A "wait until" at home, or speed 3, settles it; M1.8's tap count will show what it costs.
-40. The journal, where you stand and your flat live in the page, not the save, so a reload loses them until M1.7. The journal can be rebuilt from the log; where you stand needs a place in the save.
+40. The journal, where you stand and your flat live in the page, not the save, so a reload loses them until M1.7. The journal can be rebuilt from the log; where you stand needs a place in the save. **Answered (M1.7):** the journal is kept beside the save, a key a day, and the place you last reached in the save's summary.
 41. The camera follows you by panning, and each pan repaints the kept picture (question 13). The life reads 40.6 fps with the CPU slowed four times, against 56.4 for M1.2's block (Readings). Before M1.8's phone reading: follow in steps, or keep a margin round the screen in the layer.
-42. The life sends a `time/elapse` every frame, about 60 actions a second (question 10), and compacts its log at 600. M1.7's saves need the merge question 10 proposes.
+42. The life sends a `time/elapse` every frame, about 60 actions a second (question 10), and compacts its log at 600. M1.7's saves need the merge question 10 proposes. **Answered (M1.7):** as question 10.
 43. Your flat is the page's choice, from the block's seed. M2.2 gives people homes in the sim.
 44. The interface's words are in code (`apps/game/src/life/words.ts`, `pending.ts`, `menus.ts`), not content. The content lint and M2.10's voice pass need them as records, or at least scanned.
+45. A save takes 28 ms to write with the CPU slowed four times (median; 95th 63 ms), on the page's thread: the save is hashed, checked and turned to JSON there before IndexedDB takes it, and which of those costs most isn't measured (Readings). The page saves after every choice and every game hour, so a slow phone may drop a frame or two each time. Before M1.8's phone reading: measure it there; if it shows, hash in a worker or save when the page is idle.
+46. The journal is the page's, kept beside the save, not in the sim, because the engine's listeners hear only events a module declares, and the chronicle's 29 aren't. D19's epilogue and an heir's reading of the family's record need it in the sim: declare those events (with their arguments) and keep the chronicle as a module, or have the epilogue read what the page keeps. M2.7 decides. It grows by about ten entries a day for good.
+47. A choice is saved at once, but the write takes a few milliseconds after the outcome is shown. A tab killed inside them loses the choice, and the roll can be taken again. The browser test reloads straight after a take and the take stands; a kill wasn't tested. Saving before the outcome shows would close it, at the cost of the outcome waiting on the disk.
+48. The fixture replays against today's content. While the content is the one it was saved with, it must land on its saved state; once a record changes, its log may play out otherwise, which the test allows, as a load does. A change to a slice's shape still fails it. Whether a save should name the content it was played under, and load against it, is a question for Engine-Builder.
+49. A reload puts you at the last place you reached, standing. A walk in progress and a pose (asleep in bed) aren't kept.

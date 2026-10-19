@@ -1,0 +1,150 @@
+{
+  "format": 1,
+  "game": "live-your-life",
+  "edition": "full",
+  "build": "m1.7-fixture",
+  "savedAt": 0,
+  "summary": { "name": "fixture", "day": 0, "cash": 0, "at": null },
+  "snapshot": {
+    "kernel": {
+      "seed": "fixture-24",
+      "step": 30,
+      "modes": [{ "id": "world" }],
+      "streams": {
+        "job/postings": { "seed": "fixture-24\u001fjob/postings", "s": [515377040, 747353460, 965138280, 454876247] },
+        "ties/people": { "seed": "fixture-24\u001fties/people", "s": [296077741, 4219887500, 3899402281, 3475843770] },
+        "law/block": { "seed": "fixture-24\u001flaw/block", "s": [3648219922, 3349762906, 2492923135, 758570968] },
+        "law/fence": { "seed": "fixture-24\u001flaw/fence", "s": [2679416619, 3324979229, 3607466507, 760293199] },
+        "you/you": { "seed": "fixture-24\u001fyou/you", "s": [16447236, 531538648, 1253353110, 3126342672] },
+        "ties/requests": {
+          "seed": "fixture-24\u001fties/requests",
+          "s": [170458914, 1314879377, 1372133163, 1228346723]
+        },
+        "job/events": { "seed": "fixture-24\u001fjob/events", "s": [3857584748, 1061980168, 1097932741, 3582873253] },
+        "logic/roll": { "seed": "fixture-24\u001flogic/roll", "s": [2531684444, 3405376303, 2337451485, 1447459790] },
+        "law/law": { "seed": "fixture-24\u001flaw/law", "s": [551010174, 2483428060, 3274879352, 1342933176] }
+      },
+      "versions": {
+        "clock": 1,
+        "economy": 1,
+        "home": 1,
+        "inventory": 1,
+        "job": 1,
+        "law": 1,
+        "life": 1,
+        "logic": 1,
+        "ties": 1,
+        "time": 1,
+        "you": 1
+      }
+    },
+    "time": {
+      "tick": 6420,
+      "carry": 0,
+      "next": 21,
+      "timers": [
+        {
+          "id": "midnight",
+          "due": 6780,
+          "every": 1440,
+          "effects": [{ "effect": "job-day" }, { "effect": "ties-day" }, { "effect": "law-day" }],
+          "seq": 18
+        },
+        { "id": "rent", "due": 41340, "effects": [{ "effect": "rent-due" }], "seq": 0 }
+      ]
+    },
+    "inventory": { "bag": { "coffee": 1, "charger": 1 } },
+    "economy": { "amounts": { "cash": 29200 }, "shops": {} },
+    "logic": {},
+    "clock": {},
+    "life": {
+      "activity": "awake",
+      "since": 5250,
+      "asOf": 5250,
+      "levels": {
+        "rest": 6000000,
+        "food": 1080000,
+        "hygiene": 0,
+        "company": 5880000,
+        "calm": 6000000,
+        "health": 495000
+      }
+    },
+    "job": {
+      "career": "line-cook",
+      "employed": true,
+      "standing": 34,
+      "practice": 0,
+      "posted": [
+        { "day": 5, "shift": "dinner" },
+        { "day": 9, "shift": "dinner" },
+        { "day": 10, "shift": "dinner" },
+        { "day": 11, "shift": "dinner" },
+        { "day": 12, "shift": "dinner" },
+        { "day": 13, "shift": "dinner" }
+      ],
+      "signed": [
+        { "day": 8, "shift": "dinner", "event": 436, "in": null, "worked": 0, "home": false },
+        { "day": 9, "shift": "dinner", "event": null, "in": null, "worked": 0, "home": false },
+        { "day": 10, "shift": "dinner", "event": 392, "in": null, "worked": 0, "home": false },
+        { "day": 11, "shift": "dinner", "event": null, "in": null, "worked": 0, "home": false }
+      ],
+      "warnings": [6181],
+      "unpaid": 0,
+      "year": 2025,
+      "earned": 0,
+      "drawn": []
+    },
+    "ties": {
+      "career": "line-cook",
+      "coworker": { "first": "Walt", "last": "Hoffman", "pronouns": "he", "age": 32, "seed": 584042060 },
+      "together": 0,
+      "regard": 56,
+      "memory": [
+        { "act": "covered-for-them", "day": 2, "times": 1 },
+        { "act": "left-them-alone", "day": 4, "times": 1 }
+      ],
+      "off": [8],
+      "asked": [12],
+      "request": null
+    },
+    "home": { "owed": 0 },
+    "law": {
+      "block": "block-859293008",
+      "heat": 68,
+      "filmed": [],
+      "visits": [],
+      "cases": [
+        { "id": 1, "offence": "retail-fraud-3", "value": 1999, "evidence": "held", "court": 22, "warrant": false }
+      ],
+      "next": 2,
+      "convictions": 0,
+      "hyta": "none",
+      "probation": null,
+      "owed": { "demand": 19990, "court": 0 },
+      "barred": true,
+      "fence": { "first": "Riley", "last": "Hoffman" }
+    },
+    "you": { "first": "Sam", "last": "Dombrowski", "pronouns": "they" }
+  },
+  "log": [
+    { "type": "life/do", "activity": "sleep", "minutes": 480 },
+    { "type": "life/do", "activity": "relax", "minutes": 60 },
+    { "type": "life/do", "activity": "awake", "minutes": 30 },
+    { "type": "life/do", "activity": "eat", "minutes": 30 },
+    { "type": "job/sign-up", "day": 12 },
+    { "type": "clock/wait-until", "hour": 18, "minute": 0 },
+    { "type": "life/do", "activity": "eat", "minutes": 30 },
+    { "type": "life/do", "activity": "sleep", "minutes": 480 },
+    { "type": "life/do", "activity": "sleep", "minutes": 480 },
+    { "type": "life/do", "activity": "awake", "minutes": 30 },
+    { "type": "law/pay" },
+    { "type": "life/do", "activity": "sleep", "minutes": 480 },
+    { "type": "clock/wait-until", "hour": 12, "minute": 0 },
+    { "type": "time/elapse", "ms": 1500 },
+    { "type": "time/elapse", "ms": 500 },
+    { "type": "time/elapse", "ms": 2000 }
+  ],
+  "hash": "2593dab411ccc456",
+  "check": "db6dd631161aff04"
+}

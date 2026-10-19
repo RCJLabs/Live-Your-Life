@@ -2,8 +2,11 @@
  * The life on the page (M1.6): the sim's session for one life, with the line cook hired and the
  * pack's records. The page only reads facts, offers what the game offers and sends actions; the
  * sim decides. Time passes only out in the world: while a choice, a hold or the court is up, or
- * the page is paused, no `time/elapse` is sent (ROADMAP open question 22). What happens is
- * written to the chronicle as it drains (D52).
+ * the page is paused, no `time/elapse` is sent (ROADMAP open question 22), and out in the world it
+ * is sent in whole game minutes, a few times a second rather than every frame (open question 10).
+ * What happens is written to the chronicle as it drains (D52). Each entry keeps the event and the
+ * step it happened at, so a save can keep the journal beside it and a load can drop what the
+ * save didn't reach (M1.7, keeper.ts).
  */
 import {
   type Action,
@@ -16,10 +19,16 @@ import {
   type Session,
 } from '@eb/core';
 import { PACK } from '@lyl/content';
-import { createLifeGame, DEFAULT_START, type LawState, lifeSim, lineFor, type YouSlice } from '@lyl/sim';
+import { createLifeGame, DEFAULT_START, type LawState, lifeSim, lineFor, REAL_TIME, type YouSlice } from '@lyl/sim';
 
-export interface Entry {
+/** A chronicle entry as kept: the event, the day and the step it happened at. */
+export interface Kept {
+  readonly step: number;
   readonly day: number;
+  readonly beat: Beat;
+}
+
+export interface Entry extends Kept {
   readonly text: string;
 }
 
@@ -34,9 +43,21 @@ export class Life {
   readonly refused: { action: Action; reason: unknown }[] = [];
   #fraction = 0;
 
-  constructor(seed: string) {
-    this.session = createSession(this.game, this.sim, this.game.init(seed, this.sim));
+  /** A new life from a seed, or one a save brought back with the journal kept beside it. */
+  constructor(from: string | { readonly state: GameState; readonly kept: readonly Kept[] }) {
+    const state = typeof from === 'string' ? this.game.init(from, this.sim) : from.state;
+    this.session = createSession(this.game, this.sim, state);
     this.session.drain();
+    if (typeof from === 'string') return;
+    for (const k of from.kept) {
+      if (k.step > state.kernel.step) continue;
+      const text = this.#line(k.beat);
+      if (text) this.journal.push({ ...k, text });
+    }
+  }
+
+  get seed(): string {
+    return this.state.kernel.seed;
   }
 
   get state(): GameState {
@@ -64,11 +85,14 @@ export class Life {
     return this.preview([effect])[0] as unknown as T;
   }
 
-  /** Real milliseconds at a speed's factor, out in the world only; a part of a game minute waits. */
+  /**
+   * Real milliseconds at a speed's factor, out in the world only. They are sent as whole game
+   * minutes, so the log holds two actions a second at speed 1, not one a frame; the rest waits.
+   */
   elapse(ms: number, factor: number): void {
     if (this.mode.id !== 'world' || ms <= 0) return;
     this.#fraction += ms * factor;
-    const whole = Math.floor(this.#fraction);
+    const whole = Math.floor(this.#fraction / REAL_TIME.msPerTick) * REAL_TIME.msPerTick;
     this.#fraction -= whole;
     if (whole > 0) this.act({ type: 'time/elapse', ms: whole });
     if (this.session.log.length > 600) this.session.compact();
@@ -93,12 +117,17 @@ export class Life {
     };
   }
 
+  #line(beat: Beat): string | null {
+    return lineFor(this.sim.content, beat, this.names, DEFAULT_START);
+  }
+
   #write(beats: readonly Beat[]): void {
     const day = this.fact('time.day') as number;
+    const step = this.state.kernel.step;
     for (const beat of beats) {
-      const text = lineFor(this.sim.content, beat, this.names, DEFAULT_START);
+      const text = this.#line(beat);
       if (!text) continue;
-      this.journal.push({ day, text });
+      this.journal.push({ step, day, beat, text });
       this.fresh.push(text);
     }
   }

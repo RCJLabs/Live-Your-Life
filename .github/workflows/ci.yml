@@ -3,6 +3,8 @@
 #
 # One-time setup, by hand, in the repo's Settings (until then the deploy job fails):
 #   Pages -> Build and deployment -> Source: "GitHub Actions".
+#   Pages -> Custom domain: life.rcjlabs.com, with Enforce HTTPS (D53). The DNS record is
+#   `life` CNAME `rcjlabs.github.io.`. The deploy's page_url then names the domain.
 name: ci
 
 on:
@@ -23,10 +25,8 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    env:
-      # Pages serves a project site under the repo's name until it has a domain of its own
-      # (ROADMAP.md, open questions). The build's asset URLs and the PWA's scope follow it.
-      LYL_BASE: /${{ github.event.repository.name }}/
+    # The site is served from the root of life.rcjlabs.com (decisions.md, D53), so the build's
+    # base path is vite.config.ts's default, "/". LYL_BASE still sets another for a local check.
     steps:
       # The engine is a submodule pinned to a commit (decisions.md, D13); it is public.
       - uses: actions/checkout@v7

@@ -1,7 +1,11 @@
 import { expect, type Page, test } from '@playwright/test';
 import { expectNoAxeIssues, expectNothingOffscreen, picture, smallTargets, watchErrors } from './checks.ts';
 
-/** M1.6's life on the page (D49–D52), played by taps on the screen, as a player would. */
+/**
+ * M1.6's life on the page (D49–D52), played by taps on the screen, as a player would. The screens'
+ * checks open the page as a first visit does; the rest play the life of `?seed=life-1`, unsaved,
+ * so the block, and the walk to the diner, are the same every run (a new life's seed is random).
+ */
 
 type Life = Record<string, (...args: unknown[]) => unknown>;
 const L = <T>(page: Page, fn: string, ...args: unknown[]): Promise<T> =>
@@ -75,7 +79,7 @@ test.describe('on a phone', () => {
   test('plays a day by taps alone, and the sim refuses nothing it is sent', async ({ page }) => {
     test.setTimeout(240_000);
     const errors = watchErrors(page);
-    await page.goto('./');
+    await page.goto('./?seed=life-1');
     await expect(page.locator('#when')).toContainText('07:0');
     const places = await L<PlaceInfo[]>(page, 'places');
     const bed = places.find((p) => p.label === 'Bed' && p.building === 'apartment') as PlaceInfo;
@@ -151,7 +155,7 @@ test.describe('on a phone', () => {
   });
 
   test('stops the clock in the panel, a menu and the map, and when paused', async ({ page }) => {
-    await page.goto('./');
+    await page.goto('./?seed=life-1');
     await expect(page.locator('#when')).toContainText('07:0');
     const still = async () => {
       const before = await L<number>(page, 'tick');
@@ -180,7 +184,7 @@ test.describe('on a phone', () => {
   test('walks at a brisk pace with the clock running: about 20 game minutes from the flat to the diner', async ({
     page,
   }) => {
-    await page.goto('./');
+    await page.goto('./?seed=life-1');
     await expect(page.locator('#when')).toContainText('07:0');
     const before = await L<number>(page, 'tick');
     await page.click('#map-button');
@@ -193,7 +197,7 @@ test.describe('on a phone', () => {
   });
 
   test('the map names every building, and a tap on one walks you to its door', async ({ page }) => {
-    await page.goto('./');
+    await page.goto('./?seed=life-1');
     await page.click('#map-button');
     const buttons = page.locator('#map-places button');
     const doors = (await L<PlaceInfo[]>(page, 'places')).filter((p) => p.kind === 'door');

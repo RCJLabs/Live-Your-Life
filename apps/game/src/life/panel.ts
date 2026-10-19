@@ -101,7 +101,12 @@ export function coverOdds(life: Life, day: number): string {
   return p?.chance === undefined ? '' : `They say yes about ${odds(p.chance)}.`;
 }
 
-export function makePanel(life: Life, act: (a: Action) => void, closed: () => void): Panel {
+export function makePanel(
+  life: Life,
+  act: (a: Action) => void,
+  closed: () => void,
+  lives: (() => void) | null = null,
+): Panel {
   let tab: Tab = 'waiting';
   const body = el('div', { class: 'panel-body' });
   const tabs = el('nav', { class: 'tabs', 'aria-label': 'Panel' });
@@ -111,6 +116,8 @@ export function makePanel(life: Life, act: (a: Action) => void, closed: () => vo
     { class: 'panel', id: 'panel', role: 'dialog', 'aria-label': 'Your life', hidden: true },
     el('div', { class: 'panel-head' }, tabs, close),
     body,
+    // The way back to the lives kept on this device (M1.7): the life is saved before it goes.
+    ...(lives ? [el('div', { class: 'panel-foot' }, button('Your lives', lives, { id: 'lives-button' }))] : []),
   );
   const send = (a: Action) => {
     act(a);

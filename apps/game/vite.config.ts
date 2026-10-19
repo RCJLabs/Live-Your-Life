@@ -5,9 +5,8 @@ import { defineConfig, type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 /**
- * Where the built game is served from. GitHub Pages serves this repo under /Live-Your-Life/
- * until it has a domain of its own (ROADMAP.md, open questions), and CI sets LYL_BASE to that
- * path. Asset URLs, the manifest's scope and start_url, and the service worker's navigation
+ * Where the built game is served from: the root of life.rcjlabs.com (decisions.md, D53). LYL_BASE
+ * sets another path, for a build served under one, as GitHub Pages did before the domain. Asset URLs, the manifest's scope and start_url, and the service worker's navigation
  * fallback all derive from this one value. Engine-Builder's editor does the same with EB_BASE.
  */
 const BASE = process.env.LYL_BASE ?? '/';

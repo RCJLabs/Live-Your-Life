@@ -39,7 +39,7 @@ pnpm check        # typecheck → lint → test → build → e2e (what CI runs)
 pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
 pnpm lint         # Biome, then the purity check over this repo's eb.pure packages (tools/purity)
 pnpm test         # Vitest
-pnpm build        # apps/game/dist; LYL_BASE sets the base path (CI uses /Live-Your-Life/)
+pnpm build        # apps/game/dist; LYL_BASE sets the base path (`/` by default, as life.rcjlabs.com serves it, D53)
 pnpm e2e          # Playwright against `vite preview` of the build, under LYL_BASE
 pnpm format       # Biome autofix
 pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public/icons/icon.svg; the PNGs are committed
@@ -50,6 +50,7 @@ node tools/population/bench.ts [days] [sizes]      # the population harness in N
 node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromium at 1× and 4× CPU
 pnpm eb validate packages/content --types tools/content/game.ts   # the engine's checks on the content, its conditions against the game's facts (part of pnpm lint)
 pnpm content      # rebuild packages/content/pack.json after changing a record; a test fails until you do
+node apps/game/e2e/saves-bench.ts [n] [seconds]   # after `pnpm build`: a save's size, and its write and load times at 1× and 4× CPU
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 ```
 
@@ -61,8 +62,9 @@ node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms t
 ## Layout
 
 ```
-engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace, and
-                    since M1.1 the content pipeline: @eb/schema, @eb/compiler, @eb/script and @eb/cli (build time and CI only)
+engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace,
+                    since M1.1 the content pipeline: @eb/schema, @eb/compiler, @eb/script and @eb/cli (build time and CI only),
+                    and since M1.7 @eb/platform (save slots in IndexedDB, backups, quarantine; the page's, not the sim's)
 packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON (the street, facades, buildings
                     and blocks; since M1.2 fixtures, rooms and interiors; since M1.3 the career, shift events and taxes; since
                     M1.4 the name pool, acts and the favour; since M1.5 the shop's goods as the inventory kit's items, offences,
@@ -76,11 +78,13 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     hour plans, ties, shares), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5
                     sight.ts, who sees where in a shop); since M1.6 you (you.ts) and the chronicle (chronicle.ts);
-                    test/slice.ts is the slice's life for tests and benches
+                    test/slice.ts is the slice's life for tests and benches; test/fixtures/saves/ the save fixtures that
+                    must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
                     @lyl/stage/testing is a fake canvas for drawing tests
 apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the page is the life (src/life/: the session, places,
-                    tap-to-go, the bar, the panel, menus, the map, D49–D52); M0.3's art spike is at ?spike (src/spike/), and
+                    tap-to-go, the bar, the panel, menus, the map, D49–D52; since M1.7 the saves, keeper.ts, and your lives,
+                    lives.ts, D53–D54; play.ts is the page, main.ts its start); M0.3's art spike is at ?spike (src/spike/), and
                     M1.1's generated block at ?block=generated (src/city/, D33) with M1.2's interiors and the walker (D36);
                     dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
