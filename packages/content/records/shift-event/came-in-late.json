@@ -1,0 +1,26 @@
+{
+  "name": "Late in",
+  "tags": ["work"],
+  "weight": 4,
+  "when": "ties.beside",
+  "prompt": "{name} comes in twenty minutes late, out of breath, and asks you not to mention it.",
+  "choices": [
+    {
+      "id": "quiet",
+      "text": "Keep it to yourself",
+      "outcome": {
+        "told": "You say nothing. The owner doesn't ask.",
+        "act": "kept-quiet"
+      }
+    },
+    {
+      "id": "tell",
+      "text": "Tell the owner",
+      "outcome": {
+        "told": "The owner writes something down. {name} works the rest of the shift without talking to you.",
+        "standing": 1,
+        "act": "told-on-them"
+      }
+    }
+  ]
+}

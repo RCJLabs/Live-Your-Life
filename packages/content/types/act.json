@@ -1,0 +1,15 @@
+{
+  "title": "Act",
+  "description": "A kind of thing you do to or for someone, which they remember (D44, as Ludus's REGARD): how far it moves their regard, every time, and the line they remember it by.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "regard": { "kind": "int", "min": -30, "max": 30, "description": "Points of regard it moves, from 0 to 100." },
+    "says": {
+      "kind": "text",
+      "min": 1,
+      "max": 200,
+      "description": "What is between you, said to you. {name} is their first name; {them} and {their} their pronouns."
+    }
+  }
+}

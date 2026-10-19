@@ -3,13 +3,31 @@
   "place": "diner",
   "wage": 1473,
   "shifts": [
-    { "id": "breakfast", "hour": 6, "minute": 0, "minutes": 480 },
-    { "id": "dinner", "hour": 14, "minute": 0, "minutes": 480 }
+    {
+      "id": "breakfast",
+      "hour": 6,
+      "minute": 0,
+      "minutes": 480
+    },
+    {
+      "id": "dinner",
+      "hour": 14,
+      "minute": 0,
+      "minutes": 480
+    }
   ],
   "open": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
-  "posting": { "weekday": "thursday", "fewest": 3, "most": 6 },
+  "posting": {
+    "weekday": "thursday",
+    "fewest": 3,
+    "most": 6
+  },
   "perWeek": 5,
-  "pay": { "weekday": "friday", "hour": 6, "minute": 0 },
+  "pay": {
+    "weekday": "friday",
+    "hour": 6,
+    "minute": 0
+  },
   "withholding": ["federal-single", "social-security", "medicare", "michigan", "city-resident"],
   "standing": {
     "start": 50,
@@ -22,7 +40,38 @@
     "dropBefore": 1440,
     "drop": 1
   },
-  "warnings": { "letGoAt": 2, "lapse": 28 },
-  "skill": { "half": 24000 },
-  "events": { "tags": ["work", "food-service", "kitchen"], "chance": 50 }
+  "warnings": {
+    "letGoAt": 2,
+    "lapse": 28
+  },
+  "skill": {
+    "half": 24000
+  },
+  "crew": {
+    "names": "rust-belt",
+    "ages": {
+      "min": 19,
+      "max": 52
+    },
+    "days": 5,
+    "asks": 10,
+    "favour": "cover-shift",
+    "cover": {
+      "base": 50,
+      "regard": 50
+    },
+    "half": 2400,
+    "acts": {
+      "late": "kept-them-waiting",
+      "noShow": "left-them-alone",
+      "covered": "covered-for-them",
+      "refused": "turned-them-down",
+      "ignored": "never-answered",
+      "asked": "asked-a-favour"
+    }
+  },
+  "events": {
+    "tags": ["work", "food-service", "kitchen"],
+    "chance": 50
+  }
 }

@@ -1,0 +1,36 @@
+{
+  "name": "A burned wrist",
+  "tags": ["kitchen"],
+  "weight": 5,
+  "when": "ties.beside",
+  "prompt": "{name} catches {their} wrist on the fryer basket. The rail is full.",
+  "choices": [
+    {
+      "id": "own",
+      "text": "Keep to your own tickets",
+      "outcome": {
+        "told": "{name} runs it under the tap and comes back with {their} wrist wrapped. Two of {their} plates go out late.",
+        "act": "kept-to-yourself"
+      }
+    },
+    {
+      "id": "cover",
+      "text": "Take {their} tickets while {name} cools it",
+      "odds": {
+        "base": 50,
+        "skill": 40,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "You run both sides of the grill for ten minutes. Nothing comes back.",
+        "practice": 20,
+        "act": "helped"
+      },
+      "failure": {
+        "told": "You fall behind on both. {name} is back before you've caught up.",
+        "standing": -2,
+        "act": "helped"
+      }
+    }
+  ]
+}

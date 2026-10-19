@@ -1,8 +1,8 @@
 /**
  * The game as the engine runs it (engine/docs/specs/sim.md): the engine's time module on this
  * game's calendar, the economy kit holding the cash, the engine's logic module for rolls, the
- * clock, the player's needs and activities, the job and the home. They reach each other only
- * through facts and effects.
+ * clock, the player's needs and activities, the job, the people you know and the home. They
+ * reach each other only through facts, effects and events.
  */
 import {
   createGame,
@@ -19,6 +19,7 @@ import { clockModule } from './clock.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
 import { lifeModule } from './life.ts';
+import { tiesModule } from './ties/module.ts';
 
 /**
  * Wall-clock time into game time at speed 1: half a second a game minute, so a day lasts 12
@@ -38,12 +39,12 @@ export interface LifeOptions {
 export function startingTimers(start: LifeStart): ScheduleSpec[] {
   return [
     { timer: RENT_TIMER, after: { minutes: minutesToNextMonth(start) }, effects: [{ effect: 'rent-due' }] },
-    // Midnight: the job's postings and payday (job/shifts.ts).
+    // Midnight: the job's postings and payday (job/shifts.ts), then the coworker's asks (ties/favours.ts).
     {
       timer: 'midnight',
       after: { minutes: minutesToMidnight(start) },
       every: { days: 1 },
-      effects: [{ effect: 'job-day' }],
+      effects: [{ effect: 'job-day' }, { effect: 'ties-day' }],
     },
   ];
 }
@@ -51,13 +52,15 @@ export function startingTimers(start: LifeStart): ScheduleSpec[] {
 /** The modules of a life, in the order they start: what `eb validate` checks content's facts against. */
 export function lifeModules(options: LifeOptions = {}): Module[] {
   const start = options.start ?? DEFAULT_START;
+  const hire = options.career === undefined ? undefined : { career: options.career, start };
   return [
     timeModule({ calendar: lifeCalendar(start), realTime: REAL_TIME, timers: startingTimers(start) }),
     economyKit,
     logicModule,
     clockModule,
     lifeModule,
-    jobModule(options.career === undefined ? undefined : { career: options.career, start }),
+    jobModule(hire),
+    tiesModule(hire),
     homeModule,
   ];
 }

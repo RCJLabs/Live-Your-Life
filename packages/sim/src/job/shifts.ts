@@ -20,17 +20,37 @@ import {
   windowOf,
 } from './state.ts';
 
-/** Why a posted day can't be signed up for now, or null when it can. */
-function signUpProblem(view: FactView<JobSlice> | JobContext, day: number): string | null {
-  const slice = 'state' in view ? view.state : view.read();
+type Viewer = FactView<JobSlice> | JobContext;
+const sliceOf = (view: Viewer) => ('state' in view ? view.state : view.read());
+
+/** Why a day can't take one more shift of yours, or null when it can: from tomorrow, one a day, the week's limit. */
+export function freeProblem(view: Viewer, day: number): string | null {
+  const slice = sliceOf(view);
   if (!slice.employed) return 'not-employed';
-  // Postings are from tomorrow on: hiring posts from tomorrow, and midnight clears the day's.
-  if (!slice.posted.some((p) => p.day === day)) return 'not-posted';
   if (slice.signed.some((s) => s.day === day)) return 'already-signed-up';
   const today = todayOf(view);
+  if (day <= today.day) return 'too-soon';
   const week = weekOf(today, day);
   const taken = slice.signed.filter((s) => weekOf(today, s.day) === week).length;
   return taken >= careerFor(view.content, slice).perWeek ? 'week-full' : null;
+}
+
+/** Why a posted day can't be signed up for now, or null when it can. */
+function signUpProblem(view: Viewer, day: number): string | null {
+  // Postings are from tomorrow on: hiring posts from tomorrow, and midnight clears the day's.
+  if (sliceOf(view).employed && !sliceOf(view).posted.some((p) => p.day === day)) return 'not-posted';
+  return freeProblem(view, day);
+}
+
+/** A shift of yours from now on: its event, if it has one, sealed now so the routine can stop for it (D40). */
+function addSignUp(ctx: JobContext, day: number, shift: string): void {
+  const slice = ctx.write();
+  const career = careerFor(ctx.content, slice);
+  const { minutes } = shiftKind(career, shift);
+  const rng = ctx.rng('events');
+  const event = rng.chance(career.events.chance, 100) ? rng.int(30, minutes - 30) : null;
+  slice.signed.push({ day, shift, event, in: null, worked: 0, home: false });
+  slice.signed.sort((a, b) => a.day - b.day);
 }
 
 export const signUp = {
@@ -39,20 +59,38 @@ export const signUp = {
     if (typeof day !== 'number' || !Number.isSafeInteger(day)) return ctx.refuse('bad-day');
     const problem = signUpProblem(ctx, day);
     if (problem) return ctx.refuse(problem);
-    const slice = ctx.write();
-    const career = careerFor(ctx.content, slice);
-    const shift = slice.posted.find((p) => p.day === day)?.shift as string;
-    const { minutes } = shiftKind(career, shift);
-    // Whether this shift has an event, and when: sealed now, so the routine can stop for it (D40).
-    const rng = ctx.rng('events');
-    const event = rng.chance(career.events.chance, 100) ? rng.int(30, minutes - 30) : null;
-    slice.signed.push({ day, shift, event, in: null, worked: 0, home: false });
-    slice.signed.sort((a, b) => a.day - b.day);
+    const shift = ctx.read().posted.find((p) => p.day === day)?.shift as string;
+    addSignUp(ctx, day, shift);
     ctx.emit('signed-up', { day, shift });
   },
   options: (view: FactView<JobSlice>) =>
     view.state.posted.filter((p) => signUpProblem(view, p.day) === null).map((p) => ({ day: p.day })),
 };
+
+/** `take-shift`: a shift not posted to you, taken as a favour (D42). It counts in your week like any other. */
+export function takeShift(ctx: JobContext, day: number, shift: string): void {
+  const problem = freeProblem(ctx, day);
+  if (problem) {
+    ctx.refuse(problem);
+    return;
+  }
+  if (!careerFor(ctx.content, ctx.read()).shifts.some((k) => k.id === shift)) throw new Error(`no shift "${shift}"`);
+  addSignUp(ctx, day, shift);
+  ctx.emit('took-shift', { day, shift });
+}
+
+/** `give-shift`: one of yours covered by someone else before it starts (D42). The owner doesn't mind a swap. */
+export function giveShift(ctx: JobContext, day: number): void {
+  if (!(startsIn(ctx, day) > 0)) {
+    ctx.refuse('not-ahead');
+    return;
+  }
+  ctx.apply({ effect: 'cancel-timer', timer: timerFor(day, 'event') });
+  ctx.apply({ effect: 'cancel-timer', timer: timerFor(day, 'over') });
+  const slice = ctx.write();
+  slice.signed = slice.signed.filter((s) => s.day !== day);
+  ctx.emit('covered', { day });
+}
 
 /**
  * A shift's timers, set at midnight on its day rather than when it is signed up for: the time
@@ -113,7 +151,9 @@ export function clockIn(ctx: JobContext): void {
   const late = tick - now.start;
   ctx.emit('started', { day: s.day, late });
   const rules = careerFor(ctx.content, ctx.read()).standing;
-  if (late > rules.lateAfter) moveStanding(ctx, -rules.late, 'late');
+  if (late <= rules.lateAfter) return;
+  ctx.emit('late', { day: s.day, shift: s.shift, minutes: late });
+  moveStanding(ctx, -rules.late, 'late');
 }
 
 /** Work has stopped after `minutes` (the life module's `paid-work`): practice, and pay owed. */
@@ -127,7 +167,9 @@ export function paidWork(ctx: JobContext, minutes: number): void {
     const { start, end } = windowOf(career, today, x);
     return x.in !== null && start <= today.tick - minutes && today.tick <= end;
   });
-  if (s) s.worked += minutes;
+  if (!s) return;
+  s.worked += minutes;
+  ctx.emit('worked', { day: s.day, shift: s.shift, minutes });
 }
 
 /** A minute after a shift ends: a no-show, a shift left early, or one worked whole. */
@@ -142,7 +184,7 @@ export function shiftOver(ctx: JobContext, day: number): void {
   if (s.in === null) {
     const warnings = [...activeWarnings(slice, career, today.tick), today.tick];
     ctx.write().warnings = warnings;
-    ctx.emit('no-show', { day, warnings: warnings.length });
+    ctx.emit('no-show', { day, shift: s.shift, warnings: warnings.length });
     if (warnings.length >= career.warnings.letGoAt) letGo(ctx, 'no-shows');
     else moveStanding(ctx, -rules.noShow, 'no-show');
     return;

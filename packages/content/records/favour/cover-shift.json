@@ -1,0 +1,12 @@
+{
+  "name": "A shift to cover",
+  "asks": "{name} asks if you can take a shift of {their}.",
+  "yes": {
+    "text": "Say yes",
+    "told": "{name} thanks you. The shift is yours."
+  },
+  "no": {
+    "text": "Say no",
+    "told": "{name} says it's all right and asks someone else."
+  }
+}

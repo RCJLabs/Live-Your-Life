@@ -2,6 +2,7 @@
   "name": "The rush",
   "tags": ["kitchen"],
   "weight": 10,
+  "when": "not ties.beside",
   "prompt": "Eleven tickets on the rail and the printer is still going. Two of them are yours from ten minutes ago.",
   "choices": [
     {
@@ -15,12 +16,22 @@
     {
       "id": "push",
       "text": "Work the rail in order, as fast as you can",
-      "odds": { "base": 55, "skill": 35, "tired": 30 },
-      "outcome": { "told": "You clear the rail by half past. Nothing comes back.", "standing": 2, "practice": 30 },
+      "odds": {
+        "base": 55,
+        "skill": 35,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "You clear the rail by half past. Nothing comes back.",
+        "standing": 2,
+        "practice": 30
+      },
       "failure": {
         "told": "Two plates go out cold, and one table leaves without paying.",
         "standing": -2,
-        "needs": { "calm": -10 }
+        "needs": {
+          "calm": -10
+        }
       }
     }
   ]

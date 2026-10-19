@@ -1,0 +1,34 @@
+{
+  "name": "A raw plate",
+  "tags": ["kitchen"],
+  "weight": 4,
+  "when": "ties.beside",
+  "prompt": "A plate comes back raw in the middle. The owner holds it up at the pass and asks whose it was. It was {name}'s.",
+  "choices": [
+    {
+      "id": "nothing",
+      "text": "Say nothing",
+      "outcome": {
+        "told": "Nobody answers. The owner puts it back on the grill herself and looks at you both.",
+        "act": "said-nothing"
+      }
+    },
+    {
+      "id": "mine",
+      "text": "Say it was yours",
+      "outcome": {
+        "told": "The owner tells you to watch your temperatures. {name} doesn't look up, but at close says thanks.",
+        "standing": -2,
+        "act": "took-the-blame"
+      }
+    },
+    {
+      "id": "theirs",
+      "text": "Say it was {name}'s",
+      "outcome": {
+        "told": "The owner takes it to {name}. Neither of them says anything to you.",
+        "act": "named-them"
+      }
+    }
+  ]
+}

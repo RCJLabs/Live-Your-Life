@@ -1,0 +1,17 @@
+{
+  "title": "Favour",
+  "description": "Something someone asks of you (D42), and the two answers. {name} is their first name; {them} and {their} their pronouns. The day and the shift are the stage's to say, from the request.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "asks": { "kind": "text", "min": 1, "max": 300, "multiline": true },
+    "yes": {
+      "kind": "group",
+      "fields": { "text": { "kind": "text", "min": 1, "max": 80 }, "told": { "kind": "text", "min": 1, "max": 300 } }
+    },
+    "no": {
+      "kind": "group",
+      "fields": { "text": { "kind": "text", "min": 1, "max": 80 }, "told": { "kind": "text", "min": 1, "max": 300 } }
+    }
+  }
+}

@@ -131,6 +131,52 @@
         }
       }
     },
+    "crew": {
+      "kind": "group",
+      "optional": true,
+      "description": "Who works beside you (D41): for now one, the other cook, drawn from the seed.",
+      "fields": {
+        "names": { "kind": "ref", "to": "name-pool" },
+        "ages": {
+          "kind": "group",
+          "fields": { "min": { "kind": "int", "min": 16, "max": 90 }, "max": { "kind": "int", "min": 16, "max": 90 } }
+        },
+        "days": { "kind": "int", "min": 1, "max": 7, "description": "Days a week they work." },
+        "asks": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Percent of days they ask you to cover a shift."
+        },
+        "favour": { "kind": "ref", "to": "favour", "description": "What they ask." },
+        "cover": {
+          "kind": "group",
+          "description": "The odds they cover a shift you ask them to (D43): the base, and regard's points.",
+          "fields": {
+            "base": { "kind": "int", "min": 0, "max": 100 },
+            "regard": { "kind": "int", "min": 0, "max": 100 }
+          }
+        },
+        "half": {
+          "kind": "int",
+          "min": 60,
+          "max": 1000000,
+          "description": "Minutes beside them for familiarity to reach half."
+        },
+        "acts": {
+          "kind": "group",
+          "description": "What they remember of what you do: late, or not there, on a shift of theirs; covering one of theirs, saying no, or never answering; asking them to cover yours.",
+          "fields": {
+            "late": { "kind": "ref", "to": "act" },
+            "noShow": { "kind": "ref", "to": "act", "label": "No-show" },
+            "covered": { "kind": "ref", "to": "act" },
+            "refused": { "kind": "ref", "to": "act" },
+            "ignored": { "kind": "ref", "to": "act" },
+            "asked": { "kind": "ref", "to": "act" }
+          }
+        }
+      }
+    },
     "events": {
       "kind": "group",
       "description": "The shift events it draws (D40).",

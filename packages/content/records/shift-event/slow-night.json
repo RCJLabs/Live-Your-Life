@@ -1,0 +1,27 @@
+{
+  "name": "A slow night",
+  "tags": ["food-service"],
+  "weight": 5,
+  "when": "ties.beside",
+  "prompt": "It's slow. {name} leans on the prep table and asks how long you've lived in the city.",
+  "choices": [
+    {
+      "id": "talk",
+      "text": "Talk while you clean",
+      "outcome": {
+        "told": "You talk about the neighbourhood until the next ticket comes in.",
+        "needs": {
+          "company": 10
+        },
+        "act": "talked"
+      }
+    },
+    {
+      "id": "clean",
+      "text": "Keep cleaning",
+      "outcome": {
+        "told": "You keep cleaning. {name} goes back to the walk-in."
+      }
+    }
+  ]
+}

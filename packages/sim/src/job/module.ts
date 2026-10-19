@@ -2,14 +2,15 @@
  * The job module (M1.3): one career on the template, from its record (D9). Shifts posted weekly
  * and signed up for (shifts.ts), standing and its warnings (D39), shift events that stop the
  * routine for a choice (events.ts, D40), and pay less withholding (pay.ts, D38). The life module
- * does the working and tells this when work starts and how long it went.
+ * does the working and tells this when work starts and how long it went. Since M1.4 it raises
+ * events the ties module hears, and takes and gives shifts as favours (D42).
  */
 import { defineModule, type FactView, type InitContext } from '@eb/core';
 import { type LifeStart, weekdayOf } from '../calendar.ts';
 import { daysAtHire, post, type Today, todayOf } from './days.ts';
 import { choose, shiftChoice, shiftEvent, shiftOutcome } from './events.ts';
 import { payday } from './pay.ts';
-import { clockIn, drop, jobDay, paidWork, shiftOver, signUp } from './shifts.ts';
+import { clockIn, drop, freeProblem, giveShift, jobDay, paidWork, shiftOver, signUp, takeShift } from './shifts.ts';
 import { activeWarnings, careerFor, type JobSlice, jobless, shiftNow, skillOf, windowOf } from './state.ts';
 import { payFor } from './withholding.ts';
 
@@ -51,6 +52,13 @@ function nextShiftIn(view: FactView<JobSlice>): number | undefined {
   return starts.length === 0 ? undefined : Math.min(...starts) - today.tick;
 }
 
+/** What `worked` and `late` carry: the shift, and its minutes. */
+const SHIFT_MINUTES = {
+  day: { type: 'int', min: 0 },
+  shift: { type: 'text' },
+  minutes: { type: 'int', min: 1 },
+} as const;
+
 const dayOf = (effect: Readonly<Record<string, unknown>>): number => {
   if (typeof effect.day !== 'number' || !Number.isSafeInteger(effect.day))
     throw new Error('job: "day" is a whole number');
@@ -91,6 +99,29 @@ export function jobModule(hire?: Hire) {
         domain: { type: 'int', min: 0 },
         label: 'pay earned and not yet paid',
       },
+      free: {
+        args: { day: { type: 'int', min: 0 } },
+        read: (view, { day }) => freeProblem(view, day as number) === null,
+        domain: { type: 'bool' },
+        label: 'free to take a shift that day',
+      },
+      // Your shifts not yet started, for whoever asks to cover one: a list, so no domain.
+      ahead: (view) => {
+        if (!view.state.employed) return [];
+        const today = todayOf(view);
+        const career = careerFor(view.content, view.state);
+        return view.state.signed
+          .filter((s) => windowOf(career, today, s).start > today.tick)
+          .map((s) => ({ day: s.day, shift: s.shift }));
+      },
+    },
+    events: {
+      worked: { args: SHIFT_MINUTES, label: 'Worked a shift, or part of it' },
+      late: { args: SHIFT_MINUTES, label: 'Started a shift late' },
+      'no-show': {
+        args: { day: { type: 'int', min: 0 }, shift: { type: 'text' }, warnings: { type: 'int', min: 1 } },
+        label: "Didn't show for a shift",
+      },
     },
     actions: { 'sign-up': signUp, drop, choose },
     effects: {
@@ -108,6 +139,8 @@ export function jobModule(hire?: Hire) {
       payday: (ctx) => payday(ctx),
       'shift-choice': shiftChoice,
       'shift-outcome': (ctx, effect) => shiftOutcome(ctx, effect),
+      'take-shift': (ctx, effect) => takeShift(ctx, dayOf(effect), String(effect.shift)),
+      'give-shift': (ctx, effect) => giveShift(ctx, dayOf(effect)),
     },
     modes: {
       // A shift event on screen: the clock stops, and only a choice is allowed (D40).
