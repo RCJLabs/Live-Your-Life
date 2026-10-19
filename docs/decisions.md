@@ -221,6 +221,20 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 - 3,000: 17.1 ms at the 95th, over a 60 fps frame already; 49.7 at worst; 2.87 s a month; 601 kB.
 - A few dozen, risk 2's fallback. Not needed: at 500 the batch is inside the frame budget (research/population.md, "Risk 2's verdict").
 
+### D32. The slice's block is one side of one street. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** M1.1 generates 6 to 8 lots (tune) on the far side of one street, their fronts to the camera. Among them are the slice's buildings: the apartment house, the diner, and a corner shop for M1.5's shoplifting. The near side stays open, a verge or a car park, so nothing hides the street.
+
+**Why.** The camera is fixed (D7), so on any street the side nearer the camera shows its backs and hides the street. The slice needs one street that reads, not a city. How the city deals with the near side is M2.1's question (ROADMAP, open questions).
+
+**Options considered.** One side of one street; chosen. Both sides, the near side drawn from the back and cut to sill height while the player is on the street, as Project Zomboid hides what stands in front: the answer M2.1 needs anyway, built and tested now, with more stage work. A whole block, four streets and an alley with corner lots: closest to M2.1's generator, needing the near-side cut too, and mostly off screen at 390 px.
+
+### D33. The page stays M0.3's spike until its gates are taken. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The live page draws exactly M0.3's art spike, so the phone reading and the stranger test still measure what they were written for, and the tester brief's links still work. M1.1's generated block draws on the same page with `?block=generated`. It becomes the default once M0.3's gates are taken.
+
+**Options considered.** Keep the spike for now; chosen. Replace it now, with the spike kept at `?spike=1` and the tester brief's links changed to it.
+
 ---
 
 ## Open items

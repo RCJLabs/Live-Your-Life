@@ -107,7 +107,31 @@ How to read this file:
 
 **Goal:** one week of one life, whole, on a phone: one apartment, one job, one relationship, one crime, with bots playing it under a tap budget.
 
-- **M1.1 A block.** The generator for one block: lots, two buildings with facade grammars, a street, the walk grid. Nothing placed by hand.
+- **M1.1 A block.** Done, 2026-10-19, alongside M0.3's open gates, on Evan's word. The generator for one block: lots, two buildings with facade grammars, a street, the walk grid. Nothing placed by hand.
+  - The block is one side of one street (D32). The page stays M0.3's spike, and the generated block draws at `?block=generated` (D33).
+  - Done when:
+    - 1,000 seeded blocks have no building over another or over the street, and every door joins the street on the walk grid [auto];
+    - every block has the slice's buildings: the apartment house, the diner, the corner shop [auto];
+    - the same seed gives the same block [auto];
+    - every template is a content record that `eb validate` passes, seen failing on a planted bad record [auto];
+    - the generated block passes the page's browser checks at 360 and 390 px and in landscape [auto];
+    - its frame rate at 4× CPU is in Readings [auto].
+  - **Done, 2026-10-19: every gate passed**, each in `pnpm check` but the frame rate, which is in Readings.
+    - `packages/content` is the game's content as an Engine-Builder project: four record types (street, facade, building, block) and 11 records. The engine's compiler checks them in `pnpm lint` (`eb validate`) and builds `pack.json` (`pnpm content`), which the sim and the page read. A test fails when a record changes and the pack isn't rebuilt. `@eb/schema`, `@eb/compiler`, `@eb/script` and `@eb/cli` join the workspace; they run at build time and in CI only.
+    - The generator is `packages/sim/src/city/`, pure and seeded. It lays out the lots, the buildings and their doors, the street, its open side and its furniture, and the walk grid. Routes are weighted A* with eight neighbours, ported from 2060TD.
+    - 1,000 seeded blocks keep every template's rules, have the slice's three buildings with the shop at an end, and join every door to the street. The same seed gives the same block.
+    - The stage draws facades from the grammar: single or paired windows, sills, three cornices, three levels of wear, a shop's sign. A golden test holds M0.3's spike to its drawing, call for call, so D33's page is unchanged.
+    - Two bugs were found on the way:
+      - The A* port read its heap's keys from shared arrays. A cell whose cost fell after it was pushed broke the heap's order, and one seeded grid's route came out 4% long. The test against a plain Dijkstra caught it, and 2060TD's original has the same code.
+      - The spike drew door shares in tenths, so 0.66 to 0.78 could only come out as 0.7 or 0.8. The generator draws them in hundredths.
+    - Planted bugs: 23, 23 caught.
+      - The content: a building naming a missing facade; a record changed without rebuilding the pack.
+      - The block: the corner shop anywhere; a needed building left out; no gap between buildings; one bay too many; a building set back off its lot line; door shares in tenths again; lamps left in doorways.
+      - The walk grid: a wall's edge blocking the cell it touches; posts blocking nothing; a diagonal cutting a wall's corner; the sidewalk counted as roadway.
+      - The routes: A*'s estimate overshooting; a diagonal step as long as a straight one.
+      - The templates: a backwards range let through; a block needing more buildings than lots let through.
+      - The facades: pairs drawn as single windows; nothing ever boarded up; a shop's sign behind its awning; the spike's apartment house losing its side windows.
+      - The page: a door drawn from the street's origin; a car park painted as grass.
 - **M1.2 Two interiors.** The apartment and the restaurant from templates, walkable, with cutaway walls.
 - **M1.3 One job.** Line cook on the career template: shifts posted weekly, sign-up, pay, standing, fatigue; a shared pool of shift events by tag.
 - **M1.4 One relationship.** A coworker with familiarity, regard and a memory of acts.
@@ -182,6 +206,11 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | The kernel's copy and freeze of one slice (M0.4) | 54,000 numbers (1,000 people): 3.0 ms at full CPU, 15.4 ms at 4×. A lean copy beside the kernel: 1.3 and 6.2 ms. One share of 24: 0.10 and 1.05 ms | the harness's split, timing the engine's own `cloneJson` and `freezeJson` in Chromium | 2026-10-19 | the median of 15 |
 | A month in one action, tier-1 people (M0.4) | at 4×: 1,000 people in 1.05 s staggered, 0.83 s at midnight, 1.82 s every hour; 3,000 people in 2.87 s staggered | the harness, after each 30-day run | 2026-10-19 | 1 each |
 | Tier-1 people in a save (M0.4) | 54 numbers a person: 187 kB of canonical JSON at 1,000 people, 601 kB at 3,000 | the harness, `canonicalJson` | 2026-10-19 | 1 each |
+| A block, generated (M1.1) | planning a block from the seed: 0.037 ms; laying its walk grid: 0.063 ms, 13,270 cells; routing the longest walk on it, end to end and across the street: 6.35 ms, 94.8 m | `node packages/sim/test/block-bench.ts`, Node 22.22.0, cloud container; medians of 5 rounds | 2026-10-19 | 1,000 blocks a round |
+| Frame rate, generated block, headless (M1.1) | 60 fps at full CPU. At 4× CPU, 59.9 fps by day (95th frame 16.8 ms) and 28.0 at night (95th 50.0 ms). Nobody moves in it, so by day the kept still picture is reused every frame; at night the night pass is redrawn every frame | `node apps/game/e2e/perf.ts 3 generated`: the page's Measure, 10 s at speed 1, headless Chromium 141 at 390×844 and 2×, no GPU, cloud container | 2026-10-19 | 3 runs each |
+| Game JS, gzip (M1.1) | the spike's page: 39.51 kB (36.00 kB, and chunks shared with the generated block: the seeded random numbers 3.21 kB, the projection 0.30 kB). The generated block adds 5.72 kB, loaded only at `?block=generated`. CSS 0.95 kB | `vite build` | 2026-10-19 | 1 build |
+| Game precache (M1.1) | 21 entries, 160.89 KiB, the generated block's chunks among them | vite-plugin-pwa build log | 2026-10-19 | 1 build |
+| The content pack (M1.1) | 11 records in 4 types, 3.0 kB, hash `b8bc4b46bd1c3e4c` | `pnpm content` (`eb build`) | 2026-10-19 | 1 build |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |
@@ -202,6 +231,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-19: M0.2 done. The six needs, a placeholder job and rent, as modules on the engine's kernel and economy kit; two week bots on the engine's runner, and the bench. 500 seeded weeks refuse nothing, 200 more that start before a rent day owe it and pay it off, and the needs match DESIGN.md's table exactly. Planted bugs: 18, 18 caught. The marker moves to M0.3.
 - 2026-10-19: M0.3 built. The stage, `@lyl/stage`, draws the city in code; the game's page is the art spike (D27–D29), with the tester brief and its screenshots in docs/research/art-spike.md. Planted bugs: 28, 28 caught. The [you] gates are open.
 - 2026-10-19: M0.4 done, built alongside M0.3's open gates on Evan's word. The tier-1 people (`packages/sim/src/people/`) and the population harness (`tools/population`), in Node and in headless Chromium. Three cadences measured; D30 proposes the staggered one, and risk 2 passes at it. Planted bugs: 22, 22 caught. Evan set the tier-1 count at 1,000 (D31). The marker stays on M0.3, whose gates are open.
+- 2026-10-19: M1.1 done, alongside M0.3's open gates on Evan's word. The block is one side of one street (D32), generated from `packages/content`, the game's first content as an Engine-Builder project, checked in CI and built into a pack. The walk grid and its routes are in `packages/sim/src/city/`, and the stage draws facades from the grammar. The page stays M0.3's spike, with the generated block at `?block=generated` (D33). A golden test holds the spike to its drawing. Planted bugs: 23, 23 caught. The marker stays on M0.3.
 
 ## Open questions
 
@@ -220,3 +250,5 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 13. The kept still picture is repainted whole on every pan, so a long drag may stutter on a slow phone at night. If the phone reading shows it: keep a margin round the screen in the layer, or repaint only the strip a pan uncovers.
 14. The engine copies a module's whole slice, element by element, in every action that writes to it, and freezes it again with a path built for every element. At 54,000 numbers that is 15.4 ms with the CPU slowed four times (Readings). D30's shares work round it here. To raise in Engine-Builder: copy arrays of numbers in one pass, and build a bad element's path only when there is one. A lean version beside the kernel was 2.5 times faster.
 15. The engine fires at most 10,000 timers in one advance. An hourly timer, as D30's is, caps one action at about 416 days, and D19's skip to an heir's 18th birthday passes years. Before M2.7: pass long skips in several actions, or catch the people up in one effect. Or raise in Engine-Builder a way to fire a repeating timer's missed periods at once.
+16. How the city shows a street's near side under the fixed camera (D7, D32). Either cut its buildings to sill height while the player is on the street, as Project Zomboid hides what stands in front, or keep that side's lots low or open. M2.1's city decides.
+17. The longest walk on the block takes 6.35 ms to route in Node (Readings), about four times that on a slow phone: a dropped frame or so a tap. Before M1.6's tap-to-go: reuse A*'s buffers between routes, or route on a coarser graph of sidewalk lengths and crossings.
