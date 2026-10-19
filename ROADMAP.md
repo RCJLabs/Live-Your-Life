@@ -280,6 +280,16 @@ How to read this file:
       - Favours you ask: on a day they work; twice for a shift; the preview showing the base odds; odds deaf to regard; a cover that leaves the shift yours, or costs standing.
       - Event odds deaf to regard, or leaning the wrong way; the steady bot always taking the first choice.
 - **M1.5 One crime.** Shoplifting with the whole chain: witnesses, the odds shown, heat, a scheduled response the player sees first, charges, a fine or a record.
+  - Shoplifting is in the corner shop, a third walkable interior (D45). The law answers in the act or later, as in Michigan (D46). A first offence is fined, or offered HYTA (D47). Anything can be stolen, and a fence buys it (D48).
+  - Done when:
+    - 500 seeded weeks with a bot that steals and one that doesn't: nothing offered is refused, and every step of the chain comes up (noticed, held, ticketed, seen on camera, visited, the court date, a plea, HYTA, a fine, a record, a missed date) [auto];
+    - the odds shown for taking an item, and for selling it, are the odds rolled in every state the sweeps reach [auto];
+    - who can see a cell matches a check of sight lines over 1,000 seeded shop interiors, and the shop meets M1.2's interior checks [auto];
+    - every timer the law sets is shown to the player when it is set, with its day [auto];
+    - a week of stealing and fencing earns less, after expected fines, costs and lost shifts, than a week of shifts at the median, as a reading over the sweeps (D7, D48) [auto];
+    - every fine, cost, threshold and the fence's share trace to a row in CALIBRATION.md [auto];
+    - the goods, the shop, the fence and the offence are content records that `eb validate` passes, seen failing on a planted bad record [auto];
+    - the week bench's cost per action is in Readings [auto].
 - **M1.6 Living in it.** The HUD, tap-to-go, the map, the chronicle, the clock's speeds and pauses.
 - **M1.7 Saves.** The engine's snapshot-plus-log saves in IndexedDB, slots, quarantine, the first fixture.
 - **M1.8 The browser bot.** Plays the week on a throttled phone profile and counts taps and real minutes per day.

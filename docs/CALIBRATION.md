@@ -99,6 +99,19 @@ When a figure is softened or sharpened for play, it is written here with the rea
 - **Pay comes the Friday after the work, not a week or two later.** Most restaurants pay a week or two in arrears, so a new hire's first paycheck comes after ten days or more. The slice is one week, and it would see no pay at all.
 - **Withholding is not the tax owed.** A year's withholding is settled by a return, with a refund or a bill. The return is the money milestone's; until then, what is withheld is gone.
 
+## Theft and the law (M1.5, to fill)
+
+Figures found for D45–D48, from secondary sources. Each gets its primary source checked before it is built on: the legislature's site, the courts' benchbook, NASP's own pages. ROADMAP open question 21 names the same block on government sites.
+
+| Figure | Value | Source, as found | Status |
+| --- | --- | --- | --- |
+| Retail fraud, third degree | under $200 and no prior conviction; misdemeanour; up to 93 days, and a fine of $500 or 3× the value, whichever is greater | MCL 750.356d as summarised by FindLaw; the legislature's PDF of the statute was found but not read in full | to check |
+| Retail fraud, second degree | $200 to $1,000, or under $200 with a prior conviction | the same | to check |
+| Civil demand | the value of unrecovered goods, plus 10× the retail price, at least $50 and at most $200 | MCL 600.2953, legislature PDF, summarised | to check |
+| HYTA | offences from 18 to 26 since 1 October 2021 (2020 PA 396); prosecutor's consent needed for some ages; the record is nonpublic during and after; not for offences punishable by life, or traffic offences | Michigan Judicial Institute's sentencing benchbook, 6.15; a law firm's summary | to check: the age floor and the consent rule |
+| How often shoplifters are caught | about once in 48 thefts, and handed to police in half of those | NASP, as quoted by local news and police leaflets; offenders' self-reports | weak anchor; the game departs from it |
+| What a fence pays | 10% to 25% of retail, usually toward the low end; about 30% at traditional venues, per an industry training manual | a Canadian police research project in NCJRS (1970s); a loss-prevention manual | old and regional; ¼ proposed (D48) |
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).
