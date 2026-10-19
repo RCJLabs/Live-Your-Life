@@ -415,6 +415,12 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 - **Civil demand.** Apart from the court, the shop can claim damages: the value of anything not recovered, plus ten times the retail price, at least $50 and at most $200 (MCL 600.2953). It comes as a letter, and an unpaid one goes to collections at M2's money.
 - **How often a thief is caught.** The figure usually cited is once in 48 thefts, with half of those caught handed to the police. It comes from shoplifters' own reports (NASP), so it is a weak anchor. A walkable shop with one clerk will catch more; the departure is written down beside it.
 
+**Found while building, proposed with it** (tune).
+
+- **The bar.** A shop that catches you, in the act or from the footage, bars you for good, as a trespass notice does. Without it, the thief bot was held at the same till twenty times in eight weeks and owed $15,000 in civil demands.
+- **What it is charged as.** A theft is charged when the ticket is written, from its value and the convictions already on the record: a prior conviction makes it the second degree (MCL 750.356d).
+- **One visit at a time.** A visit that falls while you are held or in court comes the next day instead, with a new notice. Otherwise an arrest could stack on a hold and leave no way out.
+
 **Options considered.** Both ways, as real; chosen (recommended). Only in the act: no delayed consequence, which D7 leans on. Only later: loses the moment of being held.
 
 ### D47. A first offence is fined, or offered HYTA. LOCKED, 2026-10-19 (Evan's call)
@@ -439,6 +445,8 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 - **The fence's share.** About a quarter of retail. The figure comes from a source in CALIBRATION.md, or is marked as a departure.
 - **Selling is a crime of its own.** Selling stolen goods has odds too, low for the slice. The fence's own risk waits on M2's crime ladder.
 - **Crime should never pay better than work (D7).** It is held to a reading, not assumed: the bots' sweeps compare a week of theft and fencing with a week of shifts, money against the expected fines, costs and lost shifts.
+
+**Found while building, proposed with it** (tune). Each shelf holds one line of goods, rotated by the block's seed, and every good is on one shelf. Offering every good on every shelf made a turn 62% dearer: the engine checks each option it offers, and the shop offered 53.
 
 **Why I recommended against.** A fence brings an economy the slice doesn't have: goods with prices, a buyer, a place, and the risk that crime pays. Evan chose it to open the crime ladder now.
 
