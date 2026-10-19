@@ -4,18 +4,23 @@
  * Each run is the page's own Measure: a second to settle, ten seconds at speed 1. The container
  * has no GPU, so this is not a phone's number; M0.3's gate is the reading on Evan's phone.
  *
- *   pnpm build && node apps/game/e2e/perf.ts [runs]
+ *   pnpm build && node apps/game/e2e/perf.ts [runs] [match]
+ *
+ * `match` runs only the paths whose name holds it ("generated" for M1.1's block).
  */
 import { chromium } from '@playwright/test';
 import { BASE, serve } from './serve.ts';
 
 const runs = Number(process.argv[2] ?? 3);
-/** The kept still picture, and the plain painter's order every frame, to compare. */
+const match = process.argv[3] ?? '';
+/** The kept still picture, and the plain painter's order every frame, to compare; and M1.1's generated block. */
 const PATHS = [
   { name: 'kept still picture', query: 'at=13:00' },
   { name: 'everything every frame', query: 'at=13:00&cache=0' },
   { name: 'kept still picture, at night', query: 'at=22:30' },
-];
+  { name: 'generated block', query: 'block=generated&at=13:00' },
+  { name: 'generated block, at night', query: 'block=generated&at=22:30' },
+].filter((p) => p.name.includes(match));
 const stop = await serve();
 const browser = await chromium.launch();
 try {

@@ -1,0 +1,10 @@
+{
+  "ground": "diner",
+  "bays": { "min": 0, "max": 0 },
+  "windows": ["single"],
+  "cornices": ["band"],
+  "sills": false,
+  "sides": "party",
+  "sign": { "text": "DINER", "colour": "#F3EBD8", "ink": "#C9473A" },
+  "wear": { "min": 0, "max": 1 }
+}

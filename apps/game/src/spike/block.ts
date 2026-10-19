@@ -110,6 +110,8 @@ function building(rng: Rng, kind: BuildingKind, x0: number, width: number): Buil
       ground: t.ground,
       litBits: rng.int(0, 0x7fffffff),
       ...(kind === 'diner' ? { sign: { text: 'DINER', color: BUILDING.sign, ink: BUILDING.dinerRed } } : {}),
+      // The apartment house stands free, with windows down its side.
+      ...(kind === 'apartment' ? { sides: 'windows' as const } : {}),
       ...(kind === 'storefront' ? { awning: { color: '#5E7F64', stripe: '#E3DCC9' }, card: 'FOR LEASE' } : {}),
     },
     ...(interior

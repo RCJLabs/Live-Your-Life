@@ -46,6 +46,18 @@ export interface Facade {
   readonly card?: string;
   /** Which upper windows are lit at night: bits drawn from the seed. */
   readonly litBits: number;
+  /**
+   * The rest of the facade grammar (M1.1), each left out for what M0.3's spike drew: one window
+   * to a bay, a plain band for a cornice, no sills, party walls at the sides, no wear.
+   */
+  readonly window?: 'single' | 'pair';
+  readonly cornice?: 'band' | 'bracketed' | 'parapet';
+  /** Stone sills under the upper windows and lintels over them. */
+  readonly sills?: boolean;
+  /** Windows down the sides of a building that stands free, or blank party walls. */
+  readonly sides?: 'party' | 'windows';
+  /** 0 kept up; 1 streaked and patched; 2 some upper windows boarded too. */
+  readonly wear?: number;
 }
 
 export type FixtureKind =
@@ -86,7 +98,8 @@ export interface Interior {
 
 export interface Building {
   readonly id: string;
-  readonly kind: BuildingKind;
+  /** The template it was built from: one of the spike's kinds, or a content record's id (M1.1). */
+  readonly kind: string;
   readonly x0: number;
   readonly y0: number;
   readonly x1: number;
@@ -94,6 +107,8 @@ export interface Building {
   readonly storeys: number;
   readonly storeyHeight: number;
   readonly facade: Facade;
+  /** The front door's middle, metres east of the west wall, for a building with no interior to say so. */
+  readonly door?: number;
   /** Only a building with an interior template can be cut away (D18). */
   readonly interior?: Interior;
 }

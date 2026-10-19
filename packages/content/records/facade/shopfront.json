@@ -1,0 +1,14 @@
+{
+  "ground": "shop",
+  "bays": { "min": 2, "max": 4 },
+  "windows": ["single", "pair"],
+  "cornices": ["band", "bracketed", "parapet"],
+  "sills": true,
+  "sides": "party",
+  "awnings": [
+    { "colour": "#5E7F64", "stripe": "#E3DCC9" },
+    { "colour": "#8C3B32", "stripe": "#E8DCC2" },
+    { "colour": "#3F5A7A", "stripe": "#E3DCC9" }
+  ],
+  "wear": { "min": 0, "max": 2 }
+}

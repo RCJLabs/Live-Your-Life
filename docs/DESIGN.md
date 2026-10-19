@@ -43,6 +43,14 @@ Content that is never in, whatever the verb list says: sexual violence; minors i
 - The map is the same renderer zoomed out, with district labels and tap-to-travel that costs the real route time.
 - Release one: two districts live, the rest as statistics (cut ladder).
 
+**Built in M1.1, one block** (`packages/content`, `packages/sim/src/city/`, `?block=generated`; D32, D33):
+
+- **The content** is an Engine-Builder project in `packages/content`. Record types for the street, facades, buildings and blocks sit in `types/`, and their records in `records/`, all JSON. The engine's compiler checks them in CI and builds the pack the sim and the page read.
+- **The block** is one side of one street (D32), 6 to 8 lots (tune). The apartment house, the diner and a corner shop stand on every block, the shop at an end of the row. Storefronts, row houses and the odd vacant lot fill the rest, by weight. Across the street is a verge or a car park, the open side nearest the camera.
+- **Facades** follow the grammar in their records. The ground floor is diner glass, a shopfront or a stoop. Above it are bays of single or paired windows, with sills or without, and a band, a bracketed band or a parapet on top. Wear runs from kept up to boarded. Signs and awnings go where the record allows. The seed picks within each record.
+- **Street furniture stands by rule**: lamps along both curbs, a hydrant, a bench, trees on a verge, and a pole sign for a building that has one. None stands in a doorway.
+- **The walk grid** is the block's ground in half-metre cells (tune). Stepping onto each costs 1 on a sidewalk, 1.1 on a lot, 1.2 on a verge and 1.4 on the roadway (tune), and there is no step under a building or a post. Routes are weighted A* with eight neighbours, ported from 2060TD.
+
 ## Time
 
 - 1 tick = 1 game minute (tune). Speed 1 = 2 game minutes a real second, so a day is 12 minutes (tune). Speed 2 = 4×. Speed 3 = run to the next event or the end of the routine block.

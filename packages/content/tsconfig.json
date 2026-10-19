@@ -1,0 +1,10 @@
+{
+  "//": "Pure, as packages/sim: ES2023 only, no DOM and no Node types. The tests compile the project with the engine's compiler in Node, so they are typechecked by tsconfig.tests.json.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src", "pack.json"],
+  "exclude": ["src/**/*.test.ts"]
+}

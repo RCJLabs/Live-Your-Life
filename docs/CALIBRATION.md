@@ -74,6 +74,7 @@ Figures the sim uses before their ledger row is filled. None is a real figure. E
 | Tier-1 shifts | days 45%, lates 14%, nights 7%, no shift 34%, at fixed hours | `packages/sim/src/people/templates.ts`, `SHIFTS` | the employment and shift-work rows, with M2.2's careers |
 | Tier-1 households | one to four people, most living with someone | `packages/sim/src/people/templates.ts`, `HOUSEHOLD` | the household-size row, with M2.1's households by income band |
 | Tier-1 sleep | 7 to 9 hours, bedtime 22:00 to 01:00 unless a shift moves it | `packages/sim/src/people/templates.ts`, `SLEEP` | the sleep row; under M0.2's rest rates fewer than 7 hours can't last, a departure to write when the row is filled |
+| Street and lot sizes | lots 6 to 12 m wide and 12 m deep, a 3.5 m sidewalk, an 8.4 m roadway | `packages/content/records/street/main.json` and `building/` | none: distances are tuned for play, not measured (D11) |
 | Tier-1 shared places | about 12 workers to a workplace, about 30 people to a third place, 24 ties a person, 2 meetings an hour | `packages/sim/src/people/templates.ts`, `SHARED` and `TIES` | the city's businesses (M2.1) and M2.6's relationships |
 
 ## Departures, on purpose

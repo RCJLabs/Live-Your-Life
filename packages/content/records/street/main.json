@@ -1,0 +1,12 @@
+{
+  "lotDepth": 12,
+  "sidewalk": 3.5,
+  "curb": 0.18,
+  "roadway": 8.4,
+  "open": { "sidewalk": 3.2, "depth": 6, "kinds": ["verge", "car-park"] },
+  "alley": 4,
+  "yards": 6,
+  "run": 9,
+  "lampEvery": 14,
+  "trees": 5
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Storefront",
+  "use": "shop",
+  "width": { "min": 8, "max": 10 },
+  "depth": 9,
+  "storeys": { "min": 2, "max": 3 },
+  "storeyHeight": 3.5,
+  "walls": ["#A0553F", "#E2D5BB", "#8C7B6B"],
+  "trim": "#6F7F5A",
+  "door": { "min": 0.72, "max": 0.8 },
+  "facade": "shopfront"
+}

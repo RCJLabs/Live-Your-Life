@@ -1,0 +1,19 @@
+{
+  "name": "The slice's street",
+  "street": "main",
+  "lots": { "min": 6, "max": 8 },
+  "needs": ["apartment", "diner", "corner-shop"],
+  "ends": ["corner-shop"],
+  "fill": { "storefront": 3, "rowhouse": 3 },
+  "vacant": { "weight": 1, "width": { "min": 7, "max": 10 } },
+  "gap": { "min": 1, "max": 2.5 },
+  "backRow": {
+    "width": { "min": 7, "max": 13 },
+    "gap": { "min": 0.4, "max": 2 },
+    "depth": 9,
+    "storeys": { "min": 2, "max": 4 },
+    "storeyHeight": 3.2,
+    "walls": ["#A0553F", "#E2D5BB", "#9DB0B7", "#B9A48A", "#8C7B6B"],
+    "trim": "#CDBB9C"
+  }
+}

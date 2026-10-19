@@ -22,7 +22,10 @@ const INTERIORS = new Set(['diner', 'apartment']);
 const NONE = new Set<string>();
 
 const params = readParams(location.search);
-const block = makeBlock(params.seed);
+// M1.1's generated block loads only when asked for, so the spike's page stays as it was (D33).
+const generated = params.block === 'generated' ? (await import('./city/scene.ts')).generatedBlock(params.seed) : null;
+const overlay = generated && params.grid ? (await import('./city/overlay.ts')).drawWalkGrid : null;
+const block = generated ?? makeBlock(params.seed);
 const looks = castLooks(params.seed);
 const clock = new Clock(params.seed);
 if (params.at) clock.jump(params.at.hour, params.at.minute);
@@ -87,6 +90,7 @@ function render(): void {
     actorsAt(block, looks, state.time),
   );
   heights = drawn.heights;
+  if (overlay && generated) overlay(ctx, viewOf(camera, size), generated.grid);
 }
 
 const measure = new Measure();
@@ -174,7 +178,7 @@ listen(canvas, {
 });
 
 const { version, sha } = __LYL_BUILD__;
-setText('build', `Art test · version ${version}, build ${sha.slice(0, 7)}`);
+setText('build', `${generated ? 'Block test' : 'Art test'} · version ${version}, build ${sha.slice(0, 7)}`);
 
 startPwa((update) => {
   const banner = document.getElementById('update') as HTMLElement;
@@ -189,6 +193,12 @@ Object.assign(window, {
     camera: () => ({ ...camera }),
     size: () => ({ ...size }),
     measure: () => measure.start(performance.now()),
+    block: () =>
+      generated && {
+        lots: generated.plan.lots.length,
+        buildings: generated.plan.buildings.map((b) => b.template),
+        open: generated.plan.street.open,
+      },
   },
 });
 

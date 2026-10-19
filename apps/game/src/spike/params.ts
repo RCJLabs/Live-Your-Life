@@ -1,7 +1,8 @@
 /**
  * What the address can set, so any view the tester brief shows can be opened again on a
  * phone or in a screenshot: the seed, the time, the framing, the walls, the bubbles, the
- * controls, and a frozen moment for screenshots that come out the same every time.
+ * controls, and a frozen moment for screenshots that come out the same every time. Since M1.1,
+ * which block, and the walk grid over a generated one.
  */
 export type Framing = 'wide' | 'close' | 'block';
 
@@ -19,6 +20,10 @@ export interface Params {
   readonly freeze: number | null;
   /** Keep the still picture between frames; `cache=0` repaints everything, to compare. */
   readonly cache: boolean;
+  /** Which block: the spike's (D33), or M1.1's generated one with `block=generated`. */
+  readonly block: 'spike' | 'generated';
+  /** Draw the walk grid over a generated block. */
+  readonly grid: boolean;
 }
 
 export const DEFAULT_SEED = 'rust-belt-1';
@@ -46,5 +51,7 @@ export function readParams(search: string): Params {
     hud: q.get('hud') !== '0',
     freeze: freeze !== null && Number.isFinite(Number(freeze)) ? Number(freeze) : null,
     cache: q.get('cache') !== '0',
+    block: q.get('block') === 'generated' ? 'generated' : 'spike',
+    grid: q.get('grid') === '1',
   };
 }

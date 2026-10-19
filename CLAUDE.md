@@ -45,9 +45,12 @@ pnpm format       # Biome autofix
 pnpm --filter @lyl/game icons    # re-render the PWA icons from apps/game/public/icons/icon.svg; the PNGs are committed
 node packages/sim/test/week-bench.ts [seeds] [rounds]   # the week bench: µs a turn and a reduce, for Readings (500 seeds, 5 rounds)
 node apps/game/e2e/shots.ts [dir]   # after `pnpm build`: the art spike's screenshots and people's heights
-node apps/game/e2e/perf.ts [runs]   # after `pnpm build`: the spike's frame rate at 1× and 4× CPU, headless
+node apps/game/e2e/perf.ts [runs] [match]   # after `pnpm build`: the frame rate at 1× and 4× CPU, headless; match picks paths ("generated")
 node tools/population/bench.ts [days] [sizes]      # the population harness in Node: tier-1 people at each cadence (30 days; 100,300,500,1000,3000)
 node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromium at 1× and 4× CPU
+pnpm eb validate packages/content   # the engine's checks on the content (part of pnpm lint)
+pnpm content      # rebuild packages/content/pack.json after changing a record; a test fails until you do
+node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block, lay its walk grid, route across it
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -58,19 +61,24 @@ node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromi
 ## Layout
 
 ```
-engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace
+engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core, @eb/kits and @eb/purity join the workspace, and
+                    since M1.1 the content pipeline: @eb/schema, @eb/compiler, @eb/script and @eb/cli (build time and CI only)
+packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON, checked by eb validate, built
+                    into pack.json by pnpm content; the package reads only the pack (pure)
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, a placeholder job and rent,
-                    the week bots, and the tier-1 people (people/: the roster, their hours, hour plans, ties, shares)
+                    the week bots, the tier-1 people (people/: the roster, their hours, hour plans, ties, shares), and the block
+                    (city/: the templates, the plan, street furniture, the walk grid, routes)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
                     @lyl/stage/testing is a fake canvas for drawing tests
-apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. At M0.3 the art spike (src/spike/); dev/ holds the
-                    character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
+apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. At M0.3 the art spike (src/spike/), and M1.1's generated block
+                    at ?block=generated (src/city/, D33); dev/ holds the character sheet and the bench (pnpm dev, then
+                    /dev/figures.html); e2e/ the Playwright specs
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
 docs/               design, decisions, voice, calibration, research
 ```
 
-Planned, as their milestones arrive: `packages/content` (careers, events, places, templates and laws as JSON, with schemas), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the content lint, calibration checks).
+Planned, as their milestones arrive: more content in `packages/content` (careers, events, places and laws), `packages/ui` (panels, the chronicle, the map, input), and harnesses in `tools/` (the content lint, calibration checks).
 
 ## Writing
 

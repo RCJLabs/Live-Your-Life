@@ -43,6 +43,11 @@ export const BUILDING = {
   door: '#6B4A35',
   sign: '#F3EBD8',
   wallInside: '#E6DAC1',
+  /** Sills, lintels, brackets and copings: cast stone. */
+  stone: '#D3C7AE',
+  /** Plywood over a window nobody lives behind. */
+  board: '#A3835A',
+  boardDark: '#7C6142',
 } as const;
 
 export const INSIDE = {
