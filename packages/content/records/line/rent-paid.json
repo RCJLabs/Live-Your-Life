@@ -1,0 +1,8 @@
+{
+  "beat": "home/rent",
+  "when": {
+    "field": "paid",
+    "is": "true"
+  },
+  "text": "{you} paid {rent} in rent for the month."
+}

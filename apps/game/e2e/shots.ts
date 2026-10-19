@@ -14,14 +14,24 @@ const out = process.argv[2] ?? 'docs/research/art-spike';
 const MOMENT = 'freeze=1.2';
 
 const SHOTS = [
-  { file: 'a-posture-only.png', query: `at=13:00&bubbles=0&hud=0&${MOMENT}`, width: 390, height: 844 },
-  { file: 'b-with-bubbles.png', query: `at=13:00&hud=0&${MOMENT}`, width: 390, height: 844 },
-  { file: 'c-night.png', query: `at=22:30&hud=0&${MOMENT}`, width: 390, height: 844 },
-  { file: 'd-close-diner.png', query: `at=13:00&hud=0&view=close&focus=diner&${MOMENT}`, width: 390, height: 844 },
-  { file: 'e-close-flat.png', query: `at=13:00&hud=0&view=close&focus=apartment&${MOMENT}`, width: 390, height: 844 },
-  { file: 'f-landscape.png', query: `at=13:00&hud=0&${MOMENT}`, width: 844, height: 390 },
-  { file: 'g-walls-up.png', query: `at=13:00&hud=0&walls=up&${MOMENT}`, width: 390, height: 844 },
-  { file: 'h-with-controls.png', query: `at=13:00&${MOMENT}`, width: 390, height: 844 },
+  { file: 'a-posture-only.png', query: `spike&at=13:00&bubbles=0&hud=0&${MOMENT}`, width: 390, height: 844 },
+  { file: 'b-with-bubbles.png', query: `spike&at=13:00&hud=0&${MOMENT}`, width: 390, height: 844 },
+  { file: 'c-night.png', query: `spike&at=22:30&hud=0&${MOMENT}`, width: 390, height: 844 },
+  {
+    file: 'd-close-diner.png',
+    query: `spike&at=13:00&hud=0&view=close&focus=diner&${MOMENT}`,
+    width: 390,
+    height: 844,
+  },
+  {
+    file: 'e-close-flat.png',
+    query: `spike&at=13:00&hud=0&view=close&focus=apartment&${MOMENT}`,
+    width: 390,
+    height: 844,
+  },
+  { file: 'f-landscape.png', query: `spike&at=13:00&hud=0&${MOMENT}`, width: 844, height: 390 },
+  { file: 'g-walls-up.png', query: `spike&at=13:00&hud=0&walls=up&${MOMENT}`, width: 390, height: 844 },
+  { file: 'h-with-controls.png', query: `spike&at=13:00&${MOMENT}`, width: 390, height: 844 },
 ];
 
 await mkdir(out, { recursive: true });

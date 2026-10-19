@@ -1,0 +1,4 @@
+{
+  "beat": "job/paid",
+  "text": "{you} was paid {net} for {hours} of work, after taxes."
+}

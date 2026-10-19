@@ -1,0 +1,8 @@
+{
+  "beat": "home/rent",
+  "when": {
+    "field": "paid",
+    "is": "false"
+  },
+  "text": "Rent of {rent} came due, and {you} could not pay it all."
+}

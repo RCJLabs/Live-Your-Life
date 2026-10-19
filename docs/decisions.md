@@ -452,6 +452,45 @@ M0.4's [you] gate. The readings are in [research/population.md](research/populat
 
 **Options considered.** Food and small goods, no fence (recommended): theft saves money rather than makes it. Anything, with a fence; chosen. Food only: theft only from need.
 
+
+### D49. A brisk walk, and the clock runs while you walk. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** The clock runs at its speed while you walk, as it does in The Sims. People walk about three times a real pace on screen, so the 42.5 m commute from the flat to the griddle takes about 20 game minutes. This answers ROADMAP open question 18, as D10 allows: distances and commutes are tuned for play.
+
+**Proposed with it** (tune). People walk 3.9 m a stage second on screen, three times 1.3. The sim hears only that you arrived, and the time the walk took has passed on the clock as any time does.
+
+**Options considered.** Brisk walk, clock runs; chosen (recommended). Real pace: a walk costs half a game minute, so people cross the block in a blink. The clock slowed to real time while you walk: natural on screen and in game minutes, but the clock's speed changes under the player.
+
+### D50. The HUD is one compact bar, with panels on tap. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** One bar, sized for 360 px:
+- the time and speed;
+- the cash;
+- the two lowest needs;
+- a badge when something waits on you: a favour asked, a notice from the law, a court date, a shift choice.
+
+Tapping opens a panel with all six needs, the week's shifts, and what is pending, each with its day.
+
+**Options considered.** A compact bar, panels on tap; chosen (recommended). All six needs always, as The Sims shows them: nothing hidden, but a fifth of a portrait screen. Text cues only: earnest, but hard to plan a day by.
+
+### D51. The playable life is the page, with a map of the block now. LOCKED, 2026-10-19 (Evan's call; I had recommended leaving the map for M2.1's city)
+
+**Decision.** The playable life on the generated block becomes the default page. M0.3's art spike moves to `?spike`, so its open gates can still be taken there. The map is in now: the block seen from above, its places named, tap one to go there.
+
+**Why I recommended waiting.** With one block, the map shows what the screen already does. Building it now sets its shape before the city it is for exists (M2.1). Evan chose to set it now.
+
+**Options considered.** The life as the page, the map later (recommended). The life as the page, the map now; chosen. Keep the spike as the page, the life at `?life`: the safest for the art test, but the life is harder to find.
+
+### D52. The chronicle is a journal, with each entry shown once as a line. LOCKED, 2026-10-19 (Evan's call)
+
+**Decision.** Each entry shows briefly as one line at the foot of the screen, then lands in a journal you can read back by day. Entries are third person, past tense (VOICE.md). Lines name people rather than use "she" or "they" as the subject, as M1.4's lines do, so no verb has to agree (ROADMAP open question 29).
+
+**Proposed with it** (tune).
+- **Your name.** Third person needs a name for you. Until the background pick at the start (D20) is built, it is drawn from the seed and the name pool, as the coworker's is.
+- **The lines are content.** Each comes from a line record keyed by what happened, with its placeholders filled. Something that happens with no line is a failing check, not a silent gap.
+
+**Options considered.** A journal plus one-line toasts; chosen (recommended). A running feed of the last three entries over the city: keeps the drama in view, but covers the picture on a phone. The journal only: quietest, and entries are easy to miss.
+
 ---
 
 ## Open items

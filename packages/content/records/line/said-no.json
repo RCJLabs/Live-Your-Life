@@ -1,0 +1,8 @@
+{
+  "beat": "ties/answered",
+  "when": {
+    "field": "yes",
+    "is": "false"
+  },
+  "text": "{you} told {coworker} no."
+}

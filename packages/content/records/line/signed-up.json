@@ -1,0 +1,4 @@
+{
+  "beat": "job/signed-up",
+  "text": "{you} signed up for the {shift} shift on {date}."
+}

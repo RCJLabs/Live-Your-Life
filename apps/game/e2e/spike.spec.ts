@@ -18,7 +18,7 @@ for (const screen of SCREENS) {
 
     test('draws the block, keeps to the screen, and every control is a 44 px target', async ({ page }) => {
       const errors = watchErrors(page);
-      await page.goto('./?at=13:00');
+      await page.goto('./?spike&at=13:00');
       await expect(page.locator('#when')).toContainText('13:0');
       const drawn = await picture(page);
       expect(drawn.colours, 'the city is drawn, not a blank canvas').toBeGreaterThan(40);
@@ -59,14 +59,14 @@ test.describe('on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
 
   test('has no accessibility issues', async ({ page }) => {
-    await page.goto('./?at=13:00');
+    await page.goto('./?spike&at=13:00');
     await expect(page.locator('#when')).toContainText('13:0');
     await expectNoAxeIssues(page);
   });
 
   test('turns night and day, cuts the walls, hides and shows its controls, and pauses', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('./?at=13:00');
+    await page.goto('./?spike&at=13:00');
     await expect(page.locator('#when')).toContainText('13:0');
     const day = await picture(page);
     await page.locator('#night').click();
@@ -94,10 +94,10 @@ test.describe('on a phone', () => {
 
   test('keeps a still picture that matches painting everything every frame', async ({ page }) => {
     for (const at of ['13:00', '22:30']) {
-      await page.goto(`./?at=${at}&freeze=1.2&hud=0`);
+      await page.goto(`./?spike&at=${at}&freeze=1.2&hud=0`);
       await page.waitForTimeout(300);
       const kept = await blocks(page);
-      await page.goto(`./?at=${at}&freeze=1.2&hud=0&cache=0`);
+      await page.goto(`./?spike&at=${at}&freeze=1.2&hud=0&cache=0`);
       await page.waitForTimeout(300);
       const full = await blocks(page);
       const worst = Math.max(...kept.map((v, i) => Math.abs(v - (full[i] ?? 0))));
@@ -113,7 +113,7 @@ test.describe('on a phone', () => {
     page.on('request', (r) => {
       if (new URL(r.url()).origin !== home && !r.url().startsWith('data:')) elsewhere.push(r.url());
     });
-    await page.goto('./?at=13:00');
+    await page.goto('./?spike&at=13:00');
     await page.evaluate(async () => {
       await navigator.serviceWorker.ready;
     });

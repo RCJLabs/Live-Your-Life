@@ -164,8 +164,15 @@ export interface GeneratedBlock extends Block {
   readonly cutAt: (look: Look, t: number, down: boolean) => ReadonlySet<string>;
 }
 
-/** The generated block for a seed, shaped as the spike's page expects a block to be. */
-export function generatedBlock(seed: string): GeneratedBlock {
+/** The block for a seed as the stage draws it, with nobody on it: the life's page puts its own people there (M1.6). */
+export interface BlockScene extends Block {
+  readonly plan: BlockPlan;
+  readonly grid: WalkGrid;
+  /** The buildings on the street, in front of the back row. */
+  readonly fronts: readonly Building[];
+}
+
+export function blockScene(seed: string): BlockScene {
   const plan = planBlock(TEMPLATES, seed);
   const fronts = plan.buildings.map(buildingOf);
   const s = plan.street;
@@ -175,9 +182,6 @@ export function generatedBlock(seed: string): GeneratedBlock {
     props: plan.props.map(propOf),
     bounds: { x0: s.xa + 4, y0: 2, x1: s.xb - 4, y1: s.openFront + 1.5 },
   };
-  const grid = walkGrid(plan);
-  const commute = commuteFor(plan, grid, seed);
-  const actorsAt = (look: Look, t: number): Actor[] => (commute ? [walkerAt(commute, look, t)] : []);
   return {
     scene,
     people: [],
@@ -188,7 +192,19 @@ export function generatedBlock(seed: string): GeneratedBlock {
     },
     curb: s.curb,
     plan,
-    grid,
+    grid: walkGrid(plan),
+    fronts,
+  };
+}
+
+/** The generated block for a seed, shaped as the spike's page expects a block to be, with M1.2's walker. */
+export function generatedBlock(seed: string): GeneratedBlock {
+  const block = blockScene(seed);
+  const { plan, grid, fronts } = block;
+  const commute = commuteFor(plan, grid, seed);
+  const actorsAt = (look: Look, t: number): Actor[] => (commute ? [walkerAt(commute, look, t)] : []);
+  return {
+    ...block,
     commute,
     actorsAt,
     cutAt: (look, t, down) => cutFor(plan, fronts, actorsAt(look, t)[0], down),

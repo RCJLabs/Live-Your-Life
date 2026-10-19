@@ -1,0 +1,4 @@
+{
+  "beat": "job/dropped",
+  "text": "{you} dropped the shift on {date}."
+}

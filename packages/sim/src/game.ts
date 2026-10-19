@@ -22,6 +22,7 @@ import { jobModule } from './job/module.ts';
 import { lawModule } from './law/module.ts';
 import { lifeModule } from './life.ts';
 import { tiesModule } from './ties/module.ts';
+import { youModule } from './you.ts';
 
 /**
  * Wall-clock time into game time at speed 1: half a second a game minute, so a day lasts 12
@@ -67,6 +68,7 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     tiesModule(hire),
     homeModule,
     lawModule,
+    youModule,
   ];
 }
 

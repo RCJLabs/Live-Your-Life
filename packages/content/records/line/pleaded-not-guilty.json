@@ -1,0 +1,8 @@
+{
+  "beat": "law/pleaded",
+  "when": {
+    "field": "plea",
+    "is": "contest"
+  },
+  "text": "{you} pleaded not guilty."
+}
