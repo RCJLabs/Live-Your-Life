@@ -57,6 +57,8 @@ describe('the chronicle (D52)', () => {
       }
     }
     expect(written).toBeGreaterThan(300);
+    // An event the chronicle leaves out has no line, so marking one quiet can't hide a line.
+    expect(lines.filter((l) => l.beat in QUIET).map((l) => l.id)).toEqual([]);
     // Every line is for an event something raises.
     const raised = new Set([...seen.keys(), ...RARE]);
     expect(lines.filter((l) => !raised.has(l.beat)).map((l) => l.id)).toEqual([]);

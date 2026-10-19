@@ -112,6 +112,8 @@ const coworkerOf = (life: Life) =>
 /** What a mode the sim is in asks of you, as a sheet's title, line and items; null out in the world. */
 export function modeSheet(life: Life): { title: string; lead: string; items: Item[] } | null {
   const mode = life.mode;
+  // Out in the world there is nothing to ask, and the options are dear to work out every frame.
+  if (mode.id === 'world') return null;
   const options = life.options();
   if (mode.id === 'shift-event') {
     const data = mode.data as { event: string; day: number };

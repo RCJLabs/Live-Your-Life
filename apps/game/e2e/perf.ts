@@ -15,6 +15,7 @@ const runs = Number(process.argv[2] ?? 3);
 const match = process.argv[3] ?? '';
 /** The kept still picture, and the plain painter's order every frame, to compare; and M1.1's generated block. */
 const PATHS = [
+  { name: 'the life, walking to the diner', query: '', life: 'door/diner' },
   { name: 'kept still picture', query: 'spike&at=13:00' },
   { name: 'everything every frame', query: 'spike&at=13:00&cache=0' },
   { name: 'kept still picture, at night', query: 'spike&at=22:30' },
@@ -37,9 +38,21 @@ try {
       await page.goto(`${BASE}?${path.query}`);
       const cdp = await context.newCDPSession(page);
       await cdp.send('Emulation.setCPUThrottlingRate', { rate });
-      await page.locator('#measure').click();
-      await page.locator('#measured').waitFor({ state: 'visible', timeout: 60_000 });
-      const text = (await page.locator('#measured-text').textContent()) ?? '';
+      let text: string;
+      if ('life' in path) {
+        // The life has no Measure button: its hook runs the same measure while you walk the block.
+        await page.waitForFunction(() => 'life' in ((window as { __lyl?: object }).__lyl ?? {}));
+        text = await page.evaluate(async (to) => {
+          const life = (window as unknown as { __lyl: { life: Record<string, (...a: unknown[]) => unknown> } }).__lyl
+            .life;
+          life.goTo?.(to);
+          return (await life.measure?.()) as string;
+        }, path.life);
+      } else {
+        await page.locator('#measure').click();
+        await page.locator('#measured').waitFor({ state: 'visible', timeout: 60_000 });
+        text = (await page.locator('#measured-text').textContent()) ?? '';
+      }
       lines.push({ fps: Number.parseFloat(text), text });
       await context.close();
     }

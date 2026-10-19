@@ -274,8 +274,8 @@ body {
 }
 
 .sheet .button,
-.panel .list .button,
-.map-places .button {
+.map-places .button,
+.panel .list .button {
   margin: 0.15rem 0.3rem 0.15rem 0;
   text-align: left;
 }

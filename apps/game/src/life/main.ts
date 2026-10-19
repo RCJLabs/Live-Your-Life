@@ -15,6 +15,7 @@ import { startPwa } from '../pwa.ts';
 import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
 import { listen } from '../spike/input.ts';
+import { describe, Measure } from '../spike/measure.ts';
 import { makeBar, makeToast } from './dom.ts';
 import { makeMap } from './map.ts';
 import { itemsAt, makeSheet, modeSheet } from './menus.ts';
@@ -103,9 +104,11 @@ const toast = makeToast();
 const bar = makeBar({
   pause: () => {
     s.paused = !s.paused;
+    s.waitingAt = 0;
   },
   speed: () => {
     s.speed = s.speed === 1 ? 2 : 1;
+    s.waitingAt = 0;
   },
   panel: () => (panel.open ? panel.hide() : panel.show()),
   map: () => map.show(player),
@@ -154,6 +157,9 @@ function shownMinute(now: number): number {
   return (((ofDay - behind) % 1440) + 1440) % 1440;
 }
 
+const measure = new Measure();
+let measured: string | null = null;
+
 let last: number | null = null;
 function loop(now: number): void {
   const dt = last === null ? 0 : Math.min(100, now - last);
@@ -175,13 +181,14 @@ function loop(now: number): void {
     choice.show(m.title, m.lead, m.items, null);
   }
   if (!toast.busy && life.fresh.length > 0) toast.show(life.fresh.shift() as string);
+  const minute = shownMinute(now);
+  // The bar and the badge are read a few times a second: their facts don't change faster than a game minute.
   if (now - s.waitingAt > 250) {
     s.waiting = waiting(life).length;
     s.waitingAt = now;
+    bar.update(life, { minute, paused: s.paused, speed: s.speed, waiting: s.waiting });
   }
   follow(now);
-  const minute = shownMinute(now);
-  bar.update(life, { minute, paused: s.paused, speed: s.speed, waiting: s.waiting });
   const light = daylight(minute);
   const actor = player.actor(look, s.t);
   ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
@@ -198,6 +205,11 @@ function loop(now: number): void {
     },
     [actor],
   );
+  const result = measure.frame(now);
+  if (result) {
+    const screen = { width: window.innerWidth, height: window.innerHeight, dpr: window.devicePixelRatio || 1 };
+    measured = describe(result, { ...screen, drawn: size.dpr });
+  }
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -254,6 +266,22 @@ Object.assign(window, {
       journal: () => life.journal.map((e) => e.text),
       waiting: () => waiting(life).map((w) => ({ kind: w.kind, day: w.day, text: w.text })),
       home: places.home,
+      /** Walks you to a place, as a tap there would. */
+      goTo: (id: string) => {
+        const p = places.all.find((x) => x.id === id);
+        return p ? player.goTo(block.plan, block.grid, p) : false;
+      },
+      /** The frame rate over the spike's measure (spike/measure.ts), with the clock at speed 1. */
+      measure: () => {
+        measured = null;
+        s.paused = false;
+        s.speed = 1;
+        measure.start(performance.now());
+        return new Promise<string>((done) => {
+          const wait = () => (measured ? done(measured) : setTimeout(wait, 200));
+          wait();
+        });
+      },
     },
   },
 });

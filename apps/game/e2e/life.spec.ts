@@ -88,9 +88,15 @@ test.describe('on a phone', () => {
     await page.locator('#postings button').first().click();
     await page.click('#panel-close');
     expect((await L<{ kind: string }[]>(page, 'waiting')).filter((w) => w.kind === 'shift').length).toBe(1);
+    await expect(page.locator('#badge')).toHaveText('Waiting: 1');
 
     // Eat, then sleep until the shift is near: each sleep runs to its usual end or the shift's start.
+    // Nothing is sent to the sim while you are still on your way (D49).
     await tap(page, kitchen.id);
+    await page.waitForTimeout(150);
+    expect((await L<{ walking: boolean }>(page, 'where')).walking).toBe(true);
+    await expect(page.locator('#menu')).toBeHidden();
+    expect(await L<string[]>(page, 'log')).not.toContain('life/do');
     await arrive(page);
     await page.locator('#menu button[data-action="life/do"]').first().click();
     for (let i = 0; i < 6 && (await L<number | undefined>(page, 'fact', 'job.next-shift-in')) !== undefined; i++) {
