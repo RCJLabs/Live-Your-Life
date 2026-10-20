@@ -45,7 +45,9 @@ async function intent(d: Driver, profile: Profile, took: boolean): Promise<Inten
   const next = await d.fact<number | undefined>('job.next-shift-in');
   // It sets off when the alarm goes off: your walk to work and a margin before the shift (D61).
   const setOff = await d.fact<number>('you.alarm');
-  if (next !== undefined && next <= setOff && (await d.building()) !== 'diner') return { kind: 'commute' };
+  const reached = await d.hook<string | null>('reached');
+  const atWork = d.places.find((p) => p.id === reached)?.serves.includes('work');
+  if (next !== undefined && next <= setOff && !atWork) return { kind: 'commute' };
   const rest = await need('rest');
   if (rest < 10 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
   // Not off to bed with a shift near: the walk home outlasts the nap, and a bed reached after the
@@ -126,8 +128,10 @@ export async function step(d: Driver, profile: Profile, took: boolean): Promise<
       await doAt(d, next.activity);
       return took;
     case 'commute': {
-      const door = d.places.find((p) => p.kind === 'door' && p.building === 'diner');
-      if (door) await d.goTo(door);
+      // To the griddle, not the door: the alarm sets aside the walk to where you work (D61), and
+      // the shift starts once you work it there. Waiting at the door cost the walk inside.
+      const griddle = d.places.find((p) => p.kind === 'fixture' && p.serves.includes('work'));
+      if (griddle) await d.goTo(griddle);
       await d.clear();
       return took;
     }
