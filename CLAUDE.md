@@ -50,6 +50,7 @@ node tools/population/bench.ts [days] [sizes]      # the population harness in N
 node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromium at 1× and 4× CPU
 pnpm eb validate packages/content --types tools/content/game.ts   # the engine's checks on the content, its conditions against the game's facts (part of pnpm lint)
 pnpm content      # rebuild packages/content/pack.json after changing a record; a test fails until you do
+node apps/game/e2e/day-bot.ts [steady|thief] [days] [seeds] [rate]   # after `pnpm build`: the browser bot plays by taps; taps, pans and real minutes a game day
 node apps/game/e2e/saves-bench.ts [n] [seconds]   # after `pnpm build`: a save's size, and its write and load times at 1× and 4× CPU
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 ```
@@ -86,7 +87,8 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
                     tap-to-go, the bar, the panel, menus, the map, D49–D52; since M1.7 the saves, keeper.ts, and your lives,
                     lives.ts, D53–D54; play.ts is the page, main.ts its start); M0.3's art spike is at ?spike (src/spike/), and
                     M1.1's generated block at ?block=generated (src/city/, D33) with M1.2's interiors and the walker (D36);
-                    dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs
+                    dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs, and
+                    since M1.8 e2e/bot/, the browser bot that plays by taps
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/content/      game.ts: the game's modules, which eb validate and eb build check the content's conditions against
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
