@@ -555,6 +555,14 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Drop to 1× at the alarm; chosen (recommended). A 45-minute alarm: the smallest change, with time to wait at the diner. Lateness under a quarter of an hour not counted against standing: changes the job's rules, not the clock.
 
+### D61. The alarm sets aside your own walk to work. LOCKED, 2026-10-20 (Evan's call)
+
+**Decision.** The alarm (D57) sets aside the walk from your bed to where you work, as the page measures it on your block at D49's pace, and 10 minutes more (tune). With D60's drop to 1× and a fixed 30 minutes, the browser bot was still 6 minutes late to most shifts: the walk to the griddle on those blocks is about 36 game minutes, longer than the 30 set aside.
+
+**How.** The walk is the stage's to measure, as movement is (CLAUDE.md): the page routes from your bed to the griddle once and tells the sim, `you/commute`, a verb only the stage sends. The sim keeps it in your slice, now at version 2, with a migration; until the stage has said, the alarm sets aside 30 minutes. When M2.2 puts your home in the sim (ROADMAP open question 43), the sim can measure it itself.
+
+**Options considered.** Your own walk; chosen (recommended). A fixed 45 minutes: one line, wrong on a block with a longer walk. Leave 30: six minutes late stays the player's to fix, and the bot is still let go.
+
 ---
 
 ## Open items
