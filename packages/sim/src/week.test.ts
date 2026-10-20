@@ -167,7 +167,7 @@ describe('shift events in the bots’ weeks', () => {
   it('comes up for every event, takes every choice, and rolls the odds it showed', { timeout: 90_000 }, () => {
     const taken = new Map<string, number>();
     const checked =
-      playWeeks(steadyPolicy, seedsOf(300, 'events'), taken) + playWeeks(randomLifePolicy, seedsOf(300, 'odds'), taken);
+      playWeeks(steadyPolicy, seedsOf(500, 'events'), taken) + playWeeks(randomLifePolicy, seedsOf(500, 'odds'), taken);
     const career = careerOf(sim.content, LINE_COOK);
     const all = eventsFor(sim.content, career).flatMap(([id, e]) => e.choices.map((c) => `${id}/${c.id}`));
     expect([...all].filter((key) => !taken.has(key))).toEqual([]);

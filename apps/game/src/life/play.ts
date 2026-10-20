@@ -21,7 +21,7 @@ import type { Keeper, Slot } from './keeper.ts';
 import { makeMap } from './map.ts';
 import { itemsAt, makeSheet, modeSheet } from './menus.ts';
 import { makePanel } from './panel.ts';
-import { waiting } from './pending.ts';
+import { courtLine, type Waiting, waiting } from './pending.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
 import { Player } from './player.ts';
 import type { Life } from './session.ts';
@@ -83,6 +83,16 @@ export function play(
   function save(): void {
     savedHour = Math.floor((life.fact('time.tick') as number) / 60);
     if (kept) void kept.keeper.save(kept.slot, life, reachedAt);
+  }
+
+  /** D58: on the morning of a court date, its line, once. */
+  let toldCourt = -1;
+  function courtDay(list: readonly Waiting[]): void {
+    const today = life.fact('time.day') as number;
+    const line = toldCourt === today ? null : courtLine(life, list);
+    if (!line) return;
+    toldCourt = today;
+    life.fresh.push(line);
   }
 
   const blocked = () => panel.open || sheet.open || choice.open || map.open || s.ff !== null;
@@ -217,7 +227,9 @@ export function play(
     const minute = shownMinute(now);
     // The bar and the badge are read a few times a second: their facts don't change faster than a game minute.
     if (now - s.waitingAt > 250) {
-      s.waiting = waiting(life).length;
+      const list = waiting(life);
+      s.waiting = list.length;
+      courtDay(list);
       s.waitingAt = now;
       bar.update(life, { minute, paused: s.paused, speed: s.speed, waiting: s.waiting });
     }
@@ -276,7 +288,18 @@ export function play(
   Object.assign(window, {
     __lyl: {
       life: {
-        places: () => places.all.map((p) => ({ id: p.id, kind: p.kind, label: p.label, building: p.building })),
+        places: () =>
+          places.all.map((p) => ({
+            id: p.id,
+            kind: p.kind,
+            label: p.label,
+            building: p.building,
+            serves: p.serves ?? [],
+          })),
+        options: () => life.options().map((a) => ({ ...a })),
+        /** Whether the page is busy on its own: walking, or an activity's time passing on screen. */
+        busy: () => player.walking || s.ff !== null,
+        open: () => ({ panel: panel.open, menu: sheet.open, choice: choice.open, map: map.open }),
         screenOf: (id: string) => {
           const p = places.all.find((x) => x.id === id);
           return p ? project(viewOf(camera, size), { x: p.stand.x, y: p.stand.y, z: 0 }) : null;

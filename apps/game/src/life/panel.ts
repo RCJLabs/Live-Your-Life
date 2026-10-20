@@ -37,7 +37,7 @@ function waitingView(life: Life, act: (a: Action) => void): HTMLElement {
         'li',
         { 'data-kind': w.kind, 'data-day': w.day === null ? '' : String(w.day) },
         el('p', {}, w.text),
-        ...w.actions.map((a) => button(a.label, () => act(a.action))),
+        ...w.actions.map((a) => button(a.label, () => act(a.action), { 'data-action': a.action.type })),
       ),
     ),
   );
@@ -172,6 +172,6 @@ function rent(life: Life, owed: number, act: (a: Action) => void): HTMLElement {
     'p',
     { class: 'rent' },
     `You owe ${money(owed)} in rent. `,
-    pay ? button('Pay the rent', () => act(pay)) : null,
+    pay ? button('Pay the rent', () => act(pay), { 'data-action': pay.type }) : null,
   );
 }

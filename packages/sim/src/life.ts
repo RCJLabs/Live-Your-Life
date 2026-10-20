@@ -11,7 +11,7 @@
  * holds the cash.
  */
 import { defineModule, type ModuleContext } from '@eb/core';
-import { COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './dials.ts';
+import { ALARM_MINUTES, COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './dials.ts';
 import {
   ACTIVITIES,
   type Activity,
@@ -114,25 +114,37 @@ function doActivity(ctx: ModuleContext<LifeSlice>, activity: unknown, minutes: u
 
 const NEED_ARG = { need: { type: 'enum', values: NEEDS } } as const;
 
+/**
+ * Minutes until the alarm (D57): a walk's time before the next shift. Inside that walk there's no
+ * time to set aside, so what you do runs to the shift's start and being late is yours to choose.
+ */
+function alarm(view: { fact(id: string): unknown }): number | undefined {
+  const soon = view.fact('job.next-shift-in') as number | undefined;
+  if (soon === undefined) return undefined;
+  return soon > ALARM_MINUTES ? soon - ALARM_MINUTES : soon;
+}
+
 export const lifeModule = defineModule<LifeSlice>({
   id: 'life',
   init: () => ({ activity: 'awake', since: 0, asOf: 0, levels: { ...START_LEVELS } }),
   actions: {
     do: {
       run: (ctx, action) => doActivity(ctx, action.activity, action.minutes),
-      // What a menu offers now: each activity for its usual time, or until the next shift if that
-      // comes first; the meal only if it can be paid for; and work only during a shift, for the
-      // rest of it or until something on it needs you.
+      // What a menu offers now: each activity for its usual time, or until it's time to walk to
+      // the next shift if that comes first (D57's alarm), or until the shift under way ends (D58);
+      // the meal only if it can be paid for; and work only during a shift, for the rest of it or
+      // until something on it needs you.
       options: (view) => {
         const cash = view.fact('economy.amount', { resource: 'cash' }) as number;
-        const soon = view.fact('job.next-shift-in') as number | undefined;
+        const onShift = view.fact('job.on-shift') === true;
+        const until = onShift ? (view.fact('job.shift-left') as number) : alarm(view);
         const offered: { activity: Activity; minutes: unknown }[] = [];
         for (const activity of ACTIVITIES) {
           if (activity === 'work') {
-            if (view.fact('job.on-shift') === true) offered.push({ activity, minutes: view.fact('job.shift-left') });
+            if (onShift) offered.push({ activity, minutes: view.fact('job.shift-left') });
           } else if (COSTS[activity] <= cash) {
             const usual = STANDARD_MINUTES[activity];
-            offered.push({ activity, minutes: soon === undefined ? usual : Math.min(usual, soon) });
+            offered.push({ activity, minutes: until === undefined ? usual : Math.max(1, Math.min(usual, until)) });
           }
         }
         return offered;

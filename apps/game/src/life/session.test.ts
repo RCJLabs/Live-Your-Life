@@ -1,7 +1,7 @@
 import type { GameState, TimeSlice } from '@eb/core';
 import type { LawState, TiesSlice } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
-import { waiting } from './pending.ts';
+import { courtLine, type Waiting, waiting } from './pending.ts';
 import { Life } from './session.ts';
 
 /** A life whose state has had `change` made to it, as a test sets one up. */
@@ -92,5 +92,24 @@ describe('what waits on you (D50)', () => {
 
   it('is empty for a life with nothing coming', () => {
     expect(waiting(new Life('nothing'))).toEqual([]);
+  });
+});
+
+describe('the morning of a court date (D58)', () => {
+  const court = (day: number, go: boolean): Waiting => ({
+    id: 'court/1',
+    kind: 'court',
+    day,
+    text: '',
+    actions: go ? [{ label: 'Go to court', action: { type: 'law/attend' } }] : [],
+  });
+
+  it('says so while going is offered that morning, and not another day, nor after noon', () => {
+    const life = new Life('court-day');
+    expect(courtLine(life, [court(0, true)])).toMatch(/due in court this morning, by noon/);
+    expect(courtLine(life, [court(0, false)])).toBeNull();
+    expect(courtLine(life, [court(1, true)])).toBeNull();
+    life.act({ type: 'time/advance', minutes: 5 * 60 });
+    expect(courtLine(life, [court(0, true)])).toBeNull();
   });
 });
