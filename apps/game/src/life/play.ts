@@ -16,6 +16,7 @@ import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
 import { listen } from '../spike/input.ts';
 import { describe, Measure } from '../spike/measure.ts';
+import { ALARM_LINE, alarmFor } from './alarm.ts';
 import { makeBar, makeToast } from './dom.ts';
 import type { Keeper, Slot } from './keeper.ts';
 import { makeMap } from './map.ts';
@@ -83,6 +84,16 @@ export function play(
   function save(): void {
     savedHour = Math.floor((life.fact('time.tick') as number) / 60);
     if (kept) void kept.keeper.save(kept.slot, life, reachedAt);
+  }
+
+  /** D60: the alarm drops the clock to 1×, once for each shift, and says so. */
+  let rang = -1;
+  function alarm(): void {
+    const shift = alarmFor(life);
+    if (shift === null || shift === rang) return;
+    rang = shift;
+    s.speed = 1;
+    life.fresh.push(ALARM_LINE);
   }
 
   /** D58: on the morning of a court date, its line, once. */
@@ -230,6 +241,7 @@ export function play(
       const list = waiting(life);
       s.waiting = list.length;
       courtDay(list);
+      alarm();
       s.waitingAt = now;
       bar.update(life, { minute, paused: s.paused, speed: s.speed, waiting: s.waiting });
     }

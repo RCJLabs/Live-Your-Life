@@ -22,6 +22,7 @@ type Intent =
   | { readonly kind: 'do'; readonly activity: string }
   | { readonly kind: 'commute' }
   | { readonly kind: 'take' }
+  | { readonly kind: 'speed' }
   | { readonly kind: 'wait' };
 
 const has = (offers: readonly Offer[], type: string, activity?: string) =>
@@ -57,6 +58,9 @@ async function intent(d: Driver, profile: Profile, took: boolean): Promise<Inten
   const lowest = await d.fact<Need>('life.lowest');
   if ((await need(lowest)) < 40 && has(offers, 'life/do', REMEDY[lowest]))
     return { kind: 'do', activity: REMEDY[lowest] };
+  // D60 drops the clock to 1× at the alarm; with no shift near, a player waiting puts it back.
+  const slow = (await d.page.locator('#speed').textContent()) === '1×';
+  if (slow && !due && (await d.fact<boolean>('job.on-shift')) !== true) return { kind: 'speed' };
   return { kind: 'wait' };
 }
 
@@ -129,6 +133,9 @@ export async function step(d: Driver, profile: Profile, took: boolean): Promise<
       await d.clear();
       return took;
     }
+    case 'speed':
+      await d.tap('#speed');
+      return took;
     case 'take':
       // One try: if no shelf offers a take, the thief lives as the steady bot does.
       await take(d);

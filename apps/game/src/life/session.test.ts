@@ -1,6 +1,8 @@
 import type { GameState, TimeSlice } from '@eb/core';
 import type { LawState, TiesSlice } from '@lyl/sim';
+import { ALARM_MINUTES } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
+import { alarmFor } from './alarm.ts';
 import { courtLine, type Waiting, waiting } from './pending.ts';
 import { Life } from './session.ts';
 
@@ -111,5 +113,22 @@ describe('the morning of a court date (D58)', () => {
     expect(courtLine(life, [court(1, true)])).toBeNull();
     life.act({ type: 'time/advance', minutes: 5 * 60 });
     expect(courtLine(life, [court(0, true)])).toBeNull();
+  });
+});
+
+describe('the alarm (D57, D60)', () => {
+  it('goes off a walk before the shift, naming the shift, out in the world only', () => {
+    const life = new Life('alarm');
+    life.act(life.options().find((a) => a.type === 'job/sign-up') as never);
+    const next = life.fact('job.next-shift-in') as number;
+    const start = (life.fact('time.tick') as number) + next;
+    life.act({ type: 'time/advance', minutes: next - ALARM_MINUTES - 1 });
+    expect(alarmFor(life)).toBeNull();
+    life.act({ type: 'time/advance', minutes: 1 });
+    expect(alarmFor(life)).toBe(start);
+  });
+
+  it('is silent with no shift signed up for', () => {
+    expect(alarmFor(new Life('no-shift'))).toBeNull();
   });
 });

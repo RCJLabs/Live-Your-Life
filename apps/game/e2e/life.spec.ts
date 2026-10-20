@@ -154,6 +154,36 @@ test.describe('on a phone', () => {
     expect(errors).toEqual([]);
   });
 
+  test('drops the clock to 1× when the alarm goes off, and says why (D60)', async ({ page }) => {
+    test.setTimeout(180_000);
+    await page.goto('./?seed=life-1');
+    await expect(page.locator('#when')).toContainText('07:0');
+    await page.click('#badge');
+    await page.click('button[data-tab="week"]');
+    await page.locator('#postings button').first().click();
+    await page.click('#panel-close');
+    await page.click('#speed');
+    await expect(page.locator('#speed')).toHaveText('4×');
+    const bed = (await L<PlaceInfo[]>(page, 'places')).find(
+      (p) => p.label === 'Bed' && p.building === 'apartment',
+    ) as PlaceInfo;
+    let line = '';
+    for (let i = 0; i < 10 && line === ''; i++) {
+      await tap(page, bed.id);
+      await arrive(page);
+      await page.locator('#menu button[data-action="life/do"]').first().click();
+      // Sleep ends at the alarm (D57); the line comes once its fast-forward is shown.
+      for (let w = 0; w < 20 && line === ''; w++) {
+        await page.waitForTimeout(250);
+        const toast = (await page.locator('#toast').textContent()) ?? '';
+        if (toast.includes('time to walk')) line = toast;
+      }
+    }
+    expect(line).toContain('time to walk to the diner');
+    await expect(page.locator('#speed')).toHaveText('1×');
+    expect(await L<number>(page, 'fact', 'job.next-shift-in')).toBeLessThanOrEqual(30);
+  });
+
   test('stops the clock in the panel, a menu and the map, and when paused', async ({ page }) => {
     await page.goto('./?seed=life-1');
     await expect(page.locator('#when')).toContainText('07:0');
