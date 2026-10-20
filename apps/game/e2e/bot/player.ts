@@ -40,14 +40,17 @@ async function intent(d: Driver, profile: Profile, took: boolean): Promise<Inten
     return { kind: 'panel', tab: 'waiting', action: 'home/pay-owed' };
   if (cash >= 2 * RESERVE && has(offers, 'law/pay')) return { kind: 'panel', tab: 'waiting', action: 'law/pay' };
   if (profile === 'thief' && !took && (await d.fact<string>('time.phase')) !== 'night') return { kind: 'take' };
-  if ((await need('food')) < 15 && has(offers, 'life/do', 'eat')) return { kind: 'do', activity: 'eat' };
   if (has(offers, 'life/do', 'work')) return { kind: 'do', activity: 'work' };
   const next = await d.fact<number | undefined>('job.next-shift-in');
-  // It sets off when the alarm goes off: your walk to work and a margin before the shift (D61).
+  // When the alarm goes off, your walk to work and a margin before the shift (D61), it goes to the
+  // griddle and waits there: a meal or a wash first would run into the shift.
   const setOff = await d.fact<number>('you.alarm');
-  const reached = await d.hook<string | null>('reached');
-  const atWork = d.places.find((p) => p.id === reached)?.serves.includes('work');
-  if (next !== undefined && next <= setOff && !atWork) return { kind: 'commute' };
+  if (next !== undefined && next <= setOff) {
+    const reached = await d.hook<string | null>('reached');
+    const atWork = d.places.find((p) => p.id === reached)?.serves.includes('work');
+    return atWork ? { kind: 'wait' } : { kind: 'commute' };
+  }
+  if ((await need('food')) < 15 && has(offers, 'life/do', 'eat')) return { kind: 'do', activity: 'eat' };
   const rest = await need('rest');
   if (rest < 10 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
   // Not off to bed with a shift near: the walk home outlasts the nap, and a bed reached after the
