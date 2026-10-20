@@ -4,14 +4,13 @@
  * a real second is 8 game minutes, and the browser bot, tapping as fast as it could, was still a
  * few minutes late to every shift (ROADMAP open question 53).
  */
-import { ALARM_MINUTES } from '@lyl/sim';
 import type { Life } from './session.ts';
 
 /** The tick of the shift whose alarm is going off now, out in the world; null if none is. */
 export function alarmFor(life: Life): number | null {
   if (life.mode.id !== 'world') return null;
   const next = life.fact('job.next-shift-in') as number | undefined;
-  if (next === undefined || next > ALARM_MINUTES) return null;
+  if (next === undefined || next > (life.fact('you.alarm') as number)) return null;
   return (life.fact('time.tick') as number) + next;
 }
 

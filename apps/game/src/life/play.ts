@@ -8,7 +8,7 @@
  * on arrival and when the page is hidden (D54); a life played from `?seed=` is not kept.
  */
 import type { Action } from '@eb/core';
-import type { LawState } from '@lyl/sim';
+import { type LawState, LONGEST_WALK } from '@lyl/sim';
 import { type Camera, clampCamera, daylight, panBy, project, Stage, unproject, viewOf, zoomAt } from '@lyl/stage';
 import { blockScene } from '../city/scene.ts';
 import { cutFor } from '../city/walker.ts';
@@ -24,7 +24,7 @@ import { itemsAt, makeSheet, modeSheet } from './menus.ts';
 import { makePanel } from './panel.ts';
 import { courtLine, type Waiting, waiting } from './pending.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
-import { Player } from './player.ts';
+import { Player, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
 
 const MAX_DPR = 2;
@@ -52,6 +52,11 @@ export function play(
   const look = castLooks(life.seed).cook;
   const start = places.all.find((p) => p.id === at) ?? places.bed;
   const player = new Player(start);
+  // D61: the stage measures your walk to work and tells the sim, once for a block; the alarm sets it aside.
+  const work = places.all.find((p) => p.serves?.includes('work'));
+  const walk = work ? walkMinutes(block.plan, block.grid, places.bed, work) : null;
+  if (walk !== null && (life.state.you as { commute: number | null }).commute !== walk)
+    life.act({ type: 'you/commute', minutes: Math.min(walk, LONGEST_WALK) });
   /** The place you last reached, kept with the save. */
   let reachedAt: string | null = start.id;
 

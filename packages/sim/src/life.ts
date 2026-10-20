@@ -11,7 +11,7 @@
  * holds the cash.
  */
 import { defineModule, type ModuleContext } from '@eb/core';
-import { ALARM_MINUTES, COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './dials.ts';
+import { COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './dials.ts';
 import {
   ACTIVITIES,
   type Activity,
@@ -115,13 +115,15 @@ function doActivity(ctx: ModuleContext<LifeSlice>, activity: unknown, minutes: u
 const NEED_ARG = { need: { type: 'enum', values: NEEDS } } as const;
 
 /**
- * Minutes until the alarm (D57): a walk's time before the next shift. Inside that walk there's no
- * time to set aside, so what you do runs to the shift's start and being late is yours to choose.
+ * Minutes until the alarm (D57): your walk to work before the next shift (D61). Inside that walk
+ * there's no time to set aside, so what you do runs to the shift's start and being late is yours
+ * to choose.
  */
 function alarm(view: { fact(id: string): unknown }): number | undefined {
   const soon = view.fact('job.next-shift-in') as number | undefined;
   if (soon === undefined) return undefined;
-  return soon > ALARM_MINUTES ? soon - ALARM_MINUTES : soon;
+  const set = view.fact('you.alarm') as number;
+  return soon > set ? soon - set : soon;
 }
 
 export const lifeModule = defineModule<LifeSlice>({
@@ -185,6 +187,7 @@ export const lifeModule = defineModule<LifeSlice>({
         'job/sign-up',
         'job/drop',
         'ties/*',
+        'you/*',
         'law/take',
         'law/attend',
         'law/check-in',

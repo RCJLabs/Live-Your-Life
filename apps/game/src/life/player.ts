@@ -14,6 +14,20 @@ export const WALK = 3.9;
 /** Metres a full stride covers: two steps, a little longer at a brisk walk. */
 const STRIDE = 1.6;
 
+/**
+ * Game minutes to walk from one place to another at D49's pace: the route the walker would take,
+ * through doors' middles, at WALK metres a stage second and two game minutes a stage second at
+ * speed 1. Null if no route reaches it. The sim hears it as your walk to work (D61).
+ */
+export function walkMinutes(plan: BlockPlan, grid: WalkGrid, from: Place, to: Place): number | null {
+  const r = route(grid, from.cell, to.cell);
+  if (!r) return null;
+  const doors = plan.buildings.flatMap((b) => b.interior?.doors ?? []);
+  const cells = r.cells.slice(1).map((c) => throughMiddle(centreOf(grid, c), doors));
+  const metres = length([from.stand, ...cells.slice(0, -1), to.stand]);
+  return Math.max(1, Math.ceil(metres / (WALK / 2)));
+}
+
 export interface Using {
   readonly place: Place;
   readonly pose: PoseKind;

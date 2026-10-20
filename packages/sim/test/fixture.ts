@@ -5,26 +5,32 @@
  * the page's own `time/elapse`, which no bot sends. Run once per save format; the fixture is committed and
  * must keep loading (fixtures.test.ts). Never re-run to "fix" a failing load: write a migration.
  *
- *   node packages/sim/test/fixture.ts [out]
+ *   node packages/sim/test/fixture.ts <out> <build> [seed]
+ *
+ * life-v1.json was written by M1.7's build (you at version 1); life-v2.json by M1.8's, after the
+ * walk to work (D61), with the page's `you/commute` in its log.
  */
 import { writeFileSync } from 'node:fs';
 import { type Action, createSaveFile, playRun } from '@eb/core';
 import { randomFor } from '../src/index.ts';
 import { sliceGame, sliceSim } from './slice.ts';
 
-const out = process.argv[2] ?? new URL('./fixtures/saves/life-v1.json', import.meta.url).pathname;
+const [out, build, SEED = 'fixture-24'] = process.argv.slice(2);
+if (!out || !build) throw new Error('fixture.ts <out> <build>: a fixture is written once, by name');
 const game = sliceGame();
 const sim = sliceSim();
-const SEED = 'fixture-24';
 const run = playRun(game, sim, { seed: SEED, policy: randomFor(7), maxTurns: 5000 });
 let state = run.state;
 const log: Action[] = [...run.log];
-for (const ms of [1500, 500, 2000]) {
-  const elapse = { type: 'time/elapse', ms };
-  const step = game.reduce(state, elapse, sim);
-  if (!step.accepted) throw new Error('fixture: the life ended out of the world; pick another seed');
+for (const action of [
+  { type: 'time/elapse', ms: 1500 },
+  { type: 'you/commute', minutes: 36 },
+  { type: 'time/elapse', ms: 2000 },
+]) {
+  const step = game.reduce(state, action, sim);
+  if (!step.accepted) throw new Error(`fixture: ${action.type} refused: ${JSON.stringify(step.beats[0])}`);
   state = step.state;
-  log.push(elapse);
+  log.push(action);
 }
 // The snapshot is the state some way in; the actions after it are the log.
 const split = Math.floor(run.log.length * 0.7);
@@ -39,7 +45,7 @@ const file = createSaveFile(
   {
     game: 'live-your-life',
     edition: 'full',
-    build: 'm1.7-fixture',
+    build,
     savedAt: 0,
     summary: { name: 'fixture', day: 0, cash: 0, at: null },
   },
