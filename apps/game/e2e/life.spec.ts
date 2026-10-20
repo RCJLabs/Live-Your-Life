@@ -181,7 +181,21 @@ test.describe('on a phone', () => {
     }
     expect(line).toContain('time to walk to the diner');
     await expect(page.locator('#speed')).toHaveText('1×');
-    expect(await L<number>(page, 'fact', 'job.next-shift-in')).toBeLessThanOrEqual(30);
+    expect(await L<number>(page, 'fact', 'job.next-shift-in')).toBeLessThanOrEqual(
+      await L<number>(page, 'fact', 'you.alarm'),
+    );
+  });
+
+  test('sets aside your own walk to work: the walk measured is the walk taken (D61)', async ({ page }) => {
+    await page.goto('./?seed=life-1');
+    await expect(page.locator('#when')).toContainText('07:0');
+    const walk = (await L<number>(page, 'fact', 'you.alarm')) - 10;
+    const griddle = (await L<PlaceInfo[]>(page, 'places')).find((p) => p.label === 'Griddle') as PlaceInfo;
+    const before = await L<number>(page, 'tick');
+    await L(page, 'goTo', griddle.id);
+    await arrive(page);
+    const took = (await L<number>(page, 'tick')) - before;
+    expect(Math.abs(took - walk), `measured ${walk}, took ${took}`).toBeLessThanOrEqual(3);
   });
 
   test('stops the clock in the panel, a menu and the map, and when paused', async ({ page }) => {
