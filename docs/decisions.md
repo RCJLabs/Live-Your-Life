@@ -549,6 +549,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A median of 20 or fewer with no day over 35 (recommended): today's reading passes and a change that adds taps fails. Hold today's 16 and 30. Decide after the playtests; chosen.
 
+### D60. The alarm drops the clock to 1×. LOCKED, 2026-10-20 (Evan's call)
+
+**Decision.** When the alarm goes off, a walk's time before a shift (D57), the page sets the clock to 1×, once for each shift, with a line saying it's time to walk to the diner. With the alarm alone, the browser bot was still 8 to 13 minutes late to nearly every shift, because at 4× a real second is 8 game minutes; the thief was let go after 8 late starts in a row (ROADMAP open question 53).
+
+**Options considered.** Drop to 1× at the alarm; chosen (recommended). A 45-minute alarm: the smallest change, with time to wait at the diner. Lateness under a quarter of an hour not counted against standing: changes the job's rules, not the clock.
+
 ---
 
 ## Open items
