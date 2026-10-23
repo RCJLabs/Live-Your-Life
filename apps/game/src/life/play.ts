@@ -83,10 +83,13 @@ export function play(
     const from = life.fact('law.fence-from') as number;
     return from >= 0 && hour >= from && hour < (life.fact('law.fence-to') as number);
   };
-  const crowdNow = (t: number) => {
+  /**
+   * Who is out at a minute of the life as the page shows it, with its fraction: people are placed
+   * every frame from the clock, not stepped once a game minute when the sim's clock moves.
+   */
+  const crowdNow = (t: number, minute: number) => {
     const day = life.fact('time.day') as number;
     const weekday = WEEKDAYS.indexOf(life.fact('time.weekday') as (typeof WEEKDAYS)[number]);
-    const minute = day * 24 * 60 + (life.fact('time.of-day') as number);
     const people = crowd.actorsAt(minute, (((weekday - day) % 7) + 7) % 7, t, atPost);
     // And passers-by (D72), the city's statistics on its sidewalks.
     return [...people, ...passersAt(block.walkways, peopleSeed, minute, t, passerLooks, onFoot)];
@@ -268,6 +271,15 @@ export function play(
     return (((ofDay - behind) % 1440) + 1440) % 1440;
   }
 
+  /** The minute of the life the page shows, from the start day's midnight, with its fraction. */
+  function shownTime(now: number): number {
+    const at = (life.fact('time.day') as number) * 1440 + (life.fact('time.of-day') as number);
+    const ff = s.ff;
+    if (!ff) return at + life.partial;
+    // A fast-forward shown passing: the people go by at its pace, the clock catching up.
+    return at - (ff.to - ff.from) * (1 - Math.min(1, (now - ff.start) / ff.ms));
+  }
+
   const measure = new Measure();
   let measured: string | null = null;
 
@@ -334,7 +346,7 @@ export function play(
         warm: light.warm,
         time: s.t,
       },
-      [...(trip ? [] : [actor]), ...crowdNow(s.t)],
+      [...(trip ? [] : [actor]), ...crowdNow(s.t, shownTime(now))],
     );
     const result = measure.frame(now);
     if (result) {
@@ -406,7 +418,13 @@ export function play(
         across: () => block.across,
         cut: () => [...cut],
         /** Who of the tier-1 people is out in the town now (M2.2, D69). */
-        crowd: () => crowdNow(s.t).map((a) => ({ id: a.id, x: a.x, y: a.y, walking: a.pose.kind === 'walk' })),
+        crowd: () =>
+          crowdNow(s.t, shownTime(performance.now())).map((a) => ({
+            id: a.id,
+            x: a.x,
+            y: a.y,
+            walking: a.pose.kind === 'walk',
+          })),
         screenAt: (x: number, y: number) => project(viewOf(camera, size), { x, y, z: 0 }),
         focusAt: (x: number, y: number) => {
           camera = clampCamera({ ...camera, cx: x, cy: y }, limits);

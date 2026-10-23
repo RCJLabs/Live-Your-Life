@@ -86,6 +86,15 @@ export class Life {
   }
 
   /**
+   * How far into the next game minute the page's clock has run, 0 to 1: time the sim hasn't been
+   * sent yet, since it takes whole minutes. What the stage places people by, so they move every
+   * frame, not in a step each game minute.
+   */
+  get partial(): number {
+    return this.mode.id === 'world' ? Math.min(1, this.#fraction / REAL_TIME.msPerTick) : 0;
+  }
+
+  /**
    * Real milliseconds at a speed's factor, out in the world only. They are sent as whole game
    * minutes, so the log holds two actions a second at speed 1, not one a frame; the rest waits.
    */
