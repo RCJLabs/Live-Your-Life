@@ -21,6 +21,7 @@ import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
 import { lawModule } from './law/module.ts';
 import { lifeModule } from './life.ts';
+import { peopleModule, shareModule } from './people/module.ts';
 import { tiesModule } from './ties/module.ts';
 import { youModule } from './you.ts';
 
@@ -36,7 +37,13 @@ export interface LifeOptions {
   readonly start?: LifeStart;
   /** The career record a life starts hired into: the slice's is `line-cook`. Without one, no job. */
   readonly career?: string;
+  /** The tier-1 people (D31, M2.2): 1,000 by default; a test may want fewer. */
+  readonly people?: number;
 }
+
+/** The tier-1 people a life holds (D31), and the shares they are moved on in, one an hour (D30). */
+export const PEOPLE = 1000;
+export const PEOPLE_SHARES = 24;
 
 /** The timers a life starts with: the first rent, and every midnight's upkeep. */
 export function startingTimers(start: LifeStart): ScheduleSpec[] {
@@ -69,6 +76,9 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     homeModule,
     lawModule,
     youModule,
+    // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
+    peopleModule(options.people ?? PEOPLE),
+    ...Array.from({ length: PEOPLE_SHARES }, (_, k) => shareModule(options.people ?? PEOPLE, k, PEOPLE_SHARES, true)),
   ];
 }
 

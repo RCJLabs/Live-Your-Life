@@ -23,7 +23,7 @@ function census(): Map<string, Beat[]> {
   const lives: [() => Policy, ReturnType<typeof createLifeGame>][] = [
     [() => steadyFor(28), sliceGame()],
     [() => randomFor(56), sliceGame()],
-    [() => thiefFor(56), createLifeGame()],
+    [() => thiefFor(56), createLifeGame({ people: 0 })],
   ];
   for (const [bot, game] of lives)
     for (const seed of seedsOf(12, 'chronicle')) {
@@ -126,7 +126,7 @@ describe('you (D52)', () => {
     expect(you('a')).toEqual(you('a'));
     const names = new Set(Array.from({ length: 50 }, (_, i) => you(`n-${i}`).first));
     expect(names.size).toBeGreaterThan(20);
-    expect(createLifeGame().init('none', sliceSim({})).you).toEqual({
+    expect(createLifeGame({ people: 0 }).init('none', sliceSim({})).you).toEqual({
       first: 'You',
       last: '',
       pronouns: 'they',

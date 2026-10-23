@@ -9,7 +9,7 @@
  * people, as flat arrays of numbers: the kernel copies and freezes a module's whole slice in
  * every action that writes to it, so a share moved on alone costs only its own copy.
  */
-import { defineModule, type Module, type ModuleContext } from '@eb/core';
+import { type Beat, defineModule, type Module, type ModuleContext } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
 import { START_LEVELS } from '../dials.ts';
 import { type Activity, type Levels, NEEDS, PERCENT, settle } from '../needs.ts';
@@ -122,13 +122,30 @@ function moveOn(ctx: ModuleContext<PeopleSlice>): void {
   progress(city, ctx.write(), from, to, (((weekday - day) % 7) + 7) % 7);
 }
 
-/** Share k of `of`, moved on by its effect, `<id>-progress`. */
-export function shareModule(n: number, k = 0, of = 1): Module {
+/**
+ * Moves share k of `of` on when time passes its hour of the day (M2.2): each share settles a whole
+ * day once a day, a twenty-fourth of the people each hour, as the harness's timers do (D30). A
+ * life hears time pass rather than keeping timers, so a save from before the people starts them
+ * without a timer it never had.
+ */
+const onItsHour = (k: number, of: number) => (ctx: ModuleContext<PeopleSlice>, event: Beat) => {
+  const span = (event.to as number) - (event.from as number);
+  if (span <= 0) return;
+  const now = (ctx.fact('time.day') as number) * 24 * 60 + (ctx.fact('time.of-day') as number);
+  // The first hour after the passage began that is this share's, and whether it came.
+  const startHour = Math.floor((now - span) / 60) + 1;
+  const due = startHour + ((((k - startHour) % of) + of) % of);
+  if (due * 60 <= now) moveOn(ctx);
+};
+
+/** Share k of `of`, moved on by its effect, `<id>-progress`; in a life, by time passing its hour. */
+export function shareModule(n: number, k = 0, of = 1, listen = false): Module {
   const id = shareId(k, of);
   return defineModule<PeopleSlice>({
     id,
     init: () => newShare(n, k, of),
     effects: { [`${id}-progress`]: moveOn },
+    ...(listen ? { on: { 'time/passed': onItsHour(k, of) } } : {}),
     facts: {
       mean: {
         args: { need: { type: 'enum', values: NEEDS } },

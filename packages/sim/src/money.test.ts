@@ -6,8 +6,8 @@ import { lifeSim } from './content.ts';
 import { RENT, START_CASH } from './dials.ts';
 import { createLifeGame } from './game.ts';
 
-const game = createLifeGame();
-const cook = createLifeGame({ career: TEST_COOK });
+const game = createLifeGame({ people: 0 });
+const cook = createLifeGame({ people: 0, career: TEST_COOK });
 /** The test cook's records, and cash to start with. */
 const withCash = (cents: number): SimContext => ({
   content: createRecordStore({
