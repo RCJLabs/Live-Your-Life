@@ -465,6 +465,16 @@ How to read this file:
   - **Polished 2026-10-23: walkers ease round corners.** On the way to work, the tier-1 people turned on the spot at each street corner. Within 2 m of a corner (tune; less on a short leg) they now follow a curve through it, facing along it (`apps/game/src/city/crowd.ts`, `along`). Planted bugs: 1, 1 caught.
   - Found on the way: `pnpm -s typecheck` printed nothing when a package's check failed, so two type errors (a block plan's width that doesn't exist; your unit's id taken for a place) passed as clean until a test ran into them. Typecheck is now read by its exit code.
 - **M2.4 Crime and law.** Crime to the crew tier and law to detective, sharing case files; courts; prison as time passing.
+  - Started 2026-10-23 while M2.3 waits on its wages (D77). Decisions: street dealing first (D78); join a crew, then grow it (D79); the police as a sponsored recruit, to detective (D80); prison as a sentence, time and parole (D81).
+  - **Done when:**
+    - dealing works by its records: buying, holding and selling, its odds shown first and rolled, heat, witnesses among the people in the town, and its offences charged by Michigan's law, traced in CALIBRATION.md [auto];
+    - a dealer among the tier-1 people brings you into a crew when trust and heat allow, and you can later bring in people you have ties with [auto];
+    - a case file gathers the evidence of what you did, and the police act on it at times you are told; charges, bail, plea or trial with the odds from the evidence, and a sentence [auto];
+    - a felony sentence passes as days with a prison job, visits, letters and a parole hearing, rent and ties going on outside, never in one blocking action [auto];
+    - police officer is a career you can be hired into, through a paid academy, onto patrol shifts whose arrests come from the same crimes and case files; detective by standing [auto];
+    - a dealer bot, a police bot and the steady bot play 500 seeded weeks each with nothing refused, and crime pays less than work once arrests and time are counted (realism bar B6) [auto];
+    - saves from before load [auto];
+    - a dealer's week and a recruit's week played on Evan's phone [you].
 - **M2.5 Food.** Line cook to chef.
 - **M2.6 Relationships.** Romance, marriage, children, custody.
 - **M2.7 Lives.** Aging, illness, death, the heir and the ward.
