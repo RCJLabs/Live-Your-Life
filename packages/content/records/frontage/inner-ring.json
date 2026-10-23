@@ -1,0 +1,7 @@
+{
+  "name": "Inner-ring streets",
+  "street": "main",
+  "fill": { "rowhouse": 5, "apartment": 2, "storefront": 3, "corner-shop": 1, "diner": 1 },
+  "vacant": 1,
+  "gap": { "min": 1, "max": 2.5 }
+}

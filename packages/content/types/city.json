@@ -40,6 +40,14 @@
       "kind": "group",
       "description": "What the districts' densities must add up to (D4): a check, not a setting.",
       "fields": { "min": { "kind": "int", "min": 1 }, "max": { "kind": "int", "min": 1 } }
+    },
+    "institutions": {
+      "kind": "list",
+      "of": {
+        "kind": "group",
+        "fields": { "building": { "kind": "ref", "to": "building" }, "district": { "kind": "ref", "to": "district" } }
+      },
+      "description": "The few buildings the city has one of (DESIGN.md): each on the lot of its district nearest the centre that it fits."
     }
   }
 }

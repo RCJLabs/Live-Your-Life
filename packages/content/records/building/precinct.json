@@ -1,0 +1,12 @@
+{
+  "name": "Police precinct",
+  "use": "police",
+  "width": { "min": 16, "max": 22 },
+  "depth": 18,
+  "storeys": { "min": 2, "max": 3 },
+  "storeyHeight": 4,
+  "walls": ["#A0553F", "#8C7B6B"],
+  "trim": "#D8CDB4",
+  "door": { "min": 0.45, "max": 0.55 },
+  "facade": "precinct-front"
+}

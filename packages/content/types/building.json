@@ -6,8 +6,8 @@
     "name": { "kind": "text", "min": 1, "max": 40 },
     "use": {
       "kind": "enum",
-      "values": ["home", "restaurant", "shop"],
-      "description": "What it is for, so a block can ask for the slice's home, restaurant and shop."
+      "values": ["home", "restaurant", "shop", "office", "court", "police"],
+      "description": "What it is for, so a block can ask for the slice's home, restaurant and shop, and the city for its courthouse and precinct."
     },
     "width": {
       "kind": "group",
@@ -17,7 +17,7 @@
     "depth": { "kind": "number", "min": 3, "max": 30 },
     "storeys": {
       "kind": "group",
-      "fields": { "min": { "kind": "int", "min": 1, "max": 6 }, "max": { "kind": "int", "min": 1, "max": 6 } }
+      "fields": { "min": { "kind": "int", "min": 1, "max": 12 }, "max": { "kind": "int", "min": 1, "max": 12 } }
     },
     "storeyHeight": { "kind": "number", "min": 2.4, "max": 6, "label": "Storey height" },
     "walls": { "kind": "list", "of": { "kind": "colour" }, "min": 1 },

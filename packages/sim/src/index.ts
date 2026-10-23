@@ -41,7 +41,17 @@ export {
   planBlock,
   type StreetPlan,
 } from './city/block.ts';
-export { CITY, type CityPlan, type CityRecord, type DistrictRecord, districtOf, planCity } from './city/city.ts';
+export {
+  CITY,
+  type CityPlan,
+  type CityRecord,
+  type DistrictRecord,
+  districtOf,
+  lotFront,
+  planCity,
+} from './city/city.ts';
+export { type CityTemplates, cityTemplates, lotDepthOf, planFace, type Side as FaceSide, toCity } from './city/face.ts';
+export { faceProblems } from './city/faceCheck.ts';
 export { type FixturePlan, furnish, type UsePlan } from './city/furnish.ts';
 export { type InteriorPlan, planInterior, type UnitPlan } from './city/interior.ts';
 export { interiorProblems } from './city/interiorCheck.ts';

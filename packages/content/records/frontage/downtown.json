@@ -1,0 +1,7 @@
+{
+  "name": "Downtown streets",
+  "street": "main",
+  "fill": { "office": 5, "storefront": 2, "apartment": 1, "diner": 1 },
+  "vacant": 1,
+  "gap": { "min": 0, "max": 1.5 }
+}

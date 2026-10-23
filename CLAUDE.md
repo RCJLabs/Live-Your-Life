@@ -54,6 +54,7 @@ node apps/game/e2e/day-bot.ts [steady|thief] [days] [seeds] [rate]   # after `pn
 node apps/game/e2e/saves-bench.ts [n] [seconds]   # after `pnpm build`: a save's size, and its write and load times at 1× and 4× CPU
 node tools/city/bench.ts [seeds] [rounds]          # the whole city planned in Node: time, blocks, lots, people, memory (--expose-gc for the heap)
 node tools/city/chromium.ts [seeds] [rounds]       # the same in headless Chromium at 1× and 4× CPU
+node tools/city/faces.ts [seeds]                   # every face of every walkable block, planned and checked; ms a face
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 ```
 
@@ -80,7 +81,8 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     court, HYTA, the fence), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
                     hour plans, ties, shares), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5
-                    sight.ts, who sees where in a shop); since M1.6 you (you.ts) and the chronicle (chronicle.ts);
+                    sight.ts, who sees where in a shop; since M2.1 city.ts, the whole city's districts, blocks and lots, and
+                    face.ts, a block's face planned when needed); since M1.6 you (you.ts) and the chronicle (chronicle.ts);
                     test/slice.ts is the slice's life for tests and benches; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
@@ -94,7 +96,8 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/content/      game.ts: the game's modules, which eb validate and eb build check the content's conditions against
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
-tools/city/         the city bench (M2.1): the whole city planned, timed and weighed in Node and Chromium
+tools/city/         the city bench (M2.1): the whole city planned, timed and weighed in Node and Chromium; faces.ts plans and
+                    checks every walkable face
 docs/               design, decisions, voice, calibration, research
 ```
 

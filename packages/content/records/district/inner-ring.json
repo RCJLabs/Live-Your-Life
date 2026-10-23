@@ -6,5 +6,5 @@
   "lots": { "min": 6, "max": 13 },
   "density": 45,
   "income": "low",
-  "blocks": ["slice"]
+  "frontage": "inner-ring"
 }

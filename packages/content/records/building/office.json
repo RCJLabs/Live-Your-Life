@@ -1,0 +1,12 @@
+{
+  "name": "Office block",
+  "use": "office",
+  "width": { "min": 12, "max": 28 },
+  "depth": 18,
+  "storeys": { "min": 4, "max": 10 },
+  "storeyHeight": 3.8,
+  "walls": ["#B9A48A", "#8C7B6B", "#D8CDB4", "#A0553F"],
+  "trim": "#6B6158",
+  "door": { "min": 0.4, "max": 0.6 },
+  "facade": "lobby"
+}

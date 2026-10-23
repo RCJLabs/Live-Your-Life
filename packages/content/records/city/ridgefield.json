@@ -8,5 +8,9 @@
   "band": { "district": "old-industrial", "width": 3 },
   "strip": { "district": "strip", "width": 1 },
   "rest": "suburbs",
-  "population": { "min": 250000, "max": 400000 }
+  "population": { "min": 250000, "max": 400000 },
+  "institutions": [
+    { "building": "courthouse", "district": "downtown" },
+    { "building": "precinct", "district": "downtown" }
+  ]
 }

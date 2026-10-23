@@ -172,6 +172,36 @@ function stoopFront(ctx: Ctx, view: View, b: Building, face: Face, frame: Frame,
   }
 }
 
+/**
+ * An office's or an institution's ground floor (M2.1): a stone base, tall glass doors in a stone
+ * surround, the sign cut over them, and windows either side.
+ */
+function lobbyFront(ctx: Ctx, view: View, b: Building, face: Face, frame: Frame, door: number): void {
+  const w = face.width;
+  const night = frame.dark > LIGHTS_ON;
+  patch(ctx, view, face, [0, 0, w, 0.6], BUILDING.stone);
+  patch(ctx, view, face, [door - 1.5, 0, door + 1.5, 3.4], BUILDING.stone);
+  patch(ctx, view, face, [door - 1.1, 0, door + 1.1, 2.9], night ? LIT : BUILDING.glassDark, night ? 1.1 : 1);
+  patch(ctx, view, face, [door - 0.03, 0, door + 0.03, 2.9], BUILDING.frame);
+  if (night)
+    frame.lights.push({ kind: 'shape', points: faceRect(view, face, door - 1.1, 0, door + 1.1, 2.9), strength: 0.7 });
+  for (const s of bays(w, b.facade.bays, { s: door, w: 3.2 })) {
+    drawWindow(
+      ctx,
+      view,
+      face,
+      { s, t: SILL + 0.2, w: WIN_W, h: WIN_H + 0.3 },
+      bit(b.facade.litBits, 20 + Math.round(s)),
+      frame,
+    );
+  }
+  const sign = b.facade.sign;
+  if (!sign) return;
+  const top = Math.min(b.storeyHeight - 0.15, 4.2);
+  patch(ctx, view, face, [door - 2.6, top - 0.75, door + 2.6, top], sign.color);
+  paintText(ctx, view, face, sign.text, { s: door, t: top - 0.375, height: 0.5, maxWidth: 4.9 }, sign.ink);
+}
+
 /** Faint brick courses, only when close enough to see them. */
 function courses(ctx: Ctx, view: View, face: Face, color: string): void {
   if (view.u < 18) return;
@@ -214,6 +244,7 @@ export function drawFront(ctx: Ctx, view: View, b: Building, face: Face, frame: 
   if (b.facade.ground === 'diner') dinerFront(ctx, view, b, face, frame, door);
   else if (b.facade.ground === 'shop') shopFront(ctx, view, b, face, frame, door);
   else if (b.facade.ground === 'stoop') stoopFront(ctx, view, b, face, frame, door);
+  else if (b.facade.ground === 'lobby') lobbyFront(ctx, view, b, face, frame, door);
   else
     bays(face.width, b.facade.bays).forEach((s, i) => {
       drawWindow(ctx, view, face, { s, t: SILL, w: WIN_W, h: WIN_H }, bit(b.facade.litBits, 20 + i), frame);

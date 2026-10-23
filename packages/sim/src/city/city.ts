@@ -17,7 +17,7 @@ export interface DistrictRecord {
   readonly lots: { readonly min: number; readonly max: number };
   readonly density: number;
   readonly income: 'low' | 'working' | 'middle' | 'upper';
-  readonly blocks?: readonly string[];
+  readonly frontage?: string;
 }
 
 export interface CityRecord {
@@ -31,12 +31,14 @@ export interface CityRecord {
   readonly strip: { readonly district: string; readonly width: number };
   readonly rest: string;
   readonly population: { readonly min: number; readonly max: number };
+  readonly institutions: readonly { readonly building: string; readonly district: string }[];
 }
 
 export const CITY = 'ridgefield';
 
 export interface CityPlan {
   readonly name: string;
+  readonly seed: string;
   /** Cells along each side, and a cell's side in metres. */
   readonly size: number;
   readonly cell: number;
@@ -52,6 +54,8 @@ export interface CityPlan {
   readonly lots: Lots;
   /** People, by district density and area, streets included. */
   readonly population: number;
+  /** The buildings the city has one of, and the lot each stands on. */
+  readonly institutions: readonly { readonly building: string; readonly lot: number }[];
 }
 
 /** Each block: its corner, size and district, and where its lots start in `lots`. */
@@ -132,6 +136,39 @@ function frontages(length: number, lots: DistrictRecord['lots'], rng: Rng): numb
   return out;
 }
 
+/** Where a lot's front meets its street, in the city's metres. */
+export function lotFront(blocks: Blocks, lots: Lots, lot: number): { x: number; y: number } {
+  const b = lots.block[lot] as number;
+  return {
+    x: (blocks.x[b] as number) + (lots.start[lot] as number) + (lots.width[lot] as number) / 2,
+    y: (blocks.y[b] as number) + (lots.side[lot] === 1 ? (blocks.d[b] as number) : 0),
+  };
+}
+
+/** The lot of a district nearest a point that is at least `width` wide and not taken; −1 if none. */
+function nearestLot(
+  blocks: Blocks,
+  lots: Lots,
+  at: { x: number; y: number },
+  district: number,
+  width: number,
+  taken: ReadonlySet<number>,
+): number {
+  let best = -1;
+  let bestD = Number.POSITIVE_INFINITY;
+  for (let l = 0; l < lots.count; l++) {
+    if (blocks.district[lots.block[l] as number] !== district || (lots.width[l] as number) < width || taken.has(l))
+      continue;
+    const p = lotFront(blocks, lots, l);
+    const d = (p.x - at.x) * (p.x - at.x) + (p.y - at.y) * (p.y - at.y);
+    if (d < bestD) {
+      best = l;
+      bestD = d;
+    }
+  }
+  return best;
+}
+
 /** The city from a seed: its districts, blocks and lots. */
 export function planCity(store: RecordStore, seed: string, id = CITY): CityPlan {
   const city = recordOf<CityRecord>(store, 'city', id);
@@ -182,8 +219,34 @@ export function planCity(store: RecordStore, seed: string, id = CITY): CityPlan 
       }
     }
   }
+  const blocks: Blocks = {
+    count: bx.length,
+    x: Float64Array.from(bx),
+    y: Float64Array.from(by),
+    w: Float64Array.from(bw),
+    d: Float64Array.from(bd),
+    district: Uint8Array.from(bdist),
+    firstLot: Uint32Array.from(first),
+  };
+  const lots: Lots = {
+    count: lb.length,
+    block: Uint32Array.from(lb),
+    side: Uint8Array.from(ls),
+    start: Float64Array.from(lstart),
+    width: Float64Array.from(lw),
+  };
+  const centre = { x: (z.centre.col + 0.5) * city.cell, y: (z.centre.row + 0.5) * city.cell };
+  const taken = new Set<number>();
+  const institutions = city.institutions.map(({ building, district }) => {
+    const b = recordOf<{ width: { min: number } }>(store, 'building', building);
+    const lot = nearestLot(blocks, lots, centre, z.districts.indexOf(district), b.width.min, taken);
+    if (lot < 0) throw new Error(`city: no lot in ${district} fits ${building}`);
+    taken.add(lot);
+    return { building, lot };
+  });
   return {
     name: city.name,
+    seed,
     size: n,
     cell: city.cell,
     districts: z.districts,
@@ -191,23 +254,10 @@ export function planCity(store: RecordStore, seed: string, id = CITY): CityPlan 
     centre: z.centre,
     river: z.river,
     stripCol: z.stripCol,
-    blocks: {
-      count: bx.length,
-      x: Float64Array.from(bx),
-      y: Float64Array.from(by),
-      w: Float64Array.from(bw),
-      d: Float64Array.from(bd),
-      district: Uint8Array.from(bdist),
-      firstLot: Uint32Array.from(first),
-    },
-    lots: {
-      count: lb.length,
-      block: Uint32Array.from(lb),
-      side: Uint8Array.from(ls),
-      start: Float64Array.from(lstart),
-      width: Float64Array.from(lw),
-    },
+    blocks,
+    lots,
     population: Math.round(population),
+    institutions,
   };
 }
 

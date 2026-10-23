@@ -44,11 +44,11 @@
       "values": ["low", "working", "middle", "upper"],
       "description": "The usual household."
     },
-    "blocks": {
-      "kind": "list",
-      "of": { "kind": "ref", "to": "block" },
+    "frontage": {
+      "kind": "ref",
+      "to": "frontage",
       "optional": true,
-      "description": "The block templates its streets are planned from, once it can be walked."
+      "description": "What stands on its lots, once it can be walked (D63)."
     }
   }
 }

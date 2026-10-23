@@ -1,0 +1,12 @@
+{
+  "name": "Courthouse",
+  "use": "court",
+  "width": { "min": 24, "max": 28 },
+  "depth": 22,
+  "storeys": { "min": 3, "max": 4 },
+  "storeyHeight": 5,
+  "walls": ["#D8CDB4"],
+  "trim": "#B9A48A",
+  "door": { "min": 0.5, "max": 0.5 },
+  "facade": "courthouse-front"
+}

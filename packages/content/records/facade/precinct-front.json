@@ -1,0 +1,10 @@
+{
+  "ground": "lobby",
+  "bays": { "min": 5, "max": 6 },
+  "windows": ["single"],
+  "cornices": ["parapet"],
+  "sills": true,
+  "sides": "windows",
+  "sign": { "text": "POLICE", "colour": "#2F4A6B", "ink": "#E8E2D2" },
+  "wear": { "min": 0, "max": 1 }
+}
