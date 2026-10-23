@@ -593,6 +593,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Note.** Small towns named Ridgefield exist in Connecticut, Washington and New Jersey. CLAUDE.md's out list bars real places; this city is a Rust Belt city of 250,000 to 400,000 (D4, D14), not any of them. The content lint's blocklist should not list it, and a store listing should not tie it to a real state.
 
+### D67. The slice's block stands whole in the city. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** Your life's block, with your flat, the diner and the corner shop, is planned from its own seed as M1.1 planned it, and stands as one face of an inner-ring block: the one nearest downtown whose lots it fits. A save from before the city gains that address by a migration. The walk to work stays on that block. Spreading homes, workplaces and shops across the city waits for M2.2's households and M2.3's careers.
+
+**Options considered.** The slice's block kept whole (recommended, chosen): the smallest migration, and the job, the shop's crime, the alarm's walk (D61) and the bot's readings stay as they are. Spread across the city: your flat, the diner and the shop as generated buildings on different faces, with the commute across blocks; more of a city now, a larger migration, and D61's walk and the bot's readings re-taken. Spread two blocks apart: the commute crosses streets, while the walk stays short.
+
 ---
 
 ## Open items

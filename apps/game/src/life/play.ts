@@ -10,7 +10,7 @@
 import type { Action } from '@eb/core';
 import { type LawState, LONGEST_WALK } from '@lyl/sim';
 import { type Camera, clampCamera, daylight, panBy, project, Stage, unproject, viewOf, zoomAt } from '@lyl/stage';
-import { blockScene } from '../city/scene.ts';
+import { townScene } from '../city/town.ts';
 import { cutFor } from '../city/walker.ts';
 import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
@@ -47,7 +47,7 @@ export function play(
   notice: string | null = null,
 ): void {
   const law = life.state.law as LawState;
-  const block = blockScene(law.block);
+  const block = townScene(law.block);
   const places = placesOf(life.sim.content, block.plan, block.grid, law.block);
   const look = castLooks(life.seed).cook;
   const start = places.all.find((p) => p.id === at) ?? places.bed;
@@ -247,7 +247,7 @@ export function play(
       viewOf(camera, size),
       size,
       {
-        cut: cutFor(block.plan, block.fronts, actor, false),
+        cut: cutFor(block.plan, block.scene.buildings, actor, false),
         bubbles: true,
         dark: light.dark,
         warm: light.warm,

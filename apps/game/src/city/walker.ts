@@ -159,7 +159,8 @@ const HALF = 0.18;
 
 /**
  * What is cut away with someone in the block: every interior with the walls down; otherwise the
- * building they stand in and any they are behind, if it has an interior to show (DESIGN.md, Interiors).
+ * building they stand in, and any that hides them: cut to its ground floor if it has an interior to
+ * show (DESIGN.md, Interiors), else to its sills (D64).
  */
 export function cutFor(
   plan: BlockPlan,
@@ -170,7 +171,10 @@ export function cutFor(
   const open = buildings.filter((b) => b.interior);
   if (down) return new Set(open.map((b) => b.id));
   if (!who) return new Set();
-  const cut = new Set(hiding(open, box(who.x - HALF, who.y - HALF, 0, who.x + HALF, who.y + HALF, who.look.height)));
+  // What hides you is cut: to its ground floor if it has one, else to its sills (D64).
+  const cut = new Set(
+    hiding(buildings, box(who.x - HALF, who.y - HALF, 0, who.x + HALF, who.y + HALF, who.look.height)),
+  );
   const inside = insideOf(plan, who.x, who.y);
   if (inside?.interior) cut.add(inside.id);
   return cut;

@@ -50,7 +50,7 @@ function interiorOf(b: BuildingPlan): Interior | null {
   };
 }
 
-function buildingOf(b: BuildingPlan): Building {
+export function buildingOf(b: BuildingPlan): Building {
   const f = b.facade;
   const interior = interiorOf(b);
   return {
@@ -96,7 +96,7 @@ function backRowOf(plan: BlockPlan): Building[] {
   }));
 }
 
-const propOf = (p: PropPlan): Prop => ({
+export const propOf = (p: PropPlan): Prop => ({
   id: p.id,
   kind: p.kind,
   x: p.x,
@@ -107,7 +107,7 @@ const propOf = (p: PropPlan): Prop => ({
 });
 
 /** Lane lines, sidewalk joints, and a car park's bays when the open side is one. */
-function marksOf(plan: BlockPlan): Mark[] {
+function marksOf(plan: BlockPlan, inCity: boolean): Mark[] {
   const s = plan.street;
   const marks: Mark[] = [];
   const mid = (s.curb + s.farCurb) / 2;
@@ -116,9 +116,10 @@ function marksOf(plan: BlockPlan): Mark[] {
     marks.push({ x0: s.xa, y0: y, x1: s.xb, y1: y, width: 0.1, color: GROUND.laneWhite });
   for (let x = Math.ceil(s.xa / 1.5) * 1.5; x < s.xb; x += 1.5) {
     marks.push({ x0: x, y0: s.lotFront + 0.05, x1: x, y1: s.curb - 0.05, width: 0.03, color: GROUND.joint });
-    marks.push({ x0: x, y0: s.farCurb + 0.05, x1: x, y1: s.openFront - 0.05, width: 0.03, color: GROUND.joint });
+    if (!inCity)
+      marks.push({ x0: x, y0: s.farCurb + 0.05, x1: x, y1: s.openFront - 0.05, width: 0.03, color: GROUND.joint });
   }
-  if (s.open === 'car-park') {
+  if (s.open === 'car-park' && !inCity) {
     for (let x = Math.ceil(s.xa / 2.6) * 2.6; x < s.xb; x += 2.6) {
       marks.push({ x0: x, y0: s.openFront + 0.4, x1: x, y1: s.openBack - 0.4, width: 0.1, color: GROUND.laneWhite });
     }
@@ -126,17 +127,32 @@ function marksOf(plan: BlockPlan): Mark[] {
   return marks;
 }
 
-function groundOf(plan: BlockPlan): Ground {
+/**
+ * The block's ground. In the city (M2.1) its lots and alley stay within the block's ends, `lots`,
+ * and across the street lies the next block, drawn by the town, not the slice's open side.
+ */
+export function groundOf(plan: BlockPlan, lots?: { readonly x0: number; readonly x1: number }): Ground {
   const s = plan.street;
   const { xa, xb } = s;
+  const [la, lb] = lots ? [lots.x0, lots.x1] : [xa, xb];
   const patches: Patch[] = [
-    { x0: xa, y0: s.alley - 6, x1: xb, y1: s.alley, color: GROUND.grass },
-    { x0: xa, y0: s.alley, x1: xb, y1: 0, color: GROUND.alley },
-    { x0: xa, y0: 0, x1: xb, y1: s.lotFront, color: GROUND.gravel },
+    ...(lots ? [] : [{ x0: xa, y0: s.alley - 6, x1: xb, y1: s.alley, color: GROUND.grass }]),
+    { x0: la, y0: s.alley, x1: lb, y1: 0, color: GROUND.alley },
+    { x0: la, y0: 0, x1: lb, y1: s.lotFront, color: GROUND.gravel },
     { x0: xa, y0: s.lotFront, x1: xb, y1: s.curb, color: GROUND.sidewalk },
     { x0: xa, y0: s.curb, x1: xb, y1: s.farCurb, color: GROUND.asphalt },
-    { x0: xa, y0: s.farCurb, x1: xb, y1: s.openFront, color: GROUND.sidewalk },
-    { x0: xa, y0: s.openFront, x1: xb, y1: s.openBack, color: s.open === 'verge' ? GROUND.grass : GROUND.asphalt },
+    ...(lots
+      ? []
+      : [
+          { x0: xa, y0: s.farCurb, x1: xb, y1: s.openFront, color: GROUND.sidewalk },
+          {
+            x0: xa,
+            y0: s.openFront,
+            x1: xb,
+            y1: s.openBack,
+            color: s.open === 'verge' ? GROUND.grass : GROUND.asphalt,
+          },
+        ]),
   ];
   // Yards behind the buildings are dirt; vacant lots and gangways stay gravel.
   for (const b of plan.buildings) patches.push({ x0: b.x0, y0: 0.6, x1: b.x1, y1: b.y0 - 0.4, color: GROUND.dirt });
@@ -144,7 +160,7 @@ function groundOf(plan: BlockPlan): Ground {
     { x0: xa, y0: s.curb - 0.05, x1: xb, y1: s.curb + s.curbWidth, height: 0.14, color: GROUND.curb },
     { x0: xa, y0: s.farCurb - s.curbWidth, x1: xb, y1: s.farCurb + 0.05, height: 0.14, color: GROUND.curb },
   ];
-  return { patches, marks: marksOf(plan), curbs };
+  return { patches, marks: marksOf(plan, lots !== undefined), curbs };
 }
 
 function needed(buildings: readonly Building[], template: string): Building {

@@ -27,7 +27,7 @@ import { before, behind, insertPiece, type Ordered, orderPieces, type Piece, slo
 import type { Actor, Building, Frame, Light, Scene } from './types.ts';
 
 export interface Moment {
-  /** Which buildings are cut away; only those with interiors can be. */
+  /** Which buildings are cut away: to their ground floor with an interior, else to their sills (D64). */
   readonly cut: ReadonlySet<string>;
   readonly bubbles: boolean;
   /** 0 by day, 1 at night; and dusk's warmth (light.ts, `daylight`). */
@@ -137,7 +137,7 @@ export class Stage {
     const pieces: Piece[] = [];
     for (const b of this.scene.buildings) {
       const open = cut.has(b.id) && b.interior !== undefined;
-      pieces.push(...buildingPieces(b, open));
+      pieces.push(...buildingPieces(b, cut.has(b.id)));
       if (open) for (const f of b.interior?.fixtures ?? []) if (f.kind !== 'rug') pieces.push(fixturePiece(f));
     }
     for (const p of this.scene.props) pieces.push(propPiece(p));

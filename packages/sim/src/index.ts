@@ -53,6 +53,7 @@ export {
 export { type CityTemplates, cityTemplates, lotDepthOf, planFace, type Side as FaceSide, toCity } from './city/face.ts';
 export { faceProblems } from './city/faceCheck.ts';
 export { type FixturePlan, furnish, type UsePlan } from './city/furnish.ts';
+export { aroundHome, cityToHome, faceRect, type Home, homeOf, homeToCity, type NearFace } from './city/home.ts';
 export { type InteriorPlan, planInterior, type UnitPlan } from './city/interior.ts';
 export { interiorProblems } from './city/interiorCheck.ts';
 export type {
@@ -106,6 +107,7 @@ export { clear, inField, REACH, type ShopSight, type Spot, shopSight, type Watch
 export { DOORWAY, type Facing, FOOTPRINT, type PropKind, type PropPlan, streetProps } from './city/street.ts';
 export { type Streets, streetsOf } from './city/streets.ts';
 export {
+  type Around,
   CELL,
   cellAt,
   centreOf,
@@ -118,6 +120,7 @@ export {
   useCell,
   type WalkGrid,
   walkGrid,
+  walkGridAround,
 } from './city/walk.ts';
 export { inFront, type StreetPoint, type Walk, walkBetween } from './city/walks.ts';
 export { clockModule, minutesUntil } from './clock.ts';

@@ -3,7 +3,8 @@
  * roof. Cut away (D18, the Sims' cutaway), it comes apart: the far walls stand a storey high
  * showing their inside, the near walls are cut to a stub below a standing person's hips
  * (Space-Wrecked cuts at 0.55 m, `battleScene.js`), the storeys above go, and what is inside
- * sorts with the people. Only a building with an interior template can be cut.
+ * sorts with the people. A building with no interior is cut lower still (D64): to a stub at its
+ * window sills, as Project Zomboid lowers what stands between the camera and you.
  */
 import { drawBox, fillFace, leftFace, patch, rightFace, topFace } from './box.ts';
 import { lit, shadeHex } from './color.ts';
@@ -18,6 +19,8 @@ import type { Building, Interior, Room } from './types.ts';
 /** Wall thickness, and how high the near walls stand when cut. */
 export const WALL = 0.15;
 export const CUT = 0.55;
+/** How high a building with no interior stands when cut to its sills (D64). */
+export const SILL_CUT = 0.9;
 const PARAPET = 0.25;
 const AWNING_DEPTH = 1.1;
 
@@ -207,8 +210,18 @@ function cutAway(b: Building): Piece[] {
   return pieces;
 }
 
-/** The pieces a building draws as: whole, or cut away to show its ground floor. */
+/** A building cut to its sills (D64): its walls a stub, the section on top. */
+function stub(b: Building): Piece {
+  return wall(box(b.x0, b.y0, 0, b.x1, b.y1, SILL_CUT), {
+    left: b.facade.wall,
+    right: b.facade.wall,
+    cap: capColor(b.facade.wall),
+  });
+}
+
+/** The pieces a building draws as: whole, cut away to show its ground floor, or cut to its sills. */
 export function buildingPieces(b: Building, cut: boolean): Piece[] {
   if (cut && b.interior) return cutAway(b);
+  if (cut) return [stub(b)];
   return [solid(b), ...awning(b)];
 }
