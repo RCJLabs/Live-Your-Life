@@ -8,8 +8,9 @@
  * on arrival and when the page is hidden (D54); a life played from `?seed=` is not kept.
  */
 import type { Action } from '@eb/core';
-import { type LawState, LONGEST_WALK } from '@lyl/sim';
+import { type LawState, LINKED, LONGEST_WALK, WEEKDAYS } from '@lyl/sim';
 import { type Camera, clampCamera, daylight, panBy, project, Stage, unproject, viewOf, zoomAt } from '@lyl/stage';
+import { makeCrowd } from '../city/crowd.ts';
 import { townScene } from '../city/town.ts';
 import { cutFor } from '../city/walker.ts';
 import { castLooks } from '../spike/actors.ts';
@@ -48,6 +49,24 @@ export function play(
 ): void {
   const law = life.state.law as LawState;
   const block = townScene(law.block);
+  // The tier-1 people out on the town's streets (M2.2, D69), their hours the sim's.
+  const crowd = makeCrowd(block, life.fact('people.seed') as number, life.fact('people.count') as number);
+  /** Whether the coworker or the fence is at their post in an hour of a day (D70), as their modules say. */
+  const atPost = (i: number, day: number, hour: number): boolean => {
+    if (i === LINKED.coworker) {
+      const start = life.fact('ties.their-start', { day }) as number;
+      const length = life.fact('ties.their-minutes', { day }) as number;
+      return start >= 0 && hour * 60 >= start && hour * 60 < start + length;
+    }
+    const from = life.fact('law.fence-from') as number;
+    return from >= 0 && hour >= from && hour < (life.fact('law.fence-to') as number);
+  };
+  const crowdNow = (t: number) => {
+    const day = life.fact('time.day') as number;
+    const weekday = WEEKDAYS.indexOf(life.fact('time.weekday') as (typeof WEEKDAYS)[number]);
+    const minute = day * 24 * 60 + (life.fact('time.of-day') as number);
+    return crowd.actorsAt(minute, (((weekday - day) % 7) + 7) % 7, t, atPost);
+  };
   const places = placesOf(life.sim.content, block.plan, block.grid, law.block);
   const look = castLooks(life.seed).cook;
   const start = places.all.find((p) => p.id === at) ?? places.bed;
@@ -257,7 +276,7 @@ export function play(
         warm: light.warm,
         time: s.t,
       },
-      [actor],
+      [actor, ...crowdNow(s.t)],
     );
     const result = measure.frame(now);
     if (result) {
@@ -326,6 +345,8 @@ export function play(
         /** Just north of the nearest building across the street, where it stands between the camera and you (M2.1). */
         across: () => block.across,
         cut: () => [...cut],
+        /** Who of the tier-1 people is out in the town now (M2.2, D69). */
+        crowd: () => crowdNow(s.t).map((a) => ({ id: a.id, x: a.x, y: a.y, walking: a.pose.kind === 'walk' })),
         screenAt: (x: number, y: number) => project(viewOf(camera, size), { x, y, z: 0 }),
         focusAt: (x: number, y: number) => {
           camera = clampCamera({ ...camera, cx: x, cy: y }, limits);
