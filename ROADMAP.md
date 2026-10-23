@@ -429,6 +429,14 @@ How to read this file:
   - **Step 5, built 2026-10-23: the map, arterials, culling, the gates' readings.** The map draws Ridgefield below the block, each district named once on its most interior cell, the arterials and where you live. Arterials run along every fourth cell edge, marked in the street network; what they change waits for travel (M2.9). The stage draws only pieces on the screen or within 64 px of it: the town's frame rate at 4× was 18.6 fps without it and is 36.4 with it. Every walkable face of 1,000 cities passes (the third gate, Evan's answer to open question 59). The city's size and people are traced against two comparable cities in CALIBRATION.md; the districts' densities are not yet. A browser test crosses the street by a tap and sees the building across it cut to its sills. Planted bugs: 4, 4 caught: a district left unnamed on the map, arterials at the wrong spacing, culling that never culls, only interiors cut in the browser.
     - Found on the way: PR #14 said `life-v2.json` loads to exactly the state it saved, but its test had never been written; the edit that should have added it failed unseen. It is written now, and the content both fixtures were saved with is kept beside them (`pack-0b75d724de0fc3b0.json`), so the exact replay holds whatever the content becomes. Planted bugs: the walk kept a minute long and no migration, both caught.
 - **M2.2 People.** Households and tier-1 people with schedules and offscreen progression.
+  - Decisions: the 1,000 spread across the city (D68), walking the town (D69), the coworker and the fence among them (D70).
+  - **Done when:**
+    - the 1,000 have homes on residential lots in every district, by its share of the people, and work at workplaces on its lots [auto];
+    - an hour of them, and a month in one action, fit a phone's budget with the CPU slowed four times, and the save's size is read [auto];
+    - whoever is in the town is drawn where their hour puts them, and the frame rate is read with them [auto];
+    - the coworker and the fence are two of them, and saves from before load with their names, regard and memory kept [auto];
+    - 500 seeded weeks still play with no refusal, and the browser bot keeps its shifts [auto];
+    - the frame rate with people on Evan's phone [you].
 - **M2.3 Careers.** The catalogue on the template: the first 30, with the labor market.
 - **M2.4 Crime and law.** Crime to the crew tier and law to detective, sharing case files; courts; prison as time passing.
 - **M2.5 Food.** Line cook to chef.
