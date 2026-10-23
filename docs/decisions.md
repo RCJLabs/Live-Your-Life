@@ -569,6 +569,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A court alarm; chosen (recommended). A warning in the bed's menu only: sleep still runs its length. Leave it: oversleeping a court date is a real consequence.
 
+### D63. The first two districts are the inner ring and downtown. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** Of DESIGN.md's districts (downtown, old industrial, inner ring, suburbs, a commercial strip), the inner ring and downtown are walkable in Phase 2; the rest exist as statistics (cut ladder). The slice's block (walk-ups, the diner, the corner shop) is inner ring; downtown brings the courthouse and the precinct the law already needs, and later the hospital.
+
+**Options considered.** Inner ring and downtown; chosen (recommended). Inner ring and old industrial: grittier, the institutions stay panels. Inner ring and suburbs: the contrast of means, but car-dependent before M2.9's travel.
+
+### D64. The near side of a street is cut to sill height near you. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** Buildings between the fixed camera and you are drawn cut down to their window sills while you are close, as Project Zomboid hides what stands in front. Answers ROADMAP open questions 16 and 19 for M2.1's city.
+
+**Options considered.** Cut to sill height; chosen (recommended). Fade them: a faded facade is muddy on a phone. Keep the near side of each street low: no drawing rule, but every street looks half built.
+
+### D65. The whole city is generated from the start. LOCKED, 2026-10-23 (Evan's call; I had recommended starting at about 12 blocks a district and growing by the readings)
+
+**Decision.** M2.1 generates every district's streets and lots from the seed at once, with two districts walkable (D63). Its cost has not been read: the largest reading so far is one block. M2.1's first gate is the reading of the whole city's generation time, memory and save size on a phone profile; if it doesn't fit, the fallback is to generate districts as they're reached.
+
+**Options considered.** Set by readings, starting at about 12 blocks a district (recommended). The whole city now; chosen.
+
+### D66. The city is Ridgefield. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** The fictional city's name is Ridgefield (the open item since D15). It lives in one content record, so signs, the map and the chronicle read it from there.
+
+**Note.** Small towns named Ridgefield exist in Connecticut, Washington and New Jersey. CLAUDE.md's out list bars real places; this city is a Rust Belt city of 250,000 to 400,000 (D4, D14), not any of them. The content lint's blocklist should not list it, and a store listing should not tie it to a real state.
+
 ---
 
 ## Open items
@@ -576,7 +600,7 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 | Item | Where it is decided | Default until then |
 | --- | --- | --- |
 | The title | D24 | "Live Your Life" |
-| The city's name | D15 | none |
+| The city's name | D66 | Ridgefield |
 | The base year | D15 | 2025 dollars |
 | The calendar | D26 | as proposed: 365-day years, four parts of the day, meteorological seasons |
 | A domain of its own | D53 | `life.rcjlabs.com` |
