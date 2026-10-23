@@ -35,6 +35,8 @@ export interface TownScene extends BlockScene {
   readonly city: CityPlan;
   /** The city's district records, in its order. */
   readonly districts: readonly DistrictRecord[];
+  /** Just north of the nearest building across the street from your block, and its id: for the tests. */
+  readonly across: { readonly x: number; readonly y: number; readonly id: string } | null;
 }
 
 /** A building of a face near home, in the home frame. A north face's fronts face away: its back is what shows. */
@@ -93,6 +95,10 @@ export function townScene(seed: string): TownScene {
     props: plan.props.filter((p) => p.y < plan.street.farCurb).map(propOf),
     bounds: { x0: area.x0 + 4, y0: area.y0 + 4, x1: area.x1 - 4, y1: area.y1 - 4 },
   };
+  const facing = others
+    .filter((b) => b.y0 > plan.street.farCurb && b.x0 > 0 && b.x1 < plan.street.xb)
+    .sort((a, b) => a.y0 - b.y0)[0];
+  const across = facing ? { x: (facing.x0 + facing.x1) / 2, y: facing.y0 - 1, id: facing.id } : null;
   const needed = (kind: string) => fronts.find((b) => b.kind === kind) as Building;
   return {
     scene,
@@ -104,6 +110,7 @@ export function townScene(seed: string): TownScene {
     fronts,
     home,
     city,
+    across,
     districts: city.districts.map((_, i) => districtOf(store, city, i)),
   };
 }

@@ -209,6 +209,8 @@ export function play(
   let measured: string | null = null;
 
   let last: number | null = null;
+  /** What the last frame cut away (D64). */
+  let cut: ReadonlySet<string> = new Set();
   function loop(now: number): void {
     const dt = last === null ? 0 : Math.min(100, now - last);
     last = now;
@@ -242,13 +244,14 @@ export function play(
     follow(now);
     const light = daylight(minute);
     const actor = player.actor(look, s.t);
+    cut = cutFor(block.plan, block.scene.buildings, actor, false);
     ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
     stage.render(
       ctx,
       viewOf(camera, size),
       size,
       {
-        cut: cutFor(block.plan, block.scene.buildings, actor, false),
+        cut,
         bubbles: true,
         dark: light.dark,
         warm: light.warm,
@@ -320,6 +323,14 @@ export function play(
         mode: () => life.mode.id,
         tick: () => life.fact('time.tick'),
         where: () => ({ x: player.x, y: player.y, walking: player.walking }),
+        /** Just north of the nearest building across the street, where it stands between the camera and you (M2.1). */
+        across: () => block.across,
+        cut: () => [...cut],
+        screenAt: (x: number, y: number) => project(viewOf(camera, size), { x, y, z: 0 }),
+        focusAt: (x: number, y: number) => {
+          camera = clampCamera({ ...camera, cx: x, cy: y }, limits);
+          s.moved = performance.now();
+        },
         refused: () => life.refused.map((r) => ({ type: r.action.type, reason: r.reason })),
         log: () => life.session.log.map((a) => a.type),
         journal: () => life.journal.map((e) => e.text),
