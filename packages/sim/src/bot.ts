@@ -85,3 +85,29 @@ export const randomFor = (days: number, name = 'random-life'): Policy => ({
 });
 
 export const randomLifePolicy: Policy = randomFor(WEEK);
+
+/** Applications the seeker keeps out at once (tune). */
+export const SEEKING = 3;
+
+/**
+ * Looks for work (M2.3, D74), from a life with none: takes the first offer it holds, applies for
+ * openings at random while fewer than three applications wait, and once hired lives as the steady
+ * bot does. A choice, a favour or a meal still comes first.
+ */
+export const seekerFor = (days: number, name = 'seeker'): Policy => {
+  const steady = steadyFor(days, name);
+  return {
+    name,
+    choose(turn) {
+      if (done(turn, days)) return null;
+      const offered = playable(turn);
+      if (turn.mode.id === 'world' && turn.fact('job.employed') !== true) {
+        const take = offered.find((a) => a.type === 'market/accept');
+        if (take) return take;
+        const apply = offered.filter((a) => a.type === 'market/apply');
+        if (apply.length > 0 && (turn.fact('market.waiting') as number) < SEEKING) return turn.rng.pick(apply);
+      }
+      return steady.choose(turn);
+    },
+  };
+};

@@ -161,8 +161,14 @@ Per pair: familiarity, regard, attraction, resentment, and the memory above; tie
     - so does standing at 0.
   - Skill is 100 × practice ÷ (practice + 400 hours), practice being the minutes worked and what some outcomes add. Fatigue is the rest need: it lowers the odds of a chancy choice.
   - In about half of shifts, an event stops the work at a minute drawn when you sign up (D40). A choice is certain, or has odds from a base, skill and tiredness, between 5% and 95%. The preview and the roll come from the same function.
-  - Missing so far: effort as a choice, ladders and promotion (M2.5), and the labour market (M2.3).
+  - Missing so far: effort as a choice, and ladders and promotion (M2.5).
 - **The labor market** (Gridiron Eras' employer model): employers hold expectations against your real ability; heat gets you fired and resets per employer; reputation gets you hired and follows you; AI peers create vacancies; firing moves you, it never ends the game.
+- **Built in M2.3: openings and applications** (D73–D75; `packages/sim/src/market/`, `apps/game/src/life/jobs.ts`, `trip.ts`).
+  - The city's employers are the tier-1 workplaces, each working one career, a few tier-2 sites a career, and your block's diner. Each posts openings as often as its career's staff leave, by the federal turnover survey's separations; an opening stays up 10 to 28 days (tune). Nothing of it is saved.
+  - You apply from the Jobs tab, the odds shown first: the career's base, less points with a conviction, and points either way for your reputation. The answer comes in one to three days and is rolled at those odds. An offer stands two days. A career can bar a record. At most five applications wait at once.
+  - Reputation starts at 50: being let go takes 20, quitting 5, and each whole shift on time adds a point.
+  - A job away from your block is worked off screen: the real walk along the streets at 80 m a minute (tune), the shift with its events, the walk home. The coworker is beside you only while you work at the diner.
+  - Missing so far: the 29 careers' records, waiting on their wages; expectations against ability and heat per employer; the tier-1 people really leaving the jobs that open.
 - **Signature careers with their own loop** (D14):
 
 | Career | Ladder | What it owns |

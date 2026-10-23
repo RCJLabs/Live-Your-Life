@@ -4,7 +4,18 @@
  * harness runs (M0.4); the block and its interiors (M1.1, M1.2); the job (M1.3). The plan is
  * ROADMAP.md; the design, docs/DESIGN.md.
  */
-export { REMEDY, RESERVE, randomFor, randomLifePolicy, STAGE_ONLY, steadyFor, steadyPolicy, WEEK } from './bot.ts';
+export {
+  REMEDY,
+  RESERVE,
+  randomFor,
+  randomLifePolicy,
+  SEEKING,
+  STAGE_ONLY,
+  seekerFor,
+  steadyFor,
+  steadyPolicy,
+  WEEK,
+} from './bot.ts';
 export {
   BASE_YEAR,
   DEFAULT_START,
