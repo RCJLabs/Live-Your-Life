@@ -13,8 +13,9 @@ import { type Beat, defineModule, type Module, type ModuleContext } from '@eb/co
 import { WEEKDAYS } from '../calendar.ts';
 import { START_LEVELS } from '../dials.ts';
 import { type Activity, type Levels, NEEDS, PERCENT, settle } from '../needs.ts';
+import { HOURS, type HourKind } from './day.ts';
 import { type HourPlan, planAt } from './gather.ts';
-import { rosterOf } from './roster.ts';
+import { LINKED, rosterOf } from './roster.ts';
 import { meet, TIE_ROW } from './ties.ts';
 
 /** Who the people are: everything else about them follows from these two. */
@@ -37,8 +38,11 @@ export interface PeopleSlice {
 
 const SIX = NEEDS.length;
 
+/** An hour of one of the linked people (D70), from their own module; null for the roster's own. */
+export type Linked = (i: number, hour: number) => HourKind | null;
+
 /** Person i through some hours: needs settled once for each run of one activity, and their meetings. */
-function live(slice: PeopleSlice, plans: readonly HourPlan[], i: number): void {
+function live(slice: PeopleSlice, plans: readonly HourPlan[], i: number, first: number, linked?: Linked): void {
   const row = i - slice.first;
   let levels = {} as Levels;
   NEEDS.forEach((need, k) => {
@@ -46,8 +50,9 @@ function live(slice: PeopleSlice, plans: readonly HourPlan[], i: number): void {
   });
   let doing: Activity | null = null;
   let minutes = 0;
-  for (const plan of plans) {
-    for (const [activity, length] of (plan.kinds[i] as HourPlan['kinds'][number]).segments) {
+  plans.forEach((plan, k) => {
+    const kind = (linked && i < LINKED.count ? linked(i, first + k) : null) ?? (plan.kinds[i] as HourKind);
+    for (const [activity, length] of kind.segments) {
       if (activity !== doing && doing !== null) {
         levels = settle(levels, doing, minutes);
         minutes = 0;
@@ -58,7 +63,7 @@ function live(slice: PeopleSlice, plans: readonly HourPlan[], i: number): void {
     for (let e = plan.start[i] as number; e < (plan.start[i + 1] as number); e++) {
       meet(slice.ties, row, plan.others[e] as number, 1);
     }
-  }
+  });
   if (doing !== null) levels = settle(levels, doing, minutes);
   NEEDS.forEach((need, k) => {
     slice.levels[row * SIX + k] = levels[need];
@@ -71,17 +76,44 @@ function live(slice: PeopleSlice, plans: readonly HourPlan[], i: number): void {
  * comes out the same however the hours are split up and whichever share holds them; only the
  * cost differs.
  */
-export function progress(city: City, slice: PeopleSlice, from: number, to: number, weekday0: number): void {
+export function progress(
+  city: City,
+  slice: PeopleSlice,
+  from: number,
+  to: number,
+  weekday0: number,
+  linked?: Linked,
+): void {
   const roster = rosterOf(city.seed, city.n);
   for (let start = from; start < to; ) {
     const day = Math.floor(start / 24);
     const end = Math.min(to, (day + 1) * 24);
     const weekday = (weekday0 + day) % 7;
     const plans = Array.from({ length: end - start }, (_, k) => planAt(roster, city.seed, start + k, weekday));
-    for (let i = slice.first; i < slice.first + slice.count; i++) live(slice, plans, i);
+    for (let i = slice.first; i < slice.first + slice.count; i++) live(slice, plans, i, start, linked);
     start = end;
   }
   slice.hour = Math.max(slice.hour, to);
+}
+
+/**
+ * The coworker's and the fence's hours, as their modules give them (D70): at work through their
+ * shift, or the fence's hours behind the diner; otherwise the roster's day. Only a life asks: the
+ * harness has neither module.
+ */
+function linkedFrom(ctx: ModuleContext<PeopleSlice>): Linked {
+  return (i, hour) => {
+    const day = Math.floor(hour / 24);
+    const minute = (hour % 24) * 60;
+    if (i === LINKED.coworker) {
+      const start = ctx.fact('ties.their-start', { day }) as number;
+      const length = ctx.fact('ties.their-minutes', { day }) as number;
+      return start >= 0 && minute >= start && minute < start + length ? HOURS.work : null;
+    }
+    const from = ctx.fact('law.fence-from') as number;
+    const to = ctx.fact('law.fence-to') as number;
+    return from >= 0 && hour % 24 >= from && hour % 24 < to ? HOURS.work : null;
+  };
 }
 
 /** Share k of `of` (the whole roster when `of` is 1), as a new life starts it. */
@@ -110,7 +142,7 @@ export const shareId = (k: number, of: number): string => (of === 1 ? 'people-al
 
 // Settles every whole hour from the share's first unsettled one to now. It writes only when there
 // is an hour to settle, so the kernel copies the slice only then.
-function moveOn(ctx: ModuleContext<PeopleSlice>): void {
+function moveOn(ctx: ModuleContext<PeopleSlice>, inLife = false): void {
   const day = ctx.fact('time.day') as number;
   const minute = day * 24 * 60 + (ctx.fact('time.of-day') as number);
   const weekday = WEEKDAYS.indexOf(ctx.fact('time.weekday') as (typeof WEEKDAYS)[number]);
@@ -119,7 +151,8 @@ function moveOn(ctx: ModuleContext<PeopleSlice>): void {
   const from = settled < 0 ? Math.floor((minute - (ctx.fact('time.tick') as number)) / 60) : settled;
   if (to <= from) return;
   const city = { seed: ctx.fact('people.seed') as number, n: ctx.fact('people.count') as number };
-  progress(city, ctx.write(), from, to, (((weekday - day) % 7) + 7) % 7);
+  const holdsLinked = inLife && ctx.read().first < LINKED.count && ctx.read().count > 0;
+  progress(city, ctx.write(), from, to, (((weekday - day) % 7) + 7) % 7, holdsLinked ? linkedFrom(ctx) : undefined);
 }
 
 /**
@@ -135,7 +168,7 @@ const onItsHour = (k: number, of: number) => (ctx: ModuleContext<PeopleSlice>, e
   // The first hour after the passage began that is this share's, and whether it came.
   const startHour = Math.floor((now - span) / 60) + 1;
   const due = startHour + ((((k - startHour) % of) + of) % of);
-  if (due * 60 <= now) moveOn(ctx);
+  if (due * 60 <= now) moveOn(ctx, true);
 };
 
 /** Share k of `of`, moved on by its effect, `<id>-progress`; in a life, by time passing its hour. */
@@ -144,7 +177,7 @@ export function shareModule(n: number, k = 0, of = 1, listen = false): Module {
   return defineModule<PeopleSlice>({
     id,
     init: () => newShare(n, k, of),
-    effects: { [`${id}-progress`]: moveOn },
+    effects: { [`${id}-progress`]: (ctx) => moveOn(ctx) },
     ...(listen ? { on: { 'time/passed': onItsHour(k, of) } } : {}),
     facts: {
       mean: {

@@ -105,6 +105,18 @@ export function jobModule(hire?: Hire) {
         domain: { type: 'bool' },
         label: 'free to take a shift that day',
       },
+      // The coworker works beside you on your days (ties/state.ts); the people's hours need when (M2.2).
+      'shift-start': {
+        args: { day: { type: 'int', min: 0 } },
+        read: (view, { day }) => {
+          const signed = view.state.signed.find((s) => s.day === day);
+          if (!signed || view.state.career === null) return -1;
+          const kind = careerFor(view.content, view.state).shifts.find((k) => k.id === signed.shift);
+          return kind ? kind.hour * 60 + kind.minute : -1;
+        },
+        domain: { type: 'int', min: -1 },
+        label: 'the minute of the day your shift that day starts, or -1',
+      },
       // Your shifts not yet started, for whoever asks to cover one: a list, so no domain.
       ahead: (view) => {
         if (!view.state.employed) return [];
