@@ -120,6 +120,19 @@ Figures found for D45–D48, from secondary sources. Each gets its primary sourc
 
 **In use (M1.5).** `records/offence/*.json`, `records/crime/shoplifting.json` (odds, demand, HYTA, court days), `records/fence/back-lot.json` (share, trouble) and `records/item/*.json` (prices). The odds of being noticed are the game's own (tune), set far above the once-in-48 anchor: one clerk in a small shop sees much of it, and that is the point of the sight lines.
 
+## The city (M2.1)
+
+Ridgefield's size and how many live in it, against two cities of the metro class (D14). Its area is the city record's: 35 cells a side of 400 m, 196 km² (75.7 square miles); its people are the districts' densities over their cells, streets included (`records/city/ridgefield.json`, `records/district/*.json`).
+
+| Figure | Ridgefield | Comparable | Source, as read on 2026-10-23 | Primary to check |
+| --- | --- | --- | --- | --- |
+| Land area | 75.7 sq mi | Toledo, Ohio: 80.49 sq mi of land (2020). Grand Rapids, Michigan: 44.78 sq mi | Census Bureau QuickFacts for Toledo, via search results; Wikipedia (simple) for Grand Rapids | census.gov QuickFacts, land area in square miles, 2020 |
+| People | about 290,000 at every seed (tune) | Toledo: 270,871 (2020 census). Grand Rapids: 198,893 | Wikipedia's Toledo article; Census Bureau QuickFacts for Grand Rapids | the 2020 census counts |
+| People a square mile, the whole city | about 3,830 | Toledo: 3,365. Grand Rapids: 4,440 | derived from the two rows above | — |
+| People a hectare by district, streets included | downtown 40, inner ring 45, old industrial 10, the strip 8, suburbs 12 (tune) | none found yet | — | tract-level densities of a comparable city's neighbourhoods |
+
+The city as a whole sits between the two comparables. Its districts' densities are not sourced. The inner ring's 45 a hectare is about 11,650 a square mile, likely high for a Rust Belt city's older neighbourhoods. The total stays inside D4's range only because the other districts are low. Tracing each district to tract data is the next step, before households (M2.2) are built on it.
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).
@@ -127,3 +140,4 @@ Figures found for D45–D48, from secondary sources. Each gets its primary sourc
 3. How often the ledger is re-checked against newer data, and whether a later base year ever replaces 2025 in a save.
 4. Every figure in use is from a secondary source (In use). They are checked against their primaries once the build environment can reach them, or by hand.
 5. Whether a new hire's wage is the 25th percentile, or nearer the 10th ($13.84), for someone of eighteen with no experience.
+6. Which tract data stands for each district's density (The city), and whether the inner ring's 45 a hectare comes down once it is traced.
