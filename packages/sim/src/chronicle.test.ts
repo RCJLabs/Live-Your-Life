@@ -126,6 +126,11 @@ describe('you (D52)', () => {
     expect(you('a')).toEqual(you('a'));
     const names = new Set(Array.from({ length: 50 }, (_, i) => you(`n-${i}`).first));
     expect(names.size).toBeGreaterThan(20);
-    expect(createLifeGame().init('none', sliceSim({})).you).toEqual({ first: 'You', last: '', pronouns: 'they' });
+    expect(createLifeGame().init('none', sliceSim({})).you).toEqual({
+      first: 'You',
+      last: '',
+      pronouns: 'they',
+      commute: null,
+    });
   });
 });

@@ -8,7 +8,7 @@
  * on arrival and when the page is hidden (D54); a life played from `?seed=` is not kept.
  */
 import type { Action } from '@eb/core';
-import type { LawState } from '@lyl/sim';
+import { type LawState, LONGEST_WALK } from '@lyl/sim';
 import { type Camera, clampCamera, daylight, panBy, project, Stage, unproject, viewOf, zoomAt } from '@lyl/stage';
 import { blockScene } from '../city/scene.ts';
 import { cutFor } from '../city/walker.ts';
@@ -16,14 +16,15 @@ import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
 import { listen } from '../spike/input.ts';
 import { describe, Measure } from '../spike/measure.ts';
+import { type Rung, ring } from './alarm.ts';
 import { makeBar, makeToast } from './dom.ts';
 import type { Keeper, Slot } from './keeper.ts';
 import { makeMap } from './map.ts';
 import { itemsAt, makeSheet, modeSheet } from './menus.ts';
 import { makePanel } from './panel.ts';
-import { courtLine, type Waiting, waiting } from './pending.ts';
+import { type Waiting, waiting } from './pending.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
-import { Player } from './player.ts';
+import { Player, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
 
 const MAX_DPR = 2;
@@ -51,6 +52,11 @@ export function play(
   const look = castLooks(life.seed).cook;
   const start = places.all.find((p) => p.id === at) ?? places.bed;
   const player = new Player(start);
+  // D61: the stage measures your walk to work and tells the sim, once for a block; the alarm sets it aside.
+  const work = places.all.find((p) => p.serves?.includes('work'));
+  const walk = work ? walkMinutes(block.plan, block.grid, places.bed, work) : null;
+  if (walk !== null && (life.state.you as { commute: number | null }).commute !== walk)
+    life.act({ type: 'you/commute', minutes: Math.min(walk, LONGEST_WALK) });
   /** The place you last reached, kept with the save. */
   let reachedAt: string | null = start.id;
 
@@ -85,14 +91,13 @@ export function play(
     if (kept) void kept.keeper.save(kept.slot, life, reachedAt);
   }
 
-  /** D58: on the morning of a court date, its line, once. */
-  let toldCourt = -1;
-  function courtDay(list: readonly Waiting[]): void {
-    const today = life.fact('time.day') as number;
-    const line = toldCourt === today ? null : courtLine(life, list);
-    if (!line) return;
-    toldCourt = today;
-    life.fresh.push(line);
+  /** D60, D62: the alarms drop the clock to 1×, each once, and say why. */
+  let rung: Rung = { shift: -1, court: -1 };
+  function alarms(list: readonly Waiting[]): void {
+    const now = ring(life, list, rung);
+    rung = now.rung;
+    if (now.slow) s.speed = 1;
+    life.fresh.push(...now.lines);
   }
 
   const blocked = () => panel.open || sheet.open || choice.open || map.open || s.ff !== null;
@@ -229,7 +234,7 @@ export function play(
     if (now - s.waitingAt > 250) {
       const list = waiting(life);
       s.waiting = list.length;
-      courtDay(list);
+      alarms(list);
       s.waitingAt = now;
       bar.update(life, { minute, paused: s.paused, speed: s.speed, waiting: s.waiting });
     }

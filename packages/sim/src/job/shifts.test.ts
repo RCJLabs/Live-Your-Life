@@ -16,6 +16,7 @@ import {
 } from '../../test/slice.ts';
 import { ALARM_MINUTES, START_CASH } from '../dials.ts';
 import { createLifeGame } from '../game.ts';
+import { ALARM_MARGIN, LONGEST_WALK } from '../you.ts';
 import { weeklyCount } from './days.ts';
 import { taxOf } from './records.ts';
 import type { JobSlice } from './state.ts';
@@ -166,6 +167,11 @@ describe('a shift', () => {
     const during = play(game, sim, signed, at(signed, 1, 16)).state;
     expect(game.fact(during, 'job.on-shift', undefined, sim)).toBe(true);
     expect(sleep(during)).toBe(game.fact(during, 'job.shift-left', undefined, sim));
+    // D61: once the stage has said how long your walk is, the alarm sets that aside, and a margin.
+    const walked = play(game, sim, signed, { type: 'you/commute', minutes: 50 }, at(signed, 1, 9)).state;
+    expect(sleep(walked)).toBe(6 * 60 - 50 - ALARM_MARGIN);
+    expect(refusal(game, sim, signed, { type: 'you/commute', minutes: 0 })).toBe('bad-minutes');
+    expect(refusal(game, sim, signed, { type: 'you/commute', minutes: LONGEST_WALK + 1 })).toBe('bad-minutes');
   });
 });
 

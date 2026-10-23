@@ -3,9 +3,8 @@
  * the page by taps. It answers what stops the clock, signs up for every shift it can, pays what
  * it owes once a week of meals is kept back, eats, works, sleeps, and sees to its lowest need;
  * otherwise it lets the clock run at speed 2, as a player waiting would. Unlike the headless
- * bot it has to get there: it walks to the diner when a shift is near, since the walk takes
- * time the menu doesn't know about (ROADMAP open question 39), and it doesn't go to bed with a
- * shift near; and it goes to court on the day, from the panel. The thief takes once from a shelf
+ * bot it has to get there: it walks to the diner when the alarm goes off (D57, D61), and it
+ * doesn't go to bed with a shift near; and it goes to court on the day, from the panel. The thief takes once from a shelf
  * on the first day, then lives the same way until the case is over.
  */
 import { type Need, REMEDY, RESERVE } from '@lyl/sim';
@@ -13,15 +12,13 @@ import type { Driver, Offer, PlaceInfo } from './driver.ts';
 
 export type Profile = 'steady' | 'thief';
 
-/** How long before a shift the bot sets off for the diner: the walk is about 20 game minutes (D49). */
-const SET_OFF = 40;
-
 type Intent =
   | { readonly kind: 'choice' }
   | { readonly kind: 'panel'; readonly tab: 'waiting' | 'week'; readonly action: string }
   | { readonly kind: 'do'; readonly activity: string }
   | { readonly kind: 'commute' }
   | { readonly kind: 'take' }
+  | { readonly kind: 'speed' }
   | { readonly kind: 'wait' };
 
 const has = (offers: readonly Offer[], type: string, activity?: string) =>
@@ -43,20 +40,30 @@ async function intent(d: Driver, profile: Profile, took: boolean): Promise<Inten
     return { kind: 'panel', tab: 'waiting', action: 'home/pay-owed' };
   if (cash >= 2 * RESERVE && has(offers, 'law/pay')) return { kind: 'panel', tab: 'waiting', action: 'law/pay' };
   if (profile === 'thief' && !took && (await d.fact<string>('time.phase')) !== 'night') return { kind: 'take' };
-  if ((await need('food')) < 15 && has(offers, 'life/do', 'eat')) return { kind: 'do', activity: 'eat' };
   if (has(offers, 'life/do', 'work')) return { kind: 'do', activity: 'work' };
   const next = await d.fact<number | undefined>('job.next-shift-in');
-  if (next !== undefined && next <= SET_OFF && (await d.building()) !== 'diner') return { kind: 'commute' };
+  // When the alarm goes off, your walk to work and a margin before the shift (D61), it goes to the
+  // griddle and waits there: a meal or a wash first would run into the shift.
+  const setOff = await d.fact<number>('you.alarm');
+  if (next !== undefined && next <= setOff) {
+    const reached = await d.hook<string | null>('reached');
+    const atWork = d.places.find((p) => p.id === reached)?.serves.includes('work');
+    return atWork ? { kind: 'wait' } : { kind: 'commute' };
+  }
+  if ((await need('food')) < 15 && has(offers, 'life/do', 'eat')) return { kind: 'do', activity: 'eat' };
   const rest = await need('rest');
   if (rest < 10 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
   // Not off to bed with a shift near: the walk home outlasts the nap, and a bed reached after the
   // shift starts offers a whole night's sleep through it (ROADMAP open question 50).
-  const due = next !== undefined && next <= SET_OFF + 30;
+  const due = next !== undefined && next <= setOff + 30;
   const night = (await d.fact<string>('time.phase')) === 'night';
   if (night && !due && rest < 70 && has(offers, 'life/do', 'sleep')) return { kind: 'do', activity: 'sleep' };
   const lowest = await d.fact<Need>('life.lowest');
   if ((await need(lowest)) < 40 && has(offers, 'life/do', REMEDY[lowest]))
     return { kind: 'do', activity: REMEDY[lowest] };
+  // D60 drops the clock to 1× at the alarm; with no shift near, a player waiting puts it back.
+  const slow = (await d.page.locator('#speed').textContent()) === '1×';
+  if (slow && !due && (await d.fact<boolean>('job.on-shift')) !== true) return { kind: 'speed' };
   return { kind: 'wait' };
 }
 
@@ -124,11 +131,16 @@ export async function step(d: Driver, profile: Profile, took: boolean): Promise<
       await doAt(d, next.activity);
       return took;
     case 'commute': {
-      const door = d.places.find((p) => p.kind === 'door' && p.building === 'diner');
-      if (door) await d.goTo(door);
+      // To the griddle, not the door: the alarm sets aside the walk to where you work (D61), and
+      // the shift starts once you work it there. Waiting at the door cost the walk inside.
+      const griddle = d.places.find((p) => p.kind === 'fixture' && p.serves.includes('work'));
+      if (griddle) await d.goTo(griddle);
       await d.clear();
       return took;
     }
+    case 'speed':
+      await d.tap('#speed');
+      return took;
     case 'take':
       // One try: if no shelf offers a take, the thief lives as the steady bot does.
       await take(d);

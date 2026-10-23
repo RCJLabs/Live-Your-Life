@@ -6,7 +6,8 @@ import { sliceGame, sliceSim } from '../test/slice.ts';
 
 /**
  * The first save fixture (M1.7; CLAUDE.md, Saves never break): a week saved by the build that
- * started keeping saves, written once by test/fixture.ts and never written again. Every later
+ * started keeping saves (life-v1), and one by M1.8's after the walk to work (life-v2), each written
+ * once by test/fixture.ts and never again. Every later
  * build must load it with nothing skipped and every slice in the shape today's modules expect.
  * A change to a slice's shape needs a version and a migration, or this fails.
  */
@@ -29,7 +30,10 @@ describe('the first save fixture', () => {
     expect(result.report.skipped).toBe(0);
     expect(result.report.kept).toEqual([]);
     expect(result.report.replayed).toBe(result.file.log.length);
-    if (PACK.hash === SAVED_WITH) expect(result.report.differs).toBe(false);
+    // Saved at version 1 of `you`; version 2 added the walk to work (D61).
+    expect(result.report.migrated).toEqual([{ module: 'you', from: 1, to: 2 }]);
+    // A migrated state isn't the state saved, so the saved hash is held only while nothing migrates.
+    if (PACK.hash === SAVED_WITH && result.report.migrated.length === 0) expect(result.report.differs).toBe(false);
   });
 
   it('migrates every slice to the shape a new life has, down to the keys of each', () => {

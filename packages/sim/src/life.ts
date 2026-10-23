@@ -11,7 +11,7 @@
  * holds the cash.
  */
 import { defineModule, type ModuleContext } from '@eb/core';
-import { ALARM_MINUTES, COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './dials.ts';
+import { COSTS, MAX_ACTIVITY_MINUTES, STANDARD_MINUTES, START_LEVELS } from './dials.ts';
 import {
   ACTIVITIES,
   type Activity,
@@ -115,13 +115,15 @@ function doActivity(ctx: ModuleContext<LifeSlice>, activity: unknown, minutes: u
 const NEED_ARG = { need: { type: 'enum', values: NEEDS } } as const;
 
 /**
- * Minutes until the alarm (D57): a walk's time before the next shift. Inside that walk there's no
- * time to set aside, so what you do runs to the shift's start and being late is yours to choose.
+ * Minutes until the alarm (D57): your walk to work before the next shift (D61). Inside that walk
+ * there's no time to set aside, so what you do runs to the shift's start and being late is yours
+ * to choose.
  */
 function alarm(view: { fact(id: string): unknown }): number | undefined {
   const soon = view.fact('job.next-shift-in') as number | undefined;
   if (soon === undefined) return undefined;
-  return soon > ALARM_MINUTES ? soon - ALARM_MINUTES : soon;
+  const set = view.fact('you.alarm') as number;
+  return soon > set ? soon - set : soon;
 }
 
 export const lifeModule = defineModule<LifeSlice>({
@@ -131,13 +133,17 @@ export const lifeModule = defineModule<LifeSlice>({
     do: {
       run: (ctx, action) => doActivity(ctx, action.activity, action.minutes),
       // What a menu offers now: each activity for its usual time, or until it's time to walk to
-      // the next shift if that comes first (D57's alarm), or until the shift under way ends (D58);
+      // the next shift if that comes first (D57's alarm), or until the shift under way ends (D58),
+      // or until the court opens on a court day (D62);
       // the meal only if it can be paid for; and work only during a shift, for the rest of it or
       // until something on it needs you.
       options: (view) => {
         const cash = view.fact('economy.amount', { resource: 'cash' }) as number;
         const onShift = view.fact('job.on-shift') === true;
-        const until = onShift ? (view.fact('job.shift-left') as number) : alarm(view);
+        const shift = onShift ? (view.fact('job.shift-left') as number) : alarm(view);
+        // D62: on a court day, what you do ends when the court opens, as it does for a shift.
+        const court = view.fact('law.court-in') as number | undefined;
+        const until = court !== undefined && court > 0 ? Math.min(shift ?? court, court) : shift;
         const offered: { activity: Activity; minutes: unknown }[] = [];
         for (const activity of ACTIVITIES) {
           if (activity === 'work') {
@@ -185,6 +191,7 @@ export const lifeModule = defineModule<LifeSlice>({
         'job/sign-up',
         'job/drop',
         'ties/*',
+        'you/*',
         'law/take',
         'law/attend',
         'law/check-in',

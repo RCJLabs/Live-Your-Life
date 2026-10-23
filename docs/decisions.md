@@ -549,6 +549,26 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A median of 20 or fewer with no day over 35 (recommended): today's reading passes and a change that adds taps fails. Hold today's 16 and 30. Decide after the playtests; chosen.
 
+### D60. The alarm drops the clock to 1×. LOCKED, 2026-10-20 (Evan's call)
+
+**Decision.** When the alarm goes off, a walk's time before a shift (D57), the page sets the clock to 1×, once for each shift, with a line saying it's time to walk to the diner. With the alarm alone, the browser bot was still 8 to 13 minutes late to nearly every shift, because at 4× a real second is 8 game minutes; the thief was let go after 8 late starts in a row (ROADMAP open question 53).
+
+**Options considered.** Drop to 1× at the alarm; chosen (recommended). A 45-minute alarm: the smallest change, with time to wait at the diner. Lateness under a quarter of an hour not counted against standing: changes the job's rules, not the clock.
+
+### D61. The alarm sets aside your own walk to work. LOCKED, 2026-10-20 (Evan's call)
+
+**Decision.** The alarm (D57) sets aside the walk from your bed to where you work, as the page measures it on your block at D49's pace, and 10 minutes more (tune). With D60's drop to 1× and a fixed 30 minutes, the browser bot was still 6 minutes late to most shifts: the walk to the griddle on those blocks is about 36 game minutes, longer than the 30 set aside.
+
+**How.** The walk is the stage's to measure, as movement is (CLAUDE.md): the page routes from your bed to the griddle once and tells the sim, `you/commute`, a verb only the stage sends. The sim keeps it in your slice, now at version 2, with a migration; until the stage has said, the alarm sets aside 30 minutes. When M2.2 puts your home in the sim (ROADMAP open question 43), the sim can measure it itself.
+
+**Options considered.** Your own walk; chosen (recommended). A fixed 45 minutes: one line, wrong on a block with a longer walk. Leave 30: six minutes late stays the player's to fix, and the bot is still let go.
+
+### D62. A court alarm: on a court day, what you do ends when the court opens. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** On the day of a court date, sleep and every other activity end at 08:00, when the court opens, the clock drops to 1× and the morning's line says you're due by noon, as a shift's alarm does (D57, D60). Work is not cut short: leaving a shift for court is the player's to choose. With the line alone (D58), the browser bot's thief still missed court once: a night's sleep ran through the window in one step, with no moment to act.
+
+**Options considered.** A court alarm; chosen (recommended). A warning in the bed's menu only: sleep still runs its length. Leave it: oversleeping a court date is a real consequence.
+
 ---
 
 ## Open items

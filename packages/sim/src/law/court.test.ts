@@ -48,6 +48,22 @@ describe('the court date (D47)', () => {
     expect(game.options(late, sim).some((a) => a.type === 'law/attend')).toBe(false);
   });
 
+  it('stops what you do when the court opens on its day, and not on another (D62)', () => {
+    const start = withCase('court-alarm');
+    const sleep = (state: GameState) =>
+      game.options(state, sim).find((a) => a.type === 'life/do' && a.activity === 'sleep')?.minutes;
+    const night = play(game, sim, start, to(start, 3, 2)).state;
+    expect(game.fact(night, 'law.court-in', undefined, sim)).toBe(6 * 60);
+    expect(sleep(night)).toBe(6 * 60);
+    const open = play(game, sim, start, to(start, 3, 9)).state;
+    expect(game.fact(open, 'law.court-in', undefined, sim)).toBe(0);
+    const before = play(game, sim, start, to(start, 2, 2)).state;
+    expect(game.fact(before, 'law.court-in', undefined, sim)).toBeUndefined();
+    expect(sleep(before)).toBe(8 * 60);
+    const after = play(game, sim, start, to(start, 3, 12)).state;
+    expect(game.fact(after, 'law.court-in', undefined, sim)).toBeUndefined();
+  });
+
   it('a guilty plea: a conviction, its fine and costs owed', () => {
     const guilty = play(game, sim, inCourt('guilty').state, { type: 'law/plead', plea: 'guilty' });
     expect(guilty.of('law/convicted')).toEqual([
