@@ -98,7 +98,8 @@ class Heap {
 export function walkBetween(s: Streets, from: StreetPoint, to: StreetPoint): Walk | null {
   // On the same stretch of street: straight along it.
   const same = (from.a === to.a && from.b === to.b) || (from.a === to.b && from.b === to.a);
-  const direct = same ? Math.hypot(to.x - from.x, to.y - from.y) : Number.POSITIVE_INFINITY;
+  // Both on one straight street, so the distance is the difference along it.
+  const direct = same ? Math.abs(to.x - from.x) + Math.abs(to.y - from.y) : Number.POSITIVE_INFINITY;
   const dist = new Float64Array(s.count).fill(Number.POSITIVE_INFINITY);
   const prev = new Int32Array(s.count).fill(-1);
   const heap = new Heap();
