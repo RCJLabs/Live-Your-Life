@@ -7,7 +7,7 @@
  * inventory kits do, and it asks the life module to feed you.
  */
 import { defineModule } from '@eb/core';
-import { attend, checkIn, contest, owedOf, pay, plead } from './court.ts';
+import { attend, checkIn, contest, courtIn, owedOf, pay, plead } from './court.ts';
 import { drawFence, eat, type Fence, sale, sell } from './fence.ts';
 import { hearing, lawDay, review, saleSeen, ticket, visit } from './police.ts';
 import { convict, freshLaw, type LawSlice } from './state.ts';
@@ -36,6 +36,12 @@ export const lawModule = defineModule<LawState>({
       label: 'a warrant out for you',
     },
     probation: { read: ({ state }) => state.probation !== null, domain: { type: 'bool' }, label: 'on probation' },
+    // D62: minutes until today's hearing opens, 0 while it's open; nothing on a day with none.
+    'court-in': {
+      read: (view) => courtIn(view),
+      domain: { type: 'int', min: 0 },
+      label: 'minutes until your court date opens today',
+    },
     owed: {
       read: ({ state }) => owedOf(state),
       domain: { type: 'int', min: 0 },

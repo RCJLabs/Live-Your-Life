@@ -16,13 +16,13 @@ import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
 import { listen } from '../spike/input.ts';
 import { describe, Measure } from '../spike/measure.ts';
-import { ALARM_LINE, alarmFor } from './alarm.ts';
+import { type Rung, ring } from './alarm.ts';
 import { makeBar, makeToast } from './dom.ts';
 import type { Keeper, Slot } from './keeper.ts';
 import { makeMap } from './map.ts';
 import { itemsAt, makeSheet, modeSheet } from './menus.ts';
 import { makePanel } from './panel.ts';
-import { courtLine, type Waiting, waiting } from './pending.ts';
+import { type Waiting, waiting } from './pending.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
 import { Player, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
@@ -91,24 +91,13 @@ export function play(
     if (kept) void kept.keeper.save(kept.slot, life, reachedAt);
   }
 
-  /** D60: the alarm drops the clock to 1×, once for each shift, and says so. */
-  let rang = -1;
-  function alarm(): void {
-    const shift = alarmFor(life);
-    if (shift === null || shift === rang) return;
-    rang = shift;
-    s.speed = 1;
-    life.fresh.push(ALARM_LINE);
-  }
-
-  /** D58: on the morning of a court date, its line, once. */
-  let toldCourt = -1;
-  function courtDay(list: readonly Waiting[]): void {
-    const today = life.fact('time.day') as number;
-    const line = toldCourt === today ? null : courtLine(life, list);
-    if (!line) return;
-    toldCourt = today;
-    life.fresh.push(line);
+  /** D60, D62: the alarms drop the clock to 1×, each once, and say why. */
+  let rung: Rung = { shift: -1, court: -1 };
+  function alarms(list: readonly Waiting[]): void {
+    const now = ring(life, list, rung);
+    rung = now.rung;
+    if (now.slow) s.speed = 1;
+    life.fresh.push(...now.lines);
   }
 
   const blocked = () => panel.open || sheet.open || choice.open || map.open || s.ff !== null;
@@ -245,8 +234,7 @@ export function play(
     if (now - s.waitingAt > 250) {
       const list = waiting(life);
       s.waiting = list.length;
-      courtDay(list);
-      alarm();
+      alarms(list);
       s.waitingAt = now;
       bar.update(life, { minute, paused: s.paused, speed: s.speed, waiting: s.waiting });
     }

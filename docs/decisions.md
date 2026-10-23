@@ -563,6 +563,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Your own walk; chosen (recommended). A fixed 45 minutes: one line, wrong on a block with a longer walk. Leave 30: six minutes late stays the player's to fix, and the bot is still let go.
 
+### D62. A court alarm: on a court day, what you do ends when the court opens. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** On the day of a court date, sleep and every other activity end at 08:00, when the court opens, the clock drops to 1× and the morning's line says you're due by noon, as a shift's alarm does (D57, D60). Work is not cut short: leaving a shift for court is the player's to choose. With the line alone (D58), the browser bot's thief still missed court once: a night's sleep ran through the window in one step, with no moment to act.
+
+**Options considered.** A court alarm; chosen (recommended). A warning in the bed's menu only: sleep still runs its length. Leave it: oversleeping a court date is a real consequence.
+
 ---
 
 ## Open items

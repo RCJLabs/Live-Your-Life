@@ -2,7 +2,7 @@ import type { GameState, TimeSlice } from '@eb/core';
 import type { LawState, TiesSlice } from '@lyl/sim';
 import { ALARM_MINUTES } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
-import { alarmFor } from './alarm.ts';
+import { ALARM_LINE, alarmFor, ring } from './alarm.ts';
 import { courtLine, type Waiting, waiting } from './pending.ts';
 import { Life } from './session.ts';
 
@@ -130,5 +130,34 @@ describe('the alarm (D57, D60)', () => {
 
   it('is silent with no shift signed up for', () => {
     expect(alarmFor(new Life('no-shift'))).toBeNull();
+  });
+});
+
+describe('the alarms drop the clock, each once (D60, D62)', () => {
+  const none = { shift: -1, court: -1 };
+  const court: Waiting = {
+    id: 'court/1',
+    kind: 'court',
+    day: 0,
+    text: '',
+    actions: [{ label: 'Go to court', action: { type: 'law/attend' } }],
+  };
+
+  it('for a shift: once, a walk before it', () => {
+    const life = new Life('ring-shift');
+    life.act(life.options().find((a) => a.type === 'job/sign-up') as never);
+    expect(ring(life, [], none).slow).toBe(false);
+    life.act({ type: 'time/advance', minutes: (life.fact('job.next-shift-in') as number) - 5 });
+    const first = ring(life, [], none);
+    expect(first).toMatchObject({ lines: [ALARM_LINE], slow: true });
+    expect(ring(life, [], first.rung)).toMatchObject({ lines: [], slow: false });
+  });
+
+  it('for court: once, on its morning', () => {
+    const life = new Life('ring-court');
+    const first = ring(life, [court], none);
+    expect(first.slow).toBe(true);
+    expect(first.lines[0]).toMatch(/due in court/);
+    expect(ring(life, [court], first.rung)).toMatchObject({ lines: [], slow: false });
   });
 });

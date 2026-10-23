@@ -133,13 +133,17 @@ export const lifeModule = defineModule<LifeSlice>({
     do: {
       run: (ctx, action) => doActivity(ctx, action.activity, action.minutes),
       // What a menu offers now: each activity for its usual time, or until it's time to walk to
-      // the next shift if that comes first (D57's alarm), or until the shift under way ends (D58);
+      // the next shift if that comes first (D57's alarm), or until the shift under way ends (D58),
+      // or until the court opens on a court day (D62);
       // the meal only if it can be paid for; and work only during a shift, for the rest of it or
       // until something on it needs you.
       options: (view) => {
         const cash = view.fact('economy.amount', { resource: 'cash' }) as number;
         const onShift = view.fact('job.on-shift') === true;
-        const until = onShift ? (view.fact('job.shift-left') as number) : alarm(view);
+        const shift = onShift ? (view.fact('job.shift-left') as number) : alarm(view);
+        // D62: on a court day, what you do ends when the court opens, as it does for a shift.
+        const court = view.fact('law.court-in') as number | undefined;
+        const until = court !== undefined && court > 0 ? Math.min(shift ?? court, court) : shift;
         const offered: { activity: Activity; minutes: unknown }[] = [];
         for (const activity of ACTIVITIES) {
           if (activity === 'work') {

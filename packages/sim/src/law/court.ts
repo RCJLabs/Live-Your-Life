@@ -17,6 +17,19 @@ function today(view: LawView | LawContext): Case | undefined {
   return sliceOf(view).cases.find((k) => k.court === day && !k.warrant);
 }
 
+/**
+ * Minutes until today's hearing opens, 0 while it is open, or undefined with no hearing left
+ * today (D62): what the court alarm stops your day for.
+ */
+export function courtIn(view: LawView): number | undefined {
+  const day = view.fact('time.day') as number;
+  if (!sliceOf(view).cases.some((k) => k.court === day && !k.warrant)) return undefined;
+  const h = crime(view).hearing;
+  const now = view.fact('time.of-day') as number;
+  if (now >= h.to * 60) return undefined;
+  return Math.max(0, h.from * 60 - now);
+}
+
 export const attend = {
   run(ctx: LawContext) {
     const k = today(ctx);
