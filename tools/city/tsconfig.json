@@ -1,0 +1,9 @@
+{
+  "//": "The harness runs in Node and in a page, so it sees both hosts' types; the people it times stay pure in packages/sim.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  "include": ["src", "page", "*.ts"]
+}

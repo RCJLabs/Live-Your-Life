@@ -18,11 +18,11 @@ export interface Range {
   readonly max: number;
 }
 
-export type GroundKind = 'diner' | 'shop' | 'stoop';
+export type GroundKind = 'diner' | 'shop' | 'stoop' | 'lobby';
 export type WindowKind = 'single' | 'pair';
 export type CorniceKind = 'band' | 'bracketed' | 'parapet';
 export type OpenKind = 'verge' | 'car-park';
-export type Use = 'home' | 'restaurant' | 'shop';
+export type Use = 'home' | 'restaurant' | 'shop' | 'office' | 'court' | 'police';
 
 export interface Paint {
   readonly text: string;
@@ -97,13 +97,31 @@ export interface BlockRecord {
   readonly backRow: BackRowRecord;
 }
 
-/** A block's record with everything it names, read and checked. */
-export interface BlockTemplates extends InteriorTemplates {
+/** A frontage (M2.1): what stands along a district's block faces. */
+export interface FrontageRecord {
+  readonly name: string;
+  readonly street: string;
+  readonly fill: Readonly<Record<string, number>>;
+  readonly vacant: number;
+  readonly gap: Range;
+}
+
+/** The buildings a block or a frontage names, their facades and their interiors. */
+export interface BuildingTemplates extends InteriorTemplates {
   readonly id: string;
-  readonly block: BlockRecord;
   readonly street: StreetRecord;
   readonly buildings: ReadonlyMap<string, BuildingRecord>;
   readonly facades: ReadonlyMap<string, FacadeRecord>;
+}
+
+/** A block's record with everything it names, read and checked. */
+export interface BlockTemplates extends BuildingTemplates {
+  readonly block: BlockRecord;
+}
+
+/** A frontage's record with everything it names, and the city's institutions, read and checked. */
+export interface FrontageTemplates extends BuildingTemplates {
+  readonly frontage: FrontageRecord;
 }
 
 function checkRange(range: Range, where: string): void {
@@ -136,6 +154,19 @@ export function blockTemplates(store: RecordStore, id: string): BlockTemplates {
       `content: block/${id} needs ${block.needs.length} buildings but may have only ${block.lots.min} lots`,
     );
   }
+  const read = buildingsOf(store, [...block.needs, ...Object.keys(block.fill)]);
+  return { id, block, street: store.getOrThrow<StreetRecord>('street', block.street), ...read };
+}
+
+/** Reads frontage `id`, the buildings it names and the institutions `also` names. */
+export function frontageTemplates(store: RecordStore, id: string, also: readonly string[] = []): FrontageTemplates {
+  const frontage = store.getOrThrow<FrontageRecord>('frontage', id);
+  checkRange(frontage.gap, `frontage/${id} gap`);
+  const read = buildingsOf(store, [...Object.keys(frontage.fill), ...also]);
+  return { id, frontage, street: store.getOrThrow<StreetRecord>('street', frontage.street), ...read };
+}
+
+function buildingsOf(store: RecordStore, names: readonly string[]) {
   const buildings = new Map<string, BuildingRecord>();
   const facades = new Map<string, FacadeRecord>();
   const inside = {
@@ -143,7 +174,7 @@ export function blockTemplates(store: RecordStore, id: string): BlockTemplates {
     rooms: new Map<string, RoomRecord>(),
     fixtures: new Map<string, FixtureRecord>(),
   };
-  for (const name of [...block.needs, ...Object.keys(block.fill)]) {
+  for (const name of names) {
     const b = store.getOrThrow<BuildingRecord>('building', name);
     const facade = store.getOrThrow<FacadeRecord>('facade', b.facade);
     checkBuilding(name, b, facade);
@@ -151,5 +182,5 @@ export function blockTemplates(store: RecordStore, id: string): BlockTemplates {
     facades.set(b.facade, facade);
     if (b.interior) readInterior(store, b.interior, inside);
   }
-  return { id, block, street: store.getOrThrow<StreetRecord>('street', block.street), buildings, facades, ...inside };
+  return { buildings, facades, ...inside };
 }

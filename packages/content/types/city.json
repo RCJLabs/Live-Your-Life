@@ -1,0 +1,53 @@
+{
+  "title": "City",
+  "description": "The city (D4, D14, D66): a square of cells, each given a district by where it lies. Every number (tune).",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "cell": { "kind": "number", "min": 100, "max": 2000, "description": "A cell's side, in metres." },
+    "size": { "kind": "int", "min": 4, "max": 200, "description": "Cells along each side of the square." },
+    "arterialEvery": {
+      "kind": "int",
+      "min": 2,
+      "max": 20,
+      "description": "An arterial along every this many cells' edges."
+    },
+    "core": {
+      "kind": "group",
+      "description": "Downtown: the cells within this many cells of the centre.",
+      "fields": {
+        "district": { "kind": "ref", "to": "district" },
+        "radius": { "kind": "number", "min": 0.5, "max": 20 }
+      }
+    },
+    "ring": {
+      "kind": "group",
+      "description": "Around it, out to this many cells.",
+      "fields": { "district": { "kind": "ref", "to": "district" }, "radius": { "kind": "number", "min": 1, "max": 60 } }
+    },
+    "band": {
+      "kind": "group",
+      "description": "Along the river: rows this wide, a few cells off the centre, crossing all but downtown.",
+      "fields": { "district": { "kind": "ref", "to": "district" }, "width": { "kind": "int", "min": 1, "max": 10 } }
+    },
+    "strip": {
+      "kind": "group",
+      "description": "Along one arterial out of the ring to the city's edge, this many cells wide.",
+      "fields": { "district": { "kind": "ref", "to": "district" }, "width": { "kind": "int", "min": 1, "max": 5 } }
+    },
+    "rest": { "kind": "ref", "to": "district", "description": "Every other cell." },
+    "population": {
+      "kind": "group",
+      "description": "What the districts' densities must add up to (D4): a check, not a setting.",
+      "fields": { "min": { "kind": "int", "min": 1 }, "max": { "kind": "int", "min": 1 } }
+    },
+    "institutions": {
+      "kind": "list",
+      "of": {
+        "kind": "group",
+        "fields": { "building": { "kind": "ref", "to": "building" }, "district": { "kind": "ref", "to": "district" } }
+      },
+      "description": "The few buildings the city has one of (DESIGN.md): each on the lot of its district nearest the centre that it fits."
+    }
+  }
+}

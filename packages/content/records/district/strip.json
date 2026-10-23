@@ -1,0 +1,9 @@
+{
+  "name": "The strip",
+  "walkable": false,
+  "colour": "#C9A24A",
+  "block": { "length": 180, "depth": 90, "street": 26 },
+  "lots": { "min": 25, "max": 60 },
+  "density": 8,
+  "income": "working"
+}

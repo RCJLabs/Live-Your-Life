@@ -4,8 +4,8 @@
   "fields": {
     "ground": {
       "kind": "enum",
-      "values": ["diner", "shop", "stoop"],
-      "description": "A diner's band of glass, a shopfront, or a door up a step with windows beside it."
+      "values": ["diner", "shop", "stoop", "lobby"],
+      "description": "A diner's band of glass, a shopfront, a door up a step with windows beside it, or a lobby's glass doors in a stone surround."
     },
     "bays": {
       "kind": "group",

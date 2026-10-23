@@ -1,0 +1,21 @@
+{
+  "title": "Frontage",
+  "description": "What stands along a district's block faces (M2.1): the city has fixed each lot's frontage, and this picks a building for each by weight among those that fit, or leaves it empty.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "street": { "kind": "ref", "to": "street", "description": "The sidewalk, curb and roadway in front." },
+    "fill": {
+      "kind": "map",
+      "key": { "kind": "ref", "to": "building" },
+      "of": { "kind": "int", "min": 1, "max": 100 },
+      "description": "Buildings by weight, among those whose narrowest fits the lot."
+    },
+    "vacant": { "kind": "int", "min": 0, "max": 100, "description": "An empty lot, by weight beside the fill." },
+    "gap": {
+      "kind": "group",
+      "description": "Least room left beside a building on its lot: a gangway, in metres.",
+      "fields": { "min": { "kind": "number", "min": 0, "max": 6 }, "max": { "kind": "number", "min": 0, "max": 6 } }
+    }
+  }
+}

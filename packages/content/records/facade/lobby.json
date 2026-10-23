@@ -1,0 +1,9 @@
+{
+  "ground": "lobby",
+  "bays": { "min": 4, "max": 8 },
+  "windows": ["single", "pair"],
+  "cornices": ["band", "parapet"],
+  "sills": false,
+  "sides": "windows",
+  "wear": { "min": 0, "max": 1 }
+}

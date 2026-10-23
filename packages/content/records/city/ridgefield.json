@@ -1,0 +1,16 @@
+{
+  "name": "Ridgefield",
+  "cell": 400,
+  "size": 35,
+  "arterialEvery": 4,
+  "core": { "district": "downtown", "radius": 2.2 },
+  "ring": { "district": "inner-ring", "radius": 7 },
+  "band": { "district": "old-industrial", "width": 3 },
+  "strip": { "district": "strip", "width": 1 },
+  "rest": "suburbs",
+  "population": { "min": 250000, "max": 400000 },
+  "institutions": [
+    { "building": "courthouse", "district": "downtown" },
+    { "building": "precinct", "district": "downtown" }
+  ]
+}

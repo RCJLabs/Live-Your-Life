@@ -39,7 +39,7 @@ export interface Facade {
   /** Window bays across the front of each storey above the ground floor. */
   readonly bays: number;
   /** How the ground floor meets the street; `back` is a rear wall, windows on every storey. */
-  readonly ground: 'diner' | 'shop' | 'stoop' | 'back';
+  readonly ground: 'diner' | 'shop' | 'stoop' | 'lobby' | 'back';
   readonly sign?: Sign;
   readonly awning?: Awning;
   /** A card in a shop window ("FOR LEASE"). */

@@ -1,0 +1,10 @@
+{
+  "ground": "lobby",
+  "bays": { "min": 7, "max": 8 },
+  "windows": ["single"],
+  "cornices": ["bracketed"],
+  "sills": true,
+  "sides": "windows",
+  "sign": { "text": "COURTHOUSE", "colour": "#D8CDB4", "ink": "#3A3631" },
+  "wear": { "min": 0, "max": 0 }
+}

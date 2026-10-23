@@ -14,6 +14,7 @@ import type {
   Awning,
   BlockTemplates,
   BuildingRecord,
+  BuildingTemplates,
   CorniceKind,
   FacadeRecord,
   GroundKind,
@@ -138,7 +139,7 @@ function lotOrder(t: BlockTemplates, rng: Rng): (string | null)[] {
   return [first, ...middle, second];
 }
 
-function facadeOf(rng: Rng, b: BuildingRecord, f: FacadeRecord): FacadePlan {
+export function facadeOf(rng: Rng, b: BuildingRecord, f: FacadeRecord): FacadePlan {
   const awning = f.awnings && f.awnings.length > 0 ? rng.pick(f.awnings) : undefined;
   return {
     ground: f.ground,
@@ -156,10 +157,20 @@ function facadeOf(rng: Rng, b: BuildingRecord, f: FacadeRecord): FacadePlan {
   };
 }
 
-function buildingOf(t: BlockTemplates, rng: Rng, template: string, id: string, x0: number): BuildingPlan {
+/**
+ * A building on its lot, its front at `front`. A city's lot fixes `width` (face.ts); a slice's
+ * block draws it from the template.
+ */
+export function buildingOf(
+  t: BuildingTemplates,
+  rng: Rng,
+  template: string,
+  id: string,
+  x0: number,
+  front = t.street.lotDepth,
+  width = between(rng, (t.buildings.get(template) as BuildingRecord).width),
+): BuildingPlan {
   const b = t.buildings.get(template) as BuildingRecord;
-  const width = between(rng, b.width);
-  const front = t.street.lotDepth;
   const plan: BuildingPlan = {
     id,
     template,

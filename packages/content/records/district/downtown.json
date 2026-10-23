@@ -1,0 +1,10 @@
+{
+  "name": "Downtown",
+  "walkable": true,
+  "colour": "#8C7B6B",
+  "block": { "length": 100, "depth": 80, "street": 22 },
+  "lots": { "min": 12, "max": 30 },
+  "density": 40,
+  "income": "working",
+  "frontage": "downtown"
+}

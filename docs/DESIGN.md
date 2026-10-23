@@ -40,6 +40,7 @@ Content that is never in, whatever the verb list says: sexual violence; minors i
 - One fictional Rust Belt or Midwest mid-size city, 250k–400k people (tune) (D15). Districts (tune): downtown, old industrial, the inner ring, suburbs, a commercial strip.
 - Generated from the seed and the city's year: districts, arterials, a street grid, lots, buildings from templates, businesses assigned by district economics, households by income band. Changes are stored as diffs against the generated city, so a save stays small (Landnám's rule: if a fact can be computed, it does not go in the save).
 - Authored by hand, and listed here when it happens: the hospital, the courthouse and precinct, city hall, the school. Everything else is generated.
+  - **The courthouse and the precinct (M2.1).** Each is one building record, written by hand (`records/building/courthouse.json`, `precinct.json`), and listed in the city record's `institutions`. Where each stands is not authored: it takes the downtown lot nearest the city's centre that is as wide as its narrowest front, the courthouse first. Both are shells for now; their interiors come with the law's milestone (M2.4).
 - The map is the same renderer zoomed out, with district labels and tap-to-travel that costs the real route time.
 - Release one: two districts live, the rest as statistics (cut ladder).
 
@@ -50,6 +51,12 @@ Content that is never in, whatever the verb list says: sexual violence; minors i
 - **Facades** follow the grammar in their records. The ground floor is diner glass, a shopfront or a stoop. Above it are bays of single or paired windows, with sills or without, and a band, a bracketed band or a parapet on top. Wear runs from kept up to boarded. Signs and awnings go where the record allows. The seed picks within each record.
 - **Street furniture stands by rule**: lamps along both curbs, a hydrant, a bench, trees on a verge, and a pole sign for a building that has one. None stands in a doorway.
 - **The walk grid** is the block's ground in half-metre cells (tune). Stepping onto each costs 1 on a sidewalk, 1.1 on a lot, 1.2 on a verge and 1.4 on the roadway (tune), and there is no step under a building or a post. Routes are weighted A* with eight neighbours, ported from 2060TD.
+
+**Built in M2.1, the city's faces** (`packages/sim/src/city/face.ts`):
+
+- **A face** is one long side of one of the city's blocks, planned only when it is needed and the same way every time, from the city's seed, the block and the side. The city has already fixed each lot's frontage (city.ts); the district's frontage record picks a building for each lot by weight, among those whose narrowest front fits with a gangway to spare, or leaves it empty. The institutions stand on the lots the city gave them.
+- **Downtown** fills with office blocks (4 to 10 storeys, a lobby of glass doors in a stone surround), storefronts, apartment houses and the odd diner (tune). **The inner ring** is the slice's street: row houses, apartment houses, storefronts, corner shops and diners (tune).
+- **A face is a block plan** in its own frame, so the walk grid, the routes, the drawing and M1.1's and M1.2's checks take it unchanged. Lots run back 30 m in the inner ring and 38 m downtown, half the block less half the alley; the buildings stand at the front and the yards behind. Across the alley, the block's other face is its back row, seen from behind.
 
 ## Time
 

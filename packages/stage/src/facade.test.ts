@@ -61,6 +61,7 @@ describe('the facade grammar', () => {
     ['streaks and a patch', { wear: 1 }],
     ['boarded windows', { wear: 2 }],
     ['a sign over the shopfront', { sign: { text: 'GROCERY', color: BUILDING.sign, ink: '#2E5D3A' } }],
+    ['a lobby', { ground: 'lobby' }],
   ];
 
   it.each(variants)('draws %s differently from the plain front, with finite numbers', (_, change) => {
@@ -83,6 +84,19 @@ describe('the facade grammar', () => {
     };
     const all = { ...plain, litBits: 0x7fffffff };
     expect(lit({ ...all, wear: 2 })).toBeLessThan(lit(all));
+  });
+
+  it("cuts a lobby's sign over its doors, and lights the doors at night (M2.1)", () => {
+    const sign = { text: 'COURTHOUSE', color: BUILDING.stone, ink: '#3A3631' };
+    expect(drawn({ ...plain, ground: 'lobby', sign })).toContain('fillText(COURTHOUSE');
+    const lights = (facade: Facade) => {
+      const frame = frameAt(1);
+      const b = building(facade);
+      const whole = box(b.x0, b.y0, 0, b.x1, b.y1, b.storeys * b.storeyHeight + 0.25);
+      drawFront(fakeCanvas(800, 800, []).ctx, view, b, leftFace(whole), frame);
+      return frame.lights.length;
+    };
+    expect(lights({ ...plain, ground: 'lobby', litBits: 0 })).toBe(1);
   });
 
   it('puts a shop sign above an awning rather than behind it', () => {
