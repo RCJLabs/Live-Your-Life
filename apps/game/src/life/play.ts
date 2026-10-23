@@ -8,9 +8,21 @@
  * on arrival and when the page is hidden (D54); a life played from `?seed=` is not kept.
  */
 import type { Action } from '@eb/core';
-import { type LawState, LINKED, LONGEST_WALK, WEEKDAYS } from '@lyl/sim';
-import { type Camera, clampCamera, daylight, panBy, project, Stage, unproject, viewOf, zoomAt } from '@lyl/stage';
+import { cellAt, type LawState, LINKED, LONGEST_WALK, WEEKDAYS } from '@lyl/sim';
+import {
+  type Camera,
+  clampCamera,
+  daylight,
+  type Look,
+  panBy,
+  project,
+  Stage,
+  unproject,
+  viewOf,
+  zoomAt,
+} from '@lyl/stage';
 import { makeCrowd } from '../city/crowd.ts';
+import { passersAt } from '../city/passers.ts';
 import { townScene } from '../city/town.ts';
 import { cutFor } from '../city/walker.ts';
 import { castLooks } from '../spike/actors.ts';
@@ -50,7 +62,13 @@ export function play(
   const law = life.state.law as LawState;
   const block = townScene(law.block);
   // The tier-1 people out on the town's streets (M2.2, D69), their hours the sim's.
-  const crowd = makeCrowd(block, life.fact('people.seed') as number, life.fact('people.count') as number);
+  const peopleSeed = life.fact('people.seed') as number;
+  const crowd = makeCrowd(block, peopleSeed, life.fact('people.count') as number);
+  const passerLooks = new Map<number, Look>();
+  const onFoot = (x: number, y: number) => {
+    const cell = cellAt(block.grid, x, y);
+    return cell >= 0 && (block.grid.cost[cell] as number) < Infinity;
+  };
   /** Whether the coworker or the fence is at their post in an hour of a day (D70), as their modules say. */
   const atPost = (i: number, day: number, hour: number): boolean => {
     if (i === LINKED.coworker) {
@@ -65,7 +83,9 @@ export function play(
     const day = life.fact('time.day') as number;
     const weekday = WEEKDAYS.indexOf(life.fact('time.weekday') as (typeof WEEKDAYS)[number]);
     const minute = day * 24 * 60 + (life.fact('time.of-day') as number);
-    return crowd.actorsAt(minute, (((weekday - day) % 7) + 7) % 7, t, atPost);
+    const people = crowd.actorsAt(minute, (((weekday - day) % 7) + 7) % 7, t, atPost);
+    // And passers-by (D72), the city's statistics on its sidewalks.
+    return [...people, ...passersAt(block.walkways, peopleSeed, minute, t, passerLooks, onFoot)];
   };
   const places = placesOf(life.sim.content, block.plan, block.grid, law.block);
   const look = castLooks(life.seed).cook;

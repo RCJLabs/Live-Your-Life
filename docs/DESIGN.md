@@ -117,7 +117,7 @@ Three tiers (D10):
 | 1 | named, persistent people with jobs, schedules, homes, relationships, aging | off screen once a game day each, a twenty-fourth of them every game hour (D30); per tick on screen | 1,000 (tune; D31), re-measured at M2.2 |
 | 2 | district statistics: population by age and income, the job market, crime rates | per game day | the city |
 
-A tier-2 person who is met becomes tier 1 and stays.
+A tier-2 person who is met becomes tier 1 and stays. On the town's sidewalks tier 2 is drawn as passers-by (D72): as many as the hour and the district's density give, the same at the same minute, and nothing saved. Stopping one to meet them waits for M2.6.
 
 - **Generation:** name pools by the city's demographics; age from the district pyramid; traits (temperament, honesty, ambition, sociability, risk); skills by career; a look derived from the person once (Landnám's "one person, one look").
 - **Schedules:** a template from job and household (work, school, sleep, errands); free time filled by utility over needs and relationships, where places advertise what they satisfy (The Sims' model; Space-Wrecked's utility scorer is the portfolio's seed). On screen, A* on the walk grid (2060TD's time-weighted pathfinding); off screen, jumps between blocks.

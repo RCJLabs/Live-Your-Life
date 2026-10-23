@@ -218,10 +218,12 @@ export class Stage {
     };
     this.#pieces(look.cut);
     const heights = new Map<string, number>();
-    const movers = [
+    const all = [
       ...this.#movingFixtures,
       ...actors.filter((a) => !a.bed && !hidden(a)).map((a) => this.#actorPiece(a, heights)),
     ];
+    // Off screen, a mover costs its drawing and the redrawing of whatever stands in front of it.
+    const movers = this.#cull ? all.filter((p) => onScreen(view, size, p)) : all;
     let pieces = movers.length;
     const stillKey = [view.u, view.ox, view.oy, size.width, size.height, size.dpr, this.#cutKey, look.dark > LIGHTS_ON]
       .map((v) => (typeof v === 'number' ? v.toFixed(4) : String(v)))

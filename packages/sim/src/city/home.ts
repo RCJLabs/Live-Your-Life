@@ -79,7 +79,8 @@ export function faceRect(city: CityPlan, h: Home, f: NearFace, r: Rect): Rect {
 
 /**
  * The blocks within `reach` metres of the home block, in the home frame, with the faces of those
- * the walkable districts plan; the home face itself is the slice's block and is left out.
+ * the walkable districts plan; the home face itself is the slice's block and is left out. `ids`
+ * are the blocks' indices in the city, in the order of `around.blocks`.
  */
 export function aroundHome(
   ct: CityTemplates,
@@ -87,18 +88,20 @@ export function aroundHome(
   h: Home,
   plan: BlockPlan,
   reach: number,
-): { around: Around; faces: NearFace[] } {
+): { around: Around; faces: NearFace[]; ids: number[] } {
   const s = plan.street;
   const area = { x0: s.xa - reach, y0: s.alley - reach, x1: s.xb + reach, y1: s.farCurb + reach };
   const blocks: Rect[] = [];
   const faces: NearFace[] = [];
   const solids: Rect[] = [];
+  const ids: number[] = [];
   for (let b = 0; b < city.blocks.count; b++) {
     const x0 = (city.blocks.x[b] as number) - h.ox;
     const y0 = (city.blocks.y[b] as number) - h.oy;
     const r = { x0, y0, x1: x0 + (city.blocks.w[b] as number), y1: y0 + (city.blocks.d[b] as number) };
     if (r.x1 < area.x0 || r.x0 > area.x1 || r.y1 < area.y0 || r.y0 > area.y1) continue;
     blocks.push(r);
+    ids.push(b);
     if (!ct.districts[city.blocks.district[b] as number]?.frontage) continue;
     for (const side of [0, 1] as Side[]) {
       if (b === h.block && side === 1) continue;
@@ -108,5 +111,5 @@ export function aroundHome(
       for (const building of face.plan.buildings) solids.push(faceRect(city, h, face, building));
     }
   }
-  return { around: { area, blocks, sidewalk: s.curb - s.lotFront, solids }, faces };
+  return { around: { area, blocks, sidewalk: s.curb - s.lotFront, solids }, faces, ids };
 }

@@ -623,6 +623,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Fewer ties a person (recommended, chosen). 500 people, revisiting D31. Saving less often than after every action (D54), at more risk of a reload undoing a choice. Accepting the cost until Evan's phone reads it.
 
+### D72. Tier-2 passers-by fill the town's sidewalks. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** With the 1,000 tier-1 people spread across the city (D68), someone was in view in the town for 12 minutes of a day. The page now also draws passers-by: anonymous people walking the town's sidewalks, as many as the hour and the district's density give (tune), more at the rush hours and few at night. They are the city's statistics (D9) made visible and hold nothing in the save; meeting one, and their becoming tier-1, is a later milestone's.
+
+**Options considered.** Tier-2 passers-by (recommended, chosen). More of the tier-1 people's errands and evenings out drawn: true to the sim, still sparse. Tier-1 homes nearer you, revisiting D68. Empty streets until travel and more of the city open up.
+
 ---
 
 ## Open items
