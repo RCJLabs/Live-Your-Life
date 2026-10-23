@@ -38,4 +38,4 @@ export const HOUSEHOLD = [1, 1, 2, 2, 2, 3, 3, 4] as const;
 export const SHARED = { workplace: 12, thirdPlace: 30 } as const;
 
 /** Ties kept per person, and new meetings a person makes in an hour at a shared place. */
-export const TIES = { cap: 24, perHour: 2 } as const;
+export const TIES = { cap: 12, perHour: 2 } as const;

@@ -128,8 +128,8 @@ A tier-2 person who is met becomes tier 1 and stays.
 - **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md), until M2.2's careers and households replace them.
 - **Their hours** are each one of nine kinds (work, a break, sleep, the trip to work, rising, a meal, out, the evening, home). Each kind is pieces of the player's activities, so the needs are the player's needs at an hour's grain. Free time is the template's, not yet chosen by need.
 - **Their needs** are settled with the player's own math, once for each run of one activity.
-- **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 24 ties, and a full list lets a stranger take the place of someone met only once.
-- **Their state** is 54 numbers a person: six levels, and 24 ties of two numbers each. It sits in 24 shares, one moved on a whole day each game hour (D30), because the kernel copies a module's whole slice in every action that writes to it.
+- **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 12 ties (24 until M2.2, D71), and a full list lets a stranger take the place of someone met only once.
+- **Their state** is 30 numbers a person: six levels, and 12 ties of two numbers each (D71; 54 numbers and 24 ties in M0.4). It sits in 24 shares, one moved on a whole day each game hour (D30), because the kernel copies a module's whole slice in every action that writes to it.
 - **What it costs**, with the CPU slowed four times in headless Chromium: 1,000 people take 4.2 ms an hour on average and 7.9 at the 95th, and a month passes in one action in about a second.
 
 ## Relationships

@@ -617,6 +617,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Now, with a migration (recommended, chosen). Later, with no save change this milestone.
 
+### D71. A tier-1 person keeps 12 ties, not 24. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** With the 1,000 people in a life, a save was 172 kB and took 224 ms to write with the CPU slowed four times, against 4.8 kB and 28 ms before; three quarters of it was ties, 24 a person of two numbers each. A person now keeps 12 (tune): their strongest, the weakest forgotten sooner. All 1,000 stay.
+
+**Options considered.** Fewer ties a person (recommended, chosen). 500 people, revisiting D31. Saving less often than after every action (D54), at more risk of a reload undoing a choice. Accepting the cost until Evan's phone reads it.
+
 ---
 
 ## Open items
