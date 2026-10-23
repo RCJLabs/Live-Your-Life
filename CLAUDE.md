@@ -48,6 +48,7 @@ node apps/game/e2e/shots.ts [dir]   # after `pnpm build`: the art spike's screen
 node apps/game/e2e/perf.ts [runs] [match]   # after `pnpm build`: the frame rate at 1× and 4× CPU, headless; match picks paths ("generated")
 node tools/population/bench.ts [days] [sizes]      # the population harness in Node: tier-1 people at each cadence (30 days; 100,300,500,1000,3000)
 node tools/population/chromium.ts [days] [sizes]   # the same in headless Chromium at 1× and 4× CPU
+node tools/population/life.ts [rounds]             # the life's game with its 1,000 people: an hour and a month in one action, Node and Chromium
 pnpm eb validate packages/content --types tools/content/game.ts   # the engine's checks on the content, its conditions against the game's facts (part of pnpm lint)
 pnpm content      # rebuild packages/content/pack.json after changing a record; a test fails until you do
 node apps/game/e2e/day-bot.ts [steady|thief] [days] [seeds] [rate]   # after `pnpm build`: the browser bot plays by taps; taps, pans and real minutes a game day

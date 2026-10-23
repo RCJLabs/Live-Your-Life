@@ -127,10 +127,40 @@ export function newShare(n: number, k = 0, of = 1): PeopleSlice {
   return { first, count, hour: -1, levels, ties };
 }
 
-export const peopleModule = (n: number): Module =>
+/** Minutes since the start day's midnight. */
+const minuteNow = (ctx: ModuleContext<unknown>): number =>
+  (ctx.fact('time.day') as number) * 24 * 60 + (ctx.fact('time.of-day') as number);
+
+/**
+ * Time passing, cut at each midnight and passed on to the shares (M2.2). In one long passage, a
+ * month asleep or a sentence, each share would settle the whole span alone, and the hours' plans,
+ * kept only two days (gather.ts), would be built again for each of the 24: 17,280 plans for a
+ * month's 720. A day at a time, every share settles a day while its plans are kept. Each event
+ * raised here reaches every share before the next is raised (the kernel's order).
+ */
+const inDays = (ctx: ModuleContext<City>, event: Beat) => {
+  const span = (event.to as number) - (event.from as number);
+  if (span <= 0) return;
+  const now = minuteNow(ctx);
+  let from = now - span;
+  for (let midnight = (Math.floor(from / DAY) + 1) * DAY; midnight < now; midnight += DAY) {
+    ctx.emit('passed', { from, to: midnight });
+    from = midnight;
+  }
+  ctx.emit('passed', { from, to: now });
+};
+const DAY = 24 * 60;
+const MINUTE = { type: 'int', min: 0 } as const;
+
+/** Who the people are; in a life (`listen`), it also passes time on to the shares a day at a time. */
+export const peopleModule = (n: number, listen = false): Module =>
   defineModule<City>({
     id: 'people',
     init: (ctx) => ({ seed: ctx.rng('people').int(0, 0x7fffffff), n }),
+    events: {
+      passed: { args: { from: MINUTE, to: MINUTE }, label: 'Time passes for the people, at most a day at a time' },
+    },
+    ...(listen ? { on: { 'time/passed': inDays } } : {}),
     facts: {
       seed: { read: ({ state }) => state.seed, domain: { type: 'int', min: 0 }, label: "the people's seed" },
       count: { read: ({ state }) => state.n, domain: { type: 'int', min: 0 }, label: 'people' },
@@ -142,13 +172,14 @@ export const shareId = (k: number, of: number): string => (of === 1 ? 'people-al
 
 // Settles every whole hour from the share's first unsettled one to now. It writes only when there
 // is an hour to settle, so the kernel copies the slice only then.
-function moveOn(ctx: ModuleContext<PeopleSlice>, inLife = false): void {
-  const day = ctx.fact('time.day') as number;
-  const minute = day * 24 * 60 + (ctx.fact('time.of-day') as number);
+function moveOn(ctx: ModuleContext<PeopleSlice>, inLife = false, until?: number): void {
+  const now = minuteNow(ctx);
+  const day = Math.floor(now / DAY);
+  const minute = until ?? now;
   const weekday = WEEKDAYS.indexOf(ctx.fact('time.weekday') as (typeof WEEKDAYS)[number]);
   const to = Math.floor(minute / 60);
   const settled = ctx.read().hour;
-  const from = settled < 0 ? Math.floor((minute - (ctx.fact('time.tick') as number)) / 60) : settled;
+  const from = settled < 0 ? Math.floor((now - (ctx.fact('time.tick') as number)) / 60) : settled;
   if (to <= from) return;
   const city = { seed: ctx.fact('people.seed') as number, n: ctx.fact('people.count') as number };
   const holdsLinked = inLife && ctx.read().first < LINKED.count && ctx.read().count > 0;
@@ -158,17 +189,17 @@ function moveOn(ctx: ModuleContext<PeopleSlice>, inLife = false): void {
 /**
  * Moves share k of `of` on when time passes its hour of the day (M2.2): each share settles a whole
  * day once a day, a twenty-fourth of the people each hour, as the harness's timers do (D30). A
- * life hears time pass rather than keeping timers, so a save from before the people starts them
- * without a timer it never had.
+ * life hears time pass, a day at a time from the people module, rather than keeping timers, so a
+ * save from before the people starts them without a timer it never had.
  */
 const onItsHour = (k: number, of: number) => (ctx: ModuleContext<PeopleSlice>, event: Beat) => {
-  const span = (event.to as number) - (event.from as number);
-  if (span <= 0) return;
-  const now = (ctx.fact('time.day') as number) * 24 * 60 + (ctx.fact('time.of-day') as number);
+  const from = event.from as number;
+  const to = event.to as number;
+  if (to <= from) return;
   // The first hour after the passage began that is this share's, and whether it came.
-  const startHour = Math.floor((now - span) / 60) + 1;
+  const startHour = Math.floor(from / 60) + 1;
   const due = startHour + ((((k - startHour) % of) + of) % of);
-  if (due * 60 <= now) moveOn(ctx, true);
+  if (due * 60 <= to) moveOn(ctx, true, to);
 };
 
 /** Share k of `of`, moved on by its effect, `<id>-progress`; in a life, by time passing its hour. */
@@ -178,7 +209,7 @@ export function shareModule(n: number, k = 0, of = 1, listen = false): Module {
     id,
     init: () => newShare(n, k, of),
     effects: { [`${id}-progress`]: (ctx) => moveOn(ctx) },
-    ...(listen ? { on: { 'time/passed': onItsHour(k, of) } } : {}),
+    ...(listen ? { on: { 'people/passed': onItsHour(k, of) } } : {}),
     facts: {
       mean: {
         args: { need: { type: 'enum', values: NEEDS } },

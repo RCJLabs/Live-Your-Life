@@ -194,6 +194,9 @@ importers:
       '@eb/core':
         specifier: workspace:*
         version: link:../../engine/packages/core
+      '@lyl/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       '@lyl/sim':
         specifier: workspace:*
         version: link:../../packages/sim

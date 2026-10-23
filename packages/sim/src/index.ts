@@ -126,7 +126,15 @@ export { inFront, type StreetPoint, type Walk, walkBetween } from './city/walks.
 export { clockModule, minutesUntil } from './clock.ts';
 export { LIFE_CONTENT, lifeSim } from './content.ts';
 export * from './dials.ts';
-export { createLifeGame, type LifeOptions, lifeModules, REAL_TIME, startingTimers } from './game.ts';
+export {
+  createLifeGame,
+  type LifeOptions,
+  lifeModules,
+  PEOPLE,
+  PEOPLE_SHARES,
+  REAL_TIME,
+  startingTimers,
+} from './game.ts';
 export { type HomeSlice, homeModule, RENT_TIMER } from './home.ts';
 export { drawFrom, LEAST, MOST, oddsOf } from './job/events.ts';
 export { type Hire, jobModule } from './job/module.ts';

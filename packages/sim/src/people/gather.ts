@@ -94,6 +94,8 @@ function build(roster: Roster, seed: number, hour: number, weekday: number): Hou
 }
 
 const plans = new Map<string, HourPlan>();
+/** How many hour plans have been built, for the tests that hold a long passage to one plan an hour. */
+export const built = { plans: 0 };
 /** Hour plans kept: two days', enough for a share settled a day at a time and for the hour before. */
 const KEPT = 48;
 
@@ -103,6 +105,7 @@ export function planAt(roster: Roster, seed: number, hour: number, weekday: numb
   let found = plans.get(key);
   if (!found) {
     found = build(roster, seed, hour, weekday);
+    built.plans++;
     if (plans.size >= KEPT) plans.delete(plans.keys().next().value as string);
     plans.set(key, found);
   }

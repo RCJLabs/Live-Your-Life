@@ -77,7 +77,7 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     lawModule,
     youModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
-    peopleModule(options.people ?? PEOPLE),
+    peopleModule(options.people ?? PEOPLE, true),
     ...Array.from({ length: PEOPLE_SHARES }, (_, k) => shareModule(options.people ?? PEOPLE, k, PEOPLE_SHARES, true)),
   ];
 }

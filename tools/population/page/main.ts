@@ -3,6 +3,7 @@
  * throttle before calling it; opened by hand with `?run`, it runs at once. It yields between
  * readings, so the page can show how far it has got.
  */
+import { formatLife, measureLife } from '../src/life.ts';
 import { DAYS, formatSweep, SIZES, sweep } from '../src/sweep.ts';
 
 const out = document.getElementById('out') as HTMLPreElement;
@@ -22,7 +23,19 @@ async function runHarness(days: number, sizes: readonly number[]): Promise<strin
   return out.textContent;
 }
 
-Object.assign(window, { runHarness });
+/** The life bench (life.ts): an hour and a month of the life, with its people and without. */
+async function runLife(rounds: number): Promise<string> {
+  out.textContent = 'running the life';
+  const readings = await measureLife(
+    rounds,
+    () => performance.now(),
+    () => new Promise((resolve) => setTimeout(resolve, 0)),
+  );
+  out.textContent = formatLife(readings);
+  return out.textContent;
+}
+
+Object.assign(window, { runHarness, runLife });
 
 const params = new URLSearchParams(location.search);
 if (params.has('run')) {
