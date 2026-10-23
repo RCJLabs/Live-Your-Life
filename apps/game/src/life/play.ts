@@ -68,7 +68,7 @@ export function play(
     const c = document.createElement('canvas');
     return { canvas: c, ctx: c.getContext('2d') as CanvasRenderingContext2D };
   };
-  const stage = new Stage(block.scene, layer, { cache: true });
+  const stage = new Stage(block.scene, layer, { cache: true, cull: true });
   const limits = limitsFor(block);
 
   const s = {

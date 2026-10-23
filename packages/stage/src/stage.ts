@@ -120,6 +120,8 @@ export function hiding(buildings: readonly Building[], who: Box3): string[] {
 export class Stage {
   readonly scene: Scene;
   readonly #cache: boolean;
+  /** Whether pieces off the screen are skipped: the town's (M2.1). The spike draws everything, as at M0.3 (D33). */
+  readonly #cull: boolean;
   readonly #still: Layer;
   readonly #night: Layer;
   readonly #glow: Layer;
@@ -131,9 +133,14 @@ export class Stage {
   #lights: Light[] = [];
   #stillHeads = new Map<string, Pt>();
 
-  constructor(scene: Scene, makeLayer: () => Layer, options: { readonly cache?: boolean } = {}) {
+  constructor(
+    scene: Scene,
+    makeLayer: () => Layer,
+    options: { readonly cache?: boolean; readonly cull?: boolean } = {},
+  ) {
     this.scene = scene;
     this.#cache = options.cache ?? true;
+    this.#cull = options.cull ?? false;
     this.#still = makeLayer();
     this.#night = makeLayer();
     this.#glow = makeLayer();
@@ -168,7 +175,7 @@ export class Stage {
     ctx.fillRect(0, 0, size.width, size.height);
     drawGround(ctx, view, this.scene.ground);
     for (const b of this.scene.buildings) if (open(b)) drawRoomFloor(ctx, view, b, frame);
-    for (const p of this.#order.pieces) if (onScreen(view, size, p)) p.draw(ctx, view, frame);
+    for (const p of this.#order.pieces) if (!this.#cull || onScreen(view, size, p)) p.draw(ctx, view, frame);
   }
 
   /** Draws the movers over the still picture, each followed by the still pieces in front of it. */
@@ -244,7 +251,7 @@ export class Stage {
       ctx.fillRect(0, 0, size.width, size.height);
       drawGround(ctx, view, this.scene.ground);
       for (const b of this.scene.buildings) if (open(b)) drawRoomFloor(ctx, view, b, frame);
-      for (const p of everything.pieces) if (onScreen(view, size, p)) p.draw(ctx, view, frame);
+      for (const p of everything.pieces) if (!this.#cull || onScreen(view, size, p)) p.draw(ctx, view, frame);
       this.#lights = frame.lights;
       this.#nightKey = null;
       pieces = everything.pieces.length;
