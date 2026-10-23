@@ -423,6 +423,7 @@ How to read this file:
     - saves from before the city still load [auto];
     - the frame rate walking downtown, headless [auto] and on Evan's phone [you].
   - **Step 1, built 2026-10-23:** the city record (Ridgefield) and five district records; `packages/sim/src/city/city.ts` plans every district's cells, blocks and lots in typed arrays; `tools/city/` times and weighs it in Node and Chromium (Readings). Planted bugs: 5, 5 caught: the city drawn from no seed; a density doubled; downtown off the centre; a lot past its maximum; a block over its cell. Arterials (the record's `arterialEvery`) aren't laid yet.
+    - Found on the way: PR #14 said `life-v2.json` loads to exactly the state it saved, but its test had never been written; the edit that should have added it failed unseen. It is written now, and the content both fixtures were saved with is kept beside them (`pack-0b75d724de0fc3b0.json`), so the exact replay holds whatever the content becomes. Planted bugs: the walk kept a minute long and no migration, both caught.
 - **M2.2 People.** Households and tier-1 people with schedules and offscreen progression.
 - **M2.3 Careers.** The catalogue on the template: the first 30, with the labor market.
 - **M2.4 Crime and law.** Crime to the crew tier and law to detective, sharing case files; courts; prison as time passing.
