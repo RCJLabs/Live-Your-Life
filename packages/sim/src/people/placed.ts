@@ -56,7 +56,8 @@ function districtFor(weights: readonly number[], roll: number): number {
 
 /**
  * Places a roster in the city. `skip` is a face left out, your own block's, which the slice's
- * block stands on instead (D67).
+ * block stands on instead (D67). `districtOf` names a place's district, by its index in the city,
+ * where something else has chosen it: a workplace's, by its career (M2.3).
  */
 export function placeRoster(
   roster: Roster,
@@ -64,6 +65,7 @@ export function placeRoster(
   city: CityPlan,
   seed: number,
   skip?: { readonly block: number; readonly side: Side },
+  districtOf?: (place: number) => number | null,
 ): Placed {
   const records = ct.districts.map((d) => d.record);
   const { lots, weight } = byDistrict(city, records);
@@ -95,7 +97,8 @@ export function placeRoster(
   const placed = { lot: new Int32Array(n), x: new Float64Array(n), y: new Float64Array(n), building: [] as string[] };
   for (let p = 0; p < n; p++) {
     const kind: Kind = p < roster.firstShared ? 'home' : p < roster.firstThird ? 'work' : 'third';
-    const pool = lots[districtFor(weight(kind), mix(seed, 20, p))] as number[];
+    // A workplace stands where its career's employers do (M2.3, market/employers.ts), when that is known.
+    const pool = lots[districtOf?.(p) ?? districtFor(weight(kind), mix(seed, 20, p))] as number[];
     let chosen = -1;
     let building: BuildingPlan | undefined;
     // A few lots by chance, then on along the district's lots from the last, so a building that

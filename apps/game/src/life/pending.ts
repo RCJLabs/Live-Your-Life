@@ -1,6 +1,7 @@
 /**
  * What waits on you (D50): a favour asked, the police's visits, court dates, probation's
- * check-ins, money owed, and your shifts ahead, each with its day and what you can do about it now.
+ * check-ins, money owed, your shifts ahead, and going to a job away from your block (M2.3), each
+ * with its day and what you can do about it now.
  * The badge counts this list and the panel shows it, so one function says what the player is told.
  * It reads the sim's facts, its state's own lists and the timers set for you, and offers only the
  * actions the game offers now.
@@ -8,6 +9,7 @@
 import type { Action, TimeSlice } from '@eb/core';
 import { careerOf, type LawState, type TiesSlice } from '@lyl/sim';
 import type { Life } from './session.ts';
+import { canGo, GO_TO_WORK } from './trip.ts';
 import { dayText, money, whenText } from './words.ts';
 
 export interface Waiting {
@@ -26,7 +28,8 @@ const offered = (life: Life, type: string, match: (a: Action) => boolean = () =>
 const SHIFT_WORD: Readonly<Record<string, string>> = { breakfast: 'breakfast', dinner: 'dinner' };
 
 function shiftStart(life: Life, shift: string): string {
-  const k = careerOf(life.sim.content, 'line-cook').shifts.find((s) => s.id === shift);
+  const career = (life.state.job as { career: string | null }).career;
+  const k = career ? careerOf(life.sim.content, career).shifts.find((s) => s.id === shift) : undefined;
   return k ? `${String(k.hour).padStart(2, '0')}:${String(k.minute).padStart(2, '0')}` : '';
 }
 
@@ -97,9 +100,23 @@ function shifts(life: Life): Waiting[] {
   });
 }
 
+/** A job away from your block (M2.3, D73): going to it, when its shift is under way or soon. */
+function goToWork(life: Life): Waiting[] {
+  const walk = (life.state.you as { commute: number | null }).commute;
+  if (!canGo(life, walk)) return [];
+  const day = life.fact('time.day') as number;
+  const text =
+    life.fact('job.on-shift') === true
+      ? `Your shift has started. Work is a ${walk}-minute walk away.`
+      : `Your shift starts ${whenText(life, (life.fact('time.tick') as number) + (life.fact('job.next-shift-in') as number))}. Work is a ${walk}-minute walk away.`;
+  return [
+    { id: 'go-to-work', kind: 'shift', day, text, actions: [{ label: 'Go to work', action: { type: GO_TO_WORK } }] },
+  ];
+}
+
 /** Everything waiting on you, the soonest first; money owed last. */
 export function waiting(life: Life): Waiting[] {
-  const all = [...favour(life), ...law(life), ...shifts(life)];
+  const all = [...goToWork(life), ...favour(life), ...law(life), ...shifts(life)];
   return all.sort((a, b) => (a.day ?? Number.POSITIVE_INFINITY) - (b.day ?? Number.POSITIVE_INFINITY));
 }
 

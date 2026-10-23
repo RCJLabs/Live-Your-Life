@@ -9,6 +9,7 @@ import { defineModule, type FactView, type InitContext } from '@eb/core';
 import { type LifeStart, weekdayOf } from '../calendar.ts';
 import { daysAtHire, post, type Today, todayOf } from './days.ts';
 import { choose, shiftChoice, shiftEvent, shiftOutcome } from './events.ts';
+import { quit, hire as startJob } from './hire.ts';
 import { payday } from './pay.ts';
 import { clockIn, drop, freeProblem, giveShift, jobDay, paidWork, shiftOver, signUp, takeShift } from './shifts.ts';
 import { activeWarnings, careerFor, type JobSlice, jobless, shiftNow, skillOf, windowOf } from './state.ts';
@@ -134,8 +135,15 @@ export function jobModule(hire?: Hire) {
         args: { day: { type: 'int', min: 0 }, shift: { type: 'text' }, warnings: { type: 'int', min: 1 } },
         label: "Didn't show for a shift",
       },
+      hired: { args: { career: { type: 'text' } }, label: 'Started a job' },
+      quit: { label: 'Quit a job' },
+      standing: {
+        args: { by: { type: 'int' }, now: { type: 'int', min: 0, max: 100 }, why: { type: 'text' } },
+        label: 'Standing at work moved',
+      },
+      'let-go': { args: { reason: { type: 'enum', values: ['no-shows', 'standing'] } }, label: 'Let go from a job' },
     },
-    actions: { 'sign-up': signUp, drop, choose },
+    actions: { 'sign-up': signUp, drop, choose, quit },
     effects: {
       'clock-in': (ctx) => clockIn(ctx),
       'paid-work': (ctx, effect) => {
@@ -149,6 +157,7 @@ export function jobModule(hire?: Hire) {
       'shift-event': (ctx, effect) => shiftEvent(ctx, dayOf(effect)),
       'shift-over': (ctx, effect) => shiftOver(ctx, dayOf(effect)),
       payday: (ctx) => payday(ctx),
+      hire: (ctx, effect) => startJob(ctx, String(effect.career)),
       'shift-choice': shiftChoice,
       'shift-outcome': (ctx, effect) => shiftOutcome(ctx, effect),
       'take-shift': (ctx, effect) => takeShift(ctx, dayOf(effect), String(effect.shift)),

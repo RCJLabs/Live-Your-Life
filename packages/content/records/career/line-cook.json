@@ -2,6 +2,16 @@
   "name": "Line cook",
   "place": "diner",
   "wage": 1473,
+  "employers": {
+    "districts": ["inner-ring", "downtown", "strip"],
+    "staff": 6,
+    "turnover": 54
+  },
+  "hiring": {
+    "base": 15,
+    "record": 8,
+    "reputation": 20
+  },
   "shifts": [
     {
       "id": "breakfast",

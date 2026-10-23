@@ -63,6 +63,12 @@ for (const screen of SCREENS) {
       await page.click('#badge');
       await expectNothingOffscreen(page);
       expect(await smallTargets(page, '#panel')).toEqual([]);
+      // The Jobs tab (M2.3): the longest, with an Apply on each opening.
+      await page.click('button[data-tab="jobs"]');
+      await expect(page.locator('#openings li').first()).toBeVisible();
+      await expectNothingOffscreen(page);
+      expect(await smallTargets(page, '#panel')).toEqual([]);
+      await expectNoAxeIssues(page);
       await page.click('#panel-close');
       await page.click('#map-button');
       await expectNothingOffscreen(page);

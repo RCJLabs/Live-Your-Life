@@ -133,6 +133,25 @@ Ridgefield's size and how many live in it, against two cities of the metro class
 
 The city as a whole sits between the two comparables. Its districts' densities are not sourced. The inner ring's 45 a hectare is about 11,650 a square mile, likely high for a Rust Belt city's older neighbourhoods. The total stays inside D4's range only because the other districts are low. Tracing each district to tract data is the next step, before households (M2.2) are built on it.
 
+## The labor market (M2.3)
+
+How often jobs come up, how hiring goes, and how far away work is (D73, D74). The turnover figures were read through search results quoting the federal turnover survey's tables; bls.gov itself couldn't be reached from the build environment.
+
+| Figure | Value | Record or code | Source, as read on 2026-10-23 | Primary to check |
+| --- | --- | --- | --- | --- |
+| Separations a month, by industry | accommodation and food services 5.4%; retail 4.0%; manufacturing 2.7%; transportation, warehousing and utilities 3.9%; health care and social assistance 3.0%; construction 4.0%; professional and business services 4.4%; finance and insurance 1.9%; other services 3.6%; all private 3.7%. Quits are about two-thirds of these. The line cook uses food service's 54 a thousand | `career/*.json`, `employers.turnover` | JOLTS 2024 annual averages, not seasonally adjusted, tables 20 and 22 (bls.gov/news.release/jolts.t20.htm, t22.htm), via search results | the same tables, read directly |
+| Staff a career has at one employer | 6 for the line cook (tune) | `employers.staff` | none: tuned so a few openings a week come up for each career | county business patterns, employees per establishment by industry |
+| Days an opening stays up | 10 to 28 (tune) | `market/openings.ts`, `FILL` | none authoritative. Commercial estimates: about 18 days for food service and 38 for retail (Corporate Navigators); the federal business response survey (2022) found 12.3% of employers had a vacancy open over 30 days | a published time-to-fill for hourly jobs |
+| The odds an application is taken | the line cook: 15 in 100, 8 fewer with a conviction (D76, tune) | `career/line-cook.json`, `hiring` | Pager (2003), "The Mark of a Criminal Record", American Journal of Sociology 108(5): white applicants called back 34% of the time without a record and 17% with one. A callback is not a hire, so the base is a proposal; the halving with a record is Pager's | an audit study of hires, not callbacks |
+| Reputation's steps | 50 to start; 20 off for being let go, 5 for quitting, a point back for each whole shift on time (tune) | `market/odds.ts`, `REPUTATION` | none: tuned for play | — |
+| An answer to an application | one to three days (tune) | `market/module.ts` | none | — |
+| A walking pace across the city | 80 m a minute, about 1.3 m a second (tune). On your block you walk 1.95 m a game minute, tuned for play (D49) | `apps/game/src/city/workplace.ts`, `WALK_PACE` | none read yet: the commonly cited adult pace of 1.2 to 1.4 m a second | a pedestrian-speed study |
+| How long looking for work takes | the household survey's median spell of unemployment: 9.6 weeks in 2024 | — (a check, not a figure in use) | BLS CPS annual averages, table 31 (bls.gov/cps/data/aa2024/cpsaat31.htm), via search results | the same table. A spell still under way is not the time to find a job |
+
+**A departure, measured.** The seeker bot, starting with no job, was hired in a median of 3.3 game days at one in two, and is in 9.8 at 15 in 100 (D76; Readings). Still quicker than a 9.6-week spell, though the two don't measure the same thing.
+
+**The other 29 careers' wages are not in.** The federal occupational wage survey couldn't be reached from the build environment (bls.gov and the sites that quote it were blocked). A search found May 2024 figures for 7 of the 30 and part of 3 more, which are leads, not readings. The May 2025 figures, the base year's, came out on 15 May 2026.
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).
@@ -141,3 +160,5 @@ The city as a whole sits between the two comparables. Its districts' densities a
 4. Every figure in use is from a secondary source (In use). They are checked against their primaries once the build environment can reach them, or by hand.
 5. Whether a new hire's wage is the 25th percentile, or nearer the 10th ($13.84), for someone of eighteen with no experience.
 6. Which tract data stands for each district's density (The city), and whether the inner ring's 45 a hectare comes down once it is traced.
+7. How quickly someone with no job is hired. Answered for now by D76 (15 in 100); what reading should hold it, since a spell of unemployment is not quite the measure, is open.
+8. The 29 careers' wages, when bls.gov can be reached.

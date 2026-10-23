@@ -22,17 +22,22 @@ export function itemsAt(life: Life, place: Place): Item[] {
   const options = life.options();
   if (place.kind === 'fixture') {
     // D58: away from the diner during your shift, the bed says so; its sleep ends with the shift.
+    const atDiner = life.fact('market.at-diner') === true;
     const due =
       place.building !== 'diner' && life.fact('job.on-shift') === true
-        ? 'You’re due at the diner now. This sleep ends when your shift does.'
+        ? `You’re due ${atDiner ? 'at the diner' : 'at work'} now. This sleep ends when your shift does.`
         : undefined;
-    return options
-      .filter((a) => a.type === 'life/do' && place.serves?.includes(a.activity as never))
-      .map((a) => ({
-        label: doingText(String(a.activity), a.minutes as number),
-        action: a,
-        ...(due && a.activity === 'sleep' ? { note: due } : {}),
-      }));
+    return (
+      options
+        .filter((a) => a.type === 'life/do' && place.serves?.includes(a.activity as never))
+        // The diner's work is yours only while your job is there (M2.3); work elsewhere is gone to from the panel.
+        .filter((a) => a.activity !== 'work' || atDiner)
+        .map((a) => ({
+          label: doingText(String(a.activity), a.minutes as number),
+          action: a,
+          ...(due && a.activity === 'sleep' ? { note: due } : {}),
+        }))
+    );
   }
   if (place.kind === 'shelf' && place.take) {
     const take = options.find((a) => a.type === 'law/take' && a.spot === place.take?.spot);

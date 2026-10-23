@@ -8,7 +8,7 @@
  * on arrival and when the page is hidden (D54); a life played from `?seed=` is not kept.
  */
 import type { Action } from '@eb/core';
-import { cellAt, type LawState, LINKED, LONGEST_WALK, WEEKDAYS } from '@lyl/sim';
+import { cellAt, type LawState, LINKED, LONGEST_WALK, type MarketSlice, WEEKDAYS } from '@lyl/sim';
 import {
   type Camera,
   clampCamera,
@@ -25,6 +25,7 @@ import { makeCrowd } from '../city/crowd.ts';
 import { passersAt } from '../city/passers.ts';
 import { townScene } from '../city/town.ts';
 import { cutFor } from '../city/walker.ts';
+import { workOf } from '../city/workplace.ts';
 import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
 import { listen } from '../spike/input.ts';
@@ -39,6 +40,7 @@ import { type Waiting, waiting } from './pending.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
 import { Player, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
+import { canGo, GO_TO_WORK, startTrip, type Trip, tripAction } from './trip.ts';
 
 const MAX_DPR = 2;
 /** Speed 2 runs four times as fast as speed 1 (DESIGN.md, Time). */
@@ -64,6 +66,8 @@ export function play(
   // The tier-1 people out on the town's streets (M2.2, D69), their hours the sim's.
   const peopleSeed = life.fact('people.seed') as number;
   const crowd = makeCrowd(block, peopleSeed, life.fact('people.count') as number);
+  // Where the city's employers stand, and the walk to each (M2.3, D73).
+  const work = workOf(block, peopleSeed, life.fact('people.count') as number);
   const passerLooks = new Map<number, Look>();
   const onFoot = (x: number, y: number) => {
     const cell = cellAt(block.grid, x, y);
@@ -79,10 +83,13 @@ export function play(
     const from = life.fact('law.fence-from') as number;
     return from >= 0 && hour >= from && hour < (life.fact('law.fence-to') as number);
   };
-  const crowdNow = (t: number) => {
+  /**
+   * Who is out at a minute of the life as the page shows it, with its fraction: people are placed
+   * every frame from the clock, not stepped once a game minute when the sim's clock moves.
+   */
+  const crowdNow = (t: number, minute: number) => {
     const day = life.fact('time.day') as number;
     const weekday = WEEKDAYS.indexOf(life.fact('time.weekday') as (typeof WEEKDAYS)[number]);
-    const minute = day * 24 * 60 + (life.fact('time.of-day') as number);
     const people = crowd.actorsAt(minute, (((weekday - day) % 7) + 7) % 7, t, atPost);
     // And passers-by (D72), the city's statistics on its sidewalks.
     return [...people, ...passersAt(block.walkways, peopleSeed, minute, t, passerLooks, onFoot)];
@@ -90,12 +97,19 @@ export function play(
   const places = placesOf(life.sim.content, block.plan, block.grid, law.block);
   const look = castLooks(life.seed).cook;
   const start = places.all.find((p) => p.id === at) ?? places.bed;
-  const player = new Player(start);
-  // D61: the stage measures your walk to work and tells the sim, once for a block; the alarm sets it aside.
-  const work = places.all.find((p) => p.serves?.includes('work'));
-  const walk = work ? walkMinutes(block.plan, block.grid, places.bed, work) : null;
-  if (walk !== null && (life.state.you as { commute: number | null }).commute !== walk)
-    life.act({ type: 'you/commute', minutes: Math.min(walk, LONGEST_WALK) });
+  let player = new Player(start);
+  // D61: the stage measures your walk to work and tells the sim, and again when your job moves
+  // (M2.3): to the griddle on your block, or across the city to a job elsewhere. The alarm sets it aside.
+  const griddle = places.all.find((p) => p.serves?.includes('work'));
+  const dinerWalk = griddle ? walkMinutes(block.plan, block.grid, places.bed, griddle) : null;
+  function measureCommute(): void {
+    const employer = (life.state.market as MarketSlice).employer;
+    const away = employer === null || life.fact('market.at-diner') === true ? null : work.walkTo(employer);
+    const walk = away ? away.minutes : dinerWalk;
+    if (walk !== null && (life.state.you as { commute: number | null }).commute !== Math.min(walk, LONGEST_WALK))
+      life.act({ type: 'you/commute', minutes: Math.min(walk, LONGEST_WALK) });
+  }
+  measureCommute();
   /** The place you last reached, kept with the save. */
   let reachedAt: string | null = start.id;
 
@@ -139,15 +153,27 @@ export function play(
     life.fresh.push(...now.lines);
   }
 
+  /** Off to a job away from your block (M2.3): you're not on the town's streets until it's over. */
+  let trip: Trip | null = null;
   const blocked = () => panel.open || sheet.open || choice.open || map.open || s.ff !== null;
 
   function act(a: Action, at: Place | null = null): void {
+    if (a.type === GO_TO_WORK) {
+      const walk = (life.state.you as { commute: number | null }).commute;
+      if (trip === null && canGo(life, walk)) {
+        trip = startTrip(walk as number);
+        player.stop();
+        panel.hide();
+      }
+      return;
+    }
     const before = life.fact('time.tick') as number;
     const ok = life.act(a);
     s.waitingAt = 0;
     // Saved at once, so what a choice brought can't be undone by reloading (D54).
     if (ok) save();
-    if (!ok || a.type !== 'life/do') return;
+    // A walk across the city passes as a fast-forward too, with you off the screen.
+    if (!ok || (a.type !== 'life/do' && !(trip && a.type === 'time/advance'))) return;
     const after = life.fact('time.tick') as number;
     const f = at?.fixture?.use;
     if (at && f) player.use(at, f.pose === 'lie' ? 'lie' : f.pose, a.activity === 'sleep' ? 'sleep' : null);
@@ -168,6 +194,7 @@ export function play(
   );
   const panel = makePanel(
     life,
+    work,
     (a) => act(a),
     () => undefined,
     kept
@@ -244,6 +271,15 @@ export function play(
     return (((ofDay - behind) % 1440) + 1440) % 1440;
   }
 
+  /** The minute of the life the page shows, from the start day's midnight, with its fraction. */
+  function shownTime(now: number): number {
+    const at = (life.fact('time.day') as number) * 1440 + (life.fact('time.of-day') as number);
+    const ff = s.ff;
+    if (!ff) return at + life.partial;
+    // A fast-forward shown passing: the people go by at its pace, the clock catching up.
+    return at - (ff.to - ff.from) * (1 - Math.min(1, (now - ff.start) / ff.ms));
+  }
+
   const measure = new Measure();
   let measured: string | null = null;
 
@@ -256,6 +292,19 @@ export function play(
     if (s.ff && now - s.ff.start >= s.ff.ms) {
       s.ff = null;
       if (life.mode.id === 'world') player.getUp();
+    }
+    // Going to work off screen: each step once the last has shown and any choice is made.
+    if (trip && !blocked() && life.mode.id === 'world') {
+      const next = tripAction(life, trip);
+      if (next) act(next);
+      else {
+        trip = null;
+        // Back at your building's door.
+        const door = places.all.find((p) => p.kind === 'door' && p.building === places.bed.building) ?? places.bed;
+        player = new Player(door);
+        reachedAt = door.id;
+        save();
+      }
     }
     if (!blocked() && !s.paused) {
       const factor = FACTOR[s.speed];
@@ -274,6 +323,7 @@ export function play(
     const minute = shownMinute(now);
     // The bar and the badge are read a few times a second: their facts don't change faster than a game minute.
     if (now - s.waitingAt > 250) {
+      if (!trip) measureCommute();
       const list = waiting(life);
       s.waiting = list.length;
       alarms(list);
@@ -296,7 +346,7 @@ export function play(
         warm: light.warm,
         time: s.t,
       },
-      [actor, ...crowdNow(s.t)],
+      [...(trip ? [] : [actor]), ...crowdNow(s.t, shownTime(now))],
     );
     const result = measure.frame(now);
     if (result) {
@@ -325,7 +375,7 @@ export function play(
       camera = zoomAt(camera, at, factor, size, limits);
     },
     tap: (at) => {
-      if (blocked() || life.mode.id !== 'world') return;
+      if (blocked() || trip || life.mode.id !== 'world') return;
       const ground = unproject(viewOf(camera, size), at);
       const place = placeAt(places, ground.x, ground.y);
       player.goTo(block.plan, block.grid, place ?? { x: ground.x, y: ground.y });
@@ -346,7 +396,9 @@ export function play(
           })),
         options: () => life.options().map((a) => ({ ...a })),
         /** Whether the page is busy on its own: walking, or an activity's time passing on screen. */
-        busy: () => player.walking || s.ff !== null,
+        busy: () => player.walking || s.ff !== null || trip !== null,
+        /** Where a trip to work is (M2.3), or null. */
+        trip: () => trip?.step ?? null,
         open: () => ({ panel: panel.open, menu: sheet.open, choice: choice.open, map: map.open }),
         screenOf: (id: string) => {
           const p = places.all.find((x) => x.id === id);
@@ -366,7 +418,13 @@ export function play(
         across: () => block.across,
         cut: () => [...cut],
         /** Who of the tier-1 people is out in the town now (M2.2, D69). */
-        crowd: () => crowdNow(s.t).map((a) => ({ id: a.id, x: a.x, y: a.y, walking: a.pose.kind === 'walk' })),
+        crowd: () =>
+          crowdNow(s.t, shownTime(performance.now())).map((a) => ({
+            id: a.id,
+            x: a.x,
+            y: a.y,
+            walking: a.pose.kind === 'walk',
+          })),
         screenAt: (x: number, y: number) => project(viewOf(camera, size), { x, y, z: 0 }),
         focusAt: (x: number, y: number) => {
           camera = clampCamera({ ...camera, cx: x, cy: y }, limits);

@@ -1,6 +1,6 @@
 {
   "title": "Chronicle line",
-  "description": "How the chronicle records something that happened (D52): third person, past tense (VOICE.md). Keyed by the event the sim raises, and by one of its fields when the event reads differently by it. Placeholders are filled from the event and the life: {you}, {coworker}, {fence}, {item}, {offence}, {event}, {shift}, money as {net}, {owed}, {paid}, {demand}, {rent}, time as {hours}, and days as {date} or {court}.",
+  "description": "How the chronicle records something that happened (D52): third person, past tense (VOICE.md). Keyed by the event the sim raises, and by one of its fields when the event reads differently by it. Placeholders are filled from the event and the life: {you}, {coworker}, {fence}, {item}, {offence}, {event}, {career} (with its article), {shift}, money as {net}, {owed}, {paid}, {demand}, {rent}, time as {hours}, and days as {date} or {court}.",
   "fields": {
     "beat": {
       "kind": "text",

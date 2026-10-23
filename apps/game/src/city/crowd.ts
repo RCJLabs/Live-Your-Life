@@ -8,16 +8,13 @@
  */
 
 import { Rng } from '@eb/core';
-import { contentStore } from '@lyl/content';
 import {
-  cityTemplates,
   type DistrictRecord,
   type FaceSide,
   HOURS,
   hourOf,
   inFront,
   LINKED,
-  placeRoster,
   rosterOf,
   type Streets,
   streetsOf,
@@ -25,6 +22,7 @@ import {
 } from '@lyl/sim';
 import { type Actor, CLOTH, HAIR, type Look, SHOES, SKIN } from '@lyl/stage';
 import type { TownScene } from './town.ts';
+import { workOf } from './workplace.ts';
 
 /** Metres a stage second on the way to work, at speed 1, as the player walks (life/player.ts). */
 const PACE = 3.9;
@@ -95,10 +93,9 @@ export interface Crowd {
 }
 
 export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
-  const store = contentStore();
   const roster = rosterOf(seed, n);
-  const ct = cityTemplates(store, town.city);
-  const placed = placeRoster(roster, ct, town.city, seed, { block: town.home.block, side: 1 });
+  // Workplaces where their careers' employers stand (M2.3), as the Jobs panel's are.
+  const { placed } = workOf(town, seed, n);
   const records: DistrictRecord[] = [...town.districts];
   let streets: Streets | null = null;
   const b = town.scene.bounds;

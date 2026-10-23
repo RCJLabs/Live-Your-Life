@@ -30,11 +30,30 @@ export interface StandingRules {
   readonly drop: number;
 }
 
+/** Where a career's employers stand and how often their staff leave (D74). */
+export interface Employers {
+  readonly districts: readonly string[];
+  readonly staff: number;
+  /** Separations a month per thousand staff. */
+  readonly turnover: number;
+}
+
+/** The odds an application is taken (D74): the base, less `record` with a conviction, ± `reputation`. */
+export interface Hiring {
+  readonly base: number;
+  readonly record: number;
+  readonly reputation: number;
+}
+
 export interface CareerRecord {
   readonly name: string;
-  readonly place: string;
+  /** The building on your block it is worked in, when it is walkable there; otherwise off screen (D73). */
+  readonly place?: string;
   /** Cents an hour, before tax. */
   readonly wage: number;
+  readonly employers: Employers;
+  readonly requires?: { readonly record?: 'none' | 'no-theft' };
+  readonly hiring: Hiring;
   readonly shifts: readonly ShiftKind[];
   readonly open: readonly Weekday[];
   readonly posting: { readonly weekday: Weekday; readonly fewest: number; readonly most: number };

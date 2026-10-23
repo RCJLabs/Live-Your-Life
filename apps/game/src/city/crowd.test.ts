@@ -19,10 +19,11 @@ describe('the tier-1 people in the town (M2.2, D69)', () => {
   it('puts walkers in the town on its streets, never inside a building, and only in their hour on the way', () => {
     const roster = rosterOf(SEED, N);
     let seen = 0;
-    // A working week's mornings and afternoons, minute by minute across each hour.
+    // A working week's mornings and afternoons.
     for (let day = 0; day < 5; day++) {
       for (let hour = 5; hour < 20; hour++) {
-        for (let m = 0; m < 60; m += 15) {
+        // Every minute: a long way to work crosses the town in a minute or two.
+        for (let m = 0; m < 60; m++) {
           const minute = day * 1440 + hour * 60 + m;
           for (const a of crowd.actorsAt(minute, 0, 0, never)) {
             seen++;

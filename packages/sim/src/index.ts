@@ -4,7 +4,18 @@
  * harness runs (M0.4); the block and its interiors (M1.1, M1.2); the job (M1.3). The plan is
  * ROADMAP.md; the design, docs/DESIGN.md.
  */
-export { REMEDY, RESERVE, randomFor, randomLifePolicy, STAGE_ONLY, steadyFor, steadyPolicy, WEEK } from './bot.ts';
+export {
+  REMEDY,
+  RESERVE,
+  randomFor,
+  randomLifePolicy,
+  SEEKING,
+  STAGE_ONLY,
+  seekerFor,
+  steadyFor,
+  steadyPolicy,
+  WEEK,
+} from './bot.ts';
 export {
   BASE_YEAR,
   DEFAULT_START,
@@ -170,6 +181,17 @@ export {
 export { oddsAt, shopOn, stockOf } from './law/shop.ts';
 export type { Case, Hold, LawSlice, Visit } from './law/state.ts';
 export { ACTIVITY_TIMER, type LifeSlice, levelsNow, lifeModule } from './life.ts';
+export { type Employer, employersOf, hashOf, homeEmployer, SITES } from './market/employers.ts';
+export {
+  type Application,
+  HOME_DISTRICT,
+  type Listing,
+  type MarketSlice,
+  marketModule,
+  type Offer,
+} from './market/module.ts';
+export { barred, hireOdds, OFFER_DAYS, PENDING, REPUTATION } from './market/odds.ts';
+export { FILL, type Opening, openingOf, openingsOn } from './market/openings.ts';
 export {
   ACTIVITIES,
   type Activity,
