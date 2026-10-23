@@ -415,3 +415,27 @@ body {
 .panel-foot {
   margin-top: 0.75rem;
 }
+
+/* The city on the map (M2.1): districts by colour, each named once. */
+.map-city {
+  margin-top: 0.4rem;
+}
+
+.map-district {
+  font-size: 600px;
+  fill: #eef1f6;
+  stroke: #1f2430;
+  stroke-width: 90px;
+  paint-order: stroke;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.map-arterial {
+  stroke: #4a4d55;
+  stroke-width: 70px;
+}
+
+.map-city .map-you {
+  stroke-width: 60px;
+}

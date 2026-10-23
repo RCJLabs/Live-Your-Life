@@ -67,6 +67,11 @@ for (const screen of SCREENS) {
       await page.click('#map-button');
       await expectNothingOffscreen(page);
       expect(await smallTargets(page, '#map')).toEqual([]);
+      // The city below the block (M2.1): every district named once, and where you live marked.
+      await expect(page.locator('#map h2', { hasText: 'Ridgefield' })).toBeVisible();
+      const named = await page.locator('#map-city text.map-district').allTextContents();
+      expect(named.sort()).toEqual(['Downtown', 'Old industrial', 'The inner ring', 'The strip', 'The suburbs'].sort());
+      await expect(page.locator('#map-city-you')).toHaveCount(1);
       await expectNoAxeIssues(page);
       expect(errors).toEqual([]);
     });
@@ -75,6 +80,27 @@ for (const screen of SCREENS) {
 
 test.describe('on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+
+  test('crosses the street to the next block by a tap, and what stands between the camera and you is cut (M2.1, D64)', async ({
+    page,
+  }) => {
+    const errors = watchErrors(page);
+    await page.goto('./?seed=life-1');
+    await expect(page.locator('#when')).toContainText('June');
+    const across = await L<{ x: number; y: number; id: string } | null>(page, 'across');
+    expect(across, 'a building across the street').not.toBeNull();
+    if (!across) return;
+    expect(await L<string[]>(page, 'cut'), 'nothing across the street is cut from home').not.toContain(across.id);
+    await L(page, 'focusAt', across.x, across.y);
+    await page.waitForTimeout(80);
+    const at = await L<{ x: number; y: number }>(page, 'screenAt', across.x, across.y);
+    await page.mouse.click(at.x, at.y);
+    await arrive(page);
+    const where = await L<{ x: number; y: number }>(page, 'where');
+    expect(Math.abs(where.x - across.x) + Math.abs(where.y - across.y), 'there, across the street').toBeLessThan(1.5);
+    await expect.poll(() => L<string[]>(page, 'cut')).toContain(across.id);
+    expect(errors).toEqual([]);
+  });
 
   test('plays a day by taps alone, and the sim refuses nothing it is sent', async ({ page }) => {
     test.setTimeout(240_000);

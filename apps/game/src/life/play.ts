@@ -10,7 +10,7 @@
 import type { Action } from '@eb/core';
 import { type LawState, LONGEST_WALK } from '@lyl/sim';
 import { type Camera, clampCamera, daylight, panBy, project, Stage, unproject, viewOf, zoomAt } from '@lyl/stage';
-import { blockScene } from '../city/scene.ts';
+import { townScene } from '../city/town.ts';
 import { cutFor } from '../city/walker.ts';
 import { castLooks } from '../spike/actors.ts';
 import { frame, limitsFor } from '../spike/framing.ts';
@@ -47,7 +47,7 @@ export function play(
   notice: string | null = null,
 ): void {
   const law = life.state.law as LawState;
-  const block = blockScene(law.block);
+  const block = townScene(law.block);
   const places = placesOf(life.sim.content, block.plan, block.grid, law.block);
   const look = castLooks(life.seed).cook;
   const start = places.all.find((p) => p.id === at) ?? places.bed;
@@ -68,7 +68,7 @@ export function play(
     const c = document.createElement('canvas');
     return { canvas: c, ctx: c.getContext('2d') as CanvasRenderingContext2D };
   };
-  const stage = new Stage(block.scene, layer, { cache: true });
+  const stage = new Stage(block.scene, layer, { cache: true, cull: true });
   const limits = limitsFor(block);
 
   const s = {
@@ -143,6 +143,7 @@ export function play(
     places,
     (p) => player.goTo(block.plan, block.grid, p),
     () => undefined,
+    block,
   );
   const toast = makeToast();
   if (notice) life.fresh.unshift(notice);
@@ -208,6 +209,8 @@ export function play(
   let measured: string | null = null;
 
   let last: number | null = null;
+  /** What the last frame cut away (D64). */
+  let cut: ReadonlySet<string> = new Set();
   function loop(now: number): void {
     const dt = last === null ? 0 : Math.min(100, now - last);
     last = now;
@@ -241,13 +244,14 @@ export function play(
     follow(now);
     const light = daylight(minute);
     const actor = player.actor(look, s.t);
+    cut = cutFor(block.plan, block.scene.buildings, actor, false);
     ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
     stage.render(
       ctx,
       viewOf(camera, size),
       size,
       {
-        cut: cutFor(block.plan, block.fronts, actor, false),
+        cut,
         bubbles: true,
         dark: light.dark,
         warm: light.warm,
@@ -319,6 +323,14 @@ export function play(
         mode: () => life.mode.id,
         tick: () => life.fact('time.tick'),
         where: () => ({ x: player.x, y: player.y, walking: player.walking }),
+        /** Just north of the nearest building across the street, where it stands between the camera and you (M2.1). */
+        across: () => block.across,
+        cut: () => [...cut],
+        screenAt: (x: number, y: number) => project(viewOf(camera, size), { x, y, z: 0 }),
+        focusAt: (x: number, y: number) => {
+          camera = clampCamera({ ...camera, cx: x, cy: y }, limits);
+          s.moved = performance.now();
+        },
         refused: () => life.refused.map((r) => ({ type: r.action.type, reason: r.reason })),
         log: () => life.session.log.map((a) => a.type),
         journal: () => life.journal.map((e) => e.text),

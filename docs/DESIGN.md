@@ -52,6 +52,13 @@ Content that is never in, whatever the verb list says: sexual violence; minors i
 - **Street furniture stands by rule**: lamps along both curbs, a hydrant, a bench, trees on a verge, and a pole sign for a building that has one. None stands in a doorway.
 - **The walk grid** is the block's ground in half-metre cells (tune). Stepping onto each costs 1 on a sidewalk, 1.1 on a lot, 1.2 on a verge and 1.4 on the roadway (tune), and there is no step under a building or a post. Routes are weighted A* with eight neighbours, ported from 2060TD.
 
+**Built in M2.1, the city and its streets** (`packages/sim/src/city/city.ts`, `streets.ts`, `walks.ts`):
+
+- **The city** is a square of 400 m cells (tune), each given a district by where it lies (D63–D66). A cell holds whole blocks of its district, stretched or squeezed from the record's size so they fill it, and its edges are the middles of streets the cells round it share.
+- **The streets** are one network of street middles, built from the plan and never saved. A walk across the city follows them, shortest first, from the street in front of one door to the street in front of another.
+
+- **Your block** (D67) is the slice's block, standing whole as the south face of the inner-ring block nearest downtown that holds it. Round it, the faces of the blocks within 60 m (tune) are drawn and can be walked; what stands between the camera and you is cut to its sills (D64).
+
 **Built in M2.1, the city's faces** (`packages/sim/src/city/face.ts`):
 
 - **A face** is one long side of one of the city's blocks, planned only when it is needed and the same way every time, from the city's seed, the block and the side. The city has already fixed each lot's frontage (city.ts); the district's frontage record picks a building for each lot by weight, among those whose narrowest front fits with a gangway to spare, or leaves it empty. The institutions stand on the lots the city gave them.

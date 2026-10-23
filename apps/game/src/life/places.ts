@@ -20,6 +20,7 @@ import {
   stockOf,
   useCell,
   type WalkGrid,
+  walkGrid,
 } from '@lyl/sim';
 
 export type PlaceKind = 'fixture' | 'shelf' | 'fence' | 'door';
@@ -88,11 +89,14 @@ function shelfPlaces(store: RecordStore, grid: WalkGrid, plan: BlockPlan, block:
   const sight = shopOn(store, block);
   const shop = plan.buildings.find((b) => b.id === sight.building);
   const fixtures = shop?.interior?.fixtures ?? [];
+  // The law's sight lines count cells of the block's own grid (sight.ts); the page may walk a wider
+  // one (the town, M2.1), whose cells line up with it but are numbered otherwise.
+  const own = walkGrid(plan);
   return stockOf(store, block).flatMap(({ spot, item }) => {
     const at = sight.spots.find((s) => s.id === spot);
     const f = fixtures.find((x) => x.id === spot);
     if (!at || !f || !shop) return [];
-    const stand = centreOf(grid, at.cell);
+    const stand = centreOf(own, at.cell);
     const label = nameOf(store, 'item', item);
     return [
       {
@@ -101,7 +105,7 @@ function shelfPlaces(store: RecordStore, grid: WalkGrid, plan: BlockPlan, block:
         label,
         building: shop.id,
         stand,
-        cell: at.cell,
+        cell: cellAt(grid, stand.x, stand.y),
         hit: footprint(f),
         take: { spot, item },
         fixture: f,

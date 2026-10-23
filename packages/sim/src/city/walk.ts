@@ -36,6 +36,24 @@ export interface WalkGrid {
   readonly cost: Float64Array;
   /** The cheapest ground anywhere, which keeps A*'s estimate from overshooting (path.ts). */
   readonly minCost: number;
+  /**
+   * Where cells are counted from, if not the corner: a grid widened round a block (M2.1) counts
+   * from the block's own corner, `col` and `row` cells in, so a point lands in the same cell as on
+   * the block's own grid. Counting from a corner further off rounds otherwise at a cell's edge.
+   */
+  readonly anchor?: { readonly x: number; readonly y: number; readonly col: number; readonly row: number };
+}
+
+/** A point's column and row, unclamped, rounded down or up: from the grid's anchor if it has one. */
+function colOf(grid: WalkGrid, x: number, up: boolean): number {
+  const a = grid.anchor;
+  const v = (x - (a ? a.x : grid.x0)) / CELL;
+  return (up ? Math.ceil(v) : Math.floor(v)) + (a ? a.col : 0);
+}
+function rowOf(grid: WalkGrid, y: number, up: boolean): number {
+  const a = grid.anchor;
+  const v = (y - (a ? a.y : grid.y0)) / CELL;
+  return (up ? Math.ceil(v) : Math.floor(v)) + (a ? a.row : 0);
 }
 
 /** What lies at y across the whole street: the alley, the lots, a sidewalk, the roadway, the open side. */
@@ -50,10 +68,10 @@ export function groundAt(s: StreetPlan, y: number): Ground {
 
 /** Every cell a rectangle overlaps. Touching an edge is not overlapping, so a door's sidewalk stays open. */
 function eachCell(grid: WalkGrid, x0: number, y0: number, x1: number, y1: number, fn: (cell: number) => void): void {
-  const c0 = Math.max(0, Math.floor((x0 - grid.x0) / CELL));
-  const c1 = Math.min(grid.width - 1, Math.ceil((x1 - grid.x0) / CELL) - 1);
-  const r0 = Math.max(0, Math.floor((y0 - grid.y0) / CELL));
-  const r1 = Math.min(grid.height - 1, Math.ceil((y1 - grid.y0) / CELL) - 1);
+  const c0 = Math.max(0, colOf(grid, x0, false));
+  const c1 = Math.min(grid.width - 1, colOf(grid, x1, true) - 1);
+  const r0 = Math.max(0, rowOf(grid, y0, false));
+  const r1 = Math.min(grid.height - 1, rowOf(grid, y1, true) - 1);
   for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) fn(r * grid.width + c);
 }
 
@@ -112,6 +130,58 @@ export function walkGrid(plan: BlockPlan): WalkGrid {
     const step = GROUND_COST[groundAt(s, s.alley + (r + 0.5) * CELL)];
     cost.fill(step, r * width, (r + 1) * width);
   }
+  furnish(grid, plan);
+  return grid;
+}
+
+/** The blocks round the home block (M2.1, D67), in its frame, for a walk grid that reaches them. */
+export interface Around {
+  /** The ground the grid covers. */
+  readonly area: Rect;
+  /** Each block's lots, edge to edge. */
+  readonly blocks: readonly Rect[];
+  /** How wide the sidewalk round a block is. */
+  readonly sidewalk: number;
+  /** Their buildings, which nobody walks through. */
+  readonly solids: readonly Rect[];
+}
+
+/**
+ * The home block's walk grid widened to the blocks round it (M2.1): the home block's own street
+ * as walkGrid lays it, so its routes and the walk to work don't change; everywhere else a lot,
+ * the sidewalk round it, or the roadway between. The grid's cells line up with the home block's.
+ */
+export function walkGridAround(plan: BlockPlan, around: Around): WalkGrid {
+  const s = plan.street;
+  const a = around.area;
+  const x0 = s.xa - Math.ceil((s.xa - a.x0) / CELL) * CELL;
+  const y0 = s.alley - Math.ceil((s.alley - a.y0) / CELL) * CELL;
+  const width = Math.ceil((a.x1 - x0) / CELL);
+  const height = Math.ceil((a.y1 - y0) / CELL);
+  const cost = new Float64Array(width * height).fill(GROUND_COST.roadway);
+  const anchor = { x: s.xa, y: s.alley, col: Math.round((s.xa - x0) / CELL), row: Math.round((s.alley - y0) / CELL) };
+  const grid: WalkGrid = { x0, y0, width, height, cost, minCost: Math.min(...Object.values(GROUND_COST)), anchor };
+  const paint = (r: Rect, ground: Ground) =>
+    eachCell(grid, r.x0, r.y0, r.x1, r.y1, (cell) => {
+      grid.cost[cell] = GROUND_COST[ground];
+    });
+  const w = around.sidewalk;
+  for (const b of around.blocks) paint({ x0: b.x0 - w, y0: b.y0 - w, x1: b.x1 + w, y1: b.y1 + w }, 'sidewalk');
+  for (const b of around.blocks) paint(b, 'lot');
+  // The home block's street, row by row, as walkGrid lays it.
+  for (let y = s.alley + CELL / 2; y < s.farCurb; y += CELL) {
+    const ground = groundAt(s, y);
+    eachCell(grid, s.xa, y - CELL / 4, s.xb, y + CELL / 4, (cell) => {
+      grid.cost[cell] = GROUND_COST[ground];
+    });
+  }
+  furnish(grid, plan);
+  for (const r of around.solids) block(grid, r.x0, r.y0, r.x1, r.y1);
+  return grid;
+}
+
+/** The block's buildings and props on its grid: interiors opened, the rest in the way. */
+function furnish(grid: WalkGrid, plan: BlockPlan): void {
   for (const b of plan.buildings) {
     if (b.interior) openFloor(grid, b, b.interior);
     else block(grid, b.x0, b.y0, b.x1, b.y1);
@@ -120,18 +190,21 @@ export function walkGrid(plan: BlockPlan): WalkGrid {
     const f = FOOTPRINT[p.kind];
     block(grid, p.x - f.w / 2, p.y - f.d / 2, p.x + f.w / 2, p.y + f.d / 2);
   }
-  return grid;
 }
 
 /** The cell holding a point, or −1 off the grid. */
 export function cellAt(grid: WalkGrid, x: number, y: number): number {
-  const c = Math.floor((x - grid.x0) / CELL);
-  const r = Math.floor((y - grid.y0) / CELL);
+  const c = colOf(grid, x, false);
+  const r = rowOf(grid, y, false);
   return c < 0 || r < 0 || c >= grid.width || r >= grid.height ? -1 : r * grid.width + c;
 }
 
 export function centreOf(grid: WalkGrid, cell: number): { x: number; y: number } {
-  return { x: grid.x0 + ((cell % grid.width) + 0.5) * CELL, y: grid.y0 + (Math.floor(cell / grid.width) + 0.5) * CELL };
+  const a = grid.anchor ?? { x: grid.x0, y: grid.y0, col: 0, row: 0 };
+  return {
+    x: a.x + ((cell % grid.width) - a.col + 0.5) * CELL,
+    y: a.y + (Math.floor(cell / grid.width) - a.row + 0.5) * CELL,
+  };
 }
 
 /** Where a building's door meets the sidewalk: the first cell out from its front. */
