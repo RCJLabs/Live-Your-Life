@@ -1,4 +1,5 @@
-import { HOURS, hourOf, LINKED, rosterOf } from '@lyl/sim';
+import { contentStore } from '@lyl/content';
+import { careerRoster, HOURS, hourOf, LINKED } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { lookOf, makeCrowd } from './crowd.ts';
 import { townScene } from './town.ts';
@@ -17,7 +18,7 @@ describe('the tier-1 people in the town (M2.2, D69)', () => {
   });
 
   it('puts walkers in the town on its streets, never inside a building, and only in their hour on the way', () => {
-    const roster = rosterOf(SEED, N);
+    const roster = careerRoster(contentStore(), SEED, N);
     let seen = 0;
     // A working week's mornings and afternoons.
     for (let day = 0; day < 5; day++) {

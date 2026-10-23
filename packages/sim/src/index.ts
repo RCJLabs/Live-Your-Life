@@ -210,6 +210,7 @@ export {
   unitsPerMinute,
   VITAL,
 } from './needs.ts';
+export { careerRoster } from './people/careers.ts';
 export { asleep, HOURS, type HourKind, hourOf, placeOf, type Segment, type Where, working } from './people/day.ts';
 export {
   CADENCES,

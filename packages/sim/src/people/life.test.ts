@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { advance, play, sliceGame, sliceSim, waitUntil } from '../../test/slice.ts';
 import { PEOPLE_SHARES } from '../game.ts';
+import { careerRoster } from './careers.ts';
 import { built } from './gather.ts';
 import { newShare, type PeopleSlice, progress } from './module.ts';
 
@@ -40,7 +41,8 @@ describe('the tier-1 people in a life (M2.2)', () => {
     // Share 5 holds neither linked person; from 07:00 on Monday, day 0.
     const share = state['people-5'] as PeopleSlice;
     const alone = newShare(240, 5, PEOPLE_SHARES);
-    progress(city, alone, 7, share.hour, 0);
+    // The life's people work their careers' shifts (M2.3).
+    progress(city, alone, 7, share.hour, 0, undefined, careerRoster(sim.content, city.seed, city.n));
     expect(share.hour).toBeGreaterThan(29 * 24);
     expect(share.levels).toEqual(alone.levels);
     expect(share.ties).toEqual(alone.ties);

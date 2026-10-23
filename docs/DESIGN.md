@@ -125,7 +125,7 @@ A tier-2 person who is met becomes tier 1 and stays. On the town's sidewalks tie
 
 **Built in M0.4, the population harness** (`packages/sim/src/people/`, `tools/population`; docs/research/population.md):
 
-- **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md), until M2.2's careers and households replace them.
+- **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md). Since M2.3, a worker in a life works the shifts of their workplace's career instead (`people/careers.ts`); households are still the templates'.
 - **Their hours** are each one of nine kinds (work, a break, sleep, the trip to work, rising, a meal, out, the evening, home). Each kind is pieces of the player's activities, so the needs are the player's needs at an hour's grain. Free time is the template's, not yet chosen by need.
 - **Their needs** are settled with the player's own math, once for each run of one activity.
 - **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 12 ties (24 until M2.2, D71), and a full list lets a stranger take the place of someone met only once.

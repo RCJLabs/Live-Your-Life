@@ -8,14 +8,15 @@
  */
 
 import { Rng } from '@eb/core';
+import { contentStore } from '@lyl/content';
 import {
+  careerRoster,
   type DistrictRecord,
   type FaceSide,
   HOURS,
   hourOf,
   inFront,
   LINKED,
-  rosterOf,
   type Streets,
   streetsOf,
   walkBetween,
@@ -93,7 +94,8 @@ export interface Crowd {
 }
 
 export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
-  const roster = rosterOf(seed, n);
+  // Their hours as the sim keeps them: their careers' shifts (M2.3).
+  const roster = careerRoster(contentStore(), seed, n);
   // Workplaces where their careers' employers stand (M2.3), as the Jobs panel's are.
   const { placed } = workOf(town, seed, n);
   const records: DistrictRecord[] = [...town.districts];
