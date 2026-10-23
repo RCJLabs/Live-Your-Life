@@ -412,6 +412,17 @@ How to read this file:
 **Goal:** the free edition, whole: a year from the eighteenth birthday to the nineteenth, in two districts, with crime to the crew tier, law to detective, food to chef, relationships, children, aging and the heir.
 
 - **M2.1 The city.** Districts, arterials, lots, building and household templates; two districts live, the rest as statistics.
+  - Decisions: the inner ring and downtown walkable first (D63), the near side cut to sill height (D64), the whole city generated at once (D65), Ridgefield (D66).
+  - **Done when:**
+    - the whole city, every district's blocks and lots, is planned from the seed within a phone's budget, read in Chromium with the CPU slowed four times [auto];
+    - its people add up to D4's 250,000 to 400,000 from the districts' densities [auto];
+    - every block in the walkable districts passes M1.1's and M1.2's checks over 1,000 seeds [auto];
+    - a route reaches any building in the walkable districts from any other [auto];
+    - the life plays across blocks, with the near side cut (D64) [auto];
+    - the map shows the city, its districts named [auto];
+    - saves from before the city still load [auto];
+    - the frame rate walking downtown, headless [auto] and on Evan's phone [you].
+  - **Step 1, built 2026-10-23:** the city record (Ridgefield) and five district records; `packages/sim/src/city/city.ts` plans every district's cells, blocks and lots in typed arrays; `tools/city/` times and weighs it in Node and Chromium (Readings). Planted bugs: 5, 5 caught: the city drawn from no seed; a density doubled; downtown off the centre; a lot past its maximum; a block over its cell. Arterials (the record's `arterialEvery`) aren't laid yet.
 - **M2.2 People.** Households and tier-1 people with schedules and offscreen progression.
 - **M2.3 Careers.** The catalogue on the template: the first 30, with the labor market.
 - **M2.4 Crime and law.** Crime to the crew tier and law to detective, sharing case files; courts; prison as time passing.
@@ -517,6 +528,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 | Taps a day, with the alarm (M1.8, D57, D58) | steady: median 16 taps a day, 33 at most, 6 pans, 1.05 real minutes. All 12 shifts worked, all late, but by 8 to 52 minutes, ten of them by 8 to 13 (before the alarm, 7 to 85); none let go. The thief: median 12 taps, 32 at most, 1.56 real minutes; went to court and pleaded guilty, and was let go after 8 late starts in a row of 7 to 13 minutes. What lateness is left is reaction time: at speed 2 a real second is 8 game minutes, and the alarm's 30 minutes leave about 10 over the walk (open question 53) | `node apps/game/e2e/day-bot.ts steady 7 3 4` and `thief 45 1 4`, as above | 2026-10-20 | 3 seeds, 18 full days; 1 seed, 44 |
 | Late for work, as the fixes came in (after M1.8) | Steady bot, 3 seeds, 12 shifts each run. 1× at the alarm (D60): 10 late, mostly 6 minutes. Your own walk set aside (D61): 11 late, 6 to 7 minutes, because the bot waited at the diner's door, not the griddle; at the griddle, 6 late, as it ate or washed first. Going to work when the alarm goes off: **none late**. Taps a day unchanged: median 17, 35 at most, 1.42 real minutes | `node apps/game/e2e/day-bot.ts steady 7 3 4` | 2026-10-20 | 3 seeds, 18 full days each run |
 | A thief's case, with the court alarm (D62) | median 17 taps a day, 37 at most, 1.45 real minutes. Ticketed on day 0; went to court on the day and pleaded guilty; paid. 24 shifts, 1 late; kept the job. Before the court alarm, a night's sleep had run through the court's hours and a warrant followed | `node apps/game/e2e/day-bot.ts thief 45 1 4` | 2026-10-23 | 1 seed, 32 full days |
+| The whole city planned (M2.1, D65) | Ridgefield: 4,149 blocks, 78,038 lots, 289,536 people. Plan: median 63 ms, 95th 152 ms, worst 178 ms with the CPU slowed four times; 24 ms median at full CPU; 16 ms in Node. Its typed arrays hold 1.71 MB; Chromium's heap grew about 9 MB keeping one plan (coarse: `performance.memory`). Streets and lots only: what stands on a lot is planned when its block is needed | `node tools/city/chromium.ts 10 3` (Chromium 141, headless, no GPU) and `node --expose-gc tools/city/bench.ts 10 3` | 2026-10-23 | 10 seeds × 3 rounds each |
 | The stranger test (M0.3) | not taken yet | docs/research/art-spike.md | — | — |
 | Frame rate on Evan's phone (M0.3) | not taken yet | the page's Measure | — | — |
 | The clock at speed 1, in a browser (M0.1) | 6 game minutes in 3.1 s, against 2 a second by design; pause held it still for 1.6 s | a one-off Playwright script on `vite preview` at 390×844, headless Chromium 141, cloud container | 2026-10-19 | 1 run |

@@ -52,6 +52,8 @@ pnpm eb validate packages/content --types tools/content/game.ts   # the engine's
 pnpm content      # rebuild packages/content/pack.json after changing a record; a test fails until you do
 node apps/game/e2e/day-bot.ts [steady|thief] [days] [seeds] [rate]   # after `pnpm build`: the browser bot plays by taps; taps, pans and real minutes a game day
 node apps/game/e2e/saves-bench.ts [n] [seconds]   # after `pnpm build`: a save's size, and its write and load times at 1× and 4× CPU
+node tools/city/bench.ts [seeds] [rounds]          # the whole city planned in Node: time, blocks, lots, people, memory (--expose-gc for the heap)
+node tools/city/chromium.ts [seeds] [rounds]       # the same in headless Chromium at 1× and 4× CPU
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 ```
 
@@ -92,6 +94,7 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/content/      game.ts: the game's modules, which eb validate and eb build check the content's conditions against
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
+tools/city/         the city bench (M2.1): the whole city planned, timed and weighed in Node and Chromium
 docs/               design, decisions, voice, calibration, research
 ```
 

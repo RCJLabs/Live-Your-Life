@@ -1,0 +1,10 @@
+{
+  "name": "The inner ring",
+  "walkable": true,
+  "colour": "#A0553F",
+  "block": { "length": 120, "depth": 64, "street": 18 },
+  "lots": { "min": 6, "max": 13 },
+  "density": 45,
+  "income": "low",
+  "blocks": ["slice"]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "The suburbs",
+  "walkable": false,
+  "colour": "#7E9B6A",
+  "block": { "length": 220, "depth": 90, "street": 16 },
+  "lots": { "min": 18, "max": 30 },
+  "density": 12,
+  "income": "middle"
+}

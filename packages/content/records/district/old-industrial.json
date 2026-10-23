@@ -1,0 +1,9 @@
+{
+  "name": "Old industrial",
+  "walkable": false,
+  "colour": "#6E7277",
+  "block": { "length": 200, "depth": 160, "street": 20 },
+  "lots": { "min": 30, "max": 100 },
+  "density": 10,
+  "income": "low"
+}

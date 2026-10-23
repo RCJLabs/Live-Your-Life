@@ -1,0 +1,54 @@
+{
+  "title": "District",
+  "description": "A kind of neighbourhood (D4, D63): how its streets are laid out, how many people live there, and whether it can be walked yet. Metres and people, every one (tune).",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 40 },
+    "walkable": {
+      "kind": "bool",
+      "description": "Walked block by block on the page (D63); otherwise the district is its streets, lots and statistics."
+    },
+    "colour": { "kind": "colour", "description": "On the city map." },
+    "block": {
+      "kind": "group",
+      "description": "A block: a rectangle between streets, a row of lots on each long side.",
+      "fields": {
+        "length": { "kind": "number", "min": 40, "max": 400, "description": "East to west." },
+        "depth": {
+          "kind": "number",
+          "min": 20,
+          "max": 300,
+          "description": "North to south: two rows of lots and the alley."
+        },
+        "street": {
+          "kind": "number",
+          "min": 8,
+          "max": 40,
+          "description": "From one block to the next: the roadway and both sidewalks."
+        }
+      }
+    },
+    "lots": {
+      "kind": "group",
+      "description": "A lot's frontage, in whole metres.",
+      "fields": { "min": { "kind": "int", "min": 3, "max": 120 }, "max": { "kind": "int", "min": 3, "max": 200 } }
+    },
+    "density": {
+      "kind": "number",
+      "min": 0,
+      "max": 400,
+      "description": "People a hectare, streets included."
+    },
+    "income": {
+      "kind": "enum",
+      "values": ["low", "working", "middle", "upper"],
+      "description": "The usual household."
+    },
+    "blocks": {
+      "kind": "list",
+      "of": { "kind": "ref", "to": "block" },
+      "optional": true,
+      "description": "The block templates its streets are planned from, once it can be walked."
+    }
+  }
+}

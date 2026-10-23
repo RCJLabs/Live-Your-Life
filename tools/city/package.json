@@ -1,0 +1,18 @@
+{
+  "name": "@lyl/city-bench",
+  "private": true,
+  "version": "0.0.1",
+  "description": "M2.1's city bench: the whole city planned from a seed, timed and weighed in Node and in headless Chromium (D65).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@eb/core": "workspace:*",
+    "@lyl/content": "workspace:*",
+    "@lyl/sim": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "8.3.4"
+  }
+}
