@@ -42,6 +42,8 @@ export interface Roster {
   readonly firstShared: number;
   /** And from here on, third places: a bar, a gym, a church hall. */
   readonly firstThird: number;
+  /** What sets their shifts, so hour plans built from one kind of roster aren't taken for another's: 'templates' or 'careers'. */
+  readonly shifts?: string;
 }
 
 const pickShift = (roll: number): ShiftTemplate => {
@@ -70,8 +72,7 @@ function build(seed: number, n: number): Roster {
   const people = homes.map((home, i): Person => {
     const shift = shifts[i] as ShiftTemplate;
     const working = shift.minutes > 0;
-    const [early, late] = SLEEP.bedtime;
-    const evening = Math.floor((early + (mix(seed, 5, i) % (late - early + 1))) / 60);
+    const evening = eveningOf(seed, i);
     const sleepHours = SLEEP.hours[0] + (mix(seed, 6, i) % (SLEEP.hours[1] - SLEEP.hours[0] + 1));
     return {
       home,
@@ -91,12 +92,18 @@ function build(seed: number, n: number): Roster {
   };
 }
 
+/** The hour person i would go to bed on an evening free of work, from the seed. */
+export function eveningOf(seed: number, i: number): number {
+  const [early, late] = SLEEP.bedtime;
+  return Math.floor((early + (mix(seed, 5, i) % (late - early + 1))) / 60);
+}
+
 /**
  * When a shift worker goes to bed. After a night shift, in the morning, an hour after it ends.
  * Otherwise in their evening window, but early enough to sleep their hours and be up two hours
  * before the shift starts, and not before an hour after it ends.
  */
-function bedHourFor(shift: ShiftTemplate, evening: number, sleepHours: number): number {
+export function bedHourFor(shift: ShiftTemplate, evening: number, sleepHours: number): number {
   const start = shift.start / 60;
   const end = (shift.start + shift.minutes) / 60;
   if (end > 24) return end - 24 + 1;

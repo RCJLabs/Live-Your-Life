@@ -125,7 +125,7 @@ A tier-2 person who is met becomes tier 1 and stays. On the town's sidewalks tie
 
 **Built in M0.4, the population harness** (`packages/sim/src/people/`, `tools/population`; docs/research/population.md):
 
-- **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md), until M2.2's careers and households replace them.
+- **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md). Since M2.3, a worker in a life works the shifts of their workplace's career instead (`people/careers.ts`); households are still the templates'.
 - **Their hours** are each one of nine kinds (work, a break, sleep, the trip to work, rising, a meal, out, the evening, home). Each kind is pieces of the player's activities, so the needs are the player's needs at an hour's grain. Free time is the template's, not yet chosen by need.
 - **Their needs** are settled with the player's own math, once for each run of one activity.
 - **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 12 ties (24 until M2.2, D71), and a full list lets a stranger take the place of someone met only once.
@@ -168,7 +168,8 @@ Per pair: familiarity, regard, attraction, resentment, and the memory above; tie
   - You apply from the Jobs tab, the odds shown first: the career's base, less points with a conviction, and points either way for your reputation. The line cook takes 15 applicants in 100, 7 with a conviction (D76). The answer comes in one to three days and is rolled at those odds. An offer stands two days. A career can bar a record. At most five applications wait at once.
   - Reputation starts at 50: being let go takes 20, quitting 5, and each whole shift on time adds a point.
   - A job away from your block is worked off screen: the real walk along the streets at 80 m a minute (tune), the shift with its events, the walk home. The coworker is beside you only while you work at the diner.
-  - Missing so far: the 29 careers' records, waiting on their wages; expectations against ability and heat per employer; the tier-1 people really leaving the jobs that open.
+  - The tier-1 people leave the jobs that open: one of a workplace's people leaves with each opening posted there, and is between jobs until they take another that closes unfilled by you (`people/work.ts`).
+  - Missing so far: the 29 careers' records, waiting on their wages; expectations against ability and heat per employer.
 - **Signature careers with their own loop** (D14):
 
 | Career | Ladder | What it owns |

@@ -101,7 +101,7 @@ const KEPT = 48;
 
 /** Everyone's hour, counted from the start day's midnight, on a day that is `weekday` (0 for Monday). */
 export function planAt(roster: Roster, seed: number, hour: number, weekday: number): HourPlan {
-  const key = `${seed}:${roster.people.length}:${hour}:${weekday}`;
+  const key = `${roster.shifts ?? 'templates'}:${seed}:${roster.people.length}:${hour}:${weekday}`;
   let found = plans.get(key);
   if (!found) {
     found = build(roster, seed, hour, weekday);

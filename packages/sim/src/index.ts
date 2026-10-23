@@ -210,6 +210,7 @@ export {
   unitsPerMinute,
   VITAL,
 } from './needs.ts';
+export { careerRoster, rosterWith } from './people/careers.ts';
 export { asleep, HOURS, type HourKind, hourOf, placeOf, type Segment, type Where, working } from './people/day.ts';
 export {
   CADENCES,
@@ -233,6 +234,7 @@ export { type Placed, placeRoster } from './people/placed.ts';
 export { LINKED, mix, type Person, type Roster, rosterOf } from './people/roster.ts';
 export { HOUSEHOLD, SHARED, SHIFTS, type ShiftTemplate, SLEEP, TIES } from './people/templates.ts';
 export { meet, TIE_ROW } from './people/ties.ts';
+export { type WorkSlice, workModule } from './people/work.ts';
 export { thiefFor } from './thief.ts';
 export { familiarityOf, KEPT, type Memory, NEUTRAL, remember } from './ties/memory.ts';
 export { type Hired, tiesModule } from './ties/module.ts';

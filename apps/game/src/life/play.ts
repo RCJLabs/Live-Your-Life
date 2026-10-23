@@ -8,7 +8,7 @@
  * on arrival and when the page is hidden (D54); a life played from `?seed=` is not kept.
  */
 import type { Action } from '@eb/core';
-import { cellAt, type LawState, LINKED, LONGEST_WALK, type MarketSlice, WEEKDAYS } from '@lyl/sim';
+import { cellAt, type LawState, LINKED, LONGEST_WALK, type MarketSlice, rosterWith, WEEKDAYS } from '@lyl/sim';
 import {
   type Camera,
   clampCamera,
@@ -65,7 +65,17 @@ export function play(
   const block = townScene(law.block);
   // The tier-1 people out on the town's streets (M2.2, D69), their hours the sim's.
   const peopleSeed = life.fact('people.seed') as number;
-  const crowd = makeCrowd(block, peopleSeed, life.fact('people.count') as number);
+  const peopleCount = life.fact('people.count') as number;
+  // With whoever has left or changed jobs since the life began (M2.3), as the sim's shares have them.
+  const crowd = makeCrowd(block, peopleSeed, peopleCount, () =>
+    rosterWith(
+      life.sim.content,
+      peopleSeed,
+      peopleCount,
+      life.fact('people-work.moves') as number[],
+      life.fact('people-work.version') as number,
+    ),
+  );
   // Where the city's employers stand, and the walk to each (M2.3, D73).
   const work = workOf(block, peopleSeed, life.fact('people.count') as number);
   const passerLooks = new Map<number, Look>();

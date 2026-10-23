@@ -13,9 +13,10 @@ import { type Beat, defineModule, type Module, type ModuleContext } from '@eb/co
 import { WEEKDAYS } from '../calendar.ts';
 import { START_LEVELS } from '../dials.ts';
 import { type Activity, type Levels, NEEDS, PERCENT, settle } from '../needs.ts';
+import { rosterWith } from './careers.ts';
 import { HOURS, type HourKind } from './day.ts';
 import { type HourPlan, planAt } from './gather.ts';
-import { LINKED, rosterOf } from './roster.ts';
+import { LINKED, type Roster, rosterOf } from './roster.ts';
 import { meet, TIE_ROW } from './ties.ts';
 
 /** Who the people are: everything else about them follows from these two. */
@@ -83,8 +84,8 @@ export function progress(
   to: number,
   weekday0: number,
   linked?: Linked,
+  roster: Roster = rosterOf(city.seed, city.n),
 ): void {
-  const roster = rosterOf(city.seed, city.n);
   for (let start = from; start < to; ) {
     const day = Math.floor(start / 24);
     const end = Math.min(to, (day + 1) * 24);
@@ -183,7 +184,26 @@ function moveOn(ctx: ModuleContext<PeopleSlice>, inLife = false, until?: number)
   if (to <= from) return;
   const city = { seed: ctx.fact('people.seed') as number, n: ctx.fact('people.count') as number };
   const holdsLinked = inLife && ctx.read().first < LINKED.count && ctx.read().count > 0;
-  progress(city, ctx.write(), from, to, (((weekday - day) % 7) + 7) % 7, holdsLinked ? linkedFrom(ctx) : undefined);
+  // In a life, people work their careers' shifts (M2.3); the harness's shares keep the templates.
+  // With whoever has left or changed jobs since (people/work.ts).
+  const roster = inLife
+    ? rosterWith(
+        ctx.content,
+        city.seed,
+        city.n,
+        ctx.fact('people-work.moves') as number[],
+        ctx.fact('people-work.version') as number,
+      )
+    : rosterOf(city.seed, city.n);
+  progress(
+    city,
+    ctx.write(),
+    from,
+    to,
+    (((weekday - day) % 7) + 7) % 7,
+    holdsLinked ? linkedFrom(ctx) : undefined,
+    roster,
+  );
 }
 
 /**

@@ -23,6 +23,7 @@ import { lawModule } from './law/module.ts';
 import { lifeModule } from './life.ts';
 import { marketModule } from './market/module.ts';
 import { peopleModule, shareModule } from './people/module.ts';
+import { workModule } from './people/work.ts';
 import { tiesModule } from './ties/module.ts';
 import { youModule } from './you.ts';
 
@@ -81,6 +82,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     marketModule(options.career),
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
+    // Who has left or changed jobs (M2.3): heard before the shares settle their hours.
+    workModule,
     ...Array.from({ length: PEOPLE_SHARES }, (_, k) => shareModule(options.people ?? PEOPLE, k, PEOPLE_SHARES, true)),
   ];
 }
