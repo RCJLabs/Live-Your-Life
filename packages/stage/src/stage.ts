@@ -51,6 +51,15 @@ const PERSON_HALF = 0.18;
 /** How far a mover's limbs and shadow reach past the box it sorts by, in metres. */
 const REACH = 0.5;
 
+/** How far past the screen's edge a piece may lie and still be drawn: a lit window's glow reaches in (M2.1). */
+const MARGIN = 64;
+
+/** Whether a piece can show on a screen of this size: a town has far more off it than on it (M2.1). */
+export const onScreen = (view: View, size: Size, p: Piece): boolean => {
+  const r = screenRect(view, p.box);
+  return r.x1 > -MARGIN && r.x0 < size.width + MARGIN && r.y1 > -MARGIN && r.y0 < size.height + MARGIN;
+};
+
 const grow = (b: Box3, by: number): Box3 =>
   box(b.x0 - by, b.y0 - by, Math.max(0, b.z0 - by), b.x1 + by, b.y1 + by, b.z1 + by);
 const middle = (b: Box3) => ({ x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2, z: (b.z0 + b.z1) / 2 });
@@ -159,7 +168,7 @@ export class Stage {
     ctx.fillRect(0, 0, size.width, size.height);
     drawGround(ctx, view, this.scene.ground);
     for (const b of this.scene.buildings) if (open(b)) drawRoomFloor(ctx, view, b, frame);
-    for (const p of this.#order.pieces) p.draw(ctx, view, frame);
+    for (const p of this.#order.pieces) if (onScreen(view, size, p)) p.draw(ctx, view, frame);
   }
 
   /** Draws the movers over the still picture, each followed by the still pieces in front of it. */
@@ -235,7 +244,7 @@ export class Stage {
       ctx.fillRect(0, 0, size.width, size.height);
       drawGround(ctx, view, this.scene.ground);
       for (const b of this.scene.buildings) if (open(b)) drawRoomFloor(ctx, view, b, frame);
-      for (const p of everything.pieces) p.draw(ctx, view, frame);
+      for (const p of everything.pieces) if (onScreen(view, size, p)) p.draw(ctx, view, frame);
       this.#lights = frame.lights;
       this.#nightKey = null;
       pieces = everything.pieces.length;
