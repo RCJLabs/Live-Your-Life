@@ -143,6 +143,7 @@ export function play(
     places,
     (p) => player.goTo(block.plan, block.grid, p),
     () => undefined,
+    block,
   );
   const toast = makeToast();
   if (notice) life.fresh.unshift(notice);

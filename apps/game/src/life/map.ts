@@ -1,9 +1,10 @@
 /**
  * The map (D51): the block seen from above, each building named, you on it, and a tap on a
- * building sends you to its door. One block for now; the map is shaped for M2.1's city, where
- * a street is one of many. Drawn as SVG, so its names stay sharp and its buildings are buttons.
+ * building sends you to its door; below it, since M2.1, the city with its districts named and
+ * where you live. Drawn as SVG, so its names stay sharp and its buildings are buttons.
  */
-import type { BlockPlan } from '@lyl/sim';
+import type { BlockPlan, CityPlan, DistrictRecord, Home } from '@lyl/sim';
+import { cityPicture } from './citymap.ts';
 import { button, el } from './dom.ts';
 import type { Place, Places } from './places.ts';
 
@@ -22,7 +23,20 @@ export interface MapView {
   hide(): void;
 }
 
-export function makeMap(plan: BlockPlan, places: Places, go: (p: Place) => void, closed: () => void): MapView {
+/** The city the block stands in, when it stands in one (M2.1). */
+export interface InCity {
+  readonly city: CityPlan;
+  readonly districts: readonly DistrictRecord[];
+  readonly home: Home;
+}
+
+export function makeMap(
+  plan: BlockPlan,
+  places: Places,
+  go: (p: Place) => void,
+  closed: () => void,
+  inCity: InCity | null = null,
+): MapView {
   const s = plan.street;
   const doors = places.all.filter((p) => p.kind === 'door');
   const box = { x0: s.xa, y0: s.alley, x1: s.xb, y1: s.openBack };
@@ -76,6 +90,9 @@ export function makeMap(plan: BlockPlan, places: Places, go: (p: Place) => void,
     el('div', { class: 'panel-head' }, el('h2', {}, 'The block'), button('Close', hide, { id: 'map-close' })),
     picture as unknown as Node,
     list,
+    ...(inCity
+      ? [el('h2', {}, inCity.city.name), cityPicture(inCity.city, inCity.districts, inCity.home) as unknown as Node]
+      : []),
   );
   return {
     root,

@@ -10,7 +10,10 @@ import {
   type BlockPlan,
   type BuildingPlan,
   blockTemplates,
+  type CityPlan,
   cityTemplates,
+  type DistrictRecord,
+  districtOf,
   faceRect,
   type Home,
   homeOf,
@@ -29,6 +32,9 @@ const TEMPLATES = blockTemplates(contentStore(), 'slice');
 
 export interface TownScene extends BlockScene {
   readonly home: Home;
+  readonly city: CityPlan;
+  /** The city's district records, in its order. */
+  readonly districts: readonly DistrictRecord[];
 }
 
 /** A building of a face near home, in the home frame. A north face's fronts face away: its back is what shows. */
@@ -97,5 +103,7 @@ export function townScene(seed: string): TownScene {
     grid: walkGridAround(plan, around),
     fronts,
     home,
+    city,
+    districts: city.districts.map((_, i) => districtOf(store, city, i)),
   };
 }

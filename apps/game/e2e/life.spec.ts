@@ -67,6 +67,11 @@ for (const screen of SCREENS) {
       await page.click('#map-button');
       await expectNothingOffscreen(page);
       expect(await smallTargets(page, '#map')).toEqual([]);
+      // The city below the block (M2.1): every district named once, and where you live marked.
+      await expect(page.locator('#map h2', { hasText: 'Ridgefield' })).toBeVisible();
+      const named = await page.locator('#map-city text.map-district').allTextContents();
+      expect(named.sort()).toEqual(['Downtown', 'Old industrial', 'The inner ring', 'The strip', 'The suburbs'].sort());
+      await expect(page.locator('#map-city-you')).toHaveCount(1);
       await expectNoAxeIssues(page);
       expect(errors).toEqual([]);
     });
