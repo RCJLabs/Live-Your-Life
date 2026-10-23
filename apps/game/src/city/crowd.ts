@@ -65,17 +65,53 @@ function sidewalk(path: readonly Pt[]): Pt[] {
   });
 }
 
-/** Where along a path a walker is after `walked` metres, and which way they face. */
-function along(path: readonly Pt[], walked: number): { at: Pt; yaw: number } {
+/** Metres either side of a corner a walker curves round it, rather than turning on the spot (tune). */
+const ROUND = 2;
+
+const dist = (a: Pt, b: Pt): number => Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
+
+/** The curve round corner v, from p to q, `d` metres into its 2r: a quadratic Bezier through v. */
+function rounded(p: Pt, v: Pt, q: Pt, r: number, d: number): { at: Pt; yaw: number } {
+  const lin = dist(p, v);
+  const lout = dist(v, q);
+  const p0 = { x: v.x + ((p.x - v.x) * r) / lin, y: v.y + ((p.y - v.y) * r) / lin };
+  const p2 = { x: v.x + ((q.x - v.x) * r) / lout, y: v.y + ((q.y - v.y) * r) / lout };
+  const u = d / (2 * r);
+  const a = (1 - u) * (1 - u);
+  const b = 2 * u * (1 - u);
+  const c = u * u;
+  const at = { x: a * p0.x + b * v.x + c * p2.x, y: a * p0.y + b * v.y + c * p2.y };
+  const dx = 2 * (1 - u) * (v.x - p0.x) + 2 * u * (p2.x - v.x);
+  const dy = 2 * (1 - u) * (v.y - p0.y) + 2 * u * (p2.y - v.y);
+  return { at, yaw: Math.atan2(dy, dx) };
+}
+
+/** How far either side of the corner at path[k] a walker curves: ROUND, or less on a short leg. */
+const radiusAt = (path: readonly Pt[], k: number): number => {
+  const p = path[k - 1];
+  const v = path[k] as Pt;
+  const q = path[k + 1];
+  if (!p || !q || dist(p, v) === 0 || dist(v, q) === 0) return 0;
+  // A corner only where the way turns; straight on needs none.
+  if (Math.sign(v.x - p.x) === Math.sign(q.x - v.x) && Math.sign(v.y - p.y) === Math.sign(q.y - v.y)) return 0;
+  return Math.min(ROUND, dist(p, v) / 2, dist(v, q) / 2);
+};
+
+/** Where along a path a walker is after `walked` metres, and which way they face, curving round corners. */
+export function along(path: readonly Pt[], walked: number): { at: Pt; yaw: number } {
   let left = walked;
   for (let k = 1; k < path.length; k++) {
     const a = path[k - 1] as Pt;
     const b = path[k] as Pt;
-    const len = Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
-    const yaw = Math.atan2(b.y - a.y, b.x - a.x);
+    const len = dist(a, b);
     if (left <= len || k === path.length - 1) {
-      const f = len === 0 ? 0 : Math.min(1, left / len);
-      return { at: { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f }, yaw };
+      const s = Math.min(left, len);
+      const rIn = radiusAt(path, k - 1);
+      const rOut = radiusAt(path, k);
+      if (rIn > 0 && s < rIn) return rounded(path[k - 2] as Pt, a, b, rIn, rIn + s);
+      if (rOut > 0 && len - s < rOut) return rounded(a, b, path[k + 1] as Pt, rOut, rOut - (len - s));
+      const f = len === 0 ? 0 : s / len;
+      return { at: { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f }, yaw: Math.atan2(b.y - a.y, b.x - a.x) };
     }
     left -= len;
   }
