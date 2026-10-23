@@ -37,6 +37,8 @@ export interface Roster {
   readonly places: number;
   /** Places numbered from here on are shared: workplaces and third places, where people meet. */
   readonly firstShared: number;
+  /** And from here on, third places: a bar, a gym, a church hall. */
+  readonly firstThird: number;
 }
 
 const pickShift = (roll: number): ShiftTemplate => {
@@ -76,7 +78,12 @@ function build(seed: number, n: number): Roster {
       social: mix(seed, 7, i) % 100,
     };
   });
-  return { people, places: homeCount + workplaces + thirds, firstShared: homeCount };
+  return {
+    people,
+    places: homeCount + workplaces + thirds,
+    firstShared: homeCount,
+    firstThird: homeCount + workplaces,
+  };
 }
 
 /**

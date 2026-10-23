@@ -16,6 +16,7 @@ export interface DistrictRecord {
   readonly block: { readonly length: number; readonly depth: number; readonly street: number };
   readonly lots: { readonly min: number; readonly max: number };
   readonly density: number;
+  readonly jobs: number;
   readonly income: 'low' | 'working' | 'middle' | 'upper';
   readonly frontage?: string;
 }

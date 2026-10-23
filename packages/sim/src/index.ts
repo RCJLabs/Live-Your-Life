@@ -199,6 +199,7 @@ export {
   shareId,
   shareModule,
 } from './people/module.ts';
+export { type Placed, placeRoster } from './people/placed.ts';
 export { mix, type Person, type Roster, rosterOf } from './people/roster.ts';
 export { HOUSEHOLD, SHARED, SHIFTS, type ShiftTemplate, SLEEP, TIES } from './people/templates.ts';
 export { meet, TIE_ROW } from './people/ties.ts';
