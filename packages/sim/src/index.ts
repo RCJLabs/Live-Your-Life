@@ -104,6 +104,7 @@ export {
 } from './city/rooms.ts';
 export { clear, inField, REACH, type ShopSight, type Spot, shopSight, type Watcher } from './city/sight.ts';
 export { DOORWAY, type Facing, FOOTPRINT, type PropKind, type PropPlan, streetProps } from './city/street.ts';
+export { type Streets, streetsOf } from './city/streets.ts';
 export {
   CELL,
   cellAt,
@@ -118,6 +119,7 @@ export {
   type WalkGrid,
   walkGrid,
 } from './city/walk.ts';
+export { inFront, type StreetPoint, type Walk, walkBetween } from './city/walks.ts';
 export { clockModule, minutesUntil } from './clock.ts';
 export { LIFE_CONTENT, lifeSim } from './content.ts';
 export * from './dials.ts';

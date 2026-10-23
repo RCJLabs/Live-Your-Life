@@ -1,6 +1,6 @@
 /**
  * The whole city (M2.1, D65): a square of cells, each given a district by where it lies, and each
- * filled with that district's blocks and their lots. Nothing is placed by hand: the seed and the
+ * filled with that district's blocks and their lots, whole blocks to a cell. Nothing is placed by hand: the seed and the
  * city and district records decide it all, and the same seed always gives the same city. Blocks
  * and lots are kept in typed arrays, since the city has tens of thousands of them; what stands on
  * a lot is worked out only when its block is needed (M2.1's later steps).
@@ -169,6 +169,18 @@ function nearestLot(
   return best;
 }
 
+/**
+ * How many blocks a district's cell holds each way: as many of the district's size as come
+ * nearest to filling it. Each is then stretched or squeezed so whole blocks fill the cell, and
+ * the cell's edges are the middles of streets, which the cells round it share (streets.ts).
+ */
+export function gridOf(cell: number, d: DistrictRecord): { across: number; down: number } {
+  return {
+    across: Math.max(1, Math.round(cell / (d.block.length + d.block.street))),
+    down: Math.max(1, Math.round(cell / (d.block.depth + d.block.street))),
+  };
+}
+
 /** The city from a seed: its districts, blocks and lots. */
 export function planCity(store: RecordStore, seed: string, id = CITY): CityPlan {
   const city = recordOf<CityRecord>(store, 'city', id);
@@ -195,20 +207,21 @@ export function planCity(store: RecordStore, seed: string, id = CITY): CityPlan 
     const rng = root.fork(cell);
     const cx = (cell % n) * city.cell;
     const cy = Math.floor(cell / n) * city.cell;
-    const across = Math.max(1, Math.floor(city.cell / (d.block.length + d.block.street)));
-    const down = Math.max(1, Math.floor(city.cell / (d.block.depth + d.block.street)));
+    const { across, down } = gridOf(city.cell, d);
+    const length = city.cell / across - d.block.street;
+    const depth = city.cell / down - d.block.street;
     for (let j = 0; j < down; j++) {
       for (let i = 0; i < across; i++) {
         const block = bx.length;
-        bx.push(cx + d.block.street / 2 + i * (d.block.length + d.block.street));
-        by.push(cy + d.block.street / 2 + j * (d.block.depth + d.block.street));
-        bw.push(d.block.length);
-        bd.push(d.block.depth);
+        bx.push(cx + d.block.street / 2 + (i * city.cell) / across);
+        by.push(cy + d.block.street / 2 + (j * city.cell) / down);
+        bw.push(length);
+        bd.push(depth);
         bdist.push(di);
         first.push(lb.length);
         for (let side = 0; side < 2; side++) {
           let at = 0;
-          for (const w of frontages(d.block.length, d.lots, rng)) {
+          for (const w of frontages(length, d.lots, rng)) {
             lb.push(block);
             ls.push(side);
             lstart.push(at);
