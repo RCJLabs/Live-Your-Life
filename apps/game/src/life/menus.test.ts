@@ -1,3 +1,4 @@
+import type { GameState } from '@eb/core';
 import type { LawState } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { blockScene } from '../city/scene.ts';
@@ -28,6 +29,21 @@ describe('what a place offers (M1.6)', () => {
     expect(at('Stool')).toEqual(['eat', 'socialize']);
     // Off shift, the griddle has nothing: work is offered only on a shift.
     expect(at('Griddle')).toEqual([]);
+  });
+
+  it('offers the diner’s work on a shift only while your job is at the diner (M2.3)', () => {
+    const { life, find } = setUp('griddle');
+    const day = (life.state.job as { posted: { day: number }[] }).posted[0]?.day as number;
+    life.act({ type: 'job/sign-up', day });
+    life.act({ type: 'time/advance', minutes: life.fact('job.next-shift-in') as number });
+    expect(life.fact('job.on-shift')).toBe(true);
+    const griddle = find('Griddle');
+    expect(itemsAt(life, griddle).map((i) => i.action.activity)).toEqual(['work']);
+    // The same hour, the job at another diner across the city: worked there, not here.
+    const market = { ...(life.state.market as object), employer: 'line-cook-0' };
+    const away = new Life({ state: { ...life.state, market } as GameState, kept: [] });
+    expect(away.fact('market.at-diner')).toBe(false);
+    expect(itemsAt(away, griddle)).toEqual([]);
   });
 
   it('offers a shelf’s goods with the odds the preview gives, and the fence nothing while you carry nothing', () => {

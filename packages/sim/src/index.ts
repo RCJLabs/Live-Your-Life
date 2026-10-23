@@ -170,6 +170,17 @@ export {
 export { oddsAt, shopOn, stockOf } from './law/shop.ts';
 export type { Case, Hold, LawSlice, Visit } from './law/state.ts';
 export { ACTIVITY_TIMER, type LifeSlice, levelsNow, lifeModule } from './life.ts';
+export { type Employer, employersOf, hashOf, homeEmployer, SITES } from './market/employers.ts';
+export {
+  type Application,
+  HOME_DISTRICT,
+  type Listing,
+  type MarketSlice,
+  marketModule,
+  type Offer,
+} from './market/module.ts';
+export { barred, hireOdds, OFFER_DAYS, PENDING, REPUTATION } from './market/odds.ts';
+export { FILL, type Opening, openingOf, openingsOn } from './market/openings.ts';
 export {
   ACTIVITIES,
   type Activity,

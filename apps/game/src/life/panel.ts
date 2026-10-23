@@ -1,19 +1,22 @@
 /**
- * The panel the badge opens (D50): what waits on you, the week's shifts to sign up for, all six
- * needs, and the journal (D52). The clock stops while it is open. Every button sends an action
+ * The panel the badge opens (D50): what waits on you, the week's shifts to sign up for, jobs
+ * (M2.3), all six needs, and the journal (D52). The clock stops while it is open. Every button sends an action
  * the game offers now; nothing here decides what can be done.
  */
 import type { Action } from '@eb/core';
 import { careerOf, NEEDS, type Need } from '@lyl/sim';
+import type { Work } from '../city/workplace.ts';
 import { button, el, needMeter } from './dom.ts';
+import { jobsView } from './jobs.ts';
 import { waiting } from './pending.ts';
 import type { Life } from './session.ts';
 import { dayText, money, odds } from './words.ts';
 
-export type Tab = 'waiting' | 'week' | 'needs' | 'journal';
+export type Tab = 'waiting' | 'week' | 'jobs' | 'needs' | 'journal';
 const TABS: readonly [Tab, string][] = [
   ['waiting', 'Waiting'],
   ['week', 'Shifts'],
+  ['jobs', 'Jobs'],
   ['needs', 'Needs'],
   ['journal', 'Journal'],
 ];
@@ -63,7 +66,8 @@ function weekView(life: Life, act: (a: Action) => void): HTMLElement {
 /** "The dinner shift tomorrow, 14:00 to 22:00." */
 function postingText(life: Life, day: number): string {
   const posted = (life.state.job as { posted: { day: number; shift: string }[] }).posted.find((p) => p.day === day);
-  const kind = careerOf(life.sim.content, 'line-cook').shifts.find((k) => k.id === posted?.shift);
+  const career = (life.state.job as { career: string | null }).career;
+  const kind = career ? careerOf(life.sim.content, career).shifts.find((k) => k.id === posted?.shift) : undefined;
   if (!posted || !kind) return `A shift ${dayText(life, day)}.`;
   const at = (m: number) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
   const start = kind.hour * 60 + kind.minute;
@@ -103,6 +107,7 @@ export function coverOdds(life: Life, day: number): string {
 
 export function makePanel(
   life: Life,
+  work: Work,
   act: (a: Action) => void,
   closed: () => void,
   lives: (() => void) | null = null,
@@ -142,9 +147,11 @@ export function makePanel(
         ? waitingView(life, send)
         : tab === 'week'
           ? weekView(life, send)
-          : tab === 'needs'
-            ? needsView(life)
-            : journalView(life);
+          : tab === 'jobs'
+            ? jobsView(life, work, send)
+            : tab === 'needs'
+              ? needsView(life)
+              : journalView(life);
     body.replaceChildren(view, ...(owed > 0 && tab === 'waiting' ? [rent(life, owed, send)] : []));
   }
   function hide(): void {

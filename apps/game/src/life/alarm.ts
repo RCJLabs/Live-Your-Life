@@ -16,6 +16,8 @@ export function alarmFor(life: Life): number | null {
 }
 
 export const ALARM_LINE = 'It’s time to walk to the diner. The clock is back to 1×.';
+/** For a job away from your block (M2.3): it is gone to from the panel. */
+export const AWAY_LINE = 'It’s time to leave for work. Go from the panel. The clock is back to 1×.';
 
 /** Which alarms have gone off: the shift's start tick and the court's day, so each goes off once. */
 export interface Rung {
@@ -33,7 +35,7 @@ export function ring(life: Life, list: readonly Waiting[], rung: Rung): { lines:
   const shift = alarmFor(life);
   if (shift !== null && shift !== rung.shift) {
     next = { ...next, shift };
-    lines.push(ALARM_LINE);
+    lines.push(life.fact('market.at-diner') === false ? AWAY_LINE : ALARM_LINE);
   }
   const today = life.fact('time.day') as number;
   const court = today === rung.court ? null : courtLine(life, list);
