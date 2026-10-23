@@ -599,6 +599,36 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** The slice's block kept whole (recommended, chosen): the smallest migration, and the job, the shop's crime, the alarm's walk (D61) and the bot's readings stay as they are. Spread across the city: your flat, the diner and the shop as generated buildings on different faces, with the commute across blocks; more of a city now, a larger migration, and D61's walk and the bot's readings re-taken. Spread two blocks apart: the commute crosses streets, while the walk stays short.
 
+### D68. The tier-1 people are spread across the city. LOCKED, 2026-10-23 (Evan's call; I had recommended those nearest your block)
+
+**Decision.** M2.2's 1,000 tier-1 people (D31) come from every district, by its share of the city's people, with homes on its lots and work at its workplaces. Most live where you can't yet walk (ROADMAP open question 60); they are met as the city opens up.
+
+**Options considered.** Nearest your block (recommended): the people you can meet on foot are the ones simulated in full. Spread across the city (chosen): truer to the city as a whole. Re-measure first: build on real buildings and decide the spread from the reading.
+
+### D69. The tier-1 people walk the town. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** Anyone whose hour puts them within the town round your block is drawn there, walking or standing where their plan says. The frame rate is read again with them.
+
+**Options considered.** In the town (recommended, chosen). The sim only, the streets empty until travel (M2.9).
+
+### D70. The coworker and the fence become tier-1 people. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** The coworker (M1.4) and the fence (M1.5) are two of the 1,000, with homes and hours like everyone's, and keep their names, regard and memory. Saves from before migrate, with a version bump and a fixture (CLAUDE.md, Saves never break). Answers ROADMAP open questions 31 and 38.
+
+**Options considered.** Now, with a migration (recommended, chosen). Later, with no save change this milestone.
+
+### D71. A tier-1 person keeps 12 ties, not 24. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** With the 1,000 people in a life, a save was 172 kB and took 224 ms to write with the CPU slowed four times, against 4.8 kB and 28 ms before; three quarters of it was ties, 24 a person of two numbers each. A person now keeps 12 (tune): their strongest, the weakest forgotten sooner. All 1,000 stay.
+
+**Options considered.** Fewer ties a person (recommended, chosen). 500 people, revisiting D31. Saving less often than after every action (D54), at more risk of a reload undoing a choice. Accepting the cost until Evan's phone reads it.
+
+### D72. Tier-2 passers-by fill the town's sidewalks. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** With the 1,000 tier-1 people spread across the city (D68), someone was in view in the town for 12 minutes of a day. The page now also draws passers-by: anonymous people walking the town's sidewalks, as many as the hour and the district's density give (tune), more at the rush hours and few at night. They are the city's statistics (D9) made visible and hold nothing in the save; meeting one, and their becoming tier-1, is a later milestone's.
+
+**Options considered.** Tier-2 passers-by (recommended, chosen). More of the tier-1 people's errands and evenings out drawn: true to the sim, still sparse. Tier-1 homes nearer you, revisiting D68. Empty streets until travel and more of the city open up.
+
 ---
 
 ## Open items

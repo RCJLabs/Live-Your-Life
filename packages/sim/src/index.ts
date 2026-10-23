@@ -126,7 +126,15 @@ export { inFront, type StreetPoint, type Walk, walkBetween } from './city/walks.
 export { clockModule, minutesUntil } from './clock.ts';
 export { LIFE_CONTENT, lifeSim } from './content.ts';
 export * from './dials.ts';
-export { createLifeGame, type LifeOptions, lifeModules, REAL_TIME, startingTimers } from './game.ts';
+export {
+  createLifeGame,
+  type LifeOptions,
+  lifeModules,
+  PEOPLE,
+  PEOPLE_SHARES,
+  REAL_TIME,
+  startingTimers,
+} from './game.ts';
 export { type HomeSlice, homeModule, RENT_TIMER } from './home.ts';
 export { drawFrom, LEAST, MOST, oddsOf } from './job/events.ts';
 export { type Hire, jobModule } from './job/module.ts';
@@ -199,7 +207,8 @@ export {
   shareId,
   shareModule,
 } from './people/module.ts';
-export { mix, type Person, type Roster, rosterOf } from './people/roster.ts';
+export { type Placed, placeRoster } from './people/placed.ts';
+export { LINKED, mix, type Person, type Roster, rosterOf } from './people/roster.ts';
 export { HOUSEHOLD, SHARED, SHIFTS, type ShiftTemplate, SLEEP, TIES } from './people/templates.ts';
 export { meet, TIE_ROW } from './people/ties.ts';
 export { thiefFor } from './thief.ts';

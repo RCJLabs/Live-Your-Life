@@ -4,14 +4,14 @@
  * they remember kinds of act (D44). It hears the job's events, never reaches into its slice,
  * and asks it to take or give a shift when a favour is done.
  */
-import { defineModule, type InitContext } from '@eb/core';
+import { defineModule, type FactView, type InitContext } from '@eb/core';
 import type { LifeStart } from '../calendar.ts';
 import { careerOf } from '../job/records.ts';
 import { answer, askCover, coverAsk, coverGiven, tiesDay } from './favours.ts';
 import { familiarityOf } from './memory.ts';
-import { drawCoworker } from './person.ts';
+import { type Coworker, drawCoworker, theirShift } from './person.ts';
 import { crewOf, namePoolOf } from './records.ts';
-import { besideOn, crewFor, nobody, rememberAct, type TiesContext, type TiesSlice } from './state.ts';
+import { besideOn, crewFor, kindsOf, nobody, rememberAct, type TiesContext, type TiesSlice } from './state.ts';
 
 /** Hired at the start, as the job is (job/module.ts): the coworker is drawn then. */
 export interface Hired {
@@ -28,6 +28,19 @@ function hiredAt(ctx: InitContext, hire: Hired): TiesSlice {
 }
 
 const dayOf = (data: Readonly<Record<string, unknown>>): number => data.day as number;
+
+/** The shift they work on a day: yours when you work it, else their own kind; null when they're off. */
+function theirHours(view: FactView<TiesSlice>, day: number): { start: number; minutes: number } | null {
+  const slice = view.state;
+  if (!slice.coworker || !besideOn(view, day)) return null;
+  const career = careerOf(view.content, slice.career as string);
+  const yours = view.fact('job.shift-start', { day }) as number;
+  const kind =
+    yours >= 0
+      ? career.shifts.find((k) => k.hour * 60 + k.minute === yours)
+      : career.shifts.find((k) => k.id === theirShift(slice.coworker as Coworker, kindsOf(view.content, slice), day));
+  return kind ? { start: kind.hour * 60 + kind.minute, minutes: kind.minutes } : null;
+}
 
 /** What they remember when something happens on a shift of theirs. */
 const onTheirShift = (which: 'late' | 'noShow') => (ctx: TiesContext, event: Readonly<Record<string, unknown>>) => {
@@ -53,6 +66,19 @@ export function tiesModule(hire?: Hired) {
         label: 'how well you know them',
       },
       asking: { read: ({ state }) => state.request !== null, domain: { type: 'bool' }, label: 'a favour asked of you' },
+      // Their hours as one of the tier-1 people (D70): the shift they work a day, beside you on yours.
+      'their-start': {
+        args: { day: { type: 'int', min: 0 } },
+        read: (view, { day }) => theirHours(view, day as number)?.start ?? -1,
+        domain: { type: 'int', min: -1 },
+        label: 'the minute of the day their shift starts, or -1 off',
+      },
+      'their-minutes': {
+        args: { day: { type: 'int', min: 0 } },
+        read: (view, { day }) => theirHours(view, day as number)?.minutes ?? 0,
+        domain: { type: 'int', min: 0 },
+        label: 'how long their shift that day is',
+      },
     },
     actions: { 'ask-cover': askCover, answer },
     effects: {

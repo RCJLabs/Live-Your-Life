@@ -39,6 +39,12 @@
       "max": 400,
       "description": "People a hectare, streets included."
     },
+    "jobs": {
+      "kind": "number",
+      "min": 0,
+      "max": 400,
+      "description": "Jobs a hectare, streets included: where the tier-1 people work (M2.2)."
+    },
     "income": {
       "kind": "enum",
       "values": ["low", "working", "middle", "upper"],

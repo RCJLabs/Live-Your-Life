@@ -5,6 +5,7 @@
   "block": { "length": 100, "depth": 80, "street": 22 },
   "lots": { "min": 12, "max": 30 },
   "density": 40,
+  "jobs": 60,
   "income": "working",
   "frontage": "downtown"
 }

@@ -83,7 +83,7 @@ describe('the deck', () => {
 
 describe('a shift event in play', () => {
   const eventful = (changes: Partial<CareerRecord> = {}) => {
-    const game = createLifeGame({ career: TEST_COOK });
+    const game = createLifeGame({ people: 0, career: TEST_COOK });
     const sim = sliceSim(
       withCareer(testCook({ events: { tags: ['kitchen', 'food-service'], chance: 100 }, ...changes })),
     );

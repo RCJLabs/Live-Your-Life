@@ -1,3 +1,4 @@
+import { TIES } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { run } from '../src/run.ts';
 import { split } from '../src/split.ts';
@@ -24,13 +25,13 @@ describe('the population harness', () => {
 
   it('counts every share of a staggered game', () => {
     const reading = run({ n: 48, cadence: 'staggered', days: 2, seed: 'h', now: ticking() });
-    expect(reading.numbers).toBe(48 * 6 + 48 * 24 * 2);
+    expect(reading.numbers).toBe(48 * 6 + 48 * TIES.cap * 2);
     expect(reading.ties).toBeGreaterThan(0);
   });
 
   it('reports the slice it timed, and people who stayed well', () => {
     const reading = run({ n: 40, cadence: 'day', days: 2, seed: 'h', now: ticking() });
-    expect(reading.numbers).toBe(40 * 6 + 40 * 24 * 2);
+    expect(reading.numbers).toBe(40 * 6 + 40 * TIES.cap * 2);
     expect(reading.peopleKB).toBeGreaterThan(1);
     expect(reading.health).toBeGreaterThan(90);
     expect(reading.lowestHealth).toBeLessThanOrEqual(reading.health);

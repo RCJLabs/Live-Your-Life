@@ -89,7 +89,7 @@ describe('the law in the bots’ lives', () => {
     timeout: 300_000,
   }, () => {
     const tally: Tally = { beats: new Set(), pleas: new Set(), evidence: new Set(), previews: 0 };
-    playLives(createLifeGame(), () => thiefFor(DAYS), seedsOf(150, 'law-thief'), tally);
+    playLives(createLifeGame({ people: 0 }), () => thiefFor(DAYS), seedsOf(150, 'law-thief'), tally);
     playLives(sliceGame(), () => randomFor(DAYS), seedsOf(150, 'law-random'), tally);
     const chain = [
       'took',
@@ -126,8 +126,8 @@ describe('crime against work (D7, D48)', () => {
     };
     const median = (xs: number[]) => [...xs].sort((a, b) => a - b)[xs.length >> 1] as number;
     const seeds = seedsOf(60, 'pays');
-    const thieves = seeds.map((s) => worth(createLifeGame(), thiefFor(DAYS), s));
-    const cooks = seeds.map((s) => worth(createLifeGame({ career: LINE_COOK }), steadyFor(DAYS), s));
+    const thieves = seeds.map((s) => worth(createLifeGame({ people: 0 }), thiefFor(DAYS), s));
+    const cooks = seeds.map((s) => worth(createLifeGame({ people: 0, career: LINE_COOK }), steadyFor(DAYS), s));
     expect(median(thieves)).toBeLessThan(median(cooks));
     expect(Math.max(...thieves)).toBeLessThan(Math.min(...cooks));
   });

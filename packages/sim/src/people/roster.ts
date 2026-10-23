@@ -32,11 +32,16 @@ export interface Person {
   readonly social: number;
 }
 
+/** The people whose hours come from another module (D70): the coworker first, then the fence. */
+export const LINKED = { coworker: 0, fence: 1, count: 2 } as const;
+
 export interface Roster {
   readonly people: readonly Person[];
   readonly places: number;
   /** Places numbered from here on are shared: workplaces and third places, where people meet. */
   readonly firstShared: number;
+  /** And from here on, third places: a bar, a gym, a church hall. */
+  readonly firstThird: number;
 }
 
 const pickShift = (roll: number): ShiftTemplate => {
@@ -56,7 +61,9 @@ function build(seed: number, n: number): Roster {
     for (let k = 0; k < size && homes.length < n; k++) homes.push(place);
   }
   const homeCount = (homes[homes.length - 1] ?? -1) + 1;
-  const shifts = homes.map((_, i) => pickShift(mix(seed, 2, i)));
+  // The coworker and the fence (D70) work the hours their own modules give them, not a template's.
+  const none = SHIFTS.find((t) => t.minutes === 0) as ShiftTemplate;
+  const shifts = homes.map((_, i) => (i < LINKED.count ? none : pickShift(mix(seed, 2, i))));
   const employed = shifts.filter((s) => s.minutes > 0).length;
   const workplaces = Math.max(1, Math.ceil(employed / SHARED.workplace));
   const thirds = Math.max(1, Math.ceil(n / SHARED.thirdPlace));
@@ -76,7 +83,12 @@ function build(seed: number, n: number): Roster {
       social: mix(seed, 7, i) % 100,
     };
   });
-  return { people, places: homeCount + workplaces + thirds, firstShared: homeCount };
+  return {
+    people,
+    places: homeCount + workplaces + thirds,
+    firstShared: homeCount,
+    firstThird: homeCount + workplaces,
+  };
 }
 
 /**

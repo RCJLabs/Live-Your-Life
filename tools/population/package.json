@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@eb/core": "workspace:*",
+    "@lyl/content": "workspace:*",
     "@lyl/sim": "workspace:*"
   },
   "devDependencies": {

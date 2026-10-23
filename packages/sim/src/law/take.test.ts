@@ -6,7 +6,7 @@ import { shopOn, stockOf } from './shop.ts';
 import type { Hold, LawSlice } from './state.ts';
 
 // No job: the law alone. Monday 2 June 2025, 07:00, is tick 0, and the shop opens at 07:00.
-const game = createLifeGame();
+const game = createLifeGame({ people: 0 });
 const sim = sliceSim();
 const law = (state: GameState) => state.law as LawSlice;
 const tick = (state: GameState) => (state.time as { tick: number }).tick;

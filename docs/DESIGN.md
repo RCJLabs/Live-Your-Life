@@ -117,7 +117,7 @@ Three tiers (D10):
 | 1 | named, persistent people with jobs, schedules, homes, relationships, aging | off screen once a game day each, a twenty-fourth of them every game hour (D30); per tick on screen | 1,000 (tune; D31), re-measured at M2.2 |
 | 2 | district statistics: population by age and income, the job market, crime rates | per game day | the city |
 
-A tier-2 person who is met becomes tier 1 and stays.
+A tier-2 person who is met becomes tier 1 and stays. On the town's sidewalks tier 2 is drawn as passers-by (D72): as many as the hour and the district's density give, the same at the same minute, and nothing saved. Stopping one to meet them waits for M2.6.
 
 - **Generation:** name pools by the city's demographics; age from the district pyramid; traits (temperament, honesty, ambition, sociability, risk); skills by career; a look derived from the person once (Landnám's "one person, one look").
 - **Schedules:** a template from job and household (work, school, sleep, errands); free time filled by utility over needs and relationships, where places advertise what they satisfy (The Sims' model; Space-Wrecked's utility scorer is the portfolio's seed). On screen, A* on the walk grid (2060TD's time-weighted pathfinding); off screen, jumps between blocks.
@@ -128,8 +128,8 @@ A tier-2 person who is met becomes tier 1 and stays.
 - **Who they are** is worked out from the seed and never stored: households of one to four, a shift or none, a workplace, a third place, a bedtime, hours of sleep and a sociability. The templates are placeholders (tune; CALIBRATION.md), until M2.2's careers and households replace them.
 - **Their hours** are each one of nine kinds (work, a break, sleep, the trip to work, rising, a meal, out, the evening, home). Each kind is pieces of the player's activities, so the needs are the player's needs at an hour's grain. Free time is the template's, not yet chosen by need.
 - **Their needs** are settled with the player's own math, once for each run of one activity.
-- **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 24 ties, and a full list lets a stranger take the place of someone met only once.
-- **Their state** is 54 numbers a person: six levels, and 24 ties of two numbers each. It sits in 24 shares, one moved on a whole day each game hour (D30), because the kernel copies a module's whole slice in every action that writes to it.
+- **Their ties** grow at shared places. Each hour everyone there meets two others, and each meeting adds one to both people's ties. A person keeps 12 ties (24 until M2.2, D71), and a full list lets a stranger take the place of someone met only once.
+- **Their state** is 30 numbers a person: six levels, and 12 ties of two numbers each (D71; 54 numbers and 24 ties in M0.4). It sits in 24 shares, one moved on a whole day each game hour (D30), because the kernel copies a module's whole slice in every action that writes to it.
 - **What it costs**, with the CPU slowed four times in headless Chromium: 1,000 people take 4.2 ms an hour on average and 7.9 at the 95th, and a month passes in one action in about a second.
 
 ## Relationships

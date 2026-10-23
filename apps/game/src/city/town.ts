@@ -35,8 +35,48 @@ export interface TownScene extends BlockScene {
   readonly city: CityPlan;
   /** The city's district records, in its order. */
   readonly districts: readonly DistrictRecord[];
+  /** The middles of the town's sidewalks, a line each side of each block, with the people a hectare there. */
+  readonly walkways: readonly Walkway[];
   /** Just north of the nearest building across the street from your block, and its id: for the tests. */
   readonly across: { readonly x: number; readonly y: number; readonly id: string } | null;
+}
+
+export interface Walkway {
+  readonly x0: number;
+  readonly y0: number;
+  readonly x1: number;
+  readonly y1: number;
+  readonly density: number;
+}
+
+/** A sidewalk's middle along each side of each block in the town, clipped to the town's ground. */
+function walkwaysOf(
+  around: { blocks: readonly { x0: number; y0: number; x1: number; y1: number }[]; sidewalk: number },
+  ids: readonly number[],
+  density: (b: number) => number,
+  b: { x0: number; y0: number; x1: number; y1: number },
+): Walkway[] {
+  const h = around.sidewalk / 2;
+  const out: Walkway[] = [];
+  around.blocks.forEach((r, k) => {
+    const d = density(ids[k] as number);
+    const lines = [
+      { x0: r.x0 - h, y0: r.y0 - h, x1: r.x1 + h, y1: r.y0 - h },
+      { x0: r.x0 - h, y0: r.y1 + h, x1: r.x1 + h, y1: r.y1 + h },
+      { x0: r.x0 - h, y0: r.y0 - h, x1: r.x0 - h, y1: r.y1 + h },
+      { x0: r.x1 + h, y0: r.y0 - h, x1: r.x1 + h, y1: r.y1 + h },
+    ];
+    for (const l of lines) {
+      const c = {
+        x0: Math.max(l.x0, b.x0),
+        y0: Math.max(l.y0, b.y0),
+        x1: Math.min(l.x1, b.x1),
+        y1: Math.min(l.y1, b.y1),
+      };
+      if (c.x0 <= c.x1 && c.y0 <= c.y1 && c.x1 - c.x0 + (c.y1 - c.y0) > 4) out.push({ ...c, density: d });
+    }
+  });
+  return out;
 }
 
 /** A building of a face near home, in the home frame. A north face's fronts face away: its back is what shows. */
@@ -70,7 +110,8 @@ export function townScene(seed: string): TownScene {
   const plan: BlockPlan = planBlock(TEMPLATES, seed);
   const city = planCity(store, seed);
   const home = homeOf(city, 'inner-ring', plan);
-  const { around, faces } = aroundHome(cityTemplates(store, city), city, home, plan, REACH);
+  const { around, faces, ids } = aroundHome(cityTemplates(store, city), city, home, plan, REACH);
+  const districts = city.districts.map((_, i) => districtOf(store, city, i));
   const fronts = plan.buildings.map(buildingOf);
   const others = faces.flatMap((f) => f.plan.buildings.map((b) => nearBuilding(city, home, f, b)));
   const { area, blocks, sidewalk } = around;
@@ -111,6 +152,12 @@ export function townScene(seed: string): TownScene {
     home,
     city,
     across,
-    districts: city.districts.map((_, i) => districtOf(store, city, i)),
+    districts,
+    walkways: walkwaysOf(
+      around,
+      ids,
+      (b) => (districts[city.blocks.district[b] as number] as DistrictRecord).density,
+      scene.bounds,
+    ),
   };
 }

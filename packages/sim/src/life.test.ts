@@ -18,7 +18,7 @@ import { payFor } from './job/withholding.ts';
 
 const sim = lifeSim();
 const broke: SimContext = { content: createRecordStore({ resource: { cash: { name: 'Cash', start: 0, min: 0 } } }) };
-const game = createLifeGame();
+const game = createLifeGame({ people: 0 });
 // The default life starts on Monday 2 June 2025 at 07:00.
 const fresh = (context: SimContext = sim) => game.init('life', context);
 const tick = (state: GameState) => (state.time as TimeSlice).tick;
@@ -98,7 +98,7 @@ describe('doing things', () => {
 
 describe('work', () => {
   // The test cook, signed up for Tuesday's shift, 15:00 to 23:00.
-  const cook = createLifeGame({ career: TEST_COOK });
+  const cook = createLifeGame({ people: 0, career: TEST_COOK });
   const cookSim = sliceSim(withCareer(testCook()));
   const signed = play(cook, cookSim, cook.init('work', cookSim), signUp(1)).state;
   const tuesdayAt = (hour: number) => play(cook, cookSim, signed, advance(tickOf(1, hour))).state;

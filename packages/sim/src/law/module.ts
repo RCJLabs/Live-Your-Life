@@ -10,6 +10,7 @@ import { defineModule } from '@eb/core';
 import { attend, checkIn, contest, courtIn, owedOf, pay, plead } from './court.ts';
 import { drawFence, eat, type Fence, sale, sell } from './fence.ts';
 import { hearing, lawDay, review, saleSeen, ticket, visit } from './police.ts';
+import { FENCE, fenceOf } from './records.ts';
 import { convict, freshLaw, type LawSlice } from './state.ts';
 import { filmedNow, gotAway, heldNow, take, theft, wait } from './take.ts';
 
@@ -30,6 +31,19 @@ export const lawModule = defineModule<LawState>({
       label: 'convictions on your record',
     },
     cases: { read: ({ state }) => state.cases.length, domain: { type: 'int', min: 0, max: 1000 }, label: 'open cases' },
+    // The fence's hours behind the diner, for their day as one of the tier-1 people (D70); -1 without one.
+    'fence-from': {
+      read: ({ state, content }) =>
+        state.fence && content.has('fence', FENCE) ? fenceOf(content, FENCE).hours.from : -1,
+      domain: { type: 'int', min: -1, max: 24 },
+      label: 'the hour the fence comes',
+    },
+    'fence-to': {
+      read: ({ state, content }) =>
+        state.fence && content.has('fence', FENCE) ? fenceOf(content, FENCE).hours.to : -1,
+      domain: { type: 'int', min: -1, max: 24 },
+      label: 'the hour the fence goes',
+    },
     warrant: {
       read: ({ state }) => state.cases.some((k) => k.warrant),
       domain: { type: 'bool' },

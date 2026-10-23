@@ -11,7 +11,13 @@ import { type CareerRecord, createLifeGame, type LifeOptions, lifeSim, MINUTES_P
 export const LINE_COOK = 'line-cook';
 export const TEST_COOK = 'test-cook';
 
-export const sliceGame = (options: LifeOptions = {}): Game => createLifeGame({ career: LINE_COOK, ...options });
+/**
+ * The slice's life. Without the tier-1 people unless a test asks (M2.2): the 500-week sweeps are
+ * the player's life, and 1,000 people in each would make them ten times slower. The people have
+ * their own tests (src/people/) and readings.
+ */
+export const sliceGame = (options: LifeOptions = {}): Game =>
+  createLifeGame({ career: LINE_COOK, people: 0, ...options });
 export const sliceSim = (records: RecordPack = PACK.records): SimContext => lifeSim(records);
 
 export const lineCook = (): CareerRecord => PACK.records.career?.[LINE_COOK] as CareerRecord;

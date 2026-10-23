@@ -35,6 +35,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'time/scheduled': 'the clock',
   'time/cancelled': 'the clock',
   'time/capped': 'the clock',
+  'people/passed': 'the clock, as the tier-1 people hear it',
   'life/started': 'every activity; the chronicle tells what mattered',
   'life/ended': 'every activity',
   'job/posted': 'the interface: the week’s shifts are in the panel',

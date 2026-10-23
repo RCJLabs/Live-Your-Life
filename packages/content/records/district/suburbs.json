@@ -5,5 +5,6 @@
   "block": { "length": 220, "depth": 90, "street": 16 },
   "lots": { "min": 18, "max": 30 },
   "density": 12,
+  "jobs": 3,
   "income": "middle"
 }
