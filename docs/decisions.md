@@ -629,6 +629,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Tier-2 passers-by (recommended, chosen). More of the tier-1 people's errands and evenings out drawn: true to the sim, still sparse. Tier-1 homes nearer you, revisiting D68. Empty streets until travel and more of the city open up.
 
+### D73. Careers are worked anywhere in the city, off screen. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** Each career is worked at a workplace on one of the city's lots (M2.2's places). You can walk only your own town until travel (M2.9), so going to work elsewhere is a choice on the map. It costs the real walking time on the street network (walks.ts), and the shift plays as a block of time with its shift events, as sleep does. Afterwards you are back at your door. The diner and the corner shop stay walkable; a job there is worked as now.
+
+**Options considered.** Anywhere, worked off screen (recommended, chosen). Only careers whose building stands in your town, which leaves the 30 to what a seed puts near you. Pulling M2.9's travel forward and drawing a town round any block, a milestone's work before any career.
+
+### D74. You are hired through openings and applications. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** The labor market is Gridiron Eras' employer model. The tier-1 people hold careers from the same catalogue. Openings come up at the city's workplaces when one of them leaves, at real-shaped turnover rates (tune), and a Jobs panel lists them. You apply, and the odds are shown first, from the requirements you meet, your record and your reputation. The answer comes in one to three days, and the odds shown are the odds rolled. Being let go, or quitting, leaves you looking, never ends the life. Reputation follows you from employer to employer.
+
+**Options considered.** Openings and applications (recommended, chosen). Hired on the spot by any career whose requirements you meet. Openings that come and go, with no hiring roll.
+
+### D75. The first 30 careers are entry-level, and you hold one job at a time. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** The first 30 are what someone of eighteen with a diploma can get in a Rust Belt city in their first year: food service, retail, warehouse, cleaning, care aides, trades helpers, security, call centres and the like. Each has Michigan's wages, real shifts and real requirements, traced in CALIBRATION.md. You hold one job at a time; a second job is an idea for later.
+
+**Options considered.** Entry-level, one job (recommended, chosen). The same 30 with up to two jobs at once. A spread up the ladders, with degree and licence jobs the first year can't reach, held by the tier-1 people and later the heir.
+
 ---
 
 ## Open items

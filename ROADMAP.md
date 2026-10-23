@@ -445,6 +445,16 @@ How to read this file:
   - **Step 6, built 2026-10-23: an hour and a month of them, read.** `node tools/population/life.ts` times the life's own game, with its 1,000 people and with none, in Node and in Chromium. An hour passing fits (2.2 ms at 4×). A month in one action took 8.0 s at 4×: one passage of time reached each share whole, and each rebuilt every hour's plan alone, since plans are kept two days (17,280 built for 720). The people module now passes time on to the shares a day at a time, cut at midnight, so every share settles a day while its plans are kept: 0.90 s at 4×, M0.4's harness reading (1.05 s). The people come out as they did, since a share settles the same however its hours are split. Still a pause if the page asks for a month in one go: fast-forward is to yield between game hours (DESIGN.md, The clock), which no action does yet. Planted bugs: 2, 2 caught: the shares hearing time pass whole, and a share's weekday counted from the end of its piece of the passage.
   - **Built, 2026-10-23: every [auto] gate passed.** The fifth, read once with the people in: 500 steady weeks and 200 random-bot weeks with the 1,000 people play with nothing refused, and their reports match the same sweeps without the people to the last number (`pnpm check`'s sweeps hold no people, step 2). The browser bot keeps its shifts in `pnpm check`. Left: the frame rate with people on Evan's phone [you].
 - **M2.3 Careers.** The catalogue on the template: the first 30, with the labor market.
+  - Decisions: worked anywhere in the city, off screen (D73); openings and applications (D74); the first 30 entry-level, one job at a time (D75).
+  - **Done when:**
+    - 30 careers stand on the template, each with its wage, shifts and requirements traced in CALIBRATION.md, and none paying under the minimum wage [auto];
+    - the tier-1 people hold careers from the catalogue, openings come up when they leave, and the Jobs panel lists them [auto];
+    - an application's odds are the odds rolled, its answer comes in one to three days, being let go or quitting leaves you looking, and reputation follows you [auto];
+    - going to work off screen costs the real walk on the street network and plays the shift with its events [auto];
+    - bots that look for work, apply and keep jobs play 500 seeded weeks with nothing refused, and between them are hired into every career [auto];
+    - saves from before load, with the line cook's job kept [auto];
+    - the browser bot keeps its shifts, and a game day still fits its tap budget [auto];
+    - a week of looking for work and working one of the new careers, played on Evan's phone [you].
 - **M2.4 Crime and law.** Crime to the crew tier and law to detective, sharing case files; courts; prison as time passing.
 - **M2.5 Food.** Line cook to chef.
 - **M2.6 Relationships.** Romance, marriage, children, custody.
