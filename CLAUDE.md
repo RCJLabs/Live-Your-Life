@@ -54,7 +54,7 @@ node apps/game/e2e/day-bot.ts [steady|thief] [days] [seeds] [rate]   # after `pn
 node apps/game/e2e/saves-bench.ts [n] [seconds]   # after `pnpm build`: a save's size, and its write and load times at 1× and 4× CPU
 node tools/city/bench.ts [seeds] [rounds]          # the whole city planned in Node: time, blocks, lots, people, memory (--expose-gc for the heap)
 node tools/city/chromium.ts [seeds] [rounds]       # the same in headless Chromium at 1× and 4× CPU
-node tools/city/faces.ts [seeds]                   # every face of every walkable block, planned and checked; ms a face
+node tools/city/faces.ts [seeds] [from]            # every face of every walkable block, planned and checked; ms a face
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 ```
 
