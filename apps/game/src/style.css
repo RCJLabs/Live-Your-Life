@@ -431,6 +431,11 @@ body {
   dominant-baseline: middle;
 }
 
+.map-arterial {
+  stroke: #4a4d55;
+  stroke-width: 70px;
+}
+
 .map-city .map-you {
   stroke-width: 60px;
 }

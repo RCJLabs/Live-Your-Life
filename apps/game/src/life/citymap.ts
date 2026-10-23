@@ -66,6 +66,12 @@ export function cityPicture(city: CityPlan, districts: readonly DistrictRecord[]
     const y = Math.floor(c / city.size) * city.cell;
     picture.append(svg('rect', { x, y, width: city.cell, height: city.cell, fill: d.colour, 'data-district': d.name }));
   }
+  // The arterials, along every `arterialEvery`th cell edge (streets.ts).
+  const every = city.cell * city.arterialEvery;
+  for (let at = 0; at <= side + 1e-6; at += every) {
+    picture.append(svg('line', { x1: at, y1: 0, x2: at, y2: side, class: 'map-arterial' }));
+    picture.append(svg('line', { x1: 0, y1: at, x2: side, y2: at, class: 'map-arterial' }));
+  }
   districts.forEach((d, i) => {
     const c = labelCell(city, i);
     if (c < 0) return;

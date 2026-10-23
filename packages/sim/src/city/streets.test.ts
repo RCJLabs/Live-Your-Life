@@ -122,6 +122,28 @@ describe("the city's streets (M2.1)", () => {
     }
   });
 
+  it('run an arterial along every fourth cell edge, the whole city across, both ways', () => {
+    for (const city of CITIES) {
+      const s = streetsOf(city, recordsOf(city));
+      const every = city.cell * city.arterialEvery;
+      const side = city.cell * city.size;
+      let metres = 0;
+      for (let n = 0; n < s.count; n++) {
+        for (let e = s.first[n] as number; e < (s.first[n + 1] as number); e++) {
+          if (!s.arterial[e]) continue;
+          metres += s.len[e] as number;
+          const m = s.to[e] as number;
+          // Both ends on one arterial line: the same x or the same y, a whole number of `every` from the edge.
+          const x = s.x[n] === s.x[m] ? (s.x[n] as number) : (s.y[n] as number);
+          expect(Math.abs(x / every - Math.round(x / every))).toBeLessThan(1e-9);
+        }
+      }
+      const lines = Math.floor(side / every) + 1;
+      // Each edge is held from both of its ends.
+      expect(metres / 2).toBeCloseTo(lines * side * 2, 6);
+    }
+  });
+
   it('walk straight along the street to a door on the same stretch of it', () => {
     const city = CITIES[0] as CityPlan;
     const records = recordsOf(city);

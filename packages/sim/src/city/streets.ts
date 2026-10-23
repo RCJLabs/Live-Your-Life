@@ -24,6 +24,8 @@ export interface Streets {
   readonly first: Uint32Array;
   readonly to: Uint32Array;
   readonly len: Float64Array;
+  /** 1 where an edge is an arterial: along every `arterialEvery`th cell edge, the city's wider streets. */
+  readonly arterial: Uint8Array;
   /** Each east–west street middle by its y in mm: the nodes along it, west to east. */
   readonly rows: ReadonlyMap<number, { readonly at: Float64Array; readonly node: Uint32Array }>;
 }
@@ -82,7 +84,9 @@ export function streetsOf(city: CityPlan, records: readonly DistrictRecord[]): S
     }
     return id;
   };
-  const edges: [number, number, number][] = [];
+  const edges: [number, number, number, number][] = [];
+  const every = city.cell * city.arterialEvery;
+  const isArterial = (at: number) => (Math.abs(at / every - Math.round(at / every)) < 1e-9 ? 1 : 0);
   const rowNodes = new Map<number, { at: Float64Array; node: Uint32Array }>();
   for (const [key, runs] of rows) {
     const y = key / 1000;
@@ -91,7 +95,7 @@ export function streetsOf(city: CityPlan, records: readonly DistrictRecord[]): S
     rowNodes.set(key, { at: Float64Array.from(points), node: Uint32Array.from(nodes) });
     for (let i = 1; i < points.length; i++) {
       const [a, b] = [points[i - 1] as number, points[i] as number];
-      if (joined(a, b)) edges.push([nodes[i - 1] as number, nodes[i] as number, b - a]);
+      if (joined(a, b)) edges.push([nodes[i - 1] as number, nodes[i] as number, b - a, isArterial(y)]);
     }
   }
   for (const [key, runs] of cols) {
@@ -99,7 +103,7 @@ export function streetsOf(city: CityPlan, records: readonly DistrictRecord[]): S
     const { points, joined } = along(runs);
     for (let i = 1; i < points.length; i++) {
       const [a, b] = [points[i - 1] as number, points[i] as number];
-      if (joined(a, b)) edges.push([nodeAt(x, a), nodeAt(x, b), b - a]);
+      if (joined(a, b)) edges.push([nodeAt(x, a), nodeAt(x, b), b - a, isArterial(x)]);
     }
   }
   return {
@@ -112,7 +116,7 @@ export function streetsOf(city: CityPlan, records: readonly DistrictRecord[]): S
 }
 
 /** Edges both ways, grouped by node. */
-function adjacency(count: number, edges: readonly [number, number, number][]) {
+function adjacency(count: number, edges: readonly [number, number, number, number][]) {
   const degree = new Uint32Array(count + 1);
   for (const [a, b] of edges) {
     degree[a + 1] = (degree[a + 1] as number) + 1;
@@ -123,15 +127,17 @@ function adjacency(count: number, edges: readonly [number, number, number][]) {
   const fill = Uint32Array.from(degree);
   const to = new Uint32Array(edges.length * 2);
   const len = new Float64Array(edges.length * 2);
-  const put = (a: number, b: number, l: number) => {
+  const arterial = new Uint8Array(edges.length * 2);
+  const put = (a: number, b: number, l: number, big: number) => {
     const at = fill[a] as number;
     to[at] = b;
     len[at] = l;
+    arterial[at] = big;
     fill[a] = at + 1;
   };
-  for (const [a, b, l] of edges) {
-    put(a, b, l);
-    put(b, a, l);
+  for (const [a, b, l, big] of edges) {
+    put(a, b, l, big);
+    put(b, a, l, big);
   }
-  return { first, to, len };
+  return { first, to, len, arterial };
 }

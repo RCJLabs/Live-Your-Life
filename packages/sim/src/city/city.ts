@@ -50,6 +50,8 @@ export interface CityPlan {
   readonly centre: { readonly col: number; readonly row: number };
   readonly river: number;
   readonly stripCol: number;
+  /** An arterial runs along every this many cells' edges, both ways (streets.ts). */
+  readonly arterialEvery: number;
   readonly blocks: Blocks;
   readonly lots: Lots;
   /** People, by district density and area, streets included. */
@@ -267,6 +269,7 @@ export function planCity(store: RecordStore, seed: string, id = CITY): CityPlan 
     centre: z.centre,
     river: z.river,
     stripCol: z.stripCol,
+    arterialEvery: city.arterialEvery,
     blocks,
     lots,
     population: Math.round(population),
