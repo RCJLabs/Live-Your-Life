@@ -3,13 +3,85 @@
   "description": "A job on the career template (D9): where it is worked, what it pays, the shifts its employer runs and posts, how standing moves, how long its skill takes to learn, and which shift events it draws.",
   "nameField": "name",
   "fields": {
-    "name": { "kind": "text", "min": 1, "max": 40 },
-    "place": { "kind": "ref", "to": "building", "description": "The kind of building it is worked in." },
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 40
+    },
+    "place": {
+      "kind": "ref",
+      "to": "building",
+      "description": "The kind of building on your block it is worked in, when it is walkable there (the diner). Without one, it is worked off screen at its employer's lot (D73).",
+      "optional": true
+    },
     "wage": {
       "kind": "int",
       "min": 1,
       "max": 100000,
       "description": "Cents an hour, before tax. Traced in CALIBRATION.md."
+    },
+    "employers": {
+      "kind": "group",
+      "description": "Where it is worked in the city, and how often its staff leave (D74).",
+      "fields": {
+        "districts": {
+          "kind": "list",
+          "min": 1,
+          "max": 5,
+          "of": {
+            "kind": "ref",
+            "to": "district"
+          },
+          "description": "The districts its employers stand in."
+        },
+        "staff": {
+          "kind": "int",
+          "min": 1,
+          "max": 200,
+          "description": "People in this career at one employer (tune)."
+        },
+        "turnover": {
+          "kind": "int",
+          "min": 1,
+          "max": 300,
+          "description": "Separations a month per thousand staff, from its industry's federal turnover survey. Traced in CALIBRATION.md."
+        }
+      }
+    },
+    "requires": {
+      "kind": "group",
+      "optional": true,
+      "description": "What hiring asks beyond being 18 (D75). Traced in CALIBRATION.md.",
+      "fields": {
+        "record": {
+          "kind": "enum",
+          "values": ["none", "no-theft"],
+          "description": "none: no conviction at all; no-theft: none for theft or dishonesty."
+        }
+      }
+    },
+    "hiring": {
+      "kind": "group",
+      "description": "The odds an application is taken (D74), shown first and rolled: the base, less points with a conviction, and points either way from your reputation.",
+      "fields": {
+        "base": {
+          "kind": "int",
+          "min": 1,
+          "max": 100
+        },
+        "record": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Taken when you have a conviction it doesn't bar."
+        },
+        "reputation": {
+          "kind": "int",
+          "min": 0,
+          "max": 50,
+          "description": "Added at full reputation, taken at none."
+        }
+      }
     },
     "shifts": {
       "kind": "list",
@@ -19,10 +91,26 @@
       "of": {
         "kind": "group",
         "fields": {
-          "id": { "kind": "text", "min": 1, "max": 24 },
-          "hour": { "kind": "int", "min": 0, "max": 23 },
-          "minute": { "kind": "int", "min": 0, "max": 59 },
-          "minutes": { "kind": "int", "min": 60, "max": 720 }
+          "id": {
+            "kind": "text",
+            "min": 1,
+            "max": 24
+          },
+          "hour": {
+            "kind": "int",
+            "min": 0,
+            "max": 23
+          },
+          "minute": {
+            "kind": "int",
+            "min": 0,
+            "max": 59
+          },
+          "minutes": {
+            "kind": "int",
+            "min": 60,
+            "max": 720
+          }
         }
       }
     },
@@ -44,8 +132,16 @@
           "kind": "enum",
           "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
         },
-        "fewest": { "kind": "int", "min": 0, "max": 7 },
-        "most": { "kind": "int", "min": 0, "max": 7 }
+        "fewest": {
+          "kind": "int",
+          "min": 0,
+          "max": 7
+        },
+        "most": {
+          "kind": "int",
+          "min": 0,
+          "max": 7
+        }
       }
     },
     "perWeek": {
@@ -63,21 +159,41 @@
           "kind": "enum",
           "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
         },
-        "hour": { "kind": "int", "min": 0, "max": 23 },
-        "minute": { "kind": "int", "min": 0, "max": 59 }
+        "hour": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        },
+        "minute": {
+          "kind": "int",
+          "min": 0,
+          "max": 59
+        }
       }
     },
     "withholding": {
       "kind": "list",
-      "of": { "kind": "ref", "to": "tax" },
+      "of": {
+        "kind": "ref",
+        "to": "tax"
+      },
       "description": "The taxes the employer withholds from pay (D38)."
     },
     "standing": {
       "kind": "group",
       "description": "How standing moves, from 0 to 100 (D39, tune). At 0 you're let go.",
       "fields": {
-        "start": { "kind": "int", "min": 1, "max": 100 },
-        "shift": { "kind": "int", "min": 0, "max": 20, "description": "Added for a whole shift worked on time." },
+        "start": {
+          "kind": "int",
+          "min": 1,
+          "max": 100
+        },
+        "shift": {
+          "kind": "int",
+          "min": 0,
+          "max": 20,
+          "description": "Added for a whole shift worked on time."
+        },
         "lateAfter": {
           "kind": "int",
           "min": 0,
@@ -85,7 +201,12 @@
           "label": "Late after",
           "description": "Minutes after a shift's start that still count as on time."
         },
-        "late": { "kind": "int", "min": 0, "max": 50, "description": "Taken for starting later than that." },
+        "late": {
+          "kind": "int",
+          "min": 0,
+          "max": 50,
+          "description": "Taken for starting later than that."
+        },
         "missedAfter": {
           "kind": "int",
           "min": 0,
@@ -93,8 +214,18 @@
           "label": "Missed after",
           "description": "Minutes of a shift that can go unworked, once you're there, before it counts as leaving early."
         },
-        "leftEarly": { "kind": "int", "min": 0, "max": 50, "label": "Left early" },
-        "noShow": { "kind": "int", "min": 0, "max": 100, "label": "No-show" },
+        "leftEarly": {
+          "kind": "int",
+          "min": 0,
+          "max": 50,
+          "label": "Left early"
+        },
+        "noShow": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "label": "No-show"
+        },
         "dropBefore": {
           "kind": "int",
           "min": 0,
@@ -102,7 +233,12 @@
           "label": "Drop before",
           "description": "Minutes before its start that a shift can still be dropped."
         },
-        "drop": { "kind": "int", "min": 0, "max": 50, "description": "Taken for dropping a shift." }
+        "drop": {
+          "kind": "int",
+          "min": 0,
+          "max": 50,
+          "description": "Taken for dropping a shift."
+        }
       }
     },
     "warnings": {
@@ -116,7 +252,12 @@
           "label": "Let go at",
           "description": "Warnings at once that end the job."
         },
-        "lapse": { "kind": "int", "min": 1, "max": 365, "description": "Days a warning lasts." }
+        "lapse": {
+          "kind": "int",
+          "min": 1,
+          "max": 365,
+          "description": "Days a warning lasts."
+        }
       }
     },
     "skill": {
@@ -136,25 +277,56 @@
       "optional": true,
       "description": "Who works beside you (D41): for now one, the other cook, drawn from the seed.",
       "fields": {
-        "names": { "kind": "ref", "to": "name-pool" },
+        "names": {
+          "kind": "ref",
+          "to": "name-pool"
+        },
         "ages": {
           "kind": "group",
-          "fields": { "min": { "kind": "int", "min": 16, "max": 90 }, "max": { "kind": "int", "min": 16, "max": 90 } }
+          "fields": {
+            "min": {
+              "kind": "int",
+              "min": 16,
+              "max": 90
+            },
+            "max": {
+              "kind": "int",
+              "min": 16,
+              "max": 90
+            }
+          }
         },
-        "days": { "kind": "int", "min": 1, "max": 7, "description": "Days a week they work." },
+        "days": {
+          "kind": "int",
+          "min": 1,
+          "max": 7,
+          "description": "Days a week they work."
+        },
         "asks": {
           "kind": "int",
           "min": 0,
           "max": 100,
           "description": "Percent of days they ask you to cover a shift."
         },
-        "favour": { "kind": "ref", "to": "favour", "description": "What they ask." },
+        "favour": {
+          "kind": "ref",
+          "to": "favour",
+          "description": "What they ask."
+        },
         "cover": {
           "kind": "group",
           "description": "The odds they cover a shift you ask them to (D43): the base, and regard's points.",
           "fields": {
-            "base": { "kind": "int", "min": 0, "max": 100 },
-            "regard": { "kind": "int", "min": 0, "max": 100 }
+            "base": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
           }
         },
         "half": {
@@ -167,12 +339,31 @@
           "kind": "group",
           "description": "What they remember of what you do: late, or not there, on a shift of theirs; covering one of theirs, saying no, or never answering; asking them to cover yours.",
           "fields": {
-            "late": { "kind": "ref", "to": "act" },
-            "noShow": { "kind": "ref", "to": "act", "label": "No-show" },
-            "covered": { "kind": "ref", "to": "act" },
-            "refused": { "kind": "ref", "to": "act" },
-            "ignored": { "kind": "ref", "to": "act" },
-            "asked": { "kind": "ref", "to": "act" }
+            "late": {
+              "kind": "ref",
+              "to": "act"
+            },
+            "noShow": {
+              "kind": "ref",
+              "to": "act",
+              "label": "No-show"
+            },
+            "covered": {
+              "kind": "ref",
+              "to": "act"
+            },
+            "refused": {
+              "kind": "ref",
+              "to": "act"
+            },
+            "ignored": {
+              "kind": "ref",
+              "to": "act"
+            },
+            "asked": {
+              "kind": "ref",
+              "to": "act"
+            }
           }
         }
       }
@@ -181,8 +372,21 @@
       "kind": "group",
       "description": "The shift events it draws (D40).",
       "fields": {
-        "tags": { "kind": "list", "min": 1, "of": { "kind": "text", "min": 1, "max": 24 } },
-        "chance": { "kind": "int", "min": 0, "max": 100, "description": "Percent of shifts with one." }
+        "tags": {
+          "kind": "list",
+          "min": 1,
+          "of": {
+            "kind": "text",
+            "min": 1,
+            "max": 24
+          }
+        },
+        "chance": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Percent of shifts with one."
+        }
       }
     }
   }

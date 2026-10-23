@@ -11,7 +11,7 @@ import { answer, askCover, coverAsk, coverGiven, tiesDay } from './favours.ts';
 import { familiarityOf } from './memory.ts';
 import { type Coworker, drawCoworker, theirShift } from './person.ts';
 import { crewOf, namePoolOf } from './records.ts';
-import { besideOn, crewFor, kindsOf, nobody, rememberAct, type TiesContext, type TiesSlice } from './state.ts';
+import { besideOn, crewFor, kindsOf, nobody, rememberAct, type TiesContext, type TiesSlice, worksOn } from './state.ts';
 
 /** Hired at the start, as the job is (job/module.ts): the coworker is drawn then. */
 export interface Hired {
@@ -32,9 +32,10 @@ const dayOf = (data: Readonly<Record<string, unknown>>): number => data.day as n
 /** The shift they work on a day: yours when you work it, else their own kind; null when they're off. */
 function theirHours(view: FactView<TiesSlice>, day: number): { start: number; minutes: number } | null {
   const slice = view.state;
-  if (!slice.coworker || !besideOn(view, day)) return null;
+  if (!slice.coworker || !worksOn(view, day)) return null;
   const career = careerOf(view.content, slice.career as string);
-  const yours = view.fact('job.shift-start', { day }) as number;
+  // Your shift is theirs only while you work beside them at the diner (M2.3).
+  const yours = view.fact('market.at-diner') === false ? -1 : (view.fact('job.shift-start', { day }) as number);
   const kind =
     yours >= 0
       ? career.shifts.find((k) => k.hour * 60 + k.minute === yours)

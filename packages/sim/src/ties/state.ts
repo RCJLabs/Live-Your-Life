@@ -61,11 +61,20 @@ export function crewFor(content: RecordStore, slice: Pick<TiesSlice, 'career'>):
 export const kindsOf = (content: RecordStore, slice: Pick<TiesSlice, 'career'>): string[] =>
   careerFor(content, slice).shifts.map((s) => s.id);
 
-/** Whether they work a day, favours counted: the diner pairs its two cooks, so on yours they're beside you. */
-export function besideOn(view: Viewer & { fact(id: string): unknown }, day: number, today: Today = todayOf(view)) {
+/** Whether they work a day, favours counted. */
+export function worksOn(view: Viewer & { fact(id: string): unknown }, day: number, today: Today = todayOf(view)) {
   const slice = sliceOf(view);
   if (!slice.coworker || slice.off.includes(day)) return false;
   return works(slice.coworker, crewFor(view.content, slice), today, day);
+}
+
+/**
+ * Whether they work a day beside you: the diner pairs its two cooks, so on your days they're on
+ * your shift. Gone from the diner (M2.3), you work beside them no more; they keep their own days.
+ */
+export function besideOn(view: Viewer & { fact(id: string): unknown }, day: number, today: Today = todayOf(view)) {
+  if (view.fact('market.at-diner') === false) return false;
+  return worksOn(view, day, today);
 }
 
 /** An act they remember, by its record's weight, on today's day (D44). */

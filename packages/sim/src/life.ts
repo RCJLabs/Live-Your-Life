@@ -190,6 +190,8 @@ export const lifeModule = defineModule<LifeSlice>({
         'home/*',
         'job/sign-up',
         'job/drop',
+        'job/quit',
+        'market/*',
         'ties/*',
         'you/*',
         'law/take',

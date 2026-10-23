@@ -39,6 +39,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'life/started': 'every activity; the chronicle tells what mattered',
   'life/ended': 'every activity',
   'job/posted': 'the interface: the week’s shifts are in the panel',
+  'market/applied': 'the interface: applications wait in the Jobs panel; the answer is told',
   'job/standing': 'a number; lateness and no-shows are told',
   'job/started': 'the shift’s end is told',
   'job/worked': 'part of a shift; the shift’s end is told',
@@ -129,6 +130,10 @@ export function lineFor(
         return named(store, 'offence', v);
       case 'event':
         return named(store, 'shift-event', v);
+      case 'career': {
+        const name = named(store, 'career', v);
+        return `${/^[aeiou]/.test(name) ? 'an' : 'a'} ${name}`;
+      }
       case 'date':
         return dateOf(start, beat.day as number);
       case 'court':

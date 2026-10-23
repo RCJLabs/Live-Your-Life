@@ -24,6 +24,8 @@ interface Tally {
 function beside(state: GameState, day: number): boolean {
   const who = ties(state).coworker;
   if (!who || ties(state).off.includes(day)) return false;
+  // Hired away from the diner (M2.3), you're beside them no more.
+  if (game.fact(state, 'market.at-diner', undefined, sim) === false) return false;
   return works(who, crew, todayOf({ fact: (id) => game.fact(state, id, undefined, sim) }), day);
 }
 
