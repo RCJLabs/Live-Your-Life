@@ -10,7 +10,7 @@ const sim = sliceSim();
 const MAX_TURNS = 3000;
 
 describe('looking for work, headless (M2.3, D74)', () => {
-  it('plays 500 seeded weeks from no job: nothing refused, most hired, and every career reached', {
+  it('plays 500 seeded weeks from no job: nothing refused, some hired, and every career reached', {
     timeout: 120_000,
   }, () => {
     const hired = new Map<string, number>();
@@ -37,10 +37,12 @@ describe('looking for work, headless (M2.3, D74)', () => {
       if (game.fact(state, 'job.employed', undefined, sim) === true) employed++;
     }
     expect([...hired.keys()].sort()).toEqual([...sim.content.ids('career')].sort());
-    // Applications are answered at about the odds: half for the line cook (tune).
-    expect(turned / applied).toBeGreaterThan(0.3);
-    expect(turned / applied).toBeLessThan(0.7);
-    // Far faster than the household survey's 9.6 weeks a spell (ROADMAP Readings, open question 66).
-    expect(employed / 500).toBeGreaterThan(0.5);
+    // Most answers are no: the line cook takes 15 in 100 (D76). Some are still waiting when the
+    // week ends, or when a yes came first.
+    expect(turned / applied).toBeGreaterThan(0.5);
+    expect(turned / applied).toBeLessThan(0.9);
+    // About two in five are working within a week (ROADMAP Readings).
+    expect(employed / 500).toBeGreaterThan(0.25);
+    expect(employed / 500).toBeLessThan(0.6);
   });
 });

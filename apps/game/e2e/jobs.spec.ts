@@ -63,19 +63,20 @@ test('quits, applies across the city, takes the offer and goes to work off scree
   await expect(page.locator('#your-job')).toHaveText('You have no job.');
 
   // Apply for openings across the city until one is taken: the odds are shown, and rolled.
-  for (let tries = 0; tries < 8 && (await L<number>(page, 'fact', 'market.offers')) === 0; tries++) {
+  for (let tries = 0; tries < 12 && (await L<number>(page, 'fact', 'market.offers')) === 0; tries++) {
     await jobs(page);
     const away = page
       .locator('#openings li', { hasNotText: 'on your block' })
       .locator('button[data-action="market/apply"]');
+    // Up to three at once, as the seeker bot does: the line cook takes 15 in 100 (D76).
     if ((await away.count()) > 0) {
-      await expect(page.locator('#openings li').first()).toContainText('who apply are taken');
-      await away.first().click();
+      await expect(page.locator('#openings li', { hasText: 'who apply are taken' }).first()).toBeVisible();
     }
+    for (let n = 0; n < 3 && (await away.count()) > 0; n++) await away.first().click();
     await page.click('#panel-close');
     for (let n = 0; n < 6 && (await L<number>(page, 'fact', 'market.waiting')) > 0; n++) await sleepOnce(page, bed);
   }
-  expect(await L<number>(page, 'fact', 'market.offers'), 'an offer, after eight tries').toBeGreaterThan(0);
+  expect(await L<number>(page, 'fact', 'market.offers'), 'an offer, after twelve rounds').toBeGreaterThan(0);
   await jobs(page);
   await page.locator('#job-offers button[data-action="market/accept"]').first().click();
   await expect(page.locator('#your-job')).toContainText('-minute walk');

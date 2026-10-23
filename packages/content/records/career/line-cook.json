@@ -8,8 +8,8 @@
     "turnover": 54
   },
   "hiring": {
-    "base": 50,
-    "record": 25,
+    "base": 15,
+    "record": 8,
     "reputation": 20
   },
   "shifts": [

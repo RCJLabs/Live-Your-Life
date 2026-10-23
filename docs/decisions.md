@@ -647,6 +647,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Entry-level, one job (recommended, chosen). The same 30 with up to two jobs at once. A spread up the ladders, with degree and licence jobs the first year can't reach, held by the tier-1 people and later the heir.
 
+### D76. The line cook takes 15 applicants in 100. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** At one in two, a jobless bot was working in a median of 3.3 game days. The line cook's base odds drop to 15 in 100. A conviction's penalty drops from 25 points to 8, so a record still halves the odds, as in Pager's audit study, rather than sinking them to the floor of 5. At 15, the bot is hired in a median of 9.8 days, still quicker than the household survey's 9.6-week median spell of unemployment (not the same measure).
+
+**Options considered.** 15 in 100 (recommended, chosen): near a callback rate times an offer rate. Longer answers. Fewer applications at once. Keeping one in two until the 30 careers are in.
+
 ---
 
 ## Open items
