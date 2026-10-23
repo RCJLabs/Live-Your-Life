@@ -1,5 +1,5 @@
 import { contentStore } from '@lyl/content';
-import { careerRoster, HOURS, hourOf, LINKED } from '@lyl/sim';
+import { careerRoster, HOURS, hourOf, LINKED, rosterWith } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { lookOf, makeCrowd } from './crowd.ts';
 import { townScene } from './town.ts';
@@ -40,6 +40,21 @@ describe('the tier-1 people in the town (M2.2, D69)', () => {
       }
     }
     expect(seen, 'someone walks through the town in a week').toBeGreaterThan(0);
+  });
+
+  it('draws someone between jobs (M2.3) on no way to work', () => {
+    const store = contentStore();
+    // The first commuter seen in the town in a working week.
+    let seen: { i: number; minute: number } | null = null;
+    for (let minute = 5 * 60; minute < 5 * 1440 && !seen; minute += 1) {
+      const a = crowd.actorsAt(minute, 0, 0, never).find((x) => x.id.startsWith('person-'));
+      if (a) seen = { i: Number(a.id.slice('person-'.length)), minute };
+    }
+    expect(seen, 'a commuter in the town').not.toBeNull();
+    if (!seen) return;
+    const who = seen.i;
+    const left = makeCrowd(town, SEED, N, () => rosterWith(store, SEED, N, [who, -1], 1));
+    expect(left.actorsAt(seen.minute, 0, 0, never).some((a) => a.id === `person-${who}`)).toBe(false);
   });
 
   it('stands the coworker at the griddle and the fence behind the diner, when their modules say so', () => {

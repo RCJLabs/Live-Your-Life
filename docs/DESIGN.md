@@ -168,7 +168,8 @@ Per pair: familiarity, regard, attraction, resentment, and the memory above; tie
   - You apply from the Jobs tab, the odds shown first: the career's base, less points with a conviction, and points either way for your reputation. The line cook takes 15 applicants in 100, 7 with a conviction (D76). The answer comes in one to three days and is rolled at those odds. An offer stands two days. A career can bar a record. At most five applications wait at once.
   - Reputation starts at 50: being let go takes 20, quitting 5, and each whole shift on time adds a point.
   - A job away from your block is worked off screen: the real walk along the streets at 80 m a minute (tune), the shift with its events, the walk home. The coworker is beside you only while you work at the diner.
-  - Missing so far: the 29 careers' records, waiting on their wages; expectations against ability and heat per employer; the tier-1 people really leaving the jobs that open.
+  - The tier-1 people leave the jobs that open: one of a workplace's people leaves with each opening posted there, and is between jobs until they take another that closes unfilled by you (`people/work.ts`).
+  - Missing so far: the 29 careers' records, waiting on their wages; expectations against ability and heat per employer.
 - **Signature careers with their own loop** (D14):
 
 | Career | Ladder | What it owns |

@@ -81,6 +81,8 @@ describe('the labor market (M2.3, D74)', () => {
       expect(took.of('job/hired')).toEqual([{ type: 'job/hired', career: CLERK }]);
       expect((took.state.job as { career: string }).career).toBe(CLERK);
       expect(market(took.state).employer).toBe(l.employer);
+      // The opening is yours: the people's moves won't give it to anyone else (people/work.ts).
+      expect((took.state['people-work'] as { taken: string[] }).taken).toContain(l.opening);
       expect(took.fact('market.at-diner')).toBe(false);
       expect(took.fact('ties.beside')).toBe(false);
       // They still work their own days at the diner, on its shifts, not on your new one.

@@ -52,3 +52,47 @@ export function careerRoster(store: RecordStore, seed: number, n: number): Roste
   kept.set(key, roster);
   return roster;
 }
+
+const moved = new Map<string, Roster>();
+
+/**
+ * The roster with the people who have left or changed jobs (people/work.ts): `moves` holds
+ * [person, place] pairs, place -1 for someone between jobs. Kept by the moves' version, so the
+ * hour plans built from it are kept apart from another version's (gather.ts reads `shifts`).
+ */
+export function rosterWith(
+  store: RecordStore,
+  seed: number,
+  n: number,
+  moves: readonly number[],
+  version: number,
+): Roster {
+  const base = careerRoster(store, seed, n);
+  if (moves.length === 0) return base;
+  const key = `${seed}:${n}:${version}:${base.shifts}`;
+  const found = moved.get(key);
+  if (found) return found;
+  const careerAt = new Map(
+    employersOf(store, seed, rosterOf(seed, n), HOME)
+      .filter((e) => e.place >= 0)
+      .map((e) => [e.place, e.career]),
+  );
+  const people = [...base.people];
+  for (let k = 0; k < moves.length; k += 2) {
+    const i = moves[k] as number;
+    const place = moves[k + 1] as number;
+    const p = people[i];
+    if (!p) continue;
+    const career = careerAt.get(place);
+    if (place < 0 || !career) {
+      people[i] = { ...p, work: -1, shift: null, bedHour: eveningOf(seed, i) };
+      continue;
+    }
+    const shift = shiftFor(store, career, seed, i);
+    people[i] = { ...p, work: place, shift, bedHour: bedHourFor(shift, eveningOf(seed, i), p.sleepHours) };
+  }
+  const roster: Roster = { ...base, people, shifts: `${base.shifts}:moved-${version}` };
+  if (moved.size >= KEPT) moved.delete(moved.keys().next().value as string);
+  moved.set(key, roster);
+  return roster;
+}

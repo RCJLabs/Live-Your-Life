@@ -81,7 +81,8 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     withholding), the coworker (ties/, M1.4: who they are, their week, familiarity, regard and what they
                     remember, favours both ways), the law (law/, M1.5: the shop as the law sees it, taking, the police,
                     court, HYTA, the fence), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
-                    hour plans, ties, shares), and the block (city/: the templates, the plan, street furniture, the walk
+                    hour plans, ties, shares; since M2.3 careers.ts, their careers' shifts, and work.ts, who has left
+                    or changed jobs), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5
                     sight.ts, who sees where in a shop; since M2.1 city.ts, the whole city's districts, blocks and lots, and
                     face.ts, a block's face planned when needed; streets.ts and walks.ts, routes across blocks; home.ts, your

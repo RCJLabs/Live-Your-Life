@@ -154,6 +154,8 @@ const accept = {
     w.offers = w.offers.filter((x) => x.opening !== offer.opening);
     w.employer = offer.employer;
     ctx.apply({ effect: 'hire', career: offer.career });
+    // The opening is yours: nobody else fills it (people/work.ts).
+    ctx.emit('took', { opening: offer.opening, career: offer.career });
   },
   options: (v: FactView<MarketSlice>) => sliceOf(v).offers.map((x) => ({ opening: x.opening })),
 };
@@ -217,6 +219,7 @@ export const marketModule = (career?: string) =>
       'turned-down': { args: { opening: { type: 'text' }, career: { type: 'text' } }, label: 'Turned down for a job' },
       offered: { args: { opening: { type: 'text' }, career: { type: 'text' } }, label: 'Offered a job' },
       lapsed: { args: { opening: { type: 'text' }, career: { type: 'text' } }, label: 'Let a job offer lapse' },
+      took: { args: { opening: { type: 'text' }, career: { type: 'text' } }, label: 'Took a job offered' },
     },
     actions: { apply, accept, decline },
     effects: {

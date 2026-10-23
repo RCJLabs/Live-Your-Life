@@ -1,5 +1,6 @@
+import { PACK } from '@lyl/content';
 import { describe, expect, it } from 'vitest';
-import { advance, play, sliceGame, sliceSim, waitUntil } from '../../test/slice.ts';
+import { advance, lineCook, play, sliceGame, sliceSim, waitUntil } from '../../test/slice.ts';
 import { PEOPLE_SHARES } from '../game.ts';
 import { careerRoster } from './careers.ts';
 import { built } from './gather.ts';
@@ -28,21 +29,29 @@ describe('the tier-1 people in a life (M2.2)', () => {
   });
 
   it('lives a month in one action a day at a time: every hour planned once, the people as if lived in one go', () => {
+    // Staff who hardly ever leave, so nobody changes jobs this month (people/work.ts) and the
+    // people can be held to the roster lived in one go.
+    const cook = lineCook();
+    const still = sliceSim({
+      ...PACK.records,
+      career: { ...PACK.records.career, 'line-cook': { ...cook, employers: { ...cook.employers, turnover: 1 } } },
+    });
     const game = sliceGame({ people: 240 });
-    const start = game.init('month', sim);
+    const start = game.init('month', still);
     const before = built.plans;
-    const state = play(game, sim, start, advance(30 * 24 * 60)).state;
+    const state = play(game, still, start, advance(30 * 24 * 60)).state;
+    expect(game.fact(state, 'people-work.version', undefined, still)).toBe(0);
     // 720 hours, and the two days the plans are kept for at most.
     expect(built.plans - before).toBeLessThanOrEqual(720 + 48);
     const city = {
-      seed: game.fact(state, 'people.seed', undefined, sim) as number,
-      n: game.fact(state, 'people.count', undefined, sim) as number,
+      seed: game.fact(state, 'people.seed', undefined, still) as number,
+      n: game.fact(state, 'people.count', undefined, still) as number,
     };
     // Share 5 holds neither linked person; from 07:00 on Monday, day 0.
     const share = state['people-5'] as PeopleSlice;
     const alone = newShare(240, 5, PEOPLE_SHARES);
     // The life's people work their careers' shifts (M2.3).
-    progress(city, alone, 7, share.hour, 0, undefined, careerRoster(sim.content, city.seed, city.n));
+    progress(city, alone, 7, share.hour, 0, undefined, careerRoster(still.content, city.seed, city.n));
     expect(share.hour).toBeGreaterThan(29 * 24);
     expect(share.levels).toEqual(alone.levels);
     expect(share.ties).toEqual(alone.ties);

@@ -17,6 +17,7 @@ import {
   hourOf,
   inFront,
   LINKED,
+  type Roster,
   type Streets,
   streetsOf,
   walkBetween,
@@ -93,9 +94,14 @@ export interface Crowd {
   nearby(): number;
 }
 
-export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
+/**
+ * The crowd for a town. `rosterNow` gives the roster as the sim has it now, with whoever has left
+ * or changed jobs (people/work.ts); without it, the roster as a life starts.
+ */
+export function makeCrowd(town: TownScene, seed: number, n: number, rosterNow?: () => Roster): Crowd {
   // Their hours as the sim keeps them: their careers' shifts (M2.3).
-  const roster = careerRoster(contentStore(), seed, n);
+  const start = careerRoster(contentStore(), seed, n);
+  const rosterOfNow = rosterNow ?? (() => start);
   // Workplaces where their careers' employers stand (M2.3), as the Jobs panel's are.
   const { placed } = workOf(town, seed, n);
   const records: DistrictRecord[] = [...town.districts];
@@ -111,11 +117,12 @@ export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
     const x = side === 1 ? mid : (town.city.blocks.w[block] as number) - mid;
     return { block, side, x };
   };
-  // A commute's way in the home frame, worked out when first needed and kept.
-  const ways = new Map<number, Pt[] | null>();
-  const wayOf = (i: number): Pt[] | null => {
-    if (ways.has(i)) return ways.get(i) as Pt[] | null;
+  // A commute's way in the home frame, worked out when first needed and kept, by who and where to.
+  const ways = new Map<string, Pt[] | null>();
+  const wayOf = (i: number, roster: Roster = rosterOfNow()): Pt[] | null => {
     const p = roster.people[i];
+    const key = `${i}:${p?.work ?? -1}`;
+    if (ways.has(key)) return ways.get(key) as Pt[] | null;
     let way: Pt[] | null = null;
     if (p && p.work >= 0) {
       streets ??= streetsOf(town.city, records);
@@ -130,7 +137,7 @@ export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
       // Only those whose way passes through the town are ever drawn.
       way = path?.some(inTown) ? path : null;
     }
-    ways.set(i, way);
+    ways.set(key, way);
     return way;
   };
   const looks = new Map<number, Look>();
@@ -140,7 +147,7 @@ export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
   const diner = town.plan.buildings.find((x) => x.interior?.template === 'diner');
   const backOfDiner = diner ? { x: (diner.x0 + diner.x1) / 2, y: diner.y0 - 1.5 } : null;
   return {
-    nearby: () => roster.people.filter((_, i) => i >= LINKED.count && wayOf(i) !== null).length,
+    nearby: () => rosterOfNow().people.filter((_, i) => i >= LINKED.count && wayOf(i) !== null).length,
     actorsAt(minute, weekday0, t, linked) {
       const day = Math.floor(minute / (24 * 60));
       const hour = Math.floor(minute / 60) % 24;
@@ -159,10 +166,11 @@ export function makeCrowd(town: TownScene, seed: number, n: number): Crowd {
         });
       if (griddle && linked(LINKED.coworker, day, hour)) add(LINKED.coworker, griddle, -Math.PI / 2, false);
       if (backOfDiner && linked(LINKED.fence, day, hour)) add(LINKED.fence, backOfDiner, Math.PI / 2, false);
+      const roster = rosterOfNow();
       roster.people.forEach((p, i) => {
         if (i < LINKED.count) return;
         if (hourOf(p, seed, i, day, weekday, hour) !== HOURS.commute) return;
-        const way = wayOf(i);
+        const way = wayOf(i, roster);
         if (!way) return;
         // An hour's walk spread over the way: those with a long one start sooner (tune).
         const length = way.reduce(
