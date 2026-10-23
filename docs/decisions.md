@@ -683,6 +683,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Sentence, time and parole (recommended, chosen). County jail only, prison later. Full prison with factions.
 
+### D82. The street trade is in cocaine. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** You deal cocaine, bought by weight from a supplier and sold in small amounts. Delivery or possession with intent, under 50 g, is MCL 333.7401(2)(a)(iv); possession alone is MCL 333.7403(2)(a)(v). Either is a felony that can reach prison (D81). Overdose and delivery causing death (MCL 750.317a) are left out of this milestone.
+
+**Options considered.** Cocaine (recommended, chosen): it can reach prison, without an overdose system to write. Heroin or fentanyl: the most realistic trade for the region in 2025, with overdoses and the grimmest register. Unlicensed cannabis: low stakes, undercut by Michigan's legal dispensaries. An unnamed product: nothing real to trace.
+
+### D83. Michigan's law is traced from secondary sources until the statute sites can be read. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** legislature.mi.gov and courts.michigan.gov are blocked by the build environment's network policy, as bls.gov is. The dealing offences, sentences, parole and bail are traced from secondary sources (law-firm summaries, NORML, benchbook excerpts, agency reports on other hosts). Each row in CALIBRATION.md is marked "secondary" until it is checked against the statute's text.
+
+**Options considered.** Secondary now, recheck later (recommended, chosen). Wait for the hosts to be allowed, building the mechanics with empty offence rows.
+
 ---
 
 ## Open items

@@ -475,6 +475,14 @@ How to read this file:
     - a dealer bot, a police bot and the steady bot play 500 seeded weeks each with nothing refused, and crime pays less than work once arrests and time are counted (realism bar B6) [auto];
     - saves from before load [auto];
     - a dealer's week and a recruit's week played on Evan's phone [you].
+  - **Steps:**
+    1. Dealing in the sim: the trade's records (cocaine, D82: the supplier, weights and prices, buyers by hour, heat, witnesses), buying, holding and selling at odds shown first, witnesses from the tier-1 people out at that hour, and a case file that gathers what was seen. Calibration rows marked secondary (D83).
+    2. The case against you: the police act on a case file at times you are told; arrest, charges by Michigan's law, bail, plea or trial at odds from the evidence, sentence (probation, jail or prison). Shared with the shoplifting chain where it can be.
+    3. Prison: the sentence as days with a prison job, visits, letters and a parole hearing; rent and ties going on outside; parole after.
+    4. The crew: the dealer among the tier-1 people (one of the linked people, D70) who brings you in on trust and heat; working under them; bringing in people you have ties with.
+    5. The police: police officer on the market with its requirements, the academy, patrol shifts that act on the same case files, detective by standing.
+    6. The page: the trade, the case, prison and the academy on screen at 360 and 390 px.
+    7. Bots (dealer, police, steady), 500 seeded weeks each, the crime-pays bar (B6), saves from before, readings, docs.
 - **M2.5 Food.** Line cook to chef.
 - **M2.6 Relationships.** Romance, marriage, children, custody.
 - **M2.7 Lives.** Aging, illness, death, the heir and the ward.
