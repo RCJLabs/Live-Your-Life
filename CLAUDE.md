@@ -83,7 +83,8 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     hour plans, ties, shares), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5
                     sight.ts, who sees where in a shop; since M2.1 city.ts, the whole city's districts, blocks and lots, and
-                    face.ts, a block's face planned when needed; streets.ts and walks.ts, routes across blocks); since M1.6 you (you.ts) and the chronicle (chronicle.ts);
+                    face.ts, a block's face planned when needed; streets.ts and walks.ts, routes across blocks; home.ts, your
+                    block's place in the city, D67); since M1.6 you (you.ts) and the chronicle (chronicle.ts);
                     test/slice.ts is the slice's life for tests and benches; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
@@ -92,6 +93,7 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
                     tap-to-go, the bar, the panel, menus, the map, D49–D52; since M1.7 the saves, keeper.ts, and your lives,
                     lives.ts, D53–D54; play.ts is the page, main.ts its start); M0.3's art spike is at ?spike (src/spike/), and
                     M1.1's generated block at ?block=generated (src/city/, D33) with M1.2's interiors and the walker (D36);
+                    since M2.1 the life is in the town (src/city/town.ts) and the map shows the city (src/life/citymap.ts);
                     dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs, and
                     since M1.8 e2e/bot/, the browser bot that plays by taps
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
