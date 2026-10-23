@@ -1,7 +1,7 @@
 import { contentStore } from '@lyl/content';
 import { careerRoster, HOURS, hourOf, LINKED, rosterWith } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
-import { lookOf, makeCrowd } from './crowd.ts';
+import { along, lookOf, makeCrowd } from './crowd.ts';
 import { townScene } from './town.ts';
 
 const SEED = 4242;
@@ -11,6 +11,33 @@ describe('the tier-1 people in the town (M2.2, D69)', () => {
   const town = townScene('block-77');
   const crowd = makeCrowd(town, SEED, N);
   const never = () => false;
+
+  it('curves walkers round a corner instead of turning them on the spot', () => {
+    const path = [
+      { x: 0, y: 0 },
+      { x: 20, y: 0 },
+      { x: 20, y: 15 },
+    ];
+    let last = along(path, 0);
+    let largestTurn = 0;
+    let largestStep = 0;
+    let nearest = Number.POSITIVE_INFINITY;
+    for (let m = 0.1; m <= 35; m += 0.1) {
+      const now = along(path, m);
+      const turn = Math.abs(Math.atan2(Math.sin(now.yaw - last.yaw), Math.cos(now.yaw - last.yaw)));
+      largestTurn = Math.max(largestTurn, turn);
+      largestStep = Math.max(largestStep, Math.hypot(now.at.x - last.at.x, now.at.y - last.at.y));
+      nearest = Math.min(nearest, Math.hypot(now.at.x - 20, now.at.y));
+      last = now;
+    }
+    // A quarter turn over 4 m of curve: about 0.04 rad a 0.1 m step, never the whole turn at once.
+    expect(largestTurn).toBeLessThan(0.1);
+    expect(largestStep).toBeLessThan(0.15);
+    // The corner itself is cut, not walked to.
+    expect(nearest).toBeGreaterThan(0.5);
+    expect(along(path, 0).at).toEqual({ x: 0, y: 0 });
+    expect(along(path, 35).at).toEqual({ x: 20, y: 15 });
+  });
 
   it('draws each person the same every time', () => {
     expect(lookOf(SEED, 12)).toEqual(lookOf(SEED, 12));
