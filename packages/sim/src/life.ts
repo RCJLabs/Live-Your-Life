@@ -129,6 +129,13 @@ function alarm(view: { fact(id: string): unknown }): number | undefined {
 export const lifeModule = defineModule<LifeSlice>({
   id: 'life',
   init: () => ({ activity: 'awake', since: 0, asOf: 0, levels: { ...START_LEVELS } }),
+  events: {
+    // Heard by the people you know (M2.6): an evening out is met in when it ends.
+    ended: {
+      args: { activity: { type: 'enum', values: ACTIVITIES }, minutes: { type: 'int', min: 0 } },
+      label: 'Finished doing something',
+    },
+  },
   actions: {
     do: {
       run: (ctx, action) => doActivity(ctx, action.activity, action.minutes),
@@ -193,6 +200,7 @@ export const lifeModule = defineModule<LifeSlice>({
         'job/quit',
         'market/*',
         'deal/*',
+        'circle/*',
         'ties/*',
         'you/*',
         'law/take',

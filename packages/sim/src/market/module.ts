@@ -194,6 +194,12 @@ export const marketModule = (career?: string) =>
         domain: { type: 'bool' },
         label: 'working at your block’s diner',
       },
+      // The roster's place of a tier-1 workplace you work at, where you meet the people on with you (M2.6).
+      place: {
+        read: ({ state }) => (state.employer?.startsWith('w') ? Number(state.employer.slice(1)) : -1),
+        domain: { type: 'int', min: -1 },
+        label: 'the tier-1 workplace you work at, or -1',
+      },
       reputation: {
         read: ({ state }) => state.reputation,
         domain: { type: 'int', min: 0, max: 100 },
