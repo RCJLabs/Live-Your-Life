@@ -136,6 +136,7 @@ A tier-2 person who is met becomes tier 1 and stays. On the town's sidewalks tie
 
 Per pair: familiarity, regard, attraction, resentment, and the memory above; ties grow from shared activity. Statuses as data: acquaintance, friend, dating, engaged, married, separated, divorced, estranged, enemy; family ties. Romance, affairs, breakups, custody and child support at real-shaped rates. Reputation by name and by district: standing changes prices, treatment and what people will do for you (Space-Wrecked's standing levels).
 
+- **M2.6, decided 2026-10-24:** you meet the tier-1 people where you are and keep up to 12 ties (D89); intimacy fades to black (D90); each person's orientation is drawn at real shares and you pick yours (D91); the pace is real-shaped (D92). Nobody under 18 can be courted.
 - **Built in M1.4: the other line cook** (`packages/sim/src/ties/`; the crew in `career/line-cook.json`, with `name-pool/`, `act/` and `favour/` records).
   - Who they are is drawn at hire from the seed and the name pool: a first name with the pronouns that go with it, a last name, an age from 19 to 52 (D41).
   - They work five days a week. Their two days off are worked out from their own seed and the week, not stored. On a day they work and you're on, they're on your shift.

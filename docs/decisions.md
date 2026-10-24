@@ -719,6 +719,36 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** The officer's wage, marked (recommended, chosen). The rank built with no promotion into it until a wage is sourced. Detective left to M2.5.
 
+### D88. Relationships come before food. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** M2.6 is worked before M2.5. Relationships need few wage figures, and M2.7's heir needs a family to inherit. The CURRENT MILESTONE marker moves to M2.6, and the [you] gates still open are listed at the top of ROADMAP.md so none is lost.
+
+**Options considered.** M2.6 Relationships (recommended, chosen). M2.5 Food, on secondary wage sources. M2.7 Lives, without the heir. M2.9 Travel. For the marker: move it and list the open gates (recommended, chosen), or leave it at M0.3.
+
+### D89. You meet the people where you are. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** Anyone among the 1,000 tier-1 people can become a tie of yours: you meet whoever shares your place and hour, as they meet each other (D71), and keep up to 12 ties, each grown from time together. The coworker is one of them, with their regard and memory kept. Nobody under 18 can be courted, whatever else changes.
+
+**Options considered.** People you meet (recommended, chosen). The linked people only (the coworker, the fence, the supplier). People you meet plus a dating app showing strangers from the 1,000.
+
+### D90. Intimacy fades to black. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** A choice such as staying the night, then the morning. The chronicle says only that they spent the night. Pregnancy can follow at real odds, with or without contraception. Nothing is shown.
+
+**Options considered.** Fade to black (recommended, chosen). Off screen entirely, with pregnancy only from a couple's choice to try for a child.
+
+### D91. Attraction is drawn for each person. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** Each tier-1 person's orientation is drawn from the seed at real US survey shares, traced in CALIBRATION.md. You pick yours at the start, and can change it later in settings. Attraction runs both ways and follows both people's.
+
+**Options considered.** Drawn per person (recommended, chosen). Anyone attracted to you, whatever your gender.
+
+### D92. Relationships move at a real-shaped pace. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** Dating to moving in and to marriage take real median times, about one to three years, traced in CALIBRATION.md, so a marriage in the free first year is rare but possible. A pregnancy carried to birth fits in a year. The heir (M2.7) gets children who were born in play.
+
+**Options considered.** Real-shaped (recommended, chosen). Compressed about four times, written as a departure.
+
 ---
 
 ## Open items

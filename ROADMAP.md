@@ -8,6 +8,19 @@ How to read this file:
 - Work happens only at the **CURRENT MILESTONE** marker. Ideas that arrive outside it go under their phase, in "Ideas, not yet in a milestone".
 - Every number in Readings names its instrument, date and N. A number marked (tune) is a proposal.
 
+**[you] gates still open.** The marker moves on while these wait for Evan's phone (moved 2026-10-24, Evan's call); none is dropped:
+
+- M0.1: the page installs and opens offline on the phone.
+- M0.3: the stranger's answers from the screenshots; the frame rate at speed 1; continue, or interiors as scenes.
+- M0.4: the tier-1 count as a decision.
+- M1.6: the frame rate with the life running.
+- M1.8: the tap budget from the reading, and speed 3 (D56, open question 39).
+- Phase 1: 30 fps or more at speed 1.
+- M2.1: the frame rate walking downtown.
+- M2.2: the frame rate with people.
+- M2.3: a week looking for work and working a new career (and its 29 careers' wages, open question 67).
+- M2.4: a dealer's week and a recruit's week.
+
 ## Phase 0: Foundations
 
 **Goal:** the repository can prove things before it has a game: a pure sim on the engine's kernel, bots, a renderer spike measured on a phone, and the two readings the design depends on.
@@ -53,7 +66,7 @@ How to read this file:
       - `Date.now` in `life.ts` (the purity check);
       - the bot never paying what is owed;
       - paying it off offered without the cash.
-- **M0.3 The art spike (risk 1 in BRAINSTORM.md).** ← **CURRENT MILESTONE** One city block, one interior with a cutaway, six procedural people with facings and outfits, walking and sitting, day and night, at 390 px.
+- **M0.3 The art spike (risk 1 in BRAINSTORM.md).** One city block, one interior with a cutaway, six procedural people with facings and outfits, walking and sitting, day and night, at 390 px.
   - The kill criterion, written before the spike: a stranger, from a 390 px screenshot, can tell who is working, sleeping or arguing, and which building is the restaurant.
   - Done when: the screenshots and the stranger's answers are in Readings with the date [you]; fps at speed 1 on Evan's phone is in Readings [you]; the decision (continue, or interiors as scenes) is in docs/decisions.md [you].
   - **Built, 2026-10-19. The three gates are Evan's and are open.** The tester brief, its screenshots and the phone reading's steps are in [docs/research/art-spike.md](docs/research/art-spike.md).
@@ -485,7 +498,24 @@ How to read this file:
     7. Bots (dealer, police, steady), 500 seeded weeks each, the crime-pays bar (B6), saves from before, readings, docs.
   - **Built, 2026-10-24: every [auto] gate passed.** Steps 1–6 in PRs #21–#26. Step 7: the dealer bot (`packages/sim/src/dealer.ts`), a police recruit under the steady bot, and the line cook each play 500 seeded weeks with nothing refused (`deal/week.test.ts`). The dealer's weeks reach buying, selling, sales seen, raids, arraignment and the crew; 10 recruits in 20 weeks all finish the academy and make arrests on patrol. B6 holds: after 8 weeks every dealer is worth less than every line cook once arrests are counted, while with the police switched off dealers earn twice what cooks do (Readings). Saves from before load through their migrations (life-v1 to v3). The [you] gate, a dealer's week and a recruit's week on Evan's phone, is open.
 - **M2.5 Food.** Line cook to chef.
-- **M2.6 Relationships.** Romance, marriage, children, custody.
+- **M2.6 Relationships.** ← **CURRENT MILESTONE** Romance, marriage, children, custody.
+  - Started 2026-10-24, before M2.5 (D88). Decisions: you meet the people where you are (D89); intimacy fades to black (D90); attraction drawn for each person (D91); real-shaped pace (D92).
+  - **Done when:**
+    - each tier-1 person has a name, pronouns, an adult age and an orientation worked out from the seed, never stored, and nobody under 18 can be courted, by a check over every seed in the sweeps [auto];
+    - you meet the people at the place and hour you share with them, and keep up to 12 ties, each with familiarity, regard and attraction, and a memory of acts [auto];
+    - talking, asking out, dating, staying the night, moving in, engagement, marriage, separation and divorce are statuses and acts in records, each with its odds shown first and rolled [auto];
+    - a night's chance of pregnancy, with or without contraception, and a pregnancy's weeks, costs and birth trace to CALIBRATION.md [auto];
+    - a child born in play is in your household, with care hours and childcare costs, and a breakup with a child sets custody and support by Michigan's formula, traced [auto];
+    - a bot that looks for a partner plays 500 seeded weeks with nothing refused, and over a year of lives its rates of dating, moving in and marriage fall in the ranges CALIBRATION.md gives [auto];
+    - saves from before load, with the coworker's ties kept [auto];
+    - meeting someone, a date and a night, played on Evan's phone at 360 and 390 px [you].
+  - **Steps:**
+    1. Who they are: each tier-1 person's name, pronouns, age and orientation from the seed; meeting the people at your place and hour; your ties to them (up to 12), with the coworker's carried over.
+    2. Courting: talking, asking out and dates as acts with odds shown first; attraction both ways; the statuses as records; breakups.
+    3. Together: staying the night (D90), moving in with a shared rent, engagement, a wedding and Michigan's licence, separation and divorce, each with its costs traced.
+    4. Children: a night's odds with and without contraception; a pregnancy's weeks, care and costs; birth; the child in the household, care hours and childcare; custody and support on a breakup.
+    5. The page: the people you know, meeting someone, a date, the household, at 360 and 390 px.
+    6. Bots, 500 seeded weeks, the year's rates against CALIBRATION.md, saves from before, readings, docs.
 - **M2.7 Lives.** Aging, illness, death, the heir and the ward.
 - **M2.8 Education.** To community college.
 - **M2.9 Travel.** Walking, bus, rideshare; travel time as the cost.
@@ -646,6 +676,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-24: M2.4 step 5: the police (D80, D87). A police recruit is a career on the market: a felony bars it, a misdemeanour lowers the odds. The academy is 16 weeks of 10-hour weekdays, paid at Grand Rapids' $26.04. Careers can now have a ladder in their records, the next rank once practice and standing are enough, with the same employer: the academy leads to patrol ($28.28), and about three years of patrol at a standing of 70 to detective (the officer's wage, a placeholder). Patrol and detective shift events can end in an arrest, charged as the same offence records the law charges you with. A felony sentence costs a no-felony job. Tier-1 workplaces now draw their careers by each career's share of the city's jobs; a rank reached by promotion has none, and no openings. The law's slice is version 3, counting felonies. Fixed on the way: a favour the coworker asked lapses once you leave the diner, since covering their shift threw in a job without it. Planted bugs: 6, 6 caught.
 - 2026-10-24: M2.4 step 6: the street trade on the page. The corner is a place by the corner shop, reached by a tap. There you buy the supplier's lots at their hours, sell an hour at a time with the preview's odds, and join the crew, take a front, pay it back and ask the coworker in. The supplier stands there at their hours. Arraignment, a jail term, a drug case in court and prison each have a sheet, every number from the sim's records and previews; the HYTA note's hand-typed "six months" now reads the record. Prison's days pass a day a frame on "Let the days pass", stopping for anything told, from inside or out. The waiting list tells of a raid, a violation and a front owed. The police careers came onto the Jobs tab with step 5. e2e: the corner at 390 and 360 px. Planted bugs: 6, 6 caught.
 - 2026-10-24: M2.4 step 7, and every [auto] gate passed. The dealer bot buys whenever it runs low, stands the corner through the night, joins the crew, takes and repays fronts, recruits, and handles bail, court and prison. Dealers, recruits and line cooks each play 500 seeded weeks with nothing refused. Crime pays less than work once arrests are counted (B6): every dealer below every cook after 8 weeks, where without the police dealers would earn twice as much. The first dealer bot, which bought only when it held nothing, earned less than a cook even with no police, which made the bar pass for the wrong reason; a planted bug showed it. Planted bugs: 3, 3 caught after the fix. The [you] gate is open.
+- 2026-10-24: M2.6 opened before M2.5 (D88), with its gates and steps (D89–D92); the marker moved from M0.3, and the [you] gates still open are listed at the top.
 
 ## Open questions
 
@@ -725,3 +756,5 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 74. With the police careers, the seeker bot is hired sooner than M2.3's reading (Readings: 9.8 days at 15 in 100); the police recruit's odds are 10 in 100 for now. The reading is re-taken with the 30 careers.
 75. Patrol has no midnight shift, because a shift can't run past midnight yet; and patrol's arrests are of people nobody simulates. The tier-1 people's own crimes, if any, are for a later milestone.
 76. Raids come often: about four a life in 8 weeks, since three sales seen bring the police and heat raises the odds of being seen to 60 in 100. Whether that is too quick for play, Evan's week on the phone will say.
+77. The tier-1 people are all adults for now: the roster has no children. Children among them, and what an under-18 person does in a day, wait for M2.7 and M2.8; until then the age floor is a check, not a schedule.
+78. A child born in play is a household member of yours (tier 0). Whether a child of a tier-1 couple is born too, or the roster stays fixed until M2.7, is open.
