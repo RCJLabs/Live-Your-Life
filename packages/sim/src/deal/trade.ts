@@ -122,7 +122,7 @@ export function buyerCame(ctx: DealContext, effect: Effect): void {
   });
 }
 
-/** `sighted`: someone saw, and the police may hear of it (step 2 builds the case on what was seen). */
+/** `sighted`: someone saw, and told. */
 export function sighted(ctx: DealContext, effect: Effect): void {
   const t = tradeOf(ctx.content);
   const day = ctx.fact('time.day') as number;
@@ -130,4 +130,13 @@ export function sighted(ctx: DealContext, effect: Effect): void {
   ctx.write().seen.push({ day, hour, grams: t.sale.grams, passing: effect.passing as number });
   raiseHeat(ctx, t.heat.seen);
   ctx.emit('seen', { day, hour });
+  // Enough seen, and the police will come for you, at a time you are told (law/drugs.ts).
+  if (ctx.read().seen.length >= t.police.enough) ctx.apply({ effect: 'drug-case' });
+}
+
+/** `seize`: taken in a search, with what was seen kept on the case the law opens. */
+export function seize(ctx: DealContext): void {
+  const w = ctx.write();
+  w.held = 0;
+  w.seen = [];
 }

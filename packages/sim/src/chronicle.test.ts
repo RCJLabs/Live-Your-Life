@@ -16,7 +16,24 @@ const lines = sim.content.entries<LineRecord>('line').map(([id, l]) => ({ id, ..
 // law/dismissed (a contest won) left the bots' sweep when D57's alarm changed their weeks; court.test.ts
 // raises it.
 // job/quit: no bot quits (job/hire.ts); market/module.test.ts raises it.
-const RARE = ['law/revoked', 'law/discharged', 'law/dismissed', 'home/paid-owed', 'job/quit'];
+const RARE = [
+  'law/revoked',
+  'law/discharged',
+  'law/dismissed',
+  'home/paid-owed',
+  'job/quit',
+  // The street trade and a drug case (M2.4): no bot deals until step 7's; law/drugs.test.ts raises them.
+  'deal/bought',
+  'deal/on-corner',
+  'law/searched',
+  'law/raided',
+  'law/arraigned',
+  'law/bailed',
+  'law/remanded',
+  'law/sentenced',
+  'law/released',
+  'law/violated',
+];
 
 /** Every event the bots raise in a few lives of each kind, by type. */
 function census(): Map<string, Beat[]> {

@@ -1,0 +1,8 @@
+{
+  "beat": "law/sentenced",
+  "when": {
+    "field": "kind",
+    "is": "jail"
+  },
+  "text": "{you} was sentenced to {jail} in jail, then {probation} on probation."
+}

@@ -7,7 +7,7 @@ import { defineModule } from '@eb/core';
 import { namePoolOf } from '../ties/records.ts';
 import { TRADE, tradeOf } from './records.ts';
 import { type DealSlice, HEAT_MAX, heatOf } from './state.ts';
-import { buy, buyerCame, corner, cornerHour, MOST_HELD, sighted } from './trade.ts';
+import { buy, buyerCame, corner, cornerHour, MOST_HELD, seize, sighted } from './trade.ts';
 
 const TEXT = { type: 'text' } as const;
 const WHOLE = { type: 'int', min: 0 } as const;
@@ -61,5 +61,5 @@ export const dealModule = defineModule<DealSlice>({
     seen: { args: { day: WHOLE, hour: { type: 'int', min: 0, max: 23 } }, label: 'A sale was seen' },
   },
   actions: { buy, corner },
-  effects: { 'corner-hour': cornerHour, buyer: buyerCame, sighted },
+  effects: { 'corner-hour': cornerHour, buyer: buyerCame, sighted, seize },
 });

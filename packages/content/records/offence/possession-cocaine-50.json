@@ -8,5 +8,19 @@
   "fineMax": 2500000,
   "timesValue": 0,
   "fine": 200000,
-  "costs": 12500
+  "costs": 12500,
+  "deferral": false,
+  "first": {
+    "jail": {
+      "min": 0,
+      "max": 30
+    },
+    "probation": 730
+  },
+  "repeat": {
+    "prison": {
+      "min": 12,
+      "max": 24
+    }
+  }
 }

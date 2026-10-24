@@ -7,6 +7,7 @@
  */
 import type { Effect } from '@eb/core';
 import { todayOf } from '../job/days.ts';
+import { raid, violation } from './drugs.ts';
 import { FENCE, fenceOf, goodOf, offenceFor } from './records.ts';
 import {
   between,
@@ -30,15 +31,19 @@ function demandFor(ctx: LawContext, value: number, recovered: boolean): number {
   return Math.min(d.max, Math.max(d.min, d.times * value)) + (recovered ? 0 : value);
 }
 
-/** Probation ends at a new offence: the conviction it held off is entered (D47). */
+/**
+ * Probation ends at a new offence or a missed check-in. HYTA's enters the conviction it held off
+ * (D47); a sentence's sends the police to pick you up for days in jail (M2.4).
+ */
 function revoke(ctx: LawContext, why: string): void {
   const p = ctx.read().probation;
   if (!p) return;
   const w = ctx.write();
   w.probation = null;
-  w.hyta = 'revoked';
+  if (p.trainee) w.hyta = 'revoked';
   ctx.emit('revoked', { why });
-  convict(ctx, p.offence, 'probation');
+  if (p.trainee) convict(ctx, p.offence, 'probation');
+  else newVisit(ctx, later(ctx), { why: 'violation', item: '', case: 0 });
 }
 
 const holdNow = (ctx: LawContext): Hold | null =>
@@ -75,17 +80,18 @@ export function ticket(ctx: LawContext, effect: Effect): void {
 /** Sets a visit for a day, at a time in the police's hours, and tells the player. */
 function visitOn(ctx: LawContext, day: number, v: Visit): void {
   const at = tickOf(todayOf(ctx), day, between(ctx, CALLS.from, CALLS.to));
-  setTimer(ctx, `law-visit-${v.id}`, at, [{ effect: 'visit', visit: v.id }], v.why === 'warrant' ? 'arrest' : 'visit');
+  const what = v.why === 'warrant' || v.why === 'violation' ? 'arrest' : v.why === 'raid' ? 'raid' : 'visit';
+  setTimer(ctx, `law-visit-${v.id}`, at, [{ effect: 'visit', visit: v.id }], what);
 }
 
-function newVisit(ctx: LawContext, day: number, visit: Omit<Visit, 'id'>): void {
+export function newVisit(ctx: LawContext, day: number, visit: Omit<Visit, 'id'>): void {
   const w = ctx.write();
   const v = { ...visit, id: w.next++ };
   w.visits.push(v);
   visitOn(ctx, day, v);
 }
 
-const later = (ctx: LawContext): number => {
+export const later = (ctx: LawContext): number => {
   const c = crime(ctx);
   return todayOf(ctx).day + between(ctx, c.visit.min, c.visit.max);
 };
@@ -112,6 +118,11 @@ export function visit(ctx: LawContext, effect: Effect): void {
     return;
   }
   ctx.write().visits = ctx.read().visits.filter((x) => x.id !== v.id);
+  if (v.why === 'raid' || v.why === 'violation') {
+    if (v.why === 'raid') raid(ctx);
+    else violation(ctx);
+    return;
+  }
   if (v.why === 'warrant') {
     const until = todayOf(ctx).tick + crime(ctx).jail;
     const hold: Hold = { why: 'jail', until, case: v.case };

@@ -88,7 +88,7 @@ describe('the court date (D47)', () => {
 
   it('HYTA: probation, a check-in every 30 days with its fee, and no record when it is done', () => {
     const trainee = play(game, sim, inCourt('hyta').state, { type: 'law/plead', plea: 'hyta' });
-    expect(law(trainee.state).probation).toEqual({ until: 183, next: 33, offence: 'retail-fraud-3' });
+    expect(law(trainee.state).probation).toEqual({ until: 183, next: 33, offence: 'retail-fraud-3', trainee: true });
     expect(trainee.fact('law.convictions')).toBe(0);
     let state = trainee.state;
     for (const day of [33, 63, 93, 123, 153]) {

@@ -4,7 +4,7 @@
  * day, weights that the charges cover in order.
  */
 import type { RecordStore } from '@eb/core';
-import type { Hours } from '../law/records.ts';
+import type { Hours, Span } from '../law/records.ts';
 import { offenceOf } from '../law/records.ts';
 
 /** The slice's trade (D82): one. */
@@ -28,6 +28,10 @@ export interface TradeRecord {
   readonly heat: { readonly sale: number; readonly seen: number; readonly keep: number };
   readonly possession: readonly string[];
   readonly delivery: readonly string[];
+  readonly police: { readonly enough: number; readonly raid: Span };
+  readonly bail: { readonly bond: number; readonly posted: number; readonly hour: number };
+  readonly court: Span;
+  readonly contest: { readonly seen: number; readonly found: number };
 }
 
 const fail = (what: string, why: string): never => {
@@ -59,6 +63,11 @@ export function tradeOf(store: RecordStore, id: string = TRADE): TradeRecord {
   const lots = new Set(t.supplier.sells.map((l) => l.id));
   if (lots.size !== t.supplier.sells.length) fail(what, 'two of what the supplier sells share an id');
   if (t.seen.base > t.seen.most) fail(what, 'its odds of being seen start above their most');
+  for (const [name, span] of [
+    ['police.raid', t.police.raid],
+    ['court', t.court],
+  ] as const)
+    if (span.min > span.max) fail(what, `${name} runs from ${span.min} down to ${span.max}`);
   inWeight(store, what, t.possession);
   inWeight(store, what, t.delivery);
   checked.add(t);

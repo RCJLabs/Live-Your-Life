@@ -42,14 +42,17 @@ describe('the save fixtures', () => {
     .filter((m) => since(m.id))
     .map((m) => m.id);
 
-  it('loads the first with nothing skipped, migrating `you` from version 1 to 2 (D61)', () => {
+  it('loads the first with nothing skipped, migrating `you` from version 1 to 2 (D61) and the law to 2 (M2.4)', () => {
     const result = load('life-v1.json');
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.skipped).toBe(0);
     expect(result.report.kept).toEqual([]);
     expect(result.report.replayed).toBe(result.file.log.length);
-    expect(result.report.migrated).toEqual([{ module: 'you', from: 1, to: 2 }]);
+    expect(result.report.migrated).toEqual([
+      { module: 'law', from: 1, to: 2 },
+      { module: 'you', from: 1, to: 2 },
+    ]);
     expect(result.report.added).toEqual(people);
   });
 
@@ -64,11 +67,11 @@ describe('the save fixtures', () => {
     expect(result.state.kernel.versions).toEqual(fresh.kernel.versions);
   });
 
-  it('loads the second, saved after the walk to work, with nothing migrated or skipped, and the people added (M2.2)', () => {
+  it('loads the second, saved after the walk to work, with only the law migrated (M2.4), nothing skipped, and the people added (M2.2)', () => {
     const result = load('life-v2.json');
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([]);
+    expect(result.report.migrated).toEqual([{ module: 'law', from: 1, to: 2 }]);
     expect(result.report.added).toEqual(people);
     expect(result.report.skipped).toBe(0);
     expect((result.state.you as { commute: number }).commute).toBe(36);
@@ -79,11 +82,19 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.added).toEqual(['market', 'deal']);
-    // Without the market's and the trade's own slices and versions, the very state saved.
-    const { market: _, deal: _d, ...rest } = result.state as unknown as Record<string, unknown>;
+    // Without the market's and the trade's own slices and versions, and the law's migration to 2
+    // (M2.4) taken back, the very state saved.
+    const { market: _, deal: _d, law, ...rest } = result.state as unknown as Record<string, unknown>;
+    const { prison: _p, ...lawThen } = law as Record<string, unknown>;
+    const probation = lawThen.probation as Record<string, unknown> | null;
+    const { trainee: _t, ...probationThen } = probation ?? {};
     const kernel = result.state.kernel as unknown as { versions: Record<string, number> };
     const { market: __, deal: __d, ...versions } = kernel.versions;
-    const saved = { ...rest, kernel: { ...kernel, versions } } as unknown as GameState;
+    const saved = {
+      ...rest,
+      law: { ...lawThen, probation: probation ? probationThen : null },
+      kernel: { ...kernel, versions: { ...versions, law: 1 } },
+    } as unknown as GameState;
     expect(stateHash(saved)).toBe(result.file.hash);
   });
 });

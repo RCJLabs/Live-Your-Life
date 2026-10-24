@@ -8,7 +8,8 @@ import { MINUTES_PER_DAY } from '../calendar.ts';
 import { type Today, tickAt, todayOf } from '../job/days.ts';
 import { crimeOf, offenceOf, SHOPLIFTING } from './records.ts';
 
-export type Evidence = 'held' | 'camera' | 'sale';
+/** How the case was made: held at the till, on camera, the fence's sale; sales seen, or drugs found on you (M2.4). */
+export type Evidence = 'held' | 'camera' | 'sale' | 'seen' | 'found';
 
 export interface Case {
   readonly id: number;
@@ -20,20 +21,26 @@ export interface Case {
   readonly court: number;
   /** Set when the court date was missed. */
   readonly warrant: boolean;
+  /** Cents posted as bail, given back when the case ends (M2.4). */
+  readonly bail?: number;
 }
 
 /** The police coming at a time the player has been told (D46). */
 export interface Visit {
   readonly id: number;
-  readonly why: 'camera' | 'sale' | 'warrant';
+  /** A raid on what was seen of your dealing, or a probation violation (M2.4). */
+  readonly why: 'camera' | 'sale' | 'warrant' | 'raid' | 'violation';
   readonly item: string;
   /** The case a warrant is for; 0 otherwise. */
   readonly case: number;
 }
 
-/** The held mode's data: held by the clerk until the police come, or in the cells until the hearing. */
+/**
+ * The held mode's data: held by the clerk until the police come, in the cells until the hearing,
+ * or serving a jail sentence (M2.4).
+ */
 export interface Hold {
-  readonly why: 'clerk' | 'jail';
+  readonly why: 'clerk' | 'jail' | 'term';
   readonly until: number;
   readonly case?: number;
 }
@@ -51,7 +58,10 @@ export interface LawSlice {
   next: number;
   convictions: number;
   hyta: 'none' | 'on' | 'done' | 'revoked';
-  probation: { until: number; next: number; offence: string } | null;
+  /** HYTA's, which holds a conviction off (`trainee`), or a sentence's (M2.4). */
+  probation: { until: number; next: number; offence: string; trainee: boolean } | null;
+  /** A prison sentence passed and not yet served (M2.4; served in D81's days). */
+  prison: { months: number; offence: string } | null;
   owed: { demand: number; court: number };
   /** Barred from the shop, by a trespass notice after being caught there (tune). */
   barred: boolean;
@@ -70,6 +80,7 @@ export const freshLaw = (rng: Rng): LawSlice => ({
   convictions: 0,
   hyta: 'none',
   probation: null,
+  prison: null,
   owed: { demand: 0, court: 0 },
   barred: false,
 });
