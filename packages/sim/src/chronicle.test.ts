@@ -9,7 +9,7 @@ import { thiefFor } from './thief.ts';
 import type { YouSlice } from './you.ts';
 
 const sim = sliceSim();
-const NAMES = { you: 'Dana', coworker: 'Ray', fence: 'Gina' };
+const NAMES = { you: 'Dana', coworker: 'Ray', fence: 'Gina', supplier: 'Lou' };
 const lines = sim.content.entries<LineRecord>('line').map(([id, l]) => ({ id, ...l }));
 
 /** Events too rare to come up in a short sweep, which the law's own tests raise. */

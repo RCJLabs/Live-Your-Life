@@ -1,0 +1,48 @@
+{
+  "name": "Selling cocaine on the street",
+  "names": "rust-belt",
+  "supplier": {
+    "hours": {
+      "from": 20,
+      "to": 24
+    },
+    "sells": [
+      {
+        "id": "eight-ball",
+        "grams": 35,
+        "price": 18000
+      },
+      {
+        "id": "quarter",
+        "grams": 70,
+        "price": 32000
+      },
+      {
+        "id": "ounce",
+        "grams": 283,
+        "price": 120000
+      }
+    ]
+  },
+  "sale": {
+    "grams": 5,
+    "price": 4000
+  },
+  "corner": {
+    "buyers": [25, 25, 20, 15, 10, 5, 5, 5, 5, 5, 8, 8, 8, 8, 10, 10, 12, 15, 18, 20, 25, 30, 30, 30],
+    "passing": 30
+  },
+  "seen": {
+    "base": 2,
+    "witness": 20,
+    "per": 5,
+    "most": 60
+  },
+  "heat": {
+    "sale": 2,
+    "seen": 10,
+    "keep": 9500
+  },
+  "possession": ["possession-cocaine-25", "possession-cocaine-50"],
+  "delivery": ["delivery-cocaine-50"]
+}

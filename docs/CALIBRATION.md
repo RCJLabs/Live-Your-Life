@@ -152,6 +152,30 @@ How often jobs come up, how hiring goes, and how far away work is (D73, D74). Th
 
 **The other 29 careers' wages are not in.** The federal occupational wage survey couldn't be reached from the build environment (bls.gov and the sites that quote it were blocked). A search found May 2024 figures for 7 of the 30 and part of 3 more, which are leads, not readings. The May 2025 figures, the base year's, came out on 15 May 2026.
 
+## Street dealing (M2.4)
+
+Cocaine on the street (D78, D82). Every figure was read on 2026-10-23 through search results. Michigan's legislature and court sites, and every page a fetch was tried on, were blocked from the build environment, so each row is secondary until checked (D83).
+
+| Figure | Value | Record or code | Source, as found | Status |
+| --- | --- | --- | --- | --- |
+| Delivery, or possession with intent, under 50 g | felony, up to 20 years and $25,000; class D under the sentencing guidelines (MCL 777.13m) | `offence/delivery-cocaine-50.json` | MCL 333.7401(2)(a)(iv): a county bar's summary (2019); MJI's controlled substances benchbook; an unofficial copy of 777.13m | to check |
+| Possession under 25 g | felony, up to 4 years and $25,000; class G | `offence/possession-cocaine-25.json` | MCL 333.7403(2)(a)(v): an unofficial copy of the statute | to check |
+| Possession, 25 to 50 g | felony, up to 4 years and $25,000 | `offence/possession-cocaine-50.json` | MCL 333.7403(2)(a)(iv): the same copy, through a search summary | to check |
+| A second drug offence | up to twice the term and the fine (MCL 333.7413); any earlier drug conviction counts | not yet: step 2 | the statute's PDF on a legislature mirror, through a search summary | to check |
+| Guidelines' ranges for a first offence (no prior record, offence variables at I) | class D 0 to 6 months; class G 0 to 3 months. With an upper limit of 18 months or less the court gives an intermediate sanction (probation, or up to a year in jail) unless it says why not (MCL 769.34(4)(a)) | not yet: step 2 | copies of MCL 777.65 and 777.68; MJI's sentencing benchbook | to check |
+| Felony dispositions sent to prison | 19.7% in 2023; 19% to 22% since 2003 | not yet: step 2 | MDOC, prison population projection report, March 2024 | to check |
+| Truth in sentencing | the whole minimum is served before parole, with no good time | not yet: step 3 | MDOC's truth-in-sentencing page | to check |
+| Parole granted | about two in three of about 10,000 decisions a year; another source gives 33% to 43% for 2018–21, which disagrees | not yet: step 3 | MDOC testimony to the House (undated); Senate Fiscal Agency | conflicting: to settle |
+| Bail | 10% of the bond posted to be released (MCL 765.6(2)); no typical amount for a delivery charge found | not yet: step 2 | the statute through a search summary; a law firm | to check; the amount unsourced |
+| HYTA and drug delivery | HYTA excludes a "major controlled substance offence", which looks like it includes any 7401(2)(a) charge: delivery is not offered HYTA. A first possession can be deferred under MCL 333.7411, once in a lifetime | not yet: step 2 | MJI's benchbook; a copy of MCL 761.2 (the reading of "major" is an inference) | to check |
+| A gram on the street | $81 in 2021, $120 in 2020: the sale is half a gram for $40 | `trade/cocaine.json`, `sale` | UNODC's World Drug Report through Statista, whose wording of the change between the years is inconsistent | to check |
+| What the supplier charges | 3.5 g $180, 7 g $320, an ounce (28.3 g) $1,200 (tune) | `trade/cocaine.json`, `supplier.sells` | none found. UNODC gave $4,000 to $45,000 a kilogram wholesale in 2018; unsourced pages give $1,100 to $1,800 an ounce; police "street values" in Michigan seizures run from about $700 to $10,700 an ounce | placeholder |
+| Buyers by the hour, who sees, heat | the trade's `corner`, `seen` and `heat` (tune) | `trade/cocaine.json` | none: tuned for play | — |
+| Held at most | under 50 g, the weight the charges above go by (tune) | `deal/trade.ts`, `MOST_HELD` | none: keeps a street seller inside the tiers built | — |
+| What street sellers earned | about $30 an hour, 1990 dollars, for daily sellers in Washington DC (Reuter, MacCoun and Murphy); about $3.30 an hour, 1995 dollars, for a Chicago gang's foot soldiers (Levitt and Venkatesh, 2000), with 5.9 arrests and a 25% chance of death over four years | — (a check for B6, not a figure in use) | RAND reprint RP-171; NBER working paper 6592, through summaries | to check |
+
+**A departure.** The tier-1 people out on the street are those on their way to a shift (people/day.ts's commute hour). With only the line cook's shifts so far (M2.3), almost nobody passes outside the hours before 06:00 and 14:00, and the day's other hours look quieter than a real street. The passers-by drawn on the page (D72) are not counted. More careers will spread it.
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).

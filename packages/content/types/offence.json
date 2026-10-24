@@ -1,6 +1,6 @@
 {
   "title": "Offence",
-  "description": "A crime as the state's law defines it (D46, D47): what it covers, the most it carries, and what a court in the slice imposes. The figures trace to CALIBRATION.md.",
+  "description": "A crime as the state’s law defines it (D46, D47, D82): what it covers, the most it carries, and what a court imposes. The figures trace to CALIBRATION.md.",
   "nameField": "name",
   "fields": {
     "name": {
@@ -17,7 +17,8 @@
     "under": {
       "kind": "int",
       "min": 1,
-      "description": "It covers goods worth less than this, in cents."
+      "description": "It covers goods worth less than this, in cents. Left out for an offence that goes by weight, or covers any value.",
+      "optional": true
     },
     "priors": {
       "kind": "int",
@@ -28,8 +29,8 @@
     "days": {
       "kind": "int",
       "min": 0,
-      "max": 3650,
-      "description": "The most days in jail it carries."
+      "max": 36500,
+      "description": "The most days in jail or prison it carries."
     },
     "fineMax": {
       "kind": "int",
@@ -50,6 +51,17 @@
       "kind": "int",
       "min": 0,
       "description": "Court costs and assessments on a conviction, in cents (tune)."
+    },
+    "grams": {
+      "kind": "int",
+      "min": 1,
+      "optional": true,
+      "description": "For a controlled substance: it covers less than this weight, in tenths of a gram, of any mixture holding it (D82)."
+    },
+    "felony": {
+      "kind": "bool",
+      "optional": true,
+      "description": "A felony, which a record shows as one, and which can be served in prison (D81). A misdemeanour when left out."
     }
   }
 }

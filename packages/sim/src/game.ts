@@ -17,6 +17,7 @@ import {
 import { economyKit, inventoryKit } from '@eb/kits';
 import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToMidnight, minutesToNextMonth } from './calendar.ts';
 import { clockModule } from './clock.ts';
+import { dealModule } from './deal/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
 import { lawModule } from './law/module.ts';
@@ -80,6 +81,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     youModule,
     // The labor market (M2.3): added to a save from before it, it starts where the save's job is.
     marketModule(options.career),
+    // The street trade (M2.4): added to a save from before it, it starts with nothing held.
+    dealModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

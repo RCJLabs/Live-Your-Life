@@ -19,8 +19,8 @@ export interface Hours {
 export interface OffenceRecord {
   readonly name: string;
   readonly law: string;
-  /** It covers goods worth less than this, in cents. */
-  readonly under: number;
+  /** It covers goods worth less than this, in cents; any value when left out. */
+  readonly under?: number;
   readonly priors: number;
   readonly days: number;
   readonly fineMax: number;
@@ -28,6 +28,9 @@ export interface OffenceRecord {
   /** What a court in the slice imposes on a conviction, in cents. */
   readonly fine: number;
   readonly costs: number;
+  /** For a controlled substance: it covers less than this weight, in tenths of a gram (D82). */
+  readonly grams?: number;
+  readonly felony?: boolean;
 }
 
 export interface CrimeRecord {
@@ -122,7 +125,7 @@ export function fenceOf(store: RecordStore, id: string): FenceRecord {
 export function offenceFor(store: RecordStore, offences: readonly string[], value: number, convictions: number) {
   const fits = offences.find((id) => {
     const o = offenceOf(store, id);
-    return value < o.under && convictions <= o.priors;
+    return (o.under === undefined || value < o.under) && convictions <= o.priors;
   });
   return fits ?? (offences.at(-1) as string);
 }

@@ -192,6 +192,7 @@ export const lifeModule = defineModule<LifeSlice>({
         'job/drop',
         'job/quit',
         'market/*',
+        'deal/*',
         'ties/*',
         'you/*',
         'law/take',

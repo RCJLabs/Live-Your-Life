@@ -1,0 +1,12 @@
+{
+  "name": "Possession of cocaine, under 25 grams",
+  "law": "MCL 333.7403(2)(a)(v)",
+  "grams": 250,
+  "felony": true,
+  "priors": 5,
+  "days": 1461,
+  "fineMax": 2500000,
+  "timesValue": 0,
+  "fine": 100000,
+  "costs": 12500
+}

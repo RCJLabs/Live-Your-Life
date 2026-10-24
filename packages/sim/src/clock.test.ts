@@ -31,9 +31,11 @@ describe('minutesUntil', () => {
 });
 
 describe('the clock', () => {
-  it("allows the time, clock, life, home, job, market, ties, law and you actions out in the world, and no shift event's choice", () => {
+  it("allows the time, clock, life, home, job, market, trade, ties, law and you actions out in the world, and no shift event's choice", () => {
     expect(game.allowedActions(fresh())).toEqual([
       'clock/wait-until',
+      'deal/buy',
+      'deal/corner',
       'home/pay-owed',
       'job/drop',
       'job/quit',

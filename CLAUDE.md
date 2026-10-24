@@ -74,7 +74,7 @@ engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core
 packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON (the street, facades, buildings
                     and blocks; since M1.2 fixtures, rooms and interiors; since M1.3 the career, shift events and taxes; since
                     M1.4 the name pool, acts and the favour; since M1.5 the shop's goods as the inventory kit's items, offences,
-                    the crime and the fence; since M1.6 the chronicle's lines), checked by eb validate, built into pack.json
+                    the crime and the fence; since M1.6 the chronicle's lines; since M2.4 the trade), checked by eb validate, built into pack.json
                     by pnpm content; the package reads only the pack (pure)
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, rent, the week
                     bots, the job (job/, M1.3: the records, postings and sign-up, standing, shift events and their odds, pay and
@@ -88,7 +88,8 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     face.ts, a block's face planned when needed; streets.ts and walks.ts, routes across blocks; home.ts, your
                     block's place in the city, D67); since M1.6 you (you.ts) and the chronicle (chronicle.ts); since
                     M2.3 the labor market (market/: employers, openings, the odds, applications and offers, D74),
-                    and the seeker bot (bot.ts);
+                    and the seeker bot (bot.ts); since M2.4
+                    the street trade (deal/: the trade's records, buying, the corner, who passes, heat);
                     test/slice.ts is the slice's life for tests and benches; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
