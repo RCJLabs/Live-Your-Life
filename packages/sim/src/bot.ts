@@ -11,12 +11,17 @@ import type { Need } from './needs.ts';
 export const WEEK = 7;
 
 /**
- * Actions only the stage sends: wall-clock time, the editor's time controls, and the walk to
- * work the stage measures (D61). The engine
+ * Actions only the page sends: wall-clock time, the editor's time controls, the walk to work the
+ * stage measures (D61), and settings such as whom you are drawn to (D91). The engine
  * offers them to bots with no payload, which elapse refuses and advance spends on no time, so no
  * bot takes them (ROADMAP.md, open questions).
  */
-export const STAGE_ONLY: ReadonlySet<string> = new Set(['time/elapse', 'time/advance', 'you/commute']);
+export const STAGE_ONLY: ReadonlySet<string> = new Set([
+  'time/elapse',
+  'time/advance',
+  'you/commute',
+  'circle/drawn-to',
+]);
 
 /** What a pressing need sends the steady bot to do. Health has no activity of its own: rest is what lets it recover. */
 export const REMEDY: Readonly<Record<Need, string>> = {

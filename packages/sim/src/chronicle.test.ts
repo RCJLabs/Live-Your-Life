@@ -29,6 +29,8 @@ const RARE = [
   'deal/fronted',
   'job/made-arrest',
   'job/promoted',
+  // Meeting the tier-1 people (M2.6): the sweep's lives hold none; circle/module.test.ts raises it.
+  'circle/met',
   'deal/paid-back',
   'deal/cut-off',
   'deal/recruited',

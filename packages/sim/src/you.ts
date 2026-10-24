@@ -50,6 +50,11 @@ export const youModule = defineModule<YouSlice>({
     },
   },
   facts: {
+    pronouns: {
+      read: ({ state }) => state.pronouns,
+      domain: { type: 'enum', values: ['she', 'he', 'they'] },
+      label: 'your pronouns',
+    },
     alarm: {
       read: ({ state }) => (state.commute === null ? ALARM_MINUTES : state.commute + ALARM_MARGIN),
       domain: { type: 'int', min: 1 },

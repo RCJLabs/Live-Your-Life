@@ -207,6 +207,20 @@ Police officer as a career (D80): the requirements, the academy, the pay, the la
 
 **A departure.** Patrol works days, 07:00 to 15:00, and afternoons, 15:00 to 23:00. There is no midnight shift, because a shift can't run past midnight yet.
 
+## People and relationships (M2.6)
+
+Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026-10-24 through search results; gallup.com and census.gov were not reachable from the build environment.
+
+| Figure | Value | Record | Source, as found | Status |
+| --- | --- | --- | --- | --- |
+| Adults by age | 18–24: 116; 25–34: 170; 35–44: 165; 45–54: 153; 55–64: 166; 65–85: 230, per thousand adults | `population/ridgefield.json`, `ages` | from memory of the Census Bureau's national estimates for 2023; Michigan's table (ACS S0101) not read | placeholder |
+| Whom people are drawn to, by age | per thousand, drawn to their own gender and to anyone: 18–28, 95 and 136; 29–44, 68 and 74; 45–60, 31 and 20; 61–79, 18 and 12; 80 and over, 11 and 7 | `population/ridgefield.json`, `drawn` | Gallup's 2024 survey, through news coverage: 9.3% of US adults LGBTQ+; by generation, Gen Z 23.1%, millennials 14.2%, Gen X 5.1%, baby boomers 3.0%, the silent generation 1.8%; 56% of LGBTQ+ adults bisexual, 59% of Gen Z's and 52% of millennials'. Generations are taken as ages in 2025. The older generations' bisexual share, 40%, is a guess | to check; older bisexual shares (tune) |
+| Hours to a friend | familiarity at half after 90 hours together; time at work counts half | `population/ridgefield.json`, `ties.half`, `ties.atWork` | Hall (2018/2019), *Journal of Social and Personal Relationships*, through the University of Kansas's summary: about 50 hours from acquaintance to casual friend, 90 to friend, over 200 to close friend; hours working together count for less. The half is a reading of "less" (tune) | to check |
+| People met an hour out | 2 of those at your third place, as the tier-1 people meet each other (D71) | `population/ridgefield.json`, `ties.perHour` | none | (tune) |
+| Chemistry | drawn from the seed for each pair, 0 to 100; 4 points less a year of age between you past 5 years | `population/ridgefield.json`, `chemistry` | none: the shape of age gaps in couples is to read (open question) | (tune) |
+
+**Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).
@@ -217,3 +231,4 @@ Police officer as a career (D80): the requirements, the academy, the pay, the la
 6. Which tract data stands for each district's density (The city), and whether the inner ring's 45 a hectare comes down once it is traced.
 7. How quickly someone with no job is hired. Answered for now by D76 (15 in 100); what reading should hold it, since a spell of unemployment is not quite the measure, is open.
 8. The 29 careers' wages, when bls.gov can be reached.
+9. The age gaps between partners, by age (the Census Bureau's tables of married couples), so chemistry's fall with a gap can be read rather than tuned.
