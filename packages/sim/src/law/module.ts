@@ -7,17 +7,31 @@
  * inventory kits do, and it asks the life module to feed you.
  */
 import { defineModule } from '@eb/core';
-import { attend, checkIn, contest, courtIn, owedOf, pay, plead } from './court.ts';
+import { attend, checkIn, contest, convictAndSentence, courtIn, owedOf, pay, plead } from './court.ts';
+import { arraign, drugCase, postBail, released, remand } from './drugs.ts';
 import { drawFence, eat, type Fence, sale, sell } from './fence.ts';
-import { hearing, lawDay, review, saleSeen, ticket, visit } from './police.ts';
+import { hearing, lawDay, newVisit, review, saleSeen, ticket, visit } from './police.ts';
 import { FENCE, fenceOf } from './records.ts';
-import { convict, freshLaw, type LawSlice } from './state.ts';
+import { freshLaw, type LawSlice } from './state.ts';
 import { filmedNow, gotAway, heldNow, take, theft, wait } from './take.ts';
 
 export type LawState = LawSlice & { fence: Fence | null };
 
+/** Bail posted, given back as the case ends. */
+const giveBack = (ctx: Parameters<typeof arraign>[0], bail: unknown): void => {
+  if (typeof bail === 'number' && bail > 0) ctx.apply({ effect: 'add-resource', resource: 'cash', by: bail });
+};
+
 export const lawModule = defineModule<LawState>({
   id: 'law',
+  // 2 (M2.4): probation says whose it is, HYTA's or a sentence's; a prison sentence to serve.
+  version: 2,
+  migrate: {
+    2: (slice) => {
+      const s = slice as LawState;
+      return { ...s, probation: s.probation ? { ...s.probation, trainee: true } : null, prison: null };
+    },
+  },
   init: (ctx) => ({ ...freshLaw(ctx.rng('block')), fence: drawFence(ctx.content, ctx.rng('fence')) }),
   facts: {
     heat: {
@@ -50,6 +64,11 @@ export const lawModule = defineModule<LawState>({
       label: 'a warrant out for you',
     },
     probation: { read: ({ state }) => state.probation !== null, domain: { type: 'bool' }, label: 'on probation' },
+    'prison-months': {
+      read: ({ state }) => state.prison?.months ?? 0,
+      domain: { type: 'int', min: 0 },
+      label: 'months of a prison sentence still to serve',
+    },
     // D62: minutes until today's hearing opens, 0 while it's open; nothing on a day with none.
     'court-in': {
       read: (view) => courtIn(view),
@@ -62,7 +81,7 @@ export const lawModule = defineModule<LawState>({
       label: 'owed to the court and the shop',
     },
   },
-  actions: { take, wait, attend, plead, 'check-in': checkIn, pay, sell, eat },
+  actions: { take, wait, attend, plead, 'check-in': checkIn, pay, sell, eat, 'post-bail': postBail, remand },
   effects: {
     theft,
     'got-away': gotAway,
@@ -73,8 +92,18 @@ export const lawModule = defineModule<LawState>({
     visit,
     hearing,
     contest,
-    dismissed: (ctx, effect) => ctx.emit('dismissed', { case: effect.case }),
-    'found-guilty': (ctx, effect) => convict(ctx, String(effect.offence), 'trial'),
+    dismissed: (ctx, effect) => {
+      giveBack(ctx, effect.bail);
+      ctx.emit('dismissed', { case: effect.case });
+    },
+    'found-guilty': (ctx, effect) => {
+      giveBack(ctx, effect.bail);
+      convictAndSentence(ctx, String(effect.offence), 'trial');
+    },
+    // M2.4: a drug case (drugs.ts).
+    'drug-case': (ctx) => drugCase(ctx, (day) => newVisit(ctx, day, { why: 'raid', item: '', case: 0 })),
+    arraign,
+    released,
     sale,
     'sale-seen': saleSeen,
     'law-day': (ctx) => lawDay(ctx),
@@ -83,5 +112,7 @@ export const lawModule = defineModule<LawState>({
     // Held by the clerk, or in the cells: the time passes until they come. The stage's elapse too.
     held: { actions: ['law/wait', 'time/*'] },
     court: { actions: ['law/plead'] },
+    // Arraigned (M2.4): post bail or stay in jail.
+    bail: { actions: ['law/post-bail', 'law/remand'] },
   },
 });

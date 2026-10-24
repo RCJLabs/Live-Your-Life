@@ -5,6 +5,7 @@
  */
 import type { Action, Effect, OptionsView, PreviewContext } from '@eb/core';
 import { todayOf } from '../job/days.ts';
+import { drugContest, drugDeferral, isDrugCase, refund, sentence } from './drugs.ts';
 import { ageOn, type Case, convict, crime, type LawContext, type LawSlice, type LawView, sliceOf } from './state.ts';
 
 /** The case whose hearing is open now: today's, within the court's hours, not yet a warrant. */
@@ -48,43 +49,56 @@ function caseInCourt(view: LawContext | OptionsView<LawSlice>): Case | undefined
   return sliceOf(view as LawContext).cases.find((k) => k.id === id);
 }
 
-/** HYTA is offered on a first offence, below its age, to someone never on it before (D47). */
-function hytaOffered(view: LawContext | LawView): boolean {
+/**
+ * HYTA is offered on a first offence, below its age, to someone never on it before (D47); on a drug
+ * case, only for an offence that allows it (M2.4: delivery is a major controlled substance offence).
+ */
+function hytaOffered(view: LawContext | LawView, k: Case): boolean {
   const s = sliceOf(view as LawContext);
+  if (isDrugCase(k) && !drugDeferral(view, k)) return false;
   return s.convictions === 0 && s.hyta === 'none' && ageOn(view.fact('time.day') as number) < crime(view).hyta.age;
 }
 
 const contestOdds = (view: LawContext | PreviewContext<LawSlice>, k: Case): number =>
-  crime(view).contest[k.evidence === 'held' ? 'held' : 'camera'];
+  isDrugCase(k) ? drugContest(view, k) : crime(view).contest[k.evidence === 'held' ? 'held' : 'camera'];
 
 export const plead = {
   run(ctx: LawContext, action: Action) {
     const k = caseInCourt(ctx);
     if (!k) return ctx.refuse('no-case');
     const plea = action.plea;
-    if (plea === 'hyta' && !hytaOffered(ctx)) return ctx.refuse('not-offered');
+    if (plea === 'hyta' && !hytaOffered(ctx, k)) return ctx.refuse('not-offered');
     if (plea !== 'guilty' && plea !== 'hyta' && plea !== 'contest') return ctx.refuse('bad-plea');
     const w = ctx.write();
     w.cases = w.cases.filter((x) => x.id !== k.id);
     ctx.modes.pop();
     ctx.emit('pleaded', { case: k.id, plea });
-    if (plea === 'guilty') return convict(ctx, k.offence, 'plea');
+    if (plea !== 'contest') refund(ctx, k);
+    if (plea === 'guilty') return convictAndSentence(ctx, k.offence, 'plea');
     if (plea === 'hyta') return onProbation(ctx, k);
-    ctx.apply({ effect: 'contest', case: k.id, chance: contestOdds(ctx, k), offence: k.offence });
+    ctx.apply({ effect: 'contest', case: k.id, chance: contestOdds(ctx, k), offence: k.offence, bail: k.bail ?? 0 });
   },
   options: (view: OptionsView<LawSlice>) => {
-    if (!caseInCourt(view)) return [];
-    const pleas = hytaOffered(view) ? ['guilty', 'hyta', 'contest'] : ['guilty', 'contest'];
+    const k = caseInCourt(view);
+    if (!k) return [];
+    const pleas = hytaOffered(view, k) ? ['guilty', 'hyta', 'contest'] : ['guilty', 'contest'];
     return pleas.map((plea) => ({ plea }));
   },
 };
+
+/** A conviction, and for a felony its sentence, by the convictions before it (drugs.ts). */
+export function convictAndSentence(ctx: LawContext, offence: string, why: string): void {
+  const priors = ctx.read().convictions;
+  convict(ctx, offence, why);
+  sentence(ctx, offence, priors);
+}
 
 function onProbation(ctx: LawContext, k: Case): void {
   const h = crime(ctx).hyta;
   const day = todayOf(ctx).day;
   const w = ctx.write();
   w.hyta = 'on';
-  w.probation = { until: day + h.days, next: day + h.every, offence: k.offence };
+  w.probation = { until: day + h.days, next: day + h.every, offence: k.offence, trainee: true };
   ctx.emit('trainee', { case: k.id, until: day + h.days });
 }
 
@@ -95,8 +109,11 @@ export const contest = {
     ctx.apply({
       effect: 'roll',
       outcomes: [
-        { chance, effects: [{ effect: 'dismissed', case: effect.case }] },
-        { chance: 100 - chance, effects: [{ effect: 'found-guilty', case: effect.case, offence: effect.offence }] },
+        { chance, effects: [{ effect: 'dismissed', case: effect.case, bail: effect.bail ?? 0 }] },
+        {
+          chance: 100 - chance,
+          effects: [{ effect: 'found-guilty', case: effect.case, offence: effect.offence, bail: effect.bail ?? 0 }],
+        },
       ],
     });
   },

@@ -44,5 +44,25 @@
     "keep": 9500
   },
   "possession": ["possession-cocaine-25", "possession-cocaine-50"],
-  "delivery": ["delivery-cocaine-50"]
+  "delivery": ["delivery-cocaine-50"],
+  "police": {
+    "enough": 3,
+    "raid": {
+      "min": 2,
+      "max": 7
+    }
+  },
+  "bail": {
+    "bond": 500000,
+    "posted": 10,
+    "hour": 9
+  },
+  "court": {
+    "min": 21,
+    "max": 56
+  },
+  "contest": {
+    "seen": 35,
+    "found": 10
+  }
 }

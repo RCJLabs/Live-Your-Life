@@ -81,6 +81,9 @@ export function hours(minutes: number): string {
   return h === 0 ? ms : m === 0 ? hs : `${hs} and ${ms}`;
 }
 
+/** A count of something: "1 day", "30 days". */
+const counted = (n: number, what: string): string => (n === 1 ? `1 ${what}` : `${n} ${what}s`);
+
 /** Tenths of a gram as a weight: "3.5 grams", "28 grams". */
 export function weight(tenths: number): string {
   const whole = Math.floor(tenths / 10);
@@ -154,12 +157,20 @@ export function lineFor(
         return dateOf(start, beat.court as number);
       case 'hours':
         return hours((beat.worked ?? beat.minutes) as number);
+      case 'jail':
+      case 'probation':
+      case 'days':
+        return counted(v as number, 'day');
+      case 'prison':
+        return counted(v as number, 'month');
       case 'rent':
         return money(beat.cents as number);
       case 'grams':
         return weight(v as number);
       case 'net':
       case 'price':
+      case 'bond':
+      case 'posted':
       case 'owed':
       case 'paid':
       case 'demand':

@@ -62,6 +62,60 @@
       "kind": "bool",
       "optional": true,
       "description": "A felony, which a record shows as one, and which can be served in prison (D81). A misdemeanour when left out."
+    },
+    "deferral": {
+      "kind": "bool",
+      "optional": true,
+      "description": "A first offence can be deferred: HYTA under its age, probation and no public record (D47, D82)."
+    },
+    "first": {
+      "kind": "group",
+      "optional": true,
+      "description": "A felony's sentence for someone with no conviction before: days in jail, then days on probation (D82). Within the sentencing guidelines' range for the offence's class with no prior record.",
+      "fields": {
+        "jail": {
+          "kind": "group",
+          "fields": {
+            "min": {
+              "kind": "int",
+              "min": 0,
+              "max": 365
+            },
+            "max": {
+              "kind": "int",
+              "min": 0,
+              "max": 365
+            }
+          }
+        },
+        "probation": {
+          "kind": "int",
+          "min": 0,
+          "max": 1825
+        }
+      }
+    },
+    "repeat": {
+      "kind": "group",
+      "optional": true,
+      "description": "A felony's sentence for someone with a conviction before: months in prison, served as days (D81).",
+      "fields": {
+        "prison": {
+          "kind": "group",
+          "fields": {
+            "min": {
+              "kind": "int",
+              "min": 1,
+              "max": 480
+            },
+            "max": {
+              "kind": "int",
+              "min": 1,
+              "max": 480
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -3,15 +3,34 @@
   "description": "Selling a controlled substance on the street (D78, D82): whom you buy from and at what weights and prices, what a sale is, when buyers come to the corner, who sees, the heat it draws, and what holding and selling are charged as. The figures trace to CALIBRATION.md.",
   "nameField": "name",
   "fields": {
-    "name": { "kind": "text", "min": 1, "max": 60 },
-    "names": { "kind": "ref", "to": "name-pool", "description": "Whom the supplier is drawn from." },
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "names": {
+      "kind": "ref",
+      "to": "name-pool",
+      "description": "Whom the supplier is drawn from."
+    },
     "supplier": {
       "kind": "group",
       "description": "When the supplier can be found, and what they sell: a weight in tenths of a gram for a price in cents.",
       "fields": {
         "hours": {
           "kind": "group",
-          "fields": { "from": { "kind": "int", "min": 0, "max": 23 }, "to": { "kind": "int", "min": 1, "max": 24 } }
+          "fields": {
+            "from": {
+              "kind": "int",
+              "min": 0,
+              "max": 23
+            },
+            "to": {
+              "kind": "int",
+              "min": 1,
+              "max": 24
+            }
+          }
         },
         "sells": {
           "kind": "list",
@@ -19,9 +38,20 @@
           "of": {
             "kind": "group",
             "fields": {
-              "id": { "kind": "text", "min": 1, "max": 24 },
-              "grams": { "kind": "int", "min": 1, "max": 10000 },
-              "price": { "kind": "int", "min": 1 }
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "grams": {
+                "kind": "int",
+                "min": 1,
+                "max": 10000
+              },
+              "price": {
+                "kind": "int",
+                "min": 1
+              }
             }
           }
         }
@@ -30,46 +60,181 @@
     "sale": {
       "kind": "group",
       "description": "What one buyer takes, in tenths of a gram, and pays, in cents.",
-      "fields": { "grams": { "kind": "int", "min": 1, "max": 100 }, "price": { "kind": "int", "min": 1 } }
+      "fields": {
+        "grams": {
+          "kind": "int",
+          "min": 1,
+          "max": 100
+        },
+        "price": {
+          "kind": "int",
+          "min": 1
+        }
+      }
     },
     "corner": {
       "kind": "group",
       "description": "The corner where buyers come: in each hour of the day, the odds in percent that a buyer comes in each ten minutes; and of the town's people out on the street that hour, how many in a thousand pass the corner.",
       "fields": {
-        "buyers": { "kind": "list", "min": 24, "max": 24, "of": { "kind": "int", "min": 0, "max": 95 } },
-        "passing": { "kind": "int", "min": 0, "max": 1000 }
+        "buyers": {
+          "kind": "list",
+          "min": 24,
+          "max": 24,
+          "of": {
+            "kind": "int",
+            "min": 0,
+            "max": 95
+          }
+        },
+        "passing": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000
+        }
       }
     },
     "seen": {
       "kind": "group",
       "description": "The odds in percent a sale is seen and told of: a base, more for each person passing, in tenths of a percent, and more for heat, one percent for so many points; never above the most (tune).",
       "fields": {
-        "base": { "kind": "int", "min": 0, "max": 95 },
-        "witness": { "kind": "int", "min": 0, "max": 100 },
-        "per": { "kind": "int", "min": 1, "max": 100 },
-        "most": { "kind": "int", "min": 1, "max": 95 }
+        "base": {
+          "kind": "int",
+          "min": 0,
+          "max": 95
+        },
+        "witness": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "per": {
+          "kind": "int",
+          "min": 1,
+          "max": 100
+        },
+        "most": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        }
       }
     },
     "heat": {
       "kind": "group",
       "description": "The police's attention to the corner and to you: points for a sale and for one seen, and what is kept of them each day, in ten-thousandths (tune).",
       "fields": {
-        "sale": { "kind": "int", "min": 0, "max": 100 },
-        "seen": { "kind": "int", "min": 0, "max": 100 },
-        "keep": { "kind": "int", "min": 1, "max": 9999 }
+        "sale": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "seen": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "keep": {
+          "kind": "int",
+          "min": 1,
+          "max": 9999
+        }
       }
     },
     "possession": {
       "kind": "list",
       "min": 1,
-      "of": { "kind": "ref", "to": "offence" },
+      "of": {
+        "kind": "ref",
+        "to": "offence"
+      },
       "description": "What holding it is charged as: the first whose weight covers what you hold, and your record."
     },
     "delivery": {
       "kind": "list",
       "min": 1,
-      "of": { "kind": "ref", "to": "offence" },
+      "of": {
+        "kind": "ref",
+        "to": "offence"
+      },
       "description": "What selling it, or holding it to sell, is charged as: the first whose weight covers it, and your record."
+    },
+    "police": {
+      "kind": "group",
+      "description": "When the police act on what was seen (D46: at a time you are told): how many sales seen make a case, and days until they come for you.",
+      "fields": {
+        "enough": {
+          "kind": "int",
+          "min": 1,
+          "max": 50
+        },
+        "raid": {
+          "kind": "group",
+          "fields": {
+            "min": {
+              "kind": "int",
+              "min": 1,
+              "max": 60
+            },
+            "max": {
+              "kind": "int",
+              "min": 1,
+              "max": 60
+            }
+          }
+        }
+      }
+    },
+    "bail": {
+      "kind": "group",
+      "description": "Bail at arraignment: the bond in cents, the share of it in percent you post to go home (MCL 765.6), and the hour of the morning the court sees the night's arrests.",
+      "fields": {
+        "bond": {
+          "kind": "int",
+          "min": 0
+        },
+        "posted": {
+          "kind": "int",
+          "min": 1,
+          "max": 100
+        },
+        "hour": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        }
+      }
+    },
+    "court": {
+      "kind": "group",
+      "fields": {
+        "min": {
+          "kind": "int",
+          "min": 1,
+          "max": 180
+        },
+        "max": {
+          "kind": "int",
+          "min": 1,
+          "max": 180
+        }
+      },
+      "description": "Days from the arrest to the court date."
+    },
+    "contest": {
+      "kind": "group",
+      "description": "The odds in percent a not-guilty plea ends in dismissal, by the evidence: sales seen only, or the drugs found on you.",
+      "fields": {
+        "seen": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        },
+        "found": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        }
+      }
     }
   }
 }

@@ -80,7 +80,7 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     bots, the job (job/, M1.3: the records, postings and sign-up, standing, shift events and their odds, pay and
                     withholding), the coworker (ties/, M1.4: who they are, their week, familiarity, regard and what they
                     remember, favours both ways), the law (law/, M1.5: the shop as the law sees it, taking, the police,
-                    court, HYTA, the fence), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
+                    court, HYTA, the fence; since M2.4 drugs.ts, a drug case: the raid, bail, sentences), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
                     hour plans, ties, shares; since M2.3 careers.ts, their careers' shifts, and work.ts, who has left
                     or changed jobs), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5

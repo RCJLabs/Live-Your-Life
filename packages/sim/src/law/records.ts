@@ -31,6 +31,12 @@ export interface OffenceRecord {
   /** For a controlled substance: it covers less than this weight, in tenths of a gram (D82). */
   readonly grams?: number;
   readonly felony?: boolean;
+  /** A first offence can be deferred, under HYTA (D47). */
+  readonly deferral?: boolean;
+  /** A felony's sentence with no conviction before: days in jail, then on probation. */
+  readonly first?: { readonly jail: Span; readonly probation: number };
+  /** With a conviction before: months in prison. */
+  readonly repeat?: { readonly prison: Span };
 }
 
 export interface CrimeRecord {
