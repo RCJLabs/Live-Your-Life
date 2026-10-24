@@ -83,15 +83,18 @@ export function play(
     const cell = cellAt(block.grid, x, y);
     return cell >= 0 && (block.grid.cost[cell] as number) < Infinity;
   };
-  /** Whether the coworker or the fence is at their post in an hour of a day (D70), as their modules say. */
+  /** Whether the coworker, the fence or the supplier is at their post in an hour of a day (D70), as their modules say. */
   const atPost = (i: number, day: number, hour: number): boolean => {
     if (i === LINKED.coworker) {
       const start = life.fact('ties.their-start', { day }) as number;
       const length = life.fact('ties.their-minutes', { day }) as number;
       return start >= 0 && hour * 60 >= start && hour * 60 < start + length;
     }
-    const from = life.fact('law.fence-from') as number;
-    return from >= 0 && hour >= from && hour < (life.fact('law.fence-to') as number);
+    const [from, to] =
+      i === LINKED.supplier
+        ? [life.fact('deal.supplier-from') as number, life.fact('deal.supplier-to') as number]
+        : [life.fact('law.fence-from') as number, life.fact('law.fence-to') as number];
+    return from >= 0 && hour >= from && hour < to;
   };
   /**
    * Who is out at a minute of the life as the page shows it, with its fraction: people are placed

@@ -32,8 +32,8 @@ export interface Person {
   readonly social: number;
 }
 
-/** The people whose hours come from another module (D70): the coworker first, then the fence. */
-export const LINKED = { coworker: 0, fence: 1, count: 2 } as const;
+/** The people whose hours come from another module (D70): the coworker, the fence, and since M2.4 the supplier. */
+export const LINKED = { coworker: 0, fence: 1, supplier: 2, count: 3 } as const;
 
 export interface Roster {
   readonly people: readonly Person[];
@@ -63,7 +63,7 @@ function build(seed: number, n: number): Roster {
     for (let k = 0; k < size && homes.length < n; k++) homes.push(place);
   }
   const homeCount = (homes[homes.length - 1] ?? -1) + 1;
-  // The coworker and the fence (D70) work the hours their own modules give them, not a template's.
+  // The coworker, the fence and the supplier (D70) keep the hours their own modules give them, not a template's.
   const none = SHIFTS.find((t) => t.minutes === 0) as ShiftTemplate;
   const shifts = homes.map((_, i) => (i < LINKED.count ? none : pickShift(mix(seed, 2, i))));
   const employed = shifts.filter((s) => s.minutes > 0).length;

@@ -158,6 +158,8 @@ export function lineFor(
         return dateOf(start, beat.court as number);
       case 'minimum':
         return dateOf(start, beat.minimum as number);
+      case 'due':
+        return dateOf(start, beat.due as number);
       case 'hours':
         return hours((beat.worked ?? beat.minutes) as number);
       case 'jail':
@@ -172,6 +174,7 @@ export function lineFor(
         return weight(v as number);
       case 'net':
       case 'price':
+      case 'yours':
       case 'bond':
       case 'posted':
       case 'owed':

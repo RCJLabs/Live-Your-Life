@@ -695,6 +695,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Secondary now, recheck later (recommended, chosen). Wait for the hosts to be allowed, building the mechanics with empty offence rows.
 
+### D84. Working under a dealer is being fronted. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** Once in the crew (D79), the dealer fronts you weight on credit at the crew's price. You pay it back from your sales by a due date, so the debt and the risk are yours, as street-level supply usually goes.
+
+**Options considered.** Fronted on credit (recommended, chosen). A cut of each sale to them. A daily wage to stand the corner, as Levitt and Venkatesh's foot soldiers were paid.
+
+### D85. The first recruit is the coworker. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** You can bring in the one person you have ties with, the coworker, if their regard and familiarity are high enough. They then sell on their own nights from what you hold, and you keep a share. Arrested, they may name you, more likely the less they think of you. More recruits wait for M2.6's relationships.
+
+**Options considered.** The coworker, for now (recommended, chosen). Any tier-1 person you have met. Joining only, with recruiting in M2.6.
+
+### D86. An unpaid front cuts you off, with no violence yet. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** A front not paid back by its due date ends the dealer's fronting, and their trust falls; the debt stands until it is paid. Violence waits for injury and health.
+
+**Options considered.** Cut off, no violence yet (recommended, chosen). A threat you are warned of, with a placeholder injury.
+
 ---
 
 ## Open items

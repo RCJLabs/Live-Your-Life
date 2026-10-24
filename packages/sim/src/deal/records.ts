@@ -32,6 +32,25 @@ export interface TradeRecord {
   readonly bail: { readonly bond: number; readonly posted: number; readonly hour: number };
   readonly court: Span;
   readonly contest: { readonly seen: number; readonly found: number };
+  readonly crew: Crew;
+}
+
+/** The supplier's crew (D79, D84–D86). */
+export interface Crew {
+  readonly trust: number;
+  readonly heat: number;
+  readonly front: { readonly lot: string; readonly price: number; readonly days: number };
+  readonly unpaid: number;
+  readonly recruit: {
+    readonly regard: number;
+    readonly familiarity: number;
+    readonly nights: number;
+    readonly buyers: number;
+    readonly share: number;
+    readonly seen: number;
+    readonly named: number;
+    readonly act: string;
+  };
 }
 
 const fail = (what: string, why: string): never => {
@@ -63,6 +82,7 @@ export function tradeOf(store: RecordStore, id: string = TRADE): TradeRecord {
   const lots = new Set(t.supplier.sells.map((l) => l.id));
   if (lots.size !== t.supplier.sells.length) fail(what, 'two of what the supplier sells share an id');
   if (t.seen.base > t.seen.most) fail(what, 'its odds of being seen start above their most');
+  if (!lots.has(t.crew.front.lot)) fail(what, `the crew fronts "${t.crew.front.lot}", which the supplier doesn't sell`);
   for (const [name, span] of [
     ['police.raid', t.police.raid],
     ['court', t.court],

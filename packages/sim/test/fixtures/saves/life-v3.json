@@ -1,0 +1,239 @@
+{
+  "format": 1,
+  "game": "live-your-life",
+  "edition": "full",
+  "build": "m2.4-step3",
+  "savedAt": 0,
+  "summary": { "name": "fixture", "day": 0, "cash": 0, "at": null },
+  "snapshot": {
+    "kernel": {
+      "seed": "fixture-24",
+      "step": 32,
+      "modes": [{ "id": "world" }],
+      "streams": {
+        "job/postings": { "seed": "fixture-24\u001fjob/postings", "s": [622635805, 515333182, 2946350804, 454876246] },
+        "ties/people": { "seed": "fixture-24\u001fties/people", "s": [296077741, 4219887500, 3899402281, 3475843770] },
+        "law/block": { "seed": "fixture-24\u001flaw/block", "s": [3648219922, 3349762906, 2492923135, 758570968] },
+        "law/fence": { "seed": "fixture-24\u001flaw/fence", "s": [2679416619, 3324979229, 3607466507, 760293199] },
+        "you/you": { "seed": "fixture-24\u001fyou/you", "s": [16447236, 531538648, 1253353110, 3126342672] },
+        "deal/supplier": {
+          "seed": "fixture-24\u001fdeal/supplier",
+          "s": [911537989, 2375344873, 557498049, 2402721941]
+        },
+        "people/people": {
+          "seed": "fixture-24\u001fpeople/people",
+          "s": [2403378249, 4233711455, 2716281258, 491478130]
+        },
+        "logic/roll": { "seed": "fixture-24\u001flogic/roll", "s": [2802766049, 2832833112, 3525882330, 1447459795] },
+        "job/events": { "seed": "fixture-24\u001fjob/events", "s": [2046662227, 1994477840, 4164431945, 3582873249] },
+        "law/law": { "seed": "fixture-24\u001flaw/law", "s": [1653036119, 3636105141, 3668570217, 1342933187] },
+        "ties/requests": {
+          "seed": "fixture-24\u001fties/requests",
+          "s": [1316509738, 3759263875, 2267661624, 1228346724]
+        },
+        "market/hiring": {
+          "seed": "fixture-24\u001fmarket/hiring",
+          "s": [4012750440, 3375357225, 1218132411, 1071463551]
+        }
+      },
+      "versions": {
+        "clock": 1,
+        "deal": 1,
+        "economy": 1,
+        "home": 1,
+        "inventory": 1,
+        "job": 1,
+        "law": 2,
+        "life": 1,
+        "logic": 1,
+        "market": 1,
+        "people": 1,
+        "people-0": 1,
+        "people-1": 1,
+        "people-10": 1,
+        "people-11": 1,
+        "people-12": 1,
+        "people-13": 1,
+        "people-14": 1,
+        "people-15": 1,
+        "people-16": 1,
+        "people-17": 1,
+        "people-18": 1,
+        "people-19": 1,
+        "people-2": 1,
+        "people-20": 1,
+        "people-21": 1,
+        "people-22": 1,
+        "people-23": 1,
+        "people-3": 1,
+        "people-4": 1,
+        "people-5": 1,
+        "people-6": 1,
+        "people-7": 1,
+        "people-8": 1,
+        "people-9": 1,
+        "people-work": 1,
+        "prison": 1,
+        "ties": 1,
+        "time": 1,
+        "you": 2
+      }
+    },
+    "time": {
+      "tick": 7500,
+      "carry": 0,
+      "next": 25,
+      "timers": [
+        {
+          "id": "answer-line-cook-3-o99-0",
+          "due": 7597,
+          "effects": [{ "effect": "answer", "opening": "line-cook-3-o99-0" }],
+          "seq": 19
+        },
+        { "id": "law-visit-4", "due": 7656, "effects": [{ "effect": "visit", "visit": 4 }], "seq": 7 },
+        {
+          "id": "midnight",
+          "due": 8220,
+          "every": 1440,
+          "effects": [{ "effect": "job-day" }, { "effect": "ties-day" }, { "effect": "law-day" }],
+          "seq": 24
+        },
+        { "id": "rent", "due": 41340, "effects": [{ "effect": "rent-due" }], "seq": 0 }
+      ]
+    },
+    "inventory": { "bag": {} },
+    "economy": { "amounts": { "cash": 3557 }, "shops": {} },
+    "logic": {},
+    "clock": {},
+    "life": {
+      "activity": "awake",
+      "since": 6480,
+      "asOf": 6480,
+      "levels": { "rest": 1320000, "food": 0, "hygiene": 2580000, "company": 0, "calm": 6000000, "health": 0 }
+    },
+    "job": {
+      "career": "line-cook",
+      "employed": true,
+      "standing": 33,
+      "practice": 0,
+      "posted": [
+        { "day": 9, "shift": "dinner" },
+        { "day": 11, "shift": "dinner" },
+        { "day": 12, "shift": "dinner" },
+        { "day": 13, "shift": "dinner" }
+      ],
+      "signed": [],
+      "warnings": [3781],
+      "unpaid": 0,
+      "year": 2025,
+      "earned": 0,
+      "drawn": []
+    },
+    "ties": {
+      "career": "line-cook",
+      "coworker": { "first": "Walt", "last": "Hoffman", "pronouns": "he", "age": 32, "seed": 584042060 },
+      "together": 0,
+      "regard": 32,
+      "memory": [{ "act": "left-them-alone", "day": 2, "times": 1 }, { "act": "never-answered", "day": 4, "times": 1 }],
+      "off": [],
+      "asked": [],
+      "request": null
+    },
+    "home": { "owed": 0 },
+    "law": {
+      "block": "block-859293008",
+      "heat": 59,
+      "filmed": [],
+      "visits": [{ "why": "camera", "item": "soup", "case": 0, "id": 4 }],
+      "cases": [
+        { "id": 2, "offence": "retail-fraud-3", "value": 614, "evidence": "held", "court": 16, "warrant": false },
+        { "id": 6, "offence": "retail-fraud-3", "value": 1999, "evidence": "camera", "court": 39, "warrant": false },
+        { "id": 7, "offence": "receiving-3", "value": 349, "evidence": "sale", "court": 32, "warrant": false },
+        { "id": 8, "offence": "retail-fraud-3", "value": 219, "evidence": "camera", "court": 46, "warrant": false }
+      ],
+      "next": 9,
+      "convictions": 0,
+      "hyta": "none",
+      "probation": null,
+      "prison": null,
+      "owed": { "demand": 5219, "court": 0 },
+      "barred": true,
+      "fence": { "first": "Riley", "last": "Hoffman" }
+    },
+    "you": { "first": "Sam", "last": "Dombrowski", "pronouns": "they", "commute": null },
+    "market": {
+      "employer": "line-cook-home",
+      "reputation": 50,
+      "applications": [
+        { "opening": "line-cook-3-o99-0", "employer": "line-cook-3", "career": "line-cook", "odds": 15, "answer": 7597 }
+      ],
+      "offers": []
+    },
+    "deal": {
+      "supplier": { "first": "Hannah", "last": "Anderson" },
+      "held": 0,
+      "heat": 0,
+      "asOf": 0,
+      "sales": 0,
+      "takings": 0,
+      "seen": []
+    },
+    "prison": {
+      "term": null,
+      "job": false,
+      "standing": 50,
+      "earned": 0,
+      "wrote": -1,
+      "month": 0,
+      "wroteInMonth": false
+    },
+    "people": { "seed": 1558889695, "n": 0 },
+    "people-work": { "moves": [], "version": 0, "day": 5, "taken": [] },
+    "people-0": { "first": 0, "count": 0, "hour": 120, "levels": [], "ties": [] },
+    "people-1": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-2": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-3": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-4": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-5": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-6": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-7": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-8": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-9": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-10": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-11": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-12": { "first": 0, "count": 0, "hour": 132, "levels": [], "ties": [] },
+    "people-13": { "first": 0, "count": 0, "hour": 114, "levels": [], "ties": [] },
+    "people-14": { "first": 0, "count": 0, "hour": 114, "levels": [], "ties": [] },
+    "people-15": { "first": 0, "count": 0, "hour": 114, "levels": [], "ties": [] },
+    "people-16": { "first": 0, "count": 0, "hour": 114, "levels": [], "ties": [] },
+    "people-17": { "first": 0, "count": 0, "hour": 114, "levels": [], "ties": [] },
+    "people-18": { "first": 0, "count": 0, "hour": 114, "levels": [], "ties": [] },
+    "people-19": { "first": 0, "count": 0, "hour": 115, "levels": [], "ties": [] },
+    "people-20": { "first": 0, "count": 0, "hour": 120, "levels": [], "ties": [] },
+    "people-21": { "first": 0, "count": 0, "hour": 120, "levels": [], "ties": [] },
+    "people-22": { "first": 0, "count": 0, "hour": 120, "levels": [], "ties": [] },
+    "people-23": { "first": 0, "count": 0, "hour": 120, "levels": [], "ties": [] }
+  },
+  "log": [
+    { "type": "life/do", "activity": "wash", "minutes": 15 },
+    { "type": "job/sign-up", "day": 13 },
+    { "type": "job/sign-up", "day": 9 },
+    { "type": "clock/wait-until", "hour": 18, "minute": 0 },
+    { "type": "life/do", "activity": "eat", "minutes": 30 },
+    { "type": "life/do", "activity": "wash", "minutes": 15 },
+    { "type": "life/do", "activity": "socialize", "minutes": 120 },
+    { "type": "clock/wait-until", "hour": 6, "minute": 0 },
+    { "type": "life/do", "activity": "awake", "minutes": 30 },
+    { "type": "clock/wait-until", "hour": 12, "minute": 0 },
+    { "type": "market/apply", "opening": "line-cook-3-o99-0" },
+    { "type": "life/do", "activity": "wash", "minutes": 15 },
+    { "type": "life/do", "activity": "relax", "minutes": 60 },
+    { "type": "clock/wait-until", "hour": 18, "minute": 0 },
+    { "type": "clock/wait-until", "hour": 18, "minute": 0 },
+    { "type": "time/elapse", "ms": 1500 },
+    { "type": "you/commute", "minutes": 36 },
+    { "type": "time/elapse", "ms": 2000 }
+  ],
+  "hash": "37d9818682a35346",
+  "check": "9f5648db74d09a01"
+}

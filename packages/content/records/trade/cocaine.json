@@ -64,5 +64,25 @@
   "contest": {
     "seen": 35,
     "found": 10
+  },
+  "crew": {
+    "trust": 3,
+    "heat": 30,
+    "front": {
+      "lot": "ounce",
+      "price": 100000,
+      "days": 14
+    },
+    "unpaid": 5,
+    "recruit": {
+      "regard": 60,
+      "familiarity": 40,
+      "nights": 3,
+      "buyers": 20,
+      "share": 40,
+      "seen": 4,
+      "named": 70,
+      "act": "brought-them-in"
+    }
   }
 }

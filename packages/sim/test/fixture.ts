@@ -8,7 +8,8 @@
  *   node packages/sim/test/fixture.ts <out> <build> [seed]
  *
  * life-v1.json was written by M1.7's build (you at version 1); life-v2.json by M1.8's, after the
- * walk to work (D61), with the page's `you/commute` in its log.
+ * walk to work (D61), with the page's `you/commute` in its log; life-v3.json by M2.4 step 3's, with
+ * the street trade before the crew (deal at version 1), the law at 2 and prison.
  */
 import { writeFileSync } from 'node:fs';
 import { type Action, createSaveFile, playRun } from '@eb/core';

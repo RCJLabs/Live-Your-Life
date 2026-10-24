@@ -98,8 +98,8 @@ export function progress(
 }
 
 /**
- * The coworker's and the fence's hours, as their modules give them (D70): at work through their
- * shift, or the fence's hours behind the diner; otherwise the roster's day. Only a life asks: the
+ * The coworker's, the fence's and the supplier's hours, as their modules give them (D70): at work
+ * through their shift, or the fence's and the supplier's own hours; otherwise the roster's day. Only a life asks: the
  * harness has neither module.
  */
 function linkedFrom(ctx: ModuleContext<PeopleSlice>): Linked {
@@ -111,8 +111,10 @@ function linkedFrom(ctx: ModuleContext<PeopleSlice>): Linked {
       const length = ctx.fact('ties.their-minutes', { day }) as number;
       return start >= 0 && minute >= start && minute < start + length ? HOURS.work : null;
     }
-    const from = ctx.fact('law.fence-from') as number;
-    const to = ctx.fact('law.fence-to') as number;
+    const [from, to] =
+      i === LINKED.supplier
+        ? [ctx.fact('deal.supplier-from') as number, ctx.fact('deal.supplier-to') as number]
+        : [ctx.fact('law.fence-from') as number, ctx.fact('law.fence-to') as number];
     return from >= 0 && hour % 24 >= from && hour % 24 < to ? HOURS.work : null;
   };
 }
