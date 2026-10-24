@@ -1,0 +1,8 @@
+{
+  "beat": "circle/broke-up",
+  "when": {
+    "field": "by",
+    "is": "you"
+  },
+  "text": "{you} ended it with {name}."
+}

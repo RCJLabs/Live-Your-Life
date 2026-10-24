@@ -1,0 +1,65 @@
+{
+  "name": "Dating in Ridgefield",
+  "talk": {
+    "minutes": 30,
+    "odds": {
+      "base": 50,
+      "attraction": 2,
+      "regard": 4,
+      "familiarity": 1,
+      "low": 10,
+      "high": 95
+    },
+    "good": 3,
+    "bad": -2
+  },
+  "ask": {
+    "familiarity": 20,
+    "odds": {
+      "base": -30,
+      "attraction": 8,
+      "regard": 5,
+      "familiarity": 3,
+      "low": 0,
+      "high": 90
+    },
+    "yes": 5,
+    "no": -6,
+    "again": 21
+  },
+  "date": {
+    "hour": 19,
+    "window": 60,
+    "minutes": 180,
+    "cost": 6000,
+    "odds": {
+      "base": 40,
+      "attraction": 3,
+      "regard": 4,
+      "familiarity": 1,
+      "low": 10,
+      "high": 95
+    },
+    "good": 6,
+    "bad": -4,
+    "missed": -15,
+    "company": 40
+  },
+  "drift": {
+    "days": 7,
+    "per": 1
+  },
+  "leave": {
+    "regard": 30,
+    "chance": 15
+  },
+  "found": {
+    "base": 3,
+    "shared": 12,
+    "most": 40,
+    "regard": -35
+  },
+  "split": {
+    "regard": -15
+  }
+}

@@ -130,6 +130,11 @@ export const lifeModule = defineModule<LifeSlice>({
   id: 'life',
   init: () => ({ activity: 'awake', since: 0, asOf: 0, levels: { ...START_LEVELS } }),
   events: {
+    // Heard by the people you know (M2.6): going out ends when you do something else.
+    started: {
+      args: { activity: { type: 'enum', values: ACTIVITIES }, minutes: { type: 'int', min: 0 } },
+      label: 'Started doing something',
+    },
     // Heard by the people you know (M2.6): an evening out is met in when it ends.
     ended: {
       args: { activity: { type: 'enum', values: ACTIVITIES }, minutes: { type: 'int', min: 0 } },

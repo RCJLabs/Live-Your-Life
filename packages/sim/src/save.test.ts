@@ -2,11 +2,14 @@ import { readFileSync } from 'node:fs';
 import { createGame, type GameState, loadSave, readPack, stateHash } from '@eb/core';
 import { describe, expect, it } from 'vitest';
 import { LINE_COOK, sliceGame, sliceSim } from '../test/slice.ts';
+import { migrateCircle2, newTie } from './circle/state.ts';
 import { lifeModules } from './game.ts';
 
 /**
  * The save fixtures (CLAUDE.md, Saves never break): a week saved by the build that started keeping
- * saves (life-v1, M1.7), and one saved after the walk to work joined `you` (life-v2, D61), each
+ * saves (life-v1, M1.7), one saved after the walk to work joined `you` (life-v2, D61), one before
+ * the crew (life-v3, M2.4), and one with the 1,000 people and the people you know before courting
+ * (life-v4, M2.6), each
  * written once by test/fixture.ts and never again. Every later build must load them with nothing
  * skipped and every slice in the shape today's modules expect. A change to a slice's shape needs
  * a version and a migration, or this fails.
@@ -120,5 +123,39 @@ describe('the save fixtures', () => {
     expect(result.report.replayed).toBe(result.file.log.length);
     const deal = result.state.deal as { crew: boolean; owed: number; recruit: number };
     expect([deal.crew, deal.owed, deal.recruit]).toEqual([false, 0, -1]);
+  });
+
+  it('migrates a version-1 circle keeping each tie’s regard, as people you know, never asked out', () => {
+    const migrated = migrateCircle2({
+      ties: [{ person: 7, together: 90, regard: 81, met: 3 }],
+      out: -1,
+      drawnTo: 'men',
+    });
+    expect(migrated).toEqual({
+      ties: [{ ...newTie(7, 90, 3), regard: 81, seen: 3 }],
+      out: -1,
+      drawnTo: 'men',
+      settled: 0,
+    });
+  });
+
+  it('loads the fourth, saved with people you know before courting, migrating the circle from 1 to 2 (M2.6)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v4.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 2 }]);
+    expect(result.report.added).toEqual([]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    const saved = (fixture('life-v4.json') as { snapshot: { circle: { ties: { person: number; regard: number }[] } } })
+      .snapshot.circle.ties;
+    const ties = (result.state.circle as { ties: { person: number; regard: number; status: string }[] }).ties;
+    expect(saved.length).toBeGreaterThan(0);
+    expect(ties.map((t) => [t.person, t.regard, t.status])).toEqual(saved.map((t) => [t.person, t.regard, 'known']));
+    // Each tie in the shape a new one has, down to its keys.
+    const fresh = people.init('v4-shape', sim).circle as { ties: unknown[] };
+    expect(keysOf(result.state.circle)).toEqual(keysOf(fresh));
+    for (const t of ties) expect(Object.keys(t).sort()).toEqual(Object.keys(newTie(0, 0, 0)).sort());
   });
 });

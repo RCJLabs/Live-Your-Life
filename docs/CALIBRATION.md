@@ -219,6 +219,9 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | People met an hour out | 2 of those at your third place, as the tier-1 people meet each other (D71) | `population/ridgefield.json`, `ties.perHour` | none | (tune) |
 | Chemistry | drawn from the seed for each pair, 0 to 100; 4 points less a year of age between you past 5 years | `population/ridgefield.json`, `chemistry` | none: the shape of age gaps in couples is to read (open question) | (tune) |
 
+| Courting's chances and steps | talking, asking out, dates, drift, endings and finding out, each from attraction, regard and familiarity | `courtship/ridgefield.json` | none: tuned for play until the year's rates (M2.6 step 6) are read against surveys of dating and cohabitation | (tune) |
+| A date's cost | $60 for two | `courtship/ridgefield.json`, `date.cost` | none read | placeholder |
+
 **Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
 
 ## Open questions

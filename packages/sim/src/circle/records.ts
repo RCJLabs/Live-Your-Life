@@ -52,3 +52,62 @@ export function populationOf(store: RecordStore): PopulationRecord {
   checked.set(p, p);
   return p;
 }
+
+export const COURTSHIP = 'ridgefield';
+
+/** A chance worked out from the three things a person goes by (packages/content/types/courtship.json). */
+export interface Odds {
+  readonly base: number;
+  readonly attraction: number;
+  readonly regard: number;
+  readonly familiarity: number;
+  readonly low: number;
+  readonly high: number;
+}
+
+export interface CourtshipRecord {
+  readonly name: string;
+  readonly talk: { readonly minutes: number; readonly odds: Odds; readonly good: number; readonly bad: number };
+  readonly ask: {
+    readonly familiarity: number;
+    readonly odds: Odds;
+    readonly yes: number;
+    readonly no: number;
+    readonly again: number;
+  };
+  readonly date: {
+    readonly hour: number;
+    readonly window: number;
+    readonly minutes: number;
+    readonly cost: number;
+    readonly odds: Odds;
+    readonly good: number;
+    readonly bad: number;
+    readonly missed: number;
+    readonly company: number;
+  };
+  readonly drift: { readonly days: number; readonly per: number };
+  readonly leave: { readonly regard: number; readonly chance: number };
+  readonly found: { readonly base: number; readonly shared: number; readonly most: number; readonly regard: number };
+  readonly split: { readonly regard: number };
+}
+
+export function courtshipOf(store: RecordStore): CourtshipRecord {
+  const c = store.get<CourtshipRecord>('courtship', COURTSHIP);
+  if (!c) throw new Error(`courtship "${COURTSHIP}": no such record`);
+  return c;
+}
+
+/**
+ * A chance in percent: the base, points for each 10 of attraction and familiarity, and for each 10
+ * of regard above or below 50, kept between the record's low and high. Nobody drawn to you at all
+ * says yes to nothing that needs them to be.
+ */
+export function oddsOf(o: Odds, attraction: number, regard: number, familiarity: number): number {
+  const raw =
+    o.base +
+    Math.floor((attraction * o.attraction) / 10) +
+    Math.trunc(((regard - 50) * o.regard) / 10) +
+    Math.floor((familiarity * o.familiarity) / 10);
+  return Math.max(o.low, Math.min(o.high, raw));
+}

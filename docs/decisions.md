@@ -749,6 +749,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Real-shaped (recommended, chosen). Compressed about four times, written as a departure.
 
+### D93. You ask someone out in person; dates are planned by phone after. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** The first ask is made where you both are: at the third place you've gone out to, or at a tier-1 workplace while a shift is on. Once they've said yes, later dates are planned by phone at any hour.
+
+**Options considered.** In person, then texts (recommended, chosen). Anywhere by phone, to anyone you've met.
+
+### D94. You can date more than one person, and they can find out. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** Dating more than one person at a time is allowed. On each date, every other partner may find out, at odds shown before you go: more when the date is at their own third place. Finding out costs their regard hard, and below the courtship record's line they end it. This is the start of affairs (DESIGN.md, Relationships).
+
+**Options considered.** Yes, with consequences (recommended, chosen). One at a time, with affairs left for later.
+
 ---
 
 ## Open items

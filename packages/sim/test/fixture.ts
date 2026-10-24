@@ -5,20 +5,21 @@
  * the page's own `time/elapse`, which no bot sends. Run once per save format; the fixture is committed and
  * must keep loading (fixtures.test.ts). Never re-run to "fix" a failing load: write a migration.
  *
- *   node packages/sim/test/fixture.ts <out> <build> [seed]
+ *   node packages/sim/test/fixture.ts <out> <build> [seed] [people]
  *
  * life-v1.json was written by M1.7's build (you at version 1); life-v2.json by M1.8's, after the
  * walk to work (D61), with the page's `you/commute` in its log; life-v3.json by M2.4 step 3's, with
- * the street trade before the crew (deal at version 1), the law at 2 and prison.
+ * the street trade before the crew (deal at version 1), the law at 2 and prison; life-v4.json by
+ * M2.6 step 1's, with the 1,000 people and the people you know before courting (circle at version 1).
  */
 import { writeFileSync } from 'node:fs';
 import { type Action, createSaveFile, playRun } from '@eb/core';
 import { randomFor } from '../src/index.ts';
 import { sliceGame, sliceSim } from './slice.ts';
 
-const [out, build, SEED = 'fixture-24'] = process.argv.slice(2);
+const [out, build, SEED = 'fixture-24', PEOPLE] = process.argv.slice(2);
 if (!out || !build) throw new Error('fixture.ts <out> <build>: a fixture is written once, by name');
-const game = sliceGame();
+const game = PEOPLE === undefined ? sliceGame() : sliceGame({ people: Number(PEOPLE) });
 const sim = sliceSim();
 const run = playRun(game, sim, { seed: SEED, policy: randomFor(7), maxTurns: 5000 });
 let state = run.state;
@@ -33,8 +34,26 @@ for (const action of [
   state = step.state;
   log.push(action);
 }
-// The snapshot is the state some way in; the actions after it are the log.
-const split = Math.floor(run.log.length * 0.7);
+// With the people (life-v4.json): an evening out at the end, so the snapshot holds people you know.
+if (PEOPLE !== undefined) {
+  const out = game.options(state, sim).find((a) => a.type === 'circle/go-out');
+  if (!out) throw new Error('fixture: nowhere to go out to');
+  for (const action of [
+    out,
+    { type: 'clock/wait-until', hour: 20 },
+    { type: 'life/do', activity: 'socialize', minutes: 180 },
+  ]) {
+    const step = game.reduce(state, action, sim);
+    if (!step.accepted) throw new Error(`fixture: ${action.type} refused: ${JSON.stringify(step.beats[0])}`);
+    state = step.state;
+    log.push(action);
+  }
+  log.push({ type: 'time/elapse', ms: 1500 });
+  state = game.reduce(state, { type: 'time/elapse', ms: 1500 }, sim).state;
+}
+// The snapshot is the state some way in; the actions after it are the log. With the people, all
+// but the last.
+const split = PEOPLE === undefined ? Math.floor(run.log.length * 0.7) : log.length - 1;
 let snapshot = game.init(SEED, sim);
 for (const action of log.slice(0, split)) {
   const step = game.reduce(snapshot, action, sim);

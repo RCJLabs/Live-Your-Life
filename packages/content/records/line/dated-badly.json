@@ -1,0 +1,8 @@
+{
+  "beat": "circle/dated",
+  "when": {
+    "field": "good",
+    "is": "false"
+  },
+  "text": "{you} and {name} went out. It did not go well."
+}
