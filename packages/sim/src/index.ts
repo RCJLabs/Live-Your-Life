@@ -240,6 +240,8 @@ export { LINKED, mix, type Person, type Roster, rosterOf } from './people/roster
 export { HOUSEHOLD, SHARED, SHIFTS, type ShiftTemplate, SLEEP, TIES } from './people/templates.ts';
 export { meet, TIE_ROW } from './people/ties.ts';
 export { type WorkSlice, workModule } from './people/work.ts';
+export { type PrisonSlice, paroleOdds, prisonModule, type Term } from './prison/module.ts';
+export { PRISON, type PrisonRecord, prisonOf } from './prison/records.ts';
 export { thiefFor } from './thief.ts';
 export { familiarityOf, KEPT, type Memory, NEUTRAL, remember } from './ties/memory.ts';
 export { type Hired, tiesModule } from './ties/module.ts';

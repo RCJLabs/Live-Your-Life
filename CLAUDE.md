@@ -58,6 +58,7 @@ node tools/city/chromium.ts [seeds] [rounds]       # the same in headless Chromi
 node tools/city/faces.ts [seeds] [from]            # every face of every walkable block, planned and checked; ms a face
 node tools/city/walks.ts [seeds] [pairs]           # the street network built, and walks between walkable doors timed
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
+node packages/sim/test/prison-bench.ts [days] [rounds]   # a day in prison with the 1,000 people, timed: what the page spends a frame passing a sentence
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -90,7 +91,8 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     M2.3 the labor market (market/: employers, openings, the odds, applications and offers, D74),
                     and the seeker bot (bot.ts); since M2.4
                     the street trade (deal/: the trade's records, buying, the corner, who passes, heat);
-                    test/slice.ts is the slice's life for tests and benches; test/fixtures/saves/ the save fixtures that
+                    and prison (prison/: the sentence a day at a time, the job, letters, visits, parole, D81);
+                    test/slice.ts is the slice's life for tests and benches; test/case.ts a drug case brought to court; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
                     @lyl/stage/testing is a fake canvas for drawing tests

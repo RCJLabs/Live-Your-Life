@@ -25,6 +25,7 @@ import { lifeModule } from './life.ts';
 import { marketModule } from './market/module.ts';
 import { peopleModule, shareModule } from './people/module.ts';
 import { workModule } from './people/work.ts';
+import { prisonModule } from './prison/module.ts';
 import { tiesModule } from './ties/module.ts';
 import { youModule } from './you.ts';
 
@@ -83,6 +84,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     marketModule(options.career),
     // The street trade (M2.4): added to a save from before it, it starts with nothing held.
     dealModule,
+    // Prison (M2.4, D81): it hears a prison sentence, and holds the life a day at a time.
+    prisonModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

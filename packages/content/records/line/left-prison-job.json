@@ -1,0 +1,8 @@
+{
+  "beat": "prison/working",
+  "when": {
+    "field": "working",
+    "is": "false"
+  },
+  "text": "{you} gave up the job inside."
+}

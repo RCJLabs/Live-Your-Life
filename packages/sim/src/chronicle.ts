@@ -58,6 +58,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'deal/sold': 'each sale; the hour on the corner is told, and the money shows in your cash',
   'deal/turned-away': 'a buyer you had nothing for; the hour on the corner is told',
   'deal/seen': 'who saw you is not yours to know; what the police do about it is told',
+  'prison/hearing': 'its outcome is told',
 };
 
 const fail = (problem: string): never => {
@@ -155,6 +156,8 @@ export function lineFor(
         return dateOf(start, beat.day as number);
       case 'court':
         return dateOf(start, beat.court as number);
+      case 'minimum':
+        return dateOf(start, beat.minimum as number);
       case 'hours':
         return hours((beat.worked ?? beat.minutes) as number);
       case 'jail':
