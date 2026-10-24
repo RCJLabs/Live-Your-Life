@@ -40,6 +40,7 @@ import { type Waiting, waiting } from './pending.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
 import { Player, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
+import { cornerLead, PASS_DAYS, passOneDay } from './street.ts';
 import { canGo, GO_TO_WORK, startTrip, type Trip, tripAction } from './trip.ts';
 
 const MAX_DPR = 2;
@@ -67,14 +68,20 @@ export function play(
   const peopleSeed = life.fact('people.seed') as number;
   const peopleCount = life.fact('people.count') as number;
   // With whoever has left or changed jobs since the life began (M2.3), as the sim's shares have them.
-  const crowd = makeCrowd(block, peopleSeed, peopleCount, () =>
-    rosterWith(
-      life.sim.content,
-      peopleSeed,
-      peopleCount,
-      life.fact('people-work.moves') as number[],
-      life.fact('people-work.version') as number,
-    ),
+  const crowd = makeCrowd(
+    block,
+    peopleSeed,
+    peopleCount,
+    () =>
+      rosterWith(
+        life.sim.content,
+        peopleSeed,
+        peopleCount,
+        life.fact('people-work.moves') as number[],
+        life.fact('people-work.version') as number,
+      ),
+    // The supplier at the corner (M2.4), once the places are laid out below.
+    () => places.all.find((p) => p.kind === 'corner')?.stand ?? null,
   );
   // Where the city's employers stand, and the walk to each (M2.3, D73).
   const work = workOf(block, peopleSeed, life.fact('people.count') as number);
@@ -148,6 +155,8 @@ export function play(
     moved: Number.NEGATIVE_INFINITY,
     waiting: 0,
     waitingAt: 0,
+    /** Passing prison's days, a day a frame, until something happens (D81). */
+    passing: false,
   };
 
   /** The game hour last saved, so the clock running saves once an hour. */
@@ -171,6 +180,10 @@ export function play(
   const blocked = () => panel.open || sheet.open || choice.open || map.open || s.ff !== null;
 
   function act(a: Action, at: Place | null = null): void {
+    if (a.type === PASS_DAYS) {
+      s.passing = true;
+      return;
+    }
     if (a.type === GO_TO_WORK) {
       const walk = (life.state.you as { commute: number | null }).commute;
       if (trip === null && canGo(life, walk)) {
@@ -245,7 +258,15 @@ export function play(
     reachedAt = place.id;
     save();
     if (place.kind === 'door') return;
-    sheet.show(place.label, null, itemsAt(life, place), 'Leave');
+    sheet.show(place.label, place.kind === 'corner' ? cornerLead(life) : null, itemsAt(life, place), 'Leave');
+  }
+
+  /** A day of a sentence a frame (street.ts), until something comes to tell; saved when it stops. */
+  function passDay(): void {
+    if (passOneDay(life)) return;
+    s.passing = false;
+    if (life.mode.id === 'world') player.getUp();
+    save();
   }
 
   let size = { width: 1, height: 1, dpr: 1 };
@@ -319,7 +340,8 @@ export function play(
         save();
       }
     }
-    if (!blocked() && !s.paused) {
+    if (s.passing) passDay();
+    else if (!blocked() && !s.paused) {
       const factor = FACTOR[s.speed];
       life.elapse(dt, factor);
       s.t += (dt / 1000) * factor;
@@ -328,7 +350,7 @@ export function play(
       if (Math.floor((life.fact('time.tick') as number) / 60) !== savedHour) save();
     }
     const m = modeSheet(life);
-    if (m && !choice.open && !s.ff) {
+    if (m && !choice.open && !s.ff && !s.passing) {
       player.stop();
       choice.show(m.title, m.lead, m.items, null);
     }

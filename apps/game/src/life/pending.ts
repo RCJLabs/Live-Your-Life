@@ -7,7 +7,7 @@
  * actions the game offers now.
  */
 import type { Action, TimeSlice } from '@eb/core';
-import { careerOf, type LawState, type TiesSlice } from '@lyl/sim';
+import { careerOf, type DealSlice, type LawState, type TiesSlice } from '@lyl/sim';
 import type { Life } from './session.ts';
 import { canGo, GO_TO_WORK } from './trip.ts';
 import { dayText, money, whenText } from './words.ts';
@@ -58,7 +58,11 @@ function law(life: Life): Waiting[] {
     const text =
       v.why === 'warrant'
         ? `The police will come to arrest you ${whenText(life, due)}, on the warrant.`
-        : `The police will come to see you ${whenText(life, due)}.`;
+        : v.why === 'raid'
+          ? `The police will come for you ${whenText(life, due)}. What they find on you, they'll charge.`
+          : v.why === 'violation'
+            ? `The police will come ${whenText(life, due)} to pick you up for breaking probation.`
+            : `The police will come to see you ${whenText(life, due)}.`;
     out.push({ id: `police/${v.id}`, kind: 'police', day, text, actions: [] });
   }
   for (const k of s.cases) {
@@ -114,9 +118,22 @@ function goToWork(life: Life): Waiting[] {
   ];
 }
 
+/** A front owed to the supplier (M2.4, D84): paid back at the corner, at their hours. */
+function front(life: Life): Waiting[] {
+  const d = life.state.deal as DealSlice | undefined;
+  if (!d || d.owed === 0) return [];
+  const pay = offered(life, 'deal/pay-back').map((action) => ({ label: `Pay ${money(d.owed)}`, action }));
+  const who = d.supplier?.first ?? 'The supplier';
+  const by = d.due >= 0 ? ` by ${dayText(life, d.due)}` : '';
+  const text = d.cutOff
+    ? `You owe ${who} ${money(d.owed)}. They stopped fronting you when it went unpaid.`
+    : `You owe ${who} ${money(d.owed)}${by}, paid at the corner.`;
+  return [{ id: 'front', kind: 'owed', day: d.due >= 0 ? d.due : null, text, actions: pay }];
+}
+
 /** Everything waiting on you, the soonest first; money owed last. */
 export function waiting(life: Life): Waiting[] {
-  const all = [...goToWork(life), ...favour(life), ...law(life), ...shifts(life)];
+  const all = [...goToWork(life), ...favour(life), ...law(life), ...front(life), ...shifts(life)];
   return all.sort((a, b) => (a.day ?? Number.POSITIVE_INFINITY) - (b.day ?? Number.POSITIVE_INFINITY));
 }
 
