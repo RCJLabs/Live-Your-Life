@@ -76,7 +76,7 @@ engine/             Engine-Builder, a git submodule pinned to a commit; @eb/core
 packages/content/   the game's content as an Engine-Builder project: types/ and records/ as JSON (the street, facades, buildings
                     and blocks; since M1.2 fixtures, rooms and interiors; since M1.3 the career, shift events and taxes; since
                     M1.4 the name pool, acts and the favour; since M1.5 the shop's goods as the inventory kit's items, offences,
-                    the crime and the fence; since M1.6 the chronicle's lines; since M2.4 the trade; since M2.6 the population), checked by eb validate, built into pack.json
+                    the crime and the fence; since M1.6 the chronicle's lines; since M2.4 the trade; since M2.6 the population and courtship), checked by eb validate, built into pack.json
                     by pnpm content; the package reads only the pack (pure)
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, rent, the week
                     bots, the job (job/, M1.3: the records, postings and sign-up, standing, shift events and their odds, pay and
@@ -93,7 +93,7 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     and the seeker bot (bot.ts); since M2.4
                     the street trade (deal/: the trade's records, buying, the corner, who passes, heat; crew.ts, the supplier's crew, fronts and the recruit, D84–D86);
                     and prison (prison/: the sentence a day at a time, the job, letters, visits, parole, D81);
-                    since M2.6 who the tier-1 people are (people/who.ts) and the people you know (circle/: meeting them out and at work, D89);
+                    since M2.6 who the tier-1 people are (people/who.ts) and the people you know (circle/: meeting them out and at work, D89; court.ts, courting, and days.ts, what passes with it, D93–D94);
                     test/slice.ts is the slice's life for tests and benches; test/case.ts a drug case brought to court; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;

@@ -10,14 +10,31 @@ import { mix } from '../people/roster.ts';
 import { ADULT, chemistry, DRAWN_TO, type DrawnTo, drawnBy, drawnFor, type Who, whoIs } from '../people/who.ts';
 import { familiarityOf } from '../ties/memory.ts';
 import { namePoolOf, type Pronouns } from '../ties/records.ts';
-import { hauntsOf, meetAt, rosterNow } from './meet.ts';
+import {
+  answered,
+  askOut,
+  askRoll,
+  breakUp,
+  dated,
+  dateRoll,
+  foundOut,
+  goOnDate,
+  planDate,
+  talk,
+  talked,
+  talkRoll,
+} from './court.ts';
+import { circleDays } from './days.ts';
+import { hauntsOf, meetAt, nameOf, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
-import { type CircleSlice, noOne } from './state.ts';
+import { type CircleSlice, migrateCircle2, noOne } from './state.ts';
 
 /** Your age on the life's first day (D20). */
 export const START_AGE = ADULT;
 
 const PERSON = { person: { type: 'int', min: 0 } } as const;
+const WHO = { type: 'int', min: 0 } as const;
+const NAME = { type: 'text' } as const;
 
 type View = FactView<CircleSlice>;
 
@@ -42,12 +59,32 @@ const tieOf = (v: View, person: number) => v.state.ties.find((t) => t.person ===
 
 export const circleModule = defineModule<CircleSlice>({
   id: 'circle',
+  // 2 (M2.6 step 2): courting.
+  version: 2,
+  migrate: { 2: migrateCircle2 },
   init: noOne,
   events: {
-    met: { args: { person: { type: 'int', min: 0 }, name: { type: 'text' } }, label: 'Met someone' },
+    met: { args: { person: WHO, name: NAME }, label: 'Met someone' },
+    talked: { args: { person: WHO, good: { type: 'bool' } }, label: 'Talked with someone' },
+    'asked-out': { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Asked someone out' },
+    planned: { args: { person: WHO, day: { type: 'int', min: 0 } }, label: 'Planned a date' },
+    dated: { args: { person: WHO, name: NAME, good: { type: 'bool' } }, label: 'Went on a date' },
+    'stood-up': { args: { person: WHO, name: NAME }, label: 'Missed a date' },
+    'found-out': { args: { person: WHO, name: NAME }, label: 'A partner found out about another' },
+    'broke-up': { args: { person: WHO, name: NAME, by: { type: 'enum', values: ['you', 'them'] } }, label: 'Broke up' },
   },
   facts: {
     known: { read: ({ state }) => state.ties.length, domain: { type: 'int', min: 0 }, label: 'people you know' },
+    dating: {
+      read: ({ state }) => state.ties.filter((t) => t.status === 'dating').length,
+      domain: { type: 'int', min: 0 },
+      label: 'people you are dating',
+    },
+    name: {
+      args: PERSON,
+      read: (v, { person }) => nameOf(v.content, v.fact('people.seed') as number, person as number),
+      label: 'their name',
+    },
     out: { read: ({ state }) => state.out, domain: { type: 'int', min: -1 }, label: 'the place you are going out to' },
     'drawn-to': { read: yourDrawnTo, domain: { type: 'enum', values: DRAWN_TO }, label: 'whom you are drawn to' },
     familiarity: {
@@ -115,8 +152,28 @@ export const circleModule = defineModule<CircleSlice>({
       if (!DRAWN_TO.includes(action.to as DrawnTo)) return ctx.refuse('bad-drawn-to');
       ctx.write().drawnTo = action.to as DrawnTo;
     },
+    talk,
+    'ask-out': askOut,
+    'plan-date': planDate,
+    'go-on-date': goOnDate,
+    'break-up': breakUp,
+  },
+  effects: {
+    'talk-roll': talkRoll,
+    talked,
+    'ask-roll': askRoll,
+    answered,
+    'date-roll': dateRoll,
+    dated,
+    'found-out': foundOut,
   },
   on: {
+    // Missed dates, drift and endings (days.ts).
+    'time/passed': circleDays,
+    // Doing something other than socialising is leaving the place you went out to.
+    'life/started': (ctx, event) => {
+      if (event.activity !== 'socialize' && ctx.read().out >= 0) ctx.write().out = -1;
+    },
     // An evening out: the people at your third place, hour by hour, as long as you stayed.
     'life/ended': (ctx, event) => {
       const out = ctx.read().out;

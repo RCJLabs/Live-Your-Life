@@ -1,0 +1,8 @@
+{
+  "beat": "circle/asked-out",
+  "when": {
+    "field": "yes",
+    "is": "true"
+  },
+  "text": "{you} asked {name} out, and {name} said yes."
+}

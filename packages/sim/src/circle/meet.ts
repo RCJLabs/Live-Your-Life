@@ -4,7 +4,7 @@
  * (people/gather.ts). Who is there comes from the same plans the people are moved on by, so the
  * bar is full on a Friday night for the same reason the street is.
  */
-import type { FactView, ModuleContext, RecordStore } from '@eb/core';
+import type { FactView, ModuleContext, PreviewContext, RecordStore } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
 import { rosterWith } from '../people/careers.ts';
 import { type HourKind, placeOf } from '../people/day.ts';
@@ -13,9 +13,9 @@ import { LINKED, mix, type Roster } from '../people/roster.ts';
 import { whoIs } from '../people/who.ts';
 import { namePoolOf } from '../ties/records.ts';
 import { populationOf } from './records.ts';
-import { type CircleSlice, MET_ONCE } from './state.ts';
+import { type CircleSlice, MET_ONCE, newTie } from './state.ts';
 
-type View = FactView<unknown> | ModuleContext<unknown>;
+type View = FactView<unknown> | ModuleContext<unknown> | PreviewContext<unknown>;
 
 /** The roster as the people are now, with whoever has left or changed jobs. */
 export function rosterNow(v: View): Roster | null {
@@ -59,15 +59,18 @@ function together(ctx: ModuleContext<CircleSlice>, seed: number, person: number,
   const tie = slice.ties.find((t) => t.person === person);
   if (tie) {
     tie.together += minutes;
+    tie.seen = day;
     return;
   }
   const kept = populationOf(ctx.content).ties.kept;
   if (slice.ties.length >= kept) {
-    const least = slice.ties.reduce((a, b) => (b.together < a.together ? b : a));
+    const known = slice.ties.filter((t) => t.status !== 'dating');
+    if (known.length === 0) return;
+    const least = known.reduce((a, b) => (b.together < a.together ? b : a));
     if (least.together > MET_ONCE) return;
     slice.ties = slice.ties.filter((t) => t !== least);
   }
-  slice.ties.push({ person, together: minutes, regard: 50, met: day });
+  slice.ties.push(newTie(person, minutes, day));
   ctx.emit('met', { person, name: nameOf(ctx.content, seed, person) });
 }
 

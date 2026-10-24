@@ -1,0 +1,303 @@
+{
+  "title": "Courtship",
+  "description": "How you and the people you meet come to date (M2.6, D89, D93, D94): talking, asking out, dates, drifting apart, breaking up, and a partner finding out about another. Each chance is worked out from their attraction to you, their regard and how well you know each other, shown before it is rolled. Every figure is (tune) unless CALIBRATION.md traces it.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "talk": {
+      "kind": "group",
+      "description": "A talk with someone who is where you are: once an hour each.",
+      "fields": {
+        "minutes": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Minutes it adds together."
+        },
+        "odds": {
+          "kind": "group",
+          "description": "The chance it goes well.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": -100,
+              "max": 100
+            },
+            "attraction": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of their attraction to you."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of regard above 50, taken away below it."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of familiarity."
+            },
+            "low": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "high": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
+          }
+        },
+        "good": {
+          "kind": "int",
+          "min": 0,
+          "max": 30,
+          "description": "Regard when it goes well."
+        },
+        "bad": {
+          "kind": "int",
+          "min": -30,
+          "max": 0,
+          "description": "Regard when it doesn't."
+        }
+      }
+    },
+    "ask": {
+      "kind": "group",
+      "description": "Asking someone out, in person (D93).",
+      "fields": {
+        "familiarity": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "How well you must know them first."
+        },
+        "odds": {
+          "kind": "group",
+          "description": "The chance they say yes.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": -100,
+              "max": 100
+            },
+            "attraction": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of their attraction to you."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of regard above 50, taken away below it."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of familiarity."
+            },
+            "low": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "high": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
+          }
+        },
+        "yes": {
+          "kind": "int",
+          "min": 0,
+          "max": 30
+        },
+        "no": {
+          "kind": "int",
+          "min": -30,
+          "max": 0
+        },
+        "again": {
+          "kind": "int",
+          "min": 1,
+          "max": 365,
+          "description": "Days before you can ask them again."
+        }
+      }
+    },
+    "date": {
+      "kind": "group",
+      "description": "A date, planned by phone once you're dating (D93).",
+      "fields": {
+        "hour": {
+          "kind": "int",
+          "min": 0,
+          "max": 23,
+          "description": "When it starts, the day after it is planned."
+        },
+        "window": {
+          "kind": "int",
+          "min": 10,
+          "max": 180,
+          "description": "Minutes after the start you can still turn up."
+        },
+        "minutes": {
+          "kind": "int",
+          "min": 30,
+          "max": 600
+        },
+        "cost": {
+          "kind": "int",
+          "min": 0,
+          "max": 100000,
+          "description": "Cents you spend."
+        },
+        "odds": {
+          "kind": "group",
+          "description": "The chance it goes well.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": -100,
+              "max": 100
+            },
+            "attraction": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of their attraction to you."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of regard above 50, taken away below it."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of familiarity."
+            },
+            "low": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "high": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
+          }
+        },
+        "good": {
+          "kind": "int",
+          "min": 0,
+          "max": 30
+        },
+        "bad": {
+          "kind": "int",
+          "min": -30,
+          "max": 0
+        },
+        "missed": {
+          "kind": "int",
+          "min": -50,
+          "max": 0,
+          "description": "Regard when you don't turn up."
+        },
+        "company": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Points of company it gives."
+        }
+      }
+    },
+    "drift": {
+      "kind": "group",
+      "description": "Dating someone you don't see: regard lost a day after this many days apart.",
+      "fields": {
+        "days": {
+          "kind": "int",
+          "min": 1,
+          "max": 60
+        },
+        "per": {
+          "kind": "int",
+          "min": 0,
+          "max": 10
+        }
+      }
+    },
+    "leave": {
+      "kind": "group",
+      "description": "Below this regard, the chance a day they end it.",
+      "fields": {
+        "regard": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "chance": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    "found": {
+      "kind": "group",
+      "description": "Dating more than one (D94): on each date, the chance each other partner finds out, more when they go out where the date is.",
+      "fields": {
+        "base": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "shared": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "most": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "regard": {
+          "kind": "int",
+          "min": -100,
+          "max": 0,
+          "description": "Regard when they do."
+        }
+      }
+    },
+    "split": {
+      "kind": "group",
+      "description": "Breaking up.",
+      "fields": {
+        "regard": {
+          "kind": "int",
+          "min": -50,
+          "max": 0,
+          "description": "Their regard when you end it."
+        }
+      }
+    }
+  }
+}
