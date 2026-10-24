@@ -235,6 +235,101 @@
           "max": 95
         }
       }
+    },
+    "crew": {
+      "kind": "group",
+      "description": "The supplier's crew (D79, D84–D86): the trust and the heat they want before they bring you in; what they front, at what price, due in how many days; trust lost when a front goes unpaid; and a recruit's terms (tune).",
+      "fields": {
+        "trust": {
+          "kind": "int",
+          "min": 1,
+          "max": 50,
+          "description": "Purchases or repayments before they'll bring you in."
+        },
+        "heat": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "The most heat on you they'll take."
+        },
+        "front": {
+          "kind": "group",
+          "fields": {
+            "lot": {
+              "kind": "text",
+              "min": 1,
+              "max": 24
+            },
+            "price": {
+              "kind": "int",
+              "min": 1,
+              "max": 10000000
+            },
+            "days": {
+              "kind": "int",
+              "min": 1,
+              "max": 60
+            }
+          }
+        },
+        "unpaid": {
+          "kind": "int",
+          "min": 0,
+          "max": 50,
+          "description": "Trust lost for a front not paid back on time."
+        },
+        "recruit": {
+          "kind": "group",
+          "fields": {
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "The coworker's regard needed for a yes."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "How well you must know them."
+            },
+            "nights": {
+              "kind": "int",
+              "min": 1,
+              "max": 7,
+              "description": "Nights a week they sell."
+            },
+            "buyers": {
+              "kind": "int",
+              "min": 1,
+              "max": 95,
+              "description": "The odds in percent of a buyer in each of their ten minutes, through a night's four hours."
+            },
+            "share": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Percent of their takings they keep."
+            },
+            "seen": {
+              "kind": "int",
+              "min": 1,
+              "max": 95,
+              "description": "The odds in percent one of their sales is seen."
+            },
+            "named": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "The odds in percent they name you once arrested, at a regard of 0; less, a point for each point of regard."
+            },
+            "act": {
+              "kind": "ref",
+              "to": "act"
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -30,7 +30,22 @@ export interface DealSlice {
   /** Cents taken in sales, all told. */
   takings: number;
   seen: Sighting[];
+  /** The supplier's trust in you, from purchases and fronts paid back (D79). */
+  trust: number;
+  /** In their crew; cut off from their fronts after one went unpaid (D86). */
+  crew: boolean;
+  cutOff: boolean;
+  /** What a front left owed, in cents, and the day it is due; -1 with none. */
+  owed: number;
+  due: number;
+  /** The coworker, selling for you since this day (D85); -1 if not. */
+  recruit: number;
+  /** The last day the crew's days were settled to. */
+  settled: number;
 }
+
+/** What a save from before the crew (deal version 1) gains (M2.4 step 4). */
+export const NO_CREW = { trust: 0, crew: false, cutOff: false, owed: 0, due: -1, recruit: -1, settled: 0 } as const;
 
 export type DealContext = ModuleContext<DealSlice>;
 export type DealView = FactView<DealSlice> | DealContext | PreviewContext<DealSlice>;

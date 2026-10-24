@@ -90,7 +90,7 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     block's place in the city, D67); since M1.6 you (you.ts) and the chronicle (chronicle.ts); since
                     M2.3 the labor market (market/: employers, openings, the odds, applications and offers, D74),
                     and the seeker bot (bot.ts); since M2.4
-                    the street trade (deal/: the trade's records, buying, the corner, who passes, heat);
+                    the street trade (deal/: the trade's records, buying, the corner, who passes, heat; crew.ts, the supplier's crew, fronts and the recruit, D84–D86);
                     and prison (prison/: the sentence a day at a time, the job, letters, visits, parole, D81);
                     test/slice.ts is the slice's life for tests and benches; test/case.ts a drug case brought to court; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)

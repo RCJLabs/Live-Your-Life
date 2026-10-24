@@ -63,11 +63,18 @@ describe('the coworker and the fence among the tier-1 people (M2.2, D70)', () =>
     const linked = newShare(48, 0, 24);
     progress(city, plain, 0, 24, 0);
     progress(city, linked, 0, 24, 0, atWork);
-    // Six levels a person: the two linked people differ, worked all day; nobody else does.
+    // Six levels a person: the three linked people differ, worked all day; nobody else does. Two
+    // to a share here, so the third, the supplier, is the first of the next share.
     expect(linked.levels.slice(0, 12)).not.toEqual(plain.levels.slice(0, 12));
     expect(linked.count).toBe(2);
-    const other = newShare(48, 1, 24);
-    const otherLinked = newShare(48, 1, 24);
+    const next = newShare(48, 1, 24);
+    const nextLinked = newShare(48, 1, 24);
+    progress(city, next, 0, 24, 0);
+    progress(city, nextLinked, 0, 24, 0, atWork);
+    expect(nextLinked.levels.slice(0, 6)).not.toEqual(next.levels.slice(0, 6));
+    expect(nextLinked.levels.slice(6)).toEqual(next.levels.slice(6));
+    const other = newShare(48, 2, 24);
+    const otherLinked = newShare(48, 2, 24);
     progress(city, other, 0, 24, 0);
     progress(city, otherLinked, 0, 24, 0, atWork);
     expect(otherLinked.levels).toEqual(other.levels);

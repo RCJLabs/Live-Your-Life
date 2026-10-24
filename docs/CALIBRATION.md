@@ -175,12 +175,16 @@ Cocaine on the street (D78, D82). Every figure was read on 2026-10-23 through se
 | A not-guilty plea's odds of dismissal | 35% on sales seen only, 10% with the drugs found on you (tune) | `trade/cocaine.json`, `contest` | none found | dismissal and acquittal rates for drug delivery charges |
 | A probation violation | 30 days in jail (tune) | `law/drugs.ts`, `VIOLATION_DAYS` | none found | — |
 | Buyers by the hour, who sees, heat | the trade's `corner`, `seen` and `heat` (tune) | `trade/cocaine.json` | none: tuned for play | — |
+| The crew | trust of 3 (purchases, and fronts paid back on time) and heat of 30 or less to be brought in; an ounce fronted at $1,000 against $1,200 bought, due in 14 days; 5 trust lost for a front unpaid (tune) | `trade/cocaine.json`, `crew` | none found | — |
+| The recruit | asked with familiarity 40 and regard 60 or more; sells 3 nights a week, a buyer at 20 in 100 each ten minutes through four hours; keeps 40% of the takings; a sale seen at 4 in 100; once arrested, names you at 70 in 100 less a point for each point of their regard (tune) | `trade/cocaine.json`, `crew.recruit` | none found | — |
 | Held at most | under 50 g, the weight the charges above go by (tune) | `deal/trade.ts`, `MOST_HELD` | none: keeps a street seller inside the tiers built | — |
 | What street sellers earned | about $30 an hour, 1990 dollars, for daily sellers in Washington DC (Reuter, MacCoun and Murphy); about $3.30 an hour, 1995 dollars, for a Chicago gang's foot soldiers (Levitt and Venkatesh, 2000), with 5.9 arrests and a 25% chance of death over four years | — (a check for B6, not a figure in use) | RAND reprint RP-171; NBER working paper 6592, through summaries | to check |
 
 | The maximum a sentence holds | the offence's statutory maximum: 20 years for delivery, 4 for possession | `prison/module.ts` | Michigan's indeterminate sentencing, from memory: the court sets the minimum, and the maximum is the statute's | to check |
 | Pay at a prison job | $1.50 a day (tune) | `prison/state-prison.json`, `wage` | none read; Michigan's prison wages are recalled as under $4 a day | to find |
 | Standing, letters and visits | standing 50 to start, 4 a month up with the job and 2 down without; a letter a week; a visit a month from someone whose regard is 55 or more (tune) | `prison/state-prison.json` | none: tuned for play | — |
+
+**A departure, on purpose.** Working in a crew is charged only as the sales themselves. Michigan's conspiracy statute (MCL 750.157a) and the federal one are not built. A recruit's statement counts against you as two sales seen.
 
 **A departure, on purpose.** A felony in Michigan goes from arraignment in district court through a preliminary examination to circuit court, where it is pleaded or tried. The game has one court date. The guidelines' prior record variable counts every prior conviction; so does the game, and a retail fraud conviction makes a later drug charge a repeat.
 

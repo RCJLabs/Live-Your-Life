@@ -86,8 +86,9 @@ describe('the coworker in the bots’ weeks', () => {
     playWeeks(steadyPolicy, seedsOf(500, 'ties'), tally);
     const steadyShared = tally.shared;
     playWeeks(randomLifePolicy, seedsOf(300, 'ties-random'), tally);
-    // Prison's acts (M2.4, D81) are reached by prison/module.test.ts: these bots never go inside.
-    const PRISON_ACTS = ['went-inside', 'wrote-from-inside', 'silent-inside'];
+    // Prison's acts (M2.4, D81) are reached by prison/module.test.ts, and the crew's by
+    // deal/crew.test.ts: these bots never go inside or deal.
+    const PRISON_ACTS = ['went-inside', 'wrote-from-inside', 'silent-inside', 'brought-them-in'];
     const all = sim.content.ids('act').filter((act) => !PRISON_ACTS.includes(act));
     expect(all.length).toBe(17);
     expect(all.filter((act) => !tally.acts.has(act))).toEqual([]);

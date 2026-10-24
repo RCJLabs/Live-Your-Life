@@ -97,4 +97,16 @@ describe('the save fixtures', () => {
     } as unknown as GameState;
     expect(stateHash(saved)).toBe(result.file.hash);
   });
+
+  it('loads the third, saved before the crew, migrating the trade from version 1 to 2 (M2.4)', () => {
+    const result = load('life-v3.json');
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'deal', from: 1, to: 2 }]);
+    expect(result.report.added).toEqual([]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    const deal = result.state.deal as { crew: boolean; owed: number; recruit: number };
+    expect([deal.crew, deal.owed, deal.recruit]).toEqual([false, 0, -1]);
+  });
 });

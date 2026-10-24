@@ -1,0 +1,8 @@
+{
+  "beat": "deal/recruit-arrested",
+  "when": {
+    "field": "named",
+    "is": "true"
+  },
+  "text": "{coworker} was arrested selling, and named {you} to the police."
+}

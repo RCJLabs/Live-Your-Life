@@ -9,20 +9,23 @@ import { type Lot, TRADE, tradeOf } from './records.ts';
 import { type DealContext, type DealSlice, type DealView, heatOf, raiseHeat, sliceOf } from './state.ts';
 import { passingNow } from './witnesses.ts';
 
+/** Trust with the supplier holds at most this much. */
+export const TRUST_MOST = 20;
+
 /** Held at most, in tenths of a gram: under the 50 g the charges above go by (D82, tune). */
 export const MOST_HELD = 499;
 const SLOTS = 6;
 
 const traded = (v: DealView): boolean => v.content.has('trade', TRADE);
 
-const supplierHere = (v: DealView): boolean => {
+export const supplierHere = (v: DealView): boolean => {
   if (!traded(v) || !sliceOf(v).supplier) return false;
   const hour = v.fact('clock.hour') as number;
   const h = tradeOf(v.content).supplier.hours;
   return hour >= h.from && hour < h.to;
 };
 
-const cash = (v: DealView): number => v.fact('economy.amount', { resource: 'cash' }) as number;
+export const cash = (v: DealView): number => v.fact('economy.amount', { resource: 'cash' }) as number;
 
 const lotNamed = (v: DealView, id: unknown): Lot | undefined =>
   tradeOf(v.content).supplier.sells.find((l) => l.id === id);
@@ -42,7 +45,10 @@ export const buy = {
     const problem = buyProblem(ctx, lot);
     if (problem || !lot) return ctx.refuse(problem ?? 'no-such-lot');
     ctx.apply({ effect: 'add-resource', resource: 'cash', by: -lot.price });
-    ctx.write().held += lot.grams;
+    const w = ctx.write();
+    w.held += lot.grams;
+    // Each purchase is trust built with the supplier (D79), up to a point.
+    w.trust = Math.min(TRUST_MOST, w.trust + 1);
     ctx.emit('bought', { lot: lot.id, grams: lot.grams, price: lot.price });
   },
   options: (v: DealView) =>
