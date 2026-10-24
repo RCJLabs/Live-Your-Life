@@ -136,6 +136,11 @@ export {
 export { inFront, type StreetPoint, type Walk, walkBetween } from './city/walks.ts';
 export { clockModule, minutesUntil } from './clock.ts';
 export { LIFE_CONTENT, lifeSim } from './content.ts';
+export { dealModule } from './deal/module.ts';
+export { chargeFor, type Lot, TRADE, type TradeRecord, tradeOf } from './deal/records.ts';
+export { type DealSlice, heatOf, type Sighting } from './deal/state.ts';
+export { buyerOdds, MOST_HELD, seenOdds } from './deal/trade.ts';
+export { outNow, passingNow } from './deal/witnesses.ts';
 export * from './dials.ts';
 export {
   createLifeGame,

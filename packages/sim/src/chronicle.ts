@@ -20,6 +20,7 @@ export interface Names {
   readonly you: string;
   readonly coworker?: string;
   readonly fence?: string;
+  readonly supplier?: string;
 }
 
 /** Events the chronicle leaves out: the machinery, and what another event already tells. */
@@ -54,6 +55,9 @@ export const QUIET: Readonly<Record<string, string>> = {
   'law/notice': 'the interface: what is coming is in the panel',
   'law/in-court': 'the plea is told',
   'law/trainee': 'told with the plea',
+  'deal/sold': 'each sale; the hour on the corner is told, and the money shows in your cash',
+  'deal/turned-away': 'a buyer you had nothing for; the hour on the corner is told',
+  'deal/seen': 'who saw you is not yours to know; what the police do about it is told',
 };
 
 const fail = (problem: string): never => {
@@ -75,6 +79,12 @@ export function hours(minutes: number): string {
   const hs = h === 1 ? '1 hour' : `${h} hours`;
   const ms = m === 1 ? '1 minute' : `${m} minutes`;
   return h === 0 ? ms : m === 0 ? hs : `${hs} and ${ms}`;
+}
+
+/** Tenths of a gram as a weight: "3.5 grams", "28 grams". */
+export function weight(tenths: number): string {
+  const whole = Math.floor(tenths / 10);
+  return tenths % 10 === 0 ? `${whole} grams` : `${whole}.${tenths % 10} grams`;
 }
 
 const capital = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
@@ -126,6 +136,7 @@ export function lineFor(
         return names.you;
       case 'coworker':
       case 'fence':
+      case 'supplier':
         return names[key] ?? fail(`"${line.text}" names the ${key}, and there is none`);
       case 'item':
         return named(store, 'item', v);
@@ -145,7 +156,10 @@ export function lineFor(
         return hours((beat.worked ?? beat.minutes) as number);
       case 'rent':
         return money(beat.cents as number);
+      case 'grams':
+        return weight(v as number);
       case 'net':
+      case 'price':
       case 'owed':
       case 'paid':
       case 'demand':

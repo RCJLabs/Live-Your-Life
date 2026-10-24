@@ -19,7 +19,16 @@ import {
   type Session,
 } from '@eb/core';
 import { PACK } from '@lyl/content';
-import { createLifeGame, DEFAULT_START, type LawState, lifeSim, lineFor, REAL_TIME, type YouSlice } from '@lyl/sim';
+import {
+  createLifeGame,
+  DEFAULT_START,
+  type DealSlice,
+  type LawState,
+  lifeSim,
+  lineFor,
+  REAL_TIME,
+  type YouSlice,
+} from '@lyl/sim';
 
 /** A chronicle entry as kept: the event, the day and the step it happened at. */
 export interface Kept {
@@ -119,10 +128,12 @@ export class Life {
     const you = this.state.you as YouSlice;
     const ties = this.state.ties as { coworker: { first: string } | null };
     const law = this.state.law as LawState;
+    const deal = this.state.deal as DealSlice | undefined;
     return {
       you: you.first,
       ...(ties.coworker ? { coworker: ties.coworker.first } : {}),
       ...(law.fence ? { fence: law.fence.first } : {}),
+      ...(deal?.supplier ? { supplier: deal.supplier.first } : {}),
     };
   }
 

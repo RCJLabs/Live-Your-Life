@@ -465,6 +465,24 @@ How to read this file:
   - **Polished 2026-10-23: walkers ease round corners.** On the way to work, the tier-1 people turned on the spot at each street corner. Within 2 m of a corner (tune; less on a short leg) they now follow a curve through it, facing along it (`apps/game/src/city/crowd.ts`, `along`). Planted bugs: 1, 1 caught.
   - Found on the way: `pnpm -s typecheck` printed nothing when a package's check failed, so two type errors (a block plan's width that doesn't exist; your unit's id taken for a place) passed as clean until a test ran into them. Typecheck is now read by its exit code.
 - **M2.4 Crime and law.** Crime to the crew tier and law to detective, sharing case files; courts; prison as time passing.
+  - Started 2026-10-23 while M2.3 waits on its wages (D77). Decisions: street dealing first (D78); join a crew, then grow it (D79); the police as a sponsored recruit, to detective (D80); prison as a sentence, time and parole (D81).
+  - **Done when:**
+    - dealing works by its records: buying, holding and selling, its odds shown first and rolled, heat, witnesses among the people in the town, and its offences charged by Michigan's law, traced in CALIBRATION.md [auto];
+    - a dealer among the tier-1 people brings you into a crew when trust and heat allow, and you can later bring in people you have ties with [auto];
+    - a case file gathers the evidence of what you did, and the police act on it at times you are told; charges, bail, plea or trial with the odds from the evidence, and a sentence [auto];
+    - a felony sentence passes as days with a prison job, visits, letters and a parole hearing, rent and ties going on outside, never in one blocking action [auto];
+    - police officer is a career you can be hired into, through a paid academy, onto patrol shifts whose arrests come from the same crimes and case files; detective by standing [auto];
+    - a dealer bot, a police bot and the steady bot play 500 seeded weeks each with nothing refused, and crime pays less than work once arrests and time are counted (realism bar B6) [auto];
+    - saves from before load [auto];
+    - a dealer's week and a recruit's week played on Evan's phone [you].
+  - **Steps:**
+    1. Dealing in the sim: the trade's records (cocaine, D82: the supplier, weights and prices, buyers by hour, heat, witnesses), buying, holding and selling at odds shown first, witnesses from the tier-1 people out at that hour, and a case file that gathers what was seen. Calibration rows marked secondary (D83).
+    2. The case against you: the police act on a case file at times you are told; arrest, charges by Michigan's law, bail, plea or trial at odds from the evidence, sentence (probation, jail or prison). Shared with the shoplifting chain where it can be.
+    3. Prison: the sentence as days with a prison job, visits, letters and a parole hearing; rent and ties going on outside; parole after.
+    4. The crew: the dealer among the tier-1 people (one of the linked people, D70) who brings you in on trust and heat; working under them; bringing in people you have ties with.
+    5. The police: police officer on the market with its requirements, the academy, patrol shifts that act on the same case files, detective by standing.
+    6. The page: the trade, the case, prison and the academy on screen at 360 and 390 px.
+    7. Bots (dealer, police, steady), 500 seeded weeks each, the crime-pays bar (B6), saves from before, readings, docs.
 - **M2.5 Food.** Line cook to chef.
 - **M2.6 Relationships.** Romance, marriage, children, custody.
 - **M2.7 Lives.** Aging, illness, death, the heir and the ward.
@@ -617,6 +635,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-23: M2.1 steps 1 and 2 built. Ridgefield is planned whole from the seed, its districts, blocks and lots (D63–D66), and each face of a walkable block is planned only when needed, from the district's frontage: downtown's office blocks, the inner ring's row houses and shops, and the courthouse and precinct on the downtown lots nearest the centre.
 - 2026-10-23: M2.1 steps 3 to 5 built. Whole blocks fill each cell, and the streets are one network with walks across it and arterials along every fourth cell edge. Your block stands whole in the city (D67), drawn and walked with the blocks within 60 m; what hides you is cut to its sills (D64); the stage culls what is off the screen. The map shows Ridgefield. Every walkable face of 1,000 cities passes. Left: the frame rate on Evan's phone [you].
 - 2026-10-23: M2.2 built. The 1,000 tier-1 people have homes, work and third places on the city's lots (D68) and live in the life's game in 24 shares, moved on as time passes, a day at a time. The coworker and the fence are two of them (D70), with 12 ties a person (D71). The town draws those its hour puts outside (D69) and tier-2 passers-by on its sidewalks (D72). An hour of them costs 2.2 ms at 4×, a month 0.90 s, a save 112 kB. Left: the frame rate on Evan's phone [you].
+- 2026-10-23: M2.4 started early while M2.3 waits on its wages (D77–D83). Step 1: the street trade in the sim. Cocaine bought from a supplier at their hours and sold on the corner an hour at a time, at odds shown first and rolled. A sale is seen at odds from the tier-1 people passing and the heat on you; heat fades by the day; what was seen is kept for the case to come. Michigan's charges by weight are traced from secondary sources. Planted bugs: 5, 5 caught.
 
 ## Open questions
 
@@ -690,3 +709,5 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 68. ~~An opening's leaver isn't tracked.~~ Answered (Evan's call): when an opening goes up at a tier-1 workplace, one of the people working there leaves, and is between jobs until they take another that closes unfilled by you (`people/work.ts`).
 69. Off screen you walk 80 m a game minute; on your block, 1.95 m (D49). The two paces meet at your door. Whether the block's pace should come up toward the real one, or travel (M2.9) settles it.
 70. ~~The tier-1 people's hours come from the shift templates.~~ Answered: in a life, each worker works a shift of their workplace's career, on as many of its open days as it allows (`people/careers.ts`). The harness keeps the templates. With only the line cook in the content, every tier-1 worker is a line cook until the 29 careers arrive.
+71. Who sees a sale on the corner is the tier-1 people on their way to a shift. With only the line cook's shifts, the street is empty outside the hours before 06:00 and 14:00. Whether the page's passers-by (D72) should count as witnesses, or more careers are enough.
+72. What the supplier charges is a placeholder: no source for an ounce or an eight-ball was found (CALIBRATION.md, Street dealing). A price survey, read by hand, would settle it.

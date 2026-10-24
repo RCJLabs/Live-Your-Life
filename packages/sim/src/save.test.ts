@@ -30,9 +30,10 @@ describe('the save fixtures', () => {
   const load = (name: string, at = sim, with_ = game) =>
     loadSave(with_, fixture(name), at, { game: 'live-your-life', build: 'this-build' });
   // The game as it was before the tier-1 people joined the life (M2.2): what both fixtures were
-  // saved by. The labor market (M2.3) stays, since the world's mode names its actions; it writes
-  // only its own slice, and starts you at the diner, so the slices saved replay as they were.
-  const since = (id: string) => id.startsWith('people') || id === 'market';
+  // saved by. The labor market (M2.3) and the street trade (M2.4) stay, since the world's mode
+  // names their actions; each writes only its own slice, and the market starts you at the diner,
+  // so the slices saved replay as they were.
+  const since = (id: string) => id.startsWith('people') || id === 'market' || id === 'deal';
   const before = createGame({
     modules: lifeModules({ career: LINE_COOK }).filter((m) => !m.id.startsWith('people')),
     start: 'world',
@@ -77,11 +78,11 @@ describe('the save fixtures', () => {
     const result = load('life-v2.json', then, before);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.added).toEqual(['market']);
-    // Without the market's own slice and version, the very state saved.
-    const { market: _, ...rest } = result.state as unknown as Record<string, unknown>;
+    expect(result.report.added).toEqual(['market', 'deal']);
+    // Without the market's and the trade's own slices and versions, the very state saved.
+    const { market: _, deal: _d, ...rest } = result.state as unknown as Record<string, unknown>;
     const kernel = result.state.kernel as unknown as { versions: Record<string, number> };
-    const { market: __, ...versions } = kernel.versions;
+    const { market: __, deal: __d, ...versions } = kernel.versions;
     const saved = { ...rest, kernel: { ...kernel, versions } } as unknown as GameState;
     expect(stateHash(saved)).toBe(result.file.hash);
   });

@@ -653,6 +653,48 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** 15 in 100 (recommended, chosen): near a callback rate times an offer rate. Longer answers. Fewer applications at once. Keeping one in two until the 30 careers are in.
 
+### D77. M2.4 starts while M2.3 waits on its wages. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** M2.3's 29 careers need Michigan's wage figures, which the build environment can't reach (bls.gov is blocked by its network policy). M2.4 starts now; M2.3 stays open, its other [auto] gates passed, until the wages come and Evan plays a week of it.
+
+**Options considered.** Start M2.4 early (recommended, chosen). Write the 29 careers with placeholder wages, marked to replace. Pause until the wages can be read.
+
+### D78. The first crime toward the crew is street dealing. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** M2.4's crime is dealing: buy from a supplier, sell to buyers in the town, mostly at night, with witnesses, heat and the police's attention, on D13's ladder (dealing, then the crew, then the organization). Its quantities, prices, offences and sentences trace to Michigan's controlled-substance law and published figures in CALIBRATION.md, and it never glamorises (VOICE.md).
+
+**Options considered.** Street dealing (recommended, chosen). Burglary: a felony that reaches prison, but leads to no crew. Robbery: violent, and harder to keep from glamorising; later.
+
+### D79. You join a crew, then grow it. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** A tier-1 person who deals brings you in once your trust and heat allow; you work under them. Later you recruit tier-1 people you have ties with. Crews are named people, using the ties you already have.
+
+**Options considered.** Join one, then grow it (recommended, chosen). Start your own from the first. The crew as numbers on a panel, with no named members yet.
+
+### D80. You join the police as a sponsored recruit. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** Police officer is a career on the market, with real requirements (over 18, no felony). A hire is paid through a sponsored academy, time passing with its checks, then works patrol shifts. Patrol arrests come from the same crimes and case files as the crime side. Detective is a promotion by standing.
+
+**Options considered.** Hired as a recruit (recommended, chosen). Patrol now, detective with M2.5's ladders. Crime first, the police in a milestone of their own.
+
+### D81. Prison is a sentence, time, and parole. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** A felony sentence passes as days with sparse choices: a prison job, visits, letters, a parole hearing, and a standing meter. Outside, rent lapses and ties cool. The page passes it a day a frame (ROADMAP open question 65), never in one blocking action. Factions wait.
+
+**Options considered.** Sentence, time and parole (recommended, chosen). County jail only, prison later. Full prison with factions.
+
+### D82. The street trade is in cocaine. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** You deal cocaine, bought by weight from a supplier and sold in small amounts. Delivery or possession with intent, under 50 g, is MCL 333.7401(2)(a)(iv); possession alone is MCL 333.7403(2)(a)(v). Either is a felony that can reach prison (D81). Overdose and delivery causing death (MCL 750.317a) are left out of this milestone.
+
+**Options considered.** Cocaine (recommended, chosen): it can reach prison, without an overdose system to write. Heroin or fentanyl: the most realistic trade for the region in 2025, with overdoses and the grimmest register. Unlicensed cannabis: low stakes, undercut by Michigan's legal dispensaries. An unnamed product: nothing real to trace.
+
+### D83. Michigan's law is traced from secondary sources until the statute sites can be read. LOCKED, 2026-10-23 (Evan's call)
+
+**Decision.** legislature.mi.gov and courts.michigan.gov are blocked by the build environment's network policy, as bls.gov is. The dealing offences, sentences, parole and bail are traced from secondary sources (law-firm summaries, NORML, benchbook excerpts, agency reports on other hosts). Each row in CALIBRATION.md is marked "secondary" until it is checked against the statute's text.
+
+**Options considered.** Secondary now, recheck later (recommended, chosen). Wait for the hosts to be allowed, building the mechanics with empty offence rows.
+
 ---
 
 ## Open items
