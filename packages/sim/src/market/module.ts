@@ -51,6 +51,7 @@ function employersFor(v: View): readonly Employer[] {
 
 const applicant = (v: View) => ({
   convictions: v.fact('law.convictions') as number,
+  felonies: v.fact('law.felonies') as number,
   reputation: sliceOf(v).reputation,
 });
 

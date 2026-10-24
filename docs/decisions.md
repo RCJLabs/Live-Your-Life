@@ -713,6 +713,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Cut off, no violence yet (recommended, chosen). A threat you are warned of, with a placeholder injury.
 
+### D87. A detective earns a patrol officer's wage, as a placeholder. LOCKED, 2026-10-24 (Evan's call)
+
+**Decision.** No detective's rate could be read (bls.gov blocked; Grand Rapids' 2025–28 contracts were reported without rates). The detective rank pays the patrol officer's sourced $28.28 an hour, marked as a placeholder in CALIBRATION.md until a contract or the occupational survey is read.
+
+**Options considered.** The officer's wage, marked (recommended, chosen). The rank built with no promotion into it until a wage is sourced. Detective left to M2.5.
+
 ---
 
 ## Open items

@@ -1,0 +1,35 @@
+{
+  "name": "A sale on the corner",
+  "tags": ["patrol"],
+  "weight": 5,
+  "prompt": "From the cruiser you watch a hand-to-hand at the corner: cash one way, a small bag the other.",
+  "choices": [
+    {
+      "id": "note",
+      "text": "Note the corner and the time for the detectives",
+      "outcome": {
+        "told": "You write it up. Someone downtown will read it, or won't.",
+        "standing": 1
+      }
+    },
+    {
+      "id": "stop",
+      "text": "Stop them and search",
+      "odds": {
+        "base": 50,
+        "skill": 25,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "The bag is in his jacket pocket with eleven more. You make the arrest and spend the rest of the shift on the paperwork.",
+        "arrest": "delivery-cocaine-50",
+        "standing": 4,
+        "practice": 60
+      },
+      "failure": {
+        "told": "He drops it down a storm drain before you're out of the car. Nothing to charge, and a complaint about the stop.",
+        "standing": -2
+      }
+    }
+  ]
+}

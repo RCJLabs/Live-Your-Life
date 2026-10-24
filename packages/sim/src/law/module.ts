@@ -25,11 +25,18 @@ const giveBack = (ctx: Parameters<typeof arraign>[0], bail: unknown): void => {
 export const lawModule = defineModule<LawState>({
   id: 'law',
   // 2 (M2.4): probation says whose it is, HYTA's or a sentence's; a prison sentence to serve.
-  version: 2,
+  // 3 (M2.4): felonies counted apart. A save from version 2 counts none: its felonies, from the
+  // weeks the trade has been in, are read from a sentence's probation or prison where one stands.
+  version: 3,
   migrate: {
     2: (slice) => {
       const s = slice as LawState;
       return { ...s, probation: s.probation ? { ...s.probation, trainee: true } : null, prison: null };
+    },
+    3: (slice) => {
+      const s = slice as LawState;
+      const sentenced = s.prison !== null || (s.probation !== null && !s.probation.trainee);
+      return { ...s, felonies: sentenced ? 1 : 0 };
     },
   },
   init: (ctx) => ({ ...freshLaw(ctx.rng('block')), fence: drawFence(ctx.content, ctx.rng('fence')) }),
@@ -38,6 +45,11 @@ export const lawModule = defineModule<LawState>({
       read: ({ state }) => state.heat,
       domain: { type: 'int', min: 0, max: 100 },
       label: 'what the shop remembers',
+    },
+    felonies: {
+      read: ({ state }) => state.felonies,
+      domain: { type: 'int', min: 0, max: 1000 },
+      label: 'felonies on your record',
     },
     convictions: {
       read: ({ state }) => state.convictions,

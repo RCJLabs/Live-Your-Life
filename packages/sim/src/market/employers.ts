@@ -62,8 +62,21 @@ export function employersOf(
   const out: Employer[] = [];
   // Content with no careers (a test's) has nobody hiring.
   if (careers.length === 0) return out;
+  // A workplace's career, drawn by each career's share of the city's jobs (M2.4): a rank reached
+  // only by promotion has none. Content whose careers all have none (a test's) draws them evenly.
+  const shares = careers.map((c) => (records.get(c) as CareerRecord).employers.share ?? 0);
+  const total = shares.reduce((a, b) => a + b, 0);
+  const careerFor = (roll: number): string => {
+    if (total === 0) return careers[roll % careers.length] as string;
+    let left = roll % total;
+    for (let i = 0; i < careers.length; i++) {
+      left -= shares[i] as number;
+      if (left < 0) return careers[i] as string;
+    }
+    return careers.at(-1) as string;
+  };
   for (let p = roster.firstShared; p < roster.firstThird; p++) {
-    const c = careers[mix(seed, 40, p) % careers.length] as string;
+    const c = careerFor(mix(seed, 40, p));
     const r = records.get(c) as CareerRecord;
     const ds = r.employers.districts;
     out.push(employer(`w${p}`, c, r, ds[mix(seed, 41, p) % ds.length] as string, p, false));

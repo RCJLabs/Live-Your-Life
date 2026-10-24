@@ -1,0 +1,37 @@
+{
+  "name": "A traffic stop",
+  "tags": ["patrol"],
+  "weight": 5,
+  "prompt": "A car rolls through the stop sign on Second. The driver pulls over without a fuss.",
+  "choices": [
+    {
+      "id": "warn",
+      "text": "A warning, and on your way",
+      "outcome": {
+        "told": "Four minutes, a warning, and the street is quiet again.",
+        "practice": 15
+      }
+    },
+    {
+      "id": "check",
+      "text": "Run the plate and the licence",
+      "odds": {
+        "base": 80,
+        "skill": 10,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "Clean. A ticket for the stop sign.",
+        "practice": 20,
+        "standing": 1
+      },
+      "failure": {
+        "told": "The licence is suspended. A tow, and an hour at the roadside in the cold.",
+        "practice": 30,
+        "needs": {
+          "rest": -4
+        }
+      }
+    }
+  ]
+}

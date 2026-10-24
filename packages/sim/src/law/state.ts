@@ -57,6 +57,8 @@ export interface LawSlice {
   /** The next case's and visit's id. */
   next: number;
   convictions: number;
+  /** Of them, felonies (M2.4): what a police licence bars. */
+  felonies: number;
   hyta: 'none' | 'on' | 'done' | 'revoked';
   /** HYTA's, which holds a conviction off (`trainee`), or a sentence's (M2.4). */
   probation: { until: number; next: number; offence: string; trainee: boolean } | null;
@@ -78,6 +80,7 @@ export const freshLaw = (rng: Rng): LawSlice => ({
   cases: [],
   next: 1,
   convictions: 0,
+  felonies: 0,
   hyta: 'none',
   probation: null,
   prison: null,
@@ -112,6 +115,7 @@ export function convict(ctx: LawContext, offence: string, why: string): void {
   const o = offenceOf(ctx.content, offence);
   const w = ctx.write();
   w.convictions += 1;
+  if (o.felony) w.felonies += 1;
   w.owed.court += o.fine + o.costs;
   ctx.emit('convicted', { offence, why, owed: o.fine + o.costs });
 }

@@ -31,10 +31,11 @@ describe('the tier-1 people in a life (M2.2)', () => {
   it('lives a month in one action a day at a time: every hour planned once, the people as if lived in one go', () => {
     // Staff who hardly ever leave, so nobody changes jobs this month (people/work.ts) and the
     // people can be held to the roster lived in one go.
+    // The line cook alone: the police's openings (M2.4) would move people too.
     const cook = lineCook();
     const still = sliceSim({
       ...PACK.records,
-      career: { ...PACK.records.career, 'line-cook': { ...cook, employers: { ...cook.employers, turnover: 1 } } },
+      career: { 'line-cook': { ...cook, employers: { ...cook.employers, turnover: 1 } } },
     });
     const game = sliceGame({ people: 240 });
     const start = game.init('month', still);

@@ -79,7 +79,7 @@ packages/content/   the game's content as an Engine-Builder project: types/ and 
                     by pnpm content; the package reads only the pack (pure)
 packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far the calendar, the clock, the needs, rent, the week
                     bots, the job (job/, M1.3: the records, postings and sign-up, standing, shift events and their odds, pay and
-                    withholding), the coworker (ties/, M1.4: who they are, their week, familiarity, regard and what they
+                    withholding; since M2.4 a career's ladder, promotion, and arrests in the police's shift events), the coworker (ties/, M1.4: who they are, their week, familiarity, regard and what they
                     remember, favours both ways), the law (law/, M1.5: the shop as the law sees it, taking, the police,
                     court, HYTA, the fence; since M2.4 drugs.ts, a drug case: the raid, bail, sentences), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
                     hour plans, ties, shares; since M2.3 careers.ts, their careers' shifts, and work.ts, who has left

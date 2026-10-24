@@ -1,0 +1,34 @@
+{
+  "name": "An interview",
+  "tags": ["investigation"],
+  "weight": 4,
+  "prompt": "A man arrested on the corner last night wants to talk, if it helps him.",
+  "choices": [
+    {
+      "id": "send",
+      "text": "Send him back to his lawyer",
+      "outcome": {
+        "told": "He goes back to his cell. Nothing lost, nothing learned.",
+        "practice": 20
+      }
+    },
+    {
+      "id": "listen",
+      "text": "Hear him out, and check every word",
+      "odds": {
+        "base": 55,
+        "skill": 25,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "Two of his names check out. The prosecutor takes it from there.",
+        "standing": 3,
+        "practice": 90
+      },
+      "failure": {
+        "told": "None of it checks out. He was buying time, and you gave it to him.",
+        "standing": -2
+      }
+    }
+  ]
+}

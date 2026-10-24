@@ -17,7 +17,7 @@ const clerk = (changes: Partial<CareerRecord> = {}): CareerRecord => {
     // Hours no diner shift starts at, so the coworker taking yours would show.
     shifts: [{ id: 'office', hour: 9, minute: 0, minutes: 480 }],
     // Enough staff that every life has a clerk's job going on its first day.
-    employers: { districts: ['downtown'], staff: 200, turnover: 60 },
+    employers: { districts: ['downtown'], staff: 200, turnover: 60, share: 50 },
     requires: { record: 'no-theft' },
     hiring: { base: 60, record: 30, reputation: 20 },
     ...changes,
@@ -139,7 +139,7 @@ describe('the labor market (M2.3, D74)', () => {
     expect(l.problem).toBe('record');
     expect(refusal(game, sim, convicted, apply(l.opening))).toBe('record');
     const cook = listed(convicted).find((x) => x.career === 'line-cook' && x.problem === null) as Listing;
-    expect(cook.odds).toBe(hireOdds(lineCook(), { convictions: 1, reputation: REPUTATION.start }));
+    expect(cook.odds).toBe(hireOdds(lineCook(), { convictions: 1, felonies: 0, reputation: REPUTATION.start }));
     expect(cook.odds).toBe(lineCook().hiring.base - lineCook().hiring.record);
   });
 });

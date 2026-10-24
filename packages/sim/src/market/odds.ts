@@ -15,13 +15,20 @@ const CEILING = 95;
 
 export interface Applicant {
   readonly convictions: number;
+  /** Of them, felonies (M2.4). */
+  readonly felonies: number;
   readonly reputation: number;
 }
 
-/** Why you can't be hired into a career at all, or null. Every offence so far is theft (M1.5). */
+/**
+ * Why you can't be hired into a career at all, or null. Theft was every offence until M2.4, so
+ * none and no-theft both bar any conviction; no-felony bars only a felony (MCOLES's standard).
+ */
 export function barred(career: CareerRecord, you: Applicant): 'record' | null {
   const rule = career.requires?.record;
-  return rule !== undefined && you.convictions > 0 ? 'record' : null;
+  if (rule === undefined) return null;
+  const count = rule === 'no-felony' ? you.felonies : you.convictions;
+  return count > 0 ? 'record' : null;
 }
 
 /** The odds in a hundred an application is taken: the base, less the record's points, ± reputation. */

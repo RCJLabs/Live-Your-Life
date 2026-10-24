@@ -50,7 +50,7 @@ describe('the save fixtures', () => {
     expect(result.report.kept).toEqual([]);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(result.report.migrated).toEqual([
-      { module: 'law', from: 1, to: 2 },
+      { module: 'law', from: 1, to: 3 },
       { module: 'you', from: 1, to: 2 },
     ]);
     expect(result.report.added).toEqual(people);
@@ -71,7 +71,7 @@ describe('the save fixtures', () => {
     const result = load('life-v2.json');
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'law', from: 1, to: 2 }]);
+    expect(result.report.migrated).toEqual([{ module: 'law', from: 1, to: 3 }]);
     expect(result.report.added).toEqual(people);
     expect(result.report.skipped).toBe(0);
     expect((result.state.you as { commute: number }).commute).toBe(36);
@@ -85,7 +85,7 @@ describe('the save fixtures', () => {
     // Without the market's and the trade's own slices and versions, and the law's migration to 2
     // (M2.4) taken back, the very state saved.
     const { market: _, deal: _d, prison: _j, law, ...rest } = result.state as unknown as Record<string, unknown>;
-    const { prison: _p, ...lawThen } = law as Record<string, unknown>;
+    const { prison: _p, felonies: _f, ...lawThen } = law as Record<string, unknown>;
     const probation = lawThen.probation as Record<string, unknown> | null;
     const { trainee: _t, ...probationThen } = probation ?? {};
     const kernel = result.state.kernel as unknown as { versions: Record<string, number> };
@@ -102,7 +102,10 @@ describe('the save fixtures', () => {
     const result = load('life-v3.json');
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'deal', from: 1, to: 2 }]);
+    expect([...result.report.migrated].sort((a, b) => a.module.localeCompare(b.module))).toEqual([
+      { module: 'deal', from: 1, to: 2 },
+      { module: 'law', from: 2, to: 3 },
+    ]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);

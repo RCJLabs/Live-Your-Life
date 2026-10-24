@@ -36,15 +36,21 @@
         },
         "staff": {
           "kind": "int",
-          "min": 1,
+          "min": 0,
           "max": 200,
-          "description": "People in this career at one employer (tune)."
+          "description": "People in this career at one employer (tune). 0 for a rank reached only by promotion, which has no openings of its own."
         },
         "turnover": {
           "kind": "int",
           "min": 1,
           "max": 300,
           "description": "Separations a month per thousand staff, from its industry's federal turnover survey. Traced in CALIBRATION.md."
+        },
+        "share": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000,
+          "description": "Jobs in this career per ten thousand in the city: how often a tier-1 workplace works it. 0 for a rank reached only by promotion. Traced in CALIBRATION.md."
         }
       }
     },
@@ -55,8 +61,8 @@
       "fields": {
         "record": {
           "kind": "enum",
-          "values": ["none", "no-theft"],
-          "description": "none: no conviction at all; no-theft: none for theft or dishonesty."
+          "values": ["none", "no-theft", "no-felony"],
+          "description": "none: no conviction at all; no-theft: none for theft or dishonesty; no-felony: no felony (MCOLES's standard for a police licence). A no-felony job is lost on a felony sentence."
         }
       }
     },
@@ -386,6 +392,27 @@
           "min": 0,
           "max": 100,
           "description": "Percent of shifts with one."
+        }
+      }
+    },
+    "ladder": {
+      "kind": "group",
+      "optional": true,
+      "description": "The rank it leads to (M2.4): reached on a shift worked once practice and standing are enough, with the same employer.",
+      "fields": {
+        "next": {
+          "kind": "ref",
+          "to": "career"
+        },
+        "practice": {
+          "kind": "int",
+          "min": 1,
+          "description": "Minutes of practice in this career."
+        },
+        "standing": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
         }
       }
     }

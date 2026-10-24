@@ -25,6 +25,10 @@ const RARE = [
   // The street trade and a drug case (M2.4): no bot deals until step 7's; law/drugs.test.ts raises them.
   'deal/bought',
   'deal/on-corner',
+  'deal/joined',
+  'deal/fronted',
+  'job/made-arrest',
+  'job/promoted',
   'deal/paid-back',
   'deal/cut-off',
   'deal/recruited',

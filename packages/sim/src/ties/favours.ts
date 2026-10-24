@@ -33,7 +33,9 @@ export function tiesDay(ctx: TiesContext): void {
     w.off = off;
     w.asked = asked;
   }
-  if (slice.request && today.day >= slice.request.day - 1) {
+  // Gone from the diner (M2.3), a favour asked there lapses: their shift is not yours to cover.
+  if (slice.request && !atDiner(ctx)) ctx.write().request = null;
+  else if (slice.request && today.day >= slice.request.day - 1) {
     ctx.write().request = null;
     rememberAct(ctx, crewFor(ctx.content, slice).acts.ignored);
   }
@@ -51,10 +53,14 @@ export function tiesDay(ctx: TiesContext): void {
   ctx.emit('asked', { day, shift });
 }
 
+/** Still at the diner beside them: asking or covering a shift needs it (M2.3, D73). */
+const atDiner = (view: { fact(id: string): unknown }): boolean => view.fact('market.at-diner') !== false;
+
 export const answer = {
   run(ctx: TiesContext, action: Action) {
     const request = ctx.read().request;
     if (!request) return ctx.refuse('nothing-asked');
+    if (!atDiner(ctx)) return ctx.refuse('not-there');
     const acts = crewFor(ctx.content, ctx.read()).acts;
     ctx.write().request = null;
     if (action.answer === 'yes') {
@@ -70,7 +76,7 @@ export const answer = {
   },
   options: (view: FactView<TiesSlice>) => {
     const request = view.state.request;
-    if (!request) return [];
+    if (!request || !atDiner(view)) return [];
     const free = view.fact('job.free', { day: request.day }) === true;
     return free ? [{ answer: 'yes' }, { answer: 'no' }] : [{ answer: 'no' }];
   },
@@ -79,7 +85,7 @@ export const answer = {
 /** Your shifts ahead that they could cover: on their days off, not yet asked about. */
 function askable(view: FactView<TiesSlice> | TiesContext): number[] {
   const slice = 'state' in view ? view.state : view.read();
-  if (!slice.coworker) return [];
+  if (!slice.coworker || !atDiner(view)) return [];
   const today = todayOf(view);
   const crew = crewFor(view.content, slice);
   const ahead = view.fact('job.ahead') as { day: number }[];
