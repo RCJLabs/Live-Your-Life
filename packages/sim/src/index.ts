@@ -41,6 +41,7 @@ export {
   money,
   type Names,
   QUIET,
+  weight,
 } from './chronicle.ts';
 export {
   type BackPlan,
@@ -182,6 +183,7 @@ export {
   type OffenceRecord,
   offenceFor,
   offenceOf,
+  SHOPLIFTING,
 } from './law/records.ts';
 export { oddsAt, shopOn, stockOf } from './law/shop.ts';
 export type { Case, Hold, LawSlice, Visit } from './law/state.ts';

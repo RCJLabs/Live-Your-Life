@@ -1,7 +1,7 @@
 /**
  * Where you can do things on the block (M1.6): the fixtures in your flat and in the diner, by what
  * their records say they serve; each shelf in the corner shop, with the goods it holds; the fence
- * behind the diner; and every building's front door, for the map (D51). Your flat is one of the
+ * behind the diner; the corner by the corner shop (M2.4); and every building's front door, for the map (D51). Your flat is one of the
  * walk-up's, chosen from the block's seed: where you live is the page's to show until the city
  * gives homes to people (M2.2). Nothing here decides anything: the sim's options still say what
  * can be done.
@@ -23,7 +23,7 @@ import {
   walkGrid,
 } from '@lyl/sim';
 
-export type PlaceKind = 'fixture' | 'shelf' | 'fence' | 'door';
+export type PlaceKind = 'fixture' | 'shelf' | 'fence' | 'corner' | 'door';
 
 export interface Place {
   readonly id: string;
@@ -128,6 +128,25 @@ function fencePlace(grid: WalkGrid, plan: BlockPlan): Place[] {
   ];
 }
 
+/**
+ * The corner (M2.4, D78): the sidewalk a few steps along from the corner shop's door, where buyers
+ * come and the supplier stands at their hours. The first of those steps that can be walked.
+ */
+function cornerPlace(store: RecordStore, grid: WalkGrid, plan: BlockPlan, block: string): Place[] {
+  const shop = plan.buildings.find((b) => b.id === shopOn(store, block).building);
+  if (!shop) return [];
+  const door = doorStep(shop);
+  for (const dx of [3, -3, 4, -4, 2, -2]) {
+    const cell = cellAt(grid, door.x + dx * CELL, door.y);
+    if (cell < 0 || (grid.cost[cell] as number) === Number.POSITIVE_INFINITY) continue;
+    const stand = centreOf(grid, cell);
+    return [
+      { id: 'corner', kind: 'corner', label: 'The corner', building: shop.id, stand, cell, hit: around(stand, 1) },
+    ];
+  }
+  return [];
+}
+
 function doorPlaces(store: RecordStore, grid: WalkGrid, plan: BlockPlan, home: string | null): Place[] {
   return plan.buildings.flatMap((b) => {
     const stand = doorStep(b);
@@ -151,6 +170,7 @@ export function placesOf(store: RecordStore, plan: BlockPlan, grid: WalkGrid, bl
     ...(diner ? fixturePlaces(store, grid, diner, null) : []),
     ...shelfPlaces(store, grid, plan, block),
     ...fencePlace(grid, plan),
+    ...cornerPlace(store, grid, plan, block),
     ...doorPlaces(store, grid, plan, flat.id),
   ];
   const bed = all.find((p) => p.building === flat.id && p.serves?.includes('sleep'));

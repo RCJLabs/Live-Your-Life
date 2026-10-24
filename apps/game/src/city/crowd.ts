@@ -134,7 +134,17 @@ export interface Crowd {
  * The crowd for a town. `rosterNow` gives the roster as the sim has it now, with whoever has left
  * or changed jobs (people/work.ts); without it, the roster as a life starts.
  */
-export function makeCrowd(town: TownScene, seed: number, n: number, rosterNow?: () => Roster): Crowd {
+/**
+ * `supplierAt` is where the supplier stands at their hours (M2.4): the page's corner, which the
+ * page's places know and the town doesn't.
+ */
+export function makeCrowd(
+  town: TownScene,
+  seed: number,
+  n: number,
+  rosterNow?: () => Roster,
+  supplierAt?: () => Pt | null,
+): Crowd {
   // Their hours as the sim keeps them: their careers' shifts (M2.3).
   const start = careerRoster(contentStore(), seed, n);
   const rosterOfNow = rosterNow ?? (() => start);
@@ -202,6 +212,8 @@ export function makeCrowd(town: TownScene, seed: number, n: number, rosterNow?: 
         });
       if (griddle && linked(LINKED.coworker, day, hour)) add(LINKED.coworker, griddle, -Math.PI / 2, false);
       if (backOfDiner && linked(LINKED.fence, day, hour)) add(LINKED.fence, backOfDiner, Math.PI / 2, false);
+      const corner = supplierAt?.() ?? null;
+      if (corner && linked(LINKED.supplier, day, hour)) add(LINKED.supplier, corner, Math.PI, false);
       const roster = rosterOfNow();
       roster.people.forEach((p, i) => {
         if (i < LINKED.count) return;

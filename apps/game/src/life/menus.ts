@@ -5,10 +5,11 @@
  * screen are the odds rolled). The clock stops while either is open.
  */
 import type { Action } from '@eb/core';
-import { fill, shiftEventOf, type TiesSlice } from '@lyl/sim';
+import { fill, type LawState, shiftEventOf, type TiesSlice } from '@lyl/sim';
 import { button, el } from './dom.ts';
 import type { Place } from './places.ts';
 import type { Life } from './session.ts';
+import { cornerItems, crimeSheet, pleaNotes } from './street.ts';
 import { doingText, money, odds } from './words.ts';
 
 export interface Item {
@@ -58,6 +59,7 @@ export function itemsAt(life: Life, place: Place): Item[] {
       },
     ];
   }
+  if (place.kind === 'corner') return cornerItems(life);
   if (place.kind === 'fence') {
     return options
       .filter((a) => a.type === 'law/sell')
@@ -128,6 +130,8 @@ export function modeSheet(life: Life): { title: string; lead: string; items: Ite
   const mode = life.mode;
   // Out in the world there is nothing to ask, and the options are dear to work out every frame.
   if (mode.id === 'world') return null;
+  const crime = crimeSheet(life);
+  if (crime) return crime;
   const options = life.options();
   if (mode.id === 'shift-event') {
     const data = mode.data as { event: string; day: number };
@@ -143,16 +147,17 @@ export function modeSheet(life: Life): { title: string; lead: string; items: Ite
   }
   if (mode.id === 'court') {
     const k = (mode.data as { case: number }).case;
+    const notes = pleaNotes(
+      life,
+      (life.state.law as LawState).cases.find((x) => x.id === k),
+    );
     const items = options.map((a) => {
       if (a.plea === 'contest') {
         const p = life.peek<{ chance: number }>({ effect: 'contest', case: k });
         return { label: 'Plead not guilty', note: `The case is dismissed about ${odds(p.chance)}.`, action: a };
       }
-      if (a.plea === 'hyta') {
-        const note = 'Probation for six months, with a check-in each month. Done, it leaves no public record.';
-        return { label: 'Plead guilty under HYTA', note, action: a };
-      }
-      return { label: 'Plead guilty', note: 'A fine and court costs, and a conviction on your record.', action: a };
+      if (a.plea === 'hyta') return { label: 'Plead guilty under HYTA', note: notes.hyta, action: a };
+      return { label: 'Plead guilty', note: notes.guilty, action: a };
     });
     return { title: 'In court', lead: 'The judge asks how you plead.', items };
   }

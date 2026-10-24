@@ -103,6 +103,7 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
                     since M2.1 the life is in the town (src/city/town.ts) and the map shows the city (src/life/citymap.ts);
                     since M2.3 the Jobs tab (src/life/jobs.ts), going to work off screen (src/life/trip.ts) and
                     where employers stand and the walk there (src/city/workplace.ts);
+                    since M2.4 the corner, bail, jail, the court's drug cases and prison (src/life/street.ts);
                     dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs, and
                     since M1.8 e2e/bot/, the browser bot that plays by taps
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
