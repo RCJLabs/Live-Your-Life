@@ -142,6 +142,7 @@ export { chargeFor, type Lot, TRADE, type TradeRecord, tradeOf } from './deal/re
 export { type DealSlice, heatOf, type Sighting } from './deal/state.ts';
 export { buyerOdds, MOST_HELD, seenOdds } from './deal/trade.ts';
 export { outNow, passingNow } from './deal/witnesses.ts';
+export { dealerFor } from './dealer.ts';
 export * from './dials.ts';
 export {
   createLifeGame,

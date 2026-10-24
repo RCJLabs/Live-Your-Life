@@ -59,6 +59,7 @@ node tools/city/faces.ts [seeds] [from]            # every face of every walkabl
 node tools/city/walks.ts [seeds] [pairs]           # the street network built, and walks between walkable doors timed
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 node packages/sim/test/prison-bench.ts [days] [rounds]   # a day in prison with the 1,000 people, timed: what the page spends a frame passing a sentence
+node packages/sim/test/pays-bench.ts [lives] [weeks]    # dealers against line cooks, worth after what is owed: realism bar B6 (60 lives, 8 weeks)
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -81,7 +82,7 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     bots, the job (job/, M1.3: the records, postings and sign-up, standing, shift events and their odds, pay and
                     withholding; since M2.4 a career's ladder, promotion, and arrests in the police's shift events), the coworker (ties/, M1.4: who they are, their week, familiarity, regard and what they
                     remember, favours both ways), the law (law/, M1.5: the shop as the law sees it, taking, the police,
-                    court, HYTA, the fence; since M2.4 drugs.ts, a drug case: the raid, bail, sentences), the thief bot (thief.ts), the tier-1 people (people/: the roster, their hours,
+                    court, HYTA, the fence; since M2.4 drugs.ts, a drug case: the raid, bail, sentences), the thief bot (thief.ts), the dealer bot (dealer.ts, M2.4), the tier-1 people (people/: the roster, their hours,
                     hour plans, ties, shares; since M2.3 careers.ts, their careers' shifts, and work.ts, who has left
                     or changed jobs), and the block (city/: the templates, the plan, street furniture, the walk
                     grid, routes; since M1.2 the interiors: rooms, walls and doors, fixtures, and their checks; since M1.5
