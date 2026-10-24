@@ -2,6 +2,7 @@ import { type Action, Rng, seedsOf, turnFor } from '@eb/core';
 import { describe, expect, it } from 'vitest';
 import { sliceGame, sliceSim } from '../../test/slice.ts';
 import { seekerFor, WEEK } from '../bot.ts';
+import { careerOf } from '../job/records.ts';
 
 // M2.3's gate: bots that look for work, apply and keep jobs play 500 seeded weeks with nothing
 // refused, and between them are hired into every career. They start with no job.
@@ -36,7 +37,9 @@ describe('looking for work, headless (M2.3, D74)', () => {
       }
       if (game.fact(state, 'job.employed', undefined, sim) === true) employed++;
     }
-    expect([...hired.keys()].sort()).toEqual([...sim.content.ids('career')].sort());
+    // Every career with openings of its own; a rank reached by promotion has none (M2.4).
+    const hiring = sim.content.ids('career').filter((id) => careerOf(sim.content, id).employers.staff > 0);
+    expect([...hired.keys()].sort()).toEqual([...hiring].sort());
     // Most answers are no: the line cook takes 15 in 100 (D76). Some are still waiting when the
     // week ends, or when a yes came first.
     expect(turned / applied).toBeGreaterThan(0.5);

@@ -112,7 +112,8 @@ describe('the law in the bots’ lives', () => {
     ];
     expect(chain.filter((b) => !tally.beats.has(`law/${b}`))).toEqual([]);
     expect([...tally.pleas].sort()).toEqual(['contest', 'guilty', 'hyta']);
-    expect([...tally.evidence].sort()).toEqual(['camera', 'held', 'sale']);
+    // The random bot deals too since M2.4, so sales seen and drugs found are evidence as well.
+    expect([...tally.evidence].sort()).toEqual(['camera', 'found', 'held', 'sale', 'seen']);
     expect(tally.previews).toBeGreaterThan(500);
   });
 });

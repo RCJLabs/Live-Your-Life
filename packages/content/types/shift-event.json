@@ -3,11 +3,19 @@
   "description": "Something that happens on a shift and stops it for a choice (D40), drawn by tag from a pool careers share. Its words are drafts for the voice pass (docs/VOICE.md).",
   "nameField": "name",
   "fields": {
-    "name": { "kind": "text", "min": 1, "max": 40 },
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 40
+    },
     "tags": {
       "kind": "list",
       "min": 1,
-      "of": { "kind": "text", "min": 1, "max": 24 },
+      "of": {
+        "kind": "text",
+        "min": 1,
+        "max": 24
+      },
       "description": "A career draws it when they share a tag."
     },
     "weight": {
@@ -16,8 +24,18 @@
       "max": 100,
       "description": "How likely it is against the others drawn with it."
     },
-    "when": { "kind": "condition", "optional": true, "description": "It is drawn only while this holds." },
-    "prompt": { "kind": "text", "min": 1, "max": 400, "multiline": true, "description": "What happens, to you, now." },
+    "when": {
+      "kind": "condition",
+      "optional": true,
+      "description": "It is drawn only while this holds."
+    },
+    "prompt": {
+      "kind": "text",
+      "min": 1,
+      "max": 400,
+      "multiline": true,
+      "description": "What happens, to you, now."
+    },
     "choices": {
       "kind": "list",
       "min": 2,
@@ -26,16 +44,36 @@
       "of": {
         "kind": "group",
         "fields": {
-          "id": { "kind": "text", "min": 1, "max": 24 },
-          "text": { "kind": "text", "min": 1, "max": 120 },
+          "id": {
+            "kind": "text",
+            "min": 1,
+            "max": 24
+          },
+          "text": {
+            "kind": "text",
+            "min": 1,
+            "max": 120
+          },
           "odds": {
             "kind": "group",
             "optional": true,
             "description": "Without odds it is certain. With them: the base chance in percent, the points added at full skill, and the points taken away when exhausted, kept between 5 and 95.",
             "fields": {
-              "base": { "kind": "int", "min": 0, "max": 100 },
-              "skill": { "kind": "int", "min": 0, "max": 100 },
-              "tired": { "kind": "int", "min": 0, "max": 100 },
+              "base": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "skill": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "tired": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
               "regard": {
                 "kind": "int",
                 "optional": true,
@@ -49,8 +87,18 @@
             "kind": "group",
             "description": "What follows: always, or when the odds come up.",
             "fields": {
-              "told": { "kind": "text", "min": 1, "max": 300, "multiline": true },
-              "standing": { "kind": "int", "optional": true, "min": -30, "max": 30 },
+              "told": {
+                "kind": "text",
+                "min": 1,
+                "max": 300,
+                "multiline": true
+              },
+              "standing": {
+                "kind": "int",
+                "optional": true,
+                "min": -30,
+                "max": 30
+              },
               "practice": {
                 "kind": "int",
                 "optional": true,
@@ -66,8 +114,15 @@
               "needs": {
                 "kind": "map",
                 "optional": true,
-                "key": { "kind": "enum", "values": ["rest", "food", "hygiene", "company", "calm", "health"] },
-                "of": { "kind": "int", "min": -50, "max": 50 },
+                "key": {
+                  "kind": "enum",
+                  "values": ["rest", "food", "hygiene", "company", "calm", "health"]
+                },
+                "of": {
+                  "kind": "int",
+                  "min": -50,
+                  "max": 50
+                },
                 "description": "Points each need gains or loses."
               },
               "act": {
@@ -75,6 +130,12 @@
                 "to": "act",
                 "optional": true,
                 "description": "What the person beside you remembers of it (D42)."
+              },
+              "arrest": {
+                "kind": "ref",
+                "to": "offence",
+                "optional": true,
+                "description": "An arrest made, charged as this offence (M2.4): the police career's work, on the same offences the law charges you with."
               }
             }
           },
@@ -83,17 +144,52 @@
             "optional": true,
             "description": "What follows when the odds don't come up. A choice has it exactly when it has odds.",
             "fields": {
-              "told": { "kind": "text", "min": 1, "max": 300, "multiline": true },
-              "standing": { "kind": "int", "optional": true, "min": -30, "max": 30 },
-              "practice": { "kind": "int", "optional": true, "min": 0, "max": 600 },
-              "home": { "kind": "bool", "optional": true },
+              "told": {
+                "kind": "text",
+                "min": 1,
+                "max": 300,
+                "multiline": true
+              },
+              "standing": {
+                "kind": "int",
+                "optional": true,
+                "min": -30,
+                "max": 30
+              },
+              "practice": {
+                "kind": "int",
+                "optional": true,
+                "min": 0,
+                "max": 600
+              },
+              "home": {
+                "kind": "bool",
+                "optional": true
+              },
               "needs": {
                 "kind": "map",
                 "optional": true,
-                "key": { "kind": "enum", "values": ["rest", "food", "hygiene", "company", "calm", "health"] },
-                "of": { "kind": "int", "min": -50, "max": 50 }
+                "key": {
+                  "kind": "enum",
+                  "values": ["rest", "food", "hygiene", "company", "calm", "health"]
+                },
+                "of": {
+                  "kind": "int",
+                  "min": -50,
+                  "max": 50
+                }
               },
-              "act": { "kind": "ref", "to": "act", "optional": true }
+              "act": {
+                "kind": "ref",
+                "to": "act",
+                "optional": true
+              },
+              "arrest": {
+                "kind": "ref",
+                "to": "offence",
+                "optional": true,
+                "description": "An arrest made, charged as this offence (M2.4): the police career's work, on the same offences the law charges you with."
+              }
             }
           }
         }

@@ -1,0 +1,37 @@
+{
+  "name": "A report sent back",
+  "tags": ["academy", "patrol"],
+  "weight": 3,
+  "prompt": "Your incident report comes back with red ink on every page: times missing, the order of events unclear.",
+  "choices": [
+    {
+      "id": "rewrite",
+      "text": "Stay late and write it again",
+      "outcome": {
+        "told": "The second draft holds up. The sergeant says nothing, which is the point.",
+        "practice": 45,
+        "standing": 2,
+        "needs": {
+          "rest": -5
+        }
+      }
+    },
+    {
+      "id": "patch",
+      "text": "Fix only what is marked",
+      "odds": {
+        "base": 55,
+        "skill": 30,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "It passes.",
+        "standing": 0
+      },
+      "failure": {
+        "told": "It comes back again, with a note about care.",
+        "standing": -3
+      }
+    }
+  ]
+}

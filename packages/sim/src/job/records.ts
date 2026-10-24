@@ -36,6 +36,8 @@ export interface Employers {
   readonly staff: number;
   /** Separations a month per thousand staff. */
   readonly turnover: number;
+  /** Jobs per ten thousand in the city: how often a tier-1 workplace works it; 0 for a rank reached by promotion. */
+  readonly share: number;
 }
 
 /** The odds an application is taken (D74): the base, less `record` with a conviction, ± `reputation`. */
@@ -52,7 +54,7 @@ export interface CareerRecord {
   /** Cents an hour, before tax. */
   readonly wage: number;
   readonly employers: Employers;
-  readonly requires?: { readonly record?: 'none' | 'no-theft' };
+  readonly requires?: { readonly record?: 'none' | 'no-theft' | 'no-felony' };
   readonly hiring: Hiring;
   readonly shifts: readonly ShiftKind[];
   readonly open: readonly Weekday[];
@@ -66,6 +68,8 @@ export interface CareerRecord {
   /** Who works beside you (D41), when anyone does. */
   readonly crew?: Crew;
   readonly events: { readonly tags: readonly string[]; readonly chance: number };
+  /** The rank it leads to, with the same employer, once practice and standing are enough (M2.4). */
+  readonly ladder?: { readonly next: string; readonly practice: number; readonly standing: number };
 }
 
 export interface Outcome {
@@ -76,6 +80,8 @@ export interface Outcome {
   readonly needs?: Readonly<Partial<Record<Need, number>>>;
   /** What the person beside you remembers of it (D42). */
   readonly act?: string;
+  /** An arrest made, charged as this offence (M2.4): the police career's work. */
+  readonly arrest?: string;
 }
 
 export interface Odds {

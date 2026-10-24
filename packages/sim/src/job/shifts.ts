@@ -3,9 +3,11 @@
  * on time, leaving early, not showing up, and the day's upkeep: next week's postings and
  * payday. The life module does the working; this hears when work starts and how long it went.
  */
+
 import type { Action, FactView } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
 import { nextWeek, post, shiftKind, type Today, todayOf, weekOf } from './days.ts';
+import { hire } from './hire.ts';
 import type { Weekday } from './records.ts';
 import {
   activeWarnings,
@@ -195,7 +197,21 @@ export function shiftOver(ctx: JobContext, day: number): void {
   const left = !s.home && missed > rules.missedAfter;
   ctx.emit('shift-over', { day, worked: s.worked, late: s.in - start, missed, home: s.home });
   if (left) moveStanding(ctx, -rules.leftEarly, 'left-early');
-  else if (!late && !s.home) moveStanding(ctx, rules.shift, 'worked');
+  else if (!late && !s.home) {
+    moveStanding(ctx, rules.shift, 'worked');
+    promote(ctx);
+  }
+}
+
+/** A rank earned (M2.4): with the career's practice and standing, the next on its ladder, same employer. */
+function promote(ctx: JobContext): void {
+  const slice = ctx.read();
+  if (!slice.employed || slice.career === null) return;
+  const ladder = careerFor(ctx.content, slice).ladder;
+  if (!ladder || slice.practice < ladder.practice || slice.standing < ladder.standing) return;
+  const from = slice.career;
+  hire(ctx, ladder.next);
+  ctx.emit('promoted', { from, career: ladder.next });
 }
 
 /** Midnight: past postings go, next week's go up on the posting day, the day's shift is set, and payday. */

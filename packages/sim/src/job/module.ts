@@ -142,7 +142,7 @@ export function jobModule(hire?: Hire) {
         label: 'Standing at work moved',
       },
       'let-go': {
-        args: { reason: { type: 'enum', values: ['no-shows', 'standing', 'prison'] } },
+        args: { reason: { type: 'enum', values: ['no-shows', 'standing', 'prison', 'record'] } },
         label: 'Let go from a job',
       },
     },
@@ -151,6 +151,11 @@ export function jobModule(hire?: Hire) {
       // Taken into prison (D81): an employer doesn't keep the job for years.
       'prison/admitted': (ctx) => {
         if (ctx.read().employed) letGo(ctx, 'prison');
+      },
+      // A felony sentence ends a job that bars one: a police officer's licence goes with it (M2.4).
+      'law/sentenced': (ctx) => {
+        const s = ctx.read();
+        if (s.employed && careerFor(ctx.content, s).requires?.record === 'no-felony') letGo(ctx, 'record');
       },
     },
     effects: {

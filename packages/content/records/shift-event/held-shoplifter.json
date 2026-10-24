@@ -1,0 +1,39 @@
+{
+  "name": "A call from the corner shop",
+  "tags": ["patrol"],
+  "weight": 4,
+  "prompt": "The clerk at a corner shop is holding someone who took a phone charger. They are nineteen and won't look up.",
+  "choices": [
+    {
+      "id": "ticket",
+      "text": "Write an appearance ticket",
+      "outcome": {
+        "told": "You take the details and the charger back. They'll have a court date in a few weeks.",
+        "arrest": "retail-fraud-3",
+        "standing": 2,
+        "practice": 30
+      }
+    },
+    {
+      "id": "talk",
+      "text": "Talk the clerk into letting it go",
+      "odds": {
+        "base": 40,
+        "skill": 10,
+        "tired": 10
+      },
+      "outcome": {
+        "told": "The clerk shrugs and bars them from the shop. Nobody is charged.",
+        "standing": 0,
+        "needs": {
+          "calm": 3
+        }
+      },
+      "failure": {
+        "told": "The clerk insists, and the sergeant hears you tried to talk them out of it.",
+        "arrest": "retail-fraud-3",
+        "standing": -3
+      }
+    }
+  ]
+}

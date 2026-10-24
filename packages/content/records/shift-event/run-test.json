@@ -1,0 +1,43 @@
+{
+  "name": "The mile and a half",
+  "tags": ["academy"],
+  "weight": 4,
+  "prompt": "The fitness standard is a mile and a half in under fifteen minutes, in the cold, at seven in the morning.",
+  "choices": [
+    {
+      "id": "pace",
+      "text": "Run it even, lap by lap",
+      "outcome": {
+        "told": "You finish with half a minute to spare and nothing left over.",
+        "standing": 1,
+        "needs": {
+          "rest": -5
+        }
+      }
+    },
+    {
+      "id": "push",
+      "text": "Go out hard and hold on",
+      "odds": {
+        "base": 60,
+        "skill": 15,
+        "tired": 35
+      },
+      "outcome": {
+        "told": "Fourteen minutes and ten seconds. Your lungs burn through roll call.",
+        "standing": 2,
+        "needs": {
+          "rest": -8
+        }
+      },
+      "failure": {
+        "told": "You fade on the last lap and come in over. It goes in your file as a fail to be retaken.",
+        "standing": -4,
+        "needs": {
+          "rest": -10,
+          "calm": -5
+        }
+      }
+    }
+  ]
+}

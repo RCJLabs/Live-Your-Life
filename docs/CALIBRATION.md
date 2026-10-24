@@ -190,6 +190,23 @@ Cocaine on the street (D78, D82). Every figure was read on 2026-10-23 through se
 
 **A departure.** The tier-1 people out on the street are those on their way to a shift (people/day.ts's commute hour). With only the line cook's shifts so far (M2.3), almost nobody passes outside the hours before 06:00 and 14:00, and the day's other hours look quieter than a real street. The passers-by drawn on the page (D72) are not counted. More careers will spread it.
 
+## The police (M2.4)
+
+Police officer as a career (D80): the requirements, the academy, the pay, the ladder. Read on 2026-10-24 through search results; Michigan's and the federal sites were blocked from the build environment.
+
+| Figure | Value | Record | Source, as found | Status |
+| --- | --- | --- | --- | --- |
+| Who may be licensed | 18 or older; a high school diploma or GED for a recruit an agency hires; no conviction punishable by more than a year, so no felony | `career/police-recruit.json`, `requires.record: no-felony` | MCOLES's standards list (michigan.gov), through a search summary | to check |
+| The academy | 16 weeks, 800 hours: 10-hour days, Monday to Friday (practice 48,000 minutes before patrol) | `career/police-recruit.json`, `shifts`, `ladder` | Northern Michigan University's academy page (16 weeks, 800 hours); Kellogg Community College's (19 weeks) | to check |
+| A recruit's pay | $26.04 an hour, paid from the academy | `career/police-recruit.json`, `wage` | the City of Grand Rapids' 2025 posting on governmentjobs.com | to check |
+| A patrol officer's pay | $28.28 an hour, the posting's rate after six months | `career/police-officer.json`, `wage` | the same posting | to check |
+| A detective's pay | $28.28 an hour: the officer's, a placeholder (Evan's call, 2026-10-24). Grand Rapids' 2025–28 contracts give 4% raises a year; no rates were read | `career/detective.json`, `wage` | none | placeholder |
+| Patrol to detective | after 6,000 hours on patrol (about three years) at a standing of 70 (tune) | `career/police-officer.json`, `ladder` | none read | (tune) |
+| Hiring | 10 in 100 to start, 5 fewer with a misdemeanour (kept low: a department's background check and tests take weeks, and the answer here comes in days); 40 recruits to an employer; 15 in a thousand leave a month (tune) | `career/police-recruit.json`, `hiring`, `employers` | none read for Michigan departments | (tune) |
+| Police among the city's jobs | 43 jobs in 10,000: patrol officers 646,310 in May 2023, of about 150 million jobs | every career's `employers.share`; the line cook's 94 is from memory (about 1.4 million restaurant cooks) | BLS occupational profile 33-3051, May 2023, through a search summary; the cooks' figure is not read | to check; cooks to find |
+
+**A departure.** Patrol works days, 07:00 to 15:00, and afternoons, 15:00 to 23:00. There is no midnight shift, because a shift can't run past midnight yet.
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).

@@ -5,7 +5,8 @@
   "employers": {
     "districts": ["inner-ring", "downtown", "strip"],
     "staff": 6,
-    "turnover": 54
+    "turnover": 54,
+    "share": 94
   },
   "hiring": {
     "base": 15,

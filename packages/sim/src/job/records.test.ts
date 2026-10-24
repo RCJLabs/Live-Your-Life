@@ -21,7 +21,7 @@ const read =
 
 describe("the slice's job content", () => {
   it('reads every career, shift event and tax, with their checks', () => {
-    expect(records('career')).toEqual(['line-cook']);
+    expect(records('career')).toEqual(['detective', 'line-cook', 'police-officer', 'police-recruit']);
     for (const id of records('career')) careerOf(store, id);
     expect(records('shift-event').length).toBeGreaterThanOrEqual(12);
     for (const id of records('shift-event')) shiftEventOf(store, id);
@@ -33,8 +33,9 @@ describe("the slice's job content", () => {
     for (const id of records('career')) expect(careerOf(store, id).wage).toBeGreaterThanOrEqual(1248);
   });
 
-  it('draws every shift event from the line cook’s tags', () => {
-    expect(eventsFor(store, lineCook()).map(([id]) => id)).toEqual(records('shift-event'));
+  it('draws every shift event from some career’s tags', () => {
+    const drawn = new Set(records('career').flatMap((id) => eventsFor(store, careerOf(store, id)).map(([e]) => e)));
+    expect([...drawn].sort()).toEqual(records('shift-event'));
   });
 
   it('puts certain choices first in every event, so the gamble is never the first tap', () => {

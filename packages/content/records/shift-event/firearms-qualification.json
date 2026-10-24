@@ -1,0 +1,38 @@
+{
+  "name": "Firearms qualification",
+  "tags": ["academy"],
+  "weight": 4,
+  "prompt": "The range master calls your relay to the line. Fifty rounds, and you need forty in the scoring zone.",
+  "choices": [
+    {
+      "id": "ask",
+      "text": "Ask the instructor to watch your grip first",
+      "outcome": {
+        "told": "He fixes your thumbs and moves you to the next relay. You qualify on the second try.",
+        "practice": 60,
+        "standing": 1
+      }
+    },
+    {
+      "id": "slow",
+      "text": "Take every second the clock gives you",
+      "odds": {
+        "base": 70,
+        "skill": 20,
+        "tired": 25
+      },
+      "outcome": {
+        "told": "Forty-three in the zone. The range master initials your card.",
+        "standing": 3,
+        "practice": 30
+      },
+      "failure": {
+        "told": "Thirty-eight. You'll shoot it again on Friday, and the class watches you go back to the line.",
+        "standing": -3,
+        "needs": {
+          "calm": -6
+        }
+      }
+    }
+  ]
+}

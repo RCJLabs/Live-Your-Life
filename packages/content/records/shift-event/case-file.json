@@ -1,0 +1,38 @@
+{
+  "name": "Building a case",
+  "tags": ["investigation"],
+  "weight": 5,
+  "prompt": "Three patrol notes name the same corner and the same man. The case file needs one buy you can show a judge.",
+  "choices": [
+    {
+      "id": "wait",
+      "text": "Keep watching and add to the file",
+      "outcome": {
+        "told": "Another week of notes. The file is thicker and the corner is the same.",
+        "practice": 60
+      }
+    },
+    {
+      "id": "buy",
+      "text": "Set up a controlled buy",
+      "odds": {
+        "base": 45,
+        "skill": 30,
+        "tired": 15
+      },
+      "outcome": {
+        "told": "The buy goes as planned and the warrant is signed by the afternoon. The arrest is clean.",
+        "arrest": "delivery-cocaine-50",
+        "standing": 5,
+        "practice": 120
+      },
+      "failure": {
+        "told": "He doesn't show. Someone told him. The file goes back in the drawer.",
+        "standing": -2,
+        "needs": {
+          "calm": -4
+        }
+      }
+    }
+  ]
+}
