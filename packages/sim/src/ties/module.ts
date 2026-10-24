@@ -88,6 +88,10 @@ export function tiesModule(hire?: Hired) {
       'shift-act': (ctx, effect) => {
         if (ctx.read().coworker && besideOn(ctx, dayOf(effect))) rememberAct(ctx, String(effect.act));
       },
+      // An act from somewhere they weren't beside you: prison's letters and silences (M2.4, D81).
+      'tie-act': (ctx, effect) => {
+        if (ctx.read().coworker) rememberAct(ctx, String(effect.act));
+      },
       'cover-ask': coverAsk,
       'cover-given': (ctx, effect) => coverGiven(ctx, dayOf(effect)),
       'cover-refused': (ctx, effect) => ctx.emit('refused', { day: dayOf(effect) }),

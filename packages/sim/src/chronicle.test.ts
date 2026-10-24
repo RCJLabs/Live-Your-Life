@@ -33,6 +33,14 @@ const RARE = [
   'law/sentenced',
   'law/released',
   'law/violated',
+  // Prison (M2.4, D81): prison/module.test.ts raises them.
+  'prison/admitted',
+  'prison/paroled',
+  'prison/denied',
+  'prison/discharged',
+  'prison/visited',
+  'prison/wrote',
+  'prison/working',
 ];
 
 /** Every event the bots raise in a few lives of each kind, by type. */

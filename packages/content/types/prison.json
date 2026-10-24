@@ -1,0 +1,115 @@
+{
+  "title": "Prison",
+  "description": "A sentence served as days with sparse choices (D81): the prison job and its pay, your standing, letters and visits, and parole. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "wage": {
+      "kind": "int",
+      "min": 0,
+      "max": 10000,
+      "description": "A day's pay at the prison job, in cents."
+    },
+    "standing": {
+      "kind": "group",
+      "description": "Your standing with the staff and the parole board, 0 to 100: where it starts, and points a month for working, or lost for not (tune).",
+      "fields": {
+        "start": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "working": {
+          "kind": "int",
+          "min": 0,
+          "max": 30
+        },
+        "idle": {
+          "kind": "int",
+          "min": 0,
+          "max": 30
+        }
+      }
+    },
+    "letters": {
+      "kind": "group",
+      "description": "A letter a week at most; a month without one cools a tie (D81).",
+      "fields": {
+        "every": {
+          "kind": "int",
+          "min": 1,
+          "max": 60
+        },
+        "company": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    "visit": {
+      "kind": "group",
+      "description": "Someone outside visits once a month while their regard is at least this; a visit lifts company by so many points.",
+      "fields": {
+        "regard": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "company": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    "parole": {
+      "kind": "group",
+      "description": "Parole after the minimum is served (truth in sentencing): the odds in percent at a hearing, so many more or fewer for each point of standing above or below 50 in tenths; months until another hearing if denied; days on parole.",
+      "fields": {
+        "base": {
+          "kind": "int",
+          "min": 1,
+          "max": 95
+        },
+        "standing": {
+          "kind": "int",
+          "min": 0,
+          "max": 20
+        },
+        "again": {
+          "kind": "int",
+          "min": 1,
+          "max": 60
+        },
+        "term": {
+          "kind": "int",
+          "min": 30,
+          "max": 1825
+        }
+      }
+    },
+    "acts": {
+      "kind": "group",
+      "description": "What the people you know remember of it.",
+      "fields": {
+        "inside": {
+          "kind": "ref",
+          "to": "act"
+        },
+        "letter": {
+          "kind": "ref",
+          "to": "act"
+        },
+        "silent": {
+          "kind": "ref",
+          "to": "act"
+        }
+      }
+    }
+  }
+}

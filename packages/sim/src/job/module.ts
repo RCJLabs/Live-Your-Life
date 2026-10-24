@@ -12,7 +12,7 @@ import { choose, shiftChoice, shiftEvent, shiftOutcome } from './events.ts';
 import { quit, hire as startJob } from './hire.ts';
 import { payday } from './pay.ts';
 import { clockIn, drop, freeProblem, giveShift, jobDay, paidWork, shiftOver, signUp, takeShift } from './shifts.ts';
-import { activeWarnings, careerFor, type JobSlice, jobless, shiftNow, skillOf, windowOf } from './state.ts';
+import { activeWarnings, careerFor, type JobSlice, jobless, letGo, shiftNow, skillOf, windowOf } from './state.ts';
 import { payFor } from './withholding.ts';
 
 /** Who is hired where when a life starts: the slice's line cook (DESIGN.md, The first slice). */
@@ -141,9 +141,18 @@ export function jobModule(hire?: Hire) {
         args: { by: { type: 'int' }, now: { type: 'int', min: 0, max: 100 }, why: { type: 'text' } },
         label: 'Standing at work moved',
       },
-      'let-go': { args: { reason: { type: 'enum', values: ['no-shows', 'standing'] } }, label: 'Let go from a job' },
+      'let-go': {
+        args: { reason: { type: 'enum', values: ['no-shows', 'standing', 'prison'] } },
+        label: 'Let go from a job',
+      },
     },
     actions: { 'sign-up': signUp, drop, choose, quit },
+    on: {
+      // Taken into prison (D81): an employer doesn't keep the job for years.
+      'prison/admitted': (ctx) => {
+        if (ctx.read().employed) letGo(ctx, 'prison');
+      },
+    },
     effects: {
       'clock-in': (ctx) => clockIn(ctx),
       'paid-work': (ctx, effect) => {

@@ -12,7 +12,7 @@ import { arraign, drugCase, postBail, released, remand } from './drugs.ts';
 import { drawFence, eat, type Fence, sale, sell } from './fence.ts';
 import { hearing, lawDay, newVisit, review, saleSeen, ticket, visit } from './police.ts';
 import { FENCE, fenceOf } from './records.ts';
-import { freshLaw, type LawSlice } from './state.ts';
+import { crime, freshLaw, type LawSlice } from './state.ts';
 import { filmedNow, gotAway, heldNow, take, theft, wait } from './take.ts';
 
 export type LawState = LawSlice & { fence: Fence | null };
@@ -67,7 +67,7 @@ export const lawModule = defineModule<LawState>({
     'prison-months': {
       read: ({ state }) => state.prison?.months ?? 0,
       domain: { type: 'int', min: 0 },
-      label: 'months of a prison sentence still to serve',
+      label: 'months of a prison sentence passed and not yet served',
     },
     // D62: minutes until today's hearing opens, 0 while it's open; nothing on a day with none.
     'court-in': {
@@ -79,6 +79,19 @@ export const lawModule = defineModule<LawState>({
       read: ({ state }) => owedOf(state),
       domain: { type: 'int', min: 0 },
       label: 'owed to the court and the shop',
+    },
+  },
+  events: {
+    // Declared for the prison module, which hears a prison sentence (M2.4, D81).
+    sentenced: {
+      args: {
+        offence: { type: 'text' },
+        kind: { type: 'enum', values: ['probation', 'jail', 'prison'] },
+        jail: { type: 'int', min: 0 },
+        probation: { type: 'int', min: 0 },
+        prison: { type: 'int', min: 0 },
+      },
+      label: 'Sentenced',
     },
   },
   actions: { take, wait, attend, plead, 'check-in': checkIn, pay, sell, eat, 'post-bail': postBail, remand },
@@ -104,6 +117,16 @@ export const lawModule = defineModule<LawState>({
     'drug-case': (ctx) => drugCase(ctx, (day) => newVisit(ctx, day, { why: 'raid', item: '', case: 0 })),
     arraign,
     released,
+    // A prison sentence served (prison/module.ts): parole is a sentence's probation, without HYTA.
+    served: (ctx, effect) => {
+      const w = ctx.write();
+      w.prison = null;
+      const days = effect.parole as number;
+      if (days <= 0) return;
+      const day = ctx.fact('time.day') as number;
+      const every = crime(ctx).hyta.every;
+      w.probation = { until: day + days, next: day + every, offence: String(effect.offence), trainee: false };
+    },
     sale,
     'sale-seen': saleSeen,
     'law-day': (ctx) => lawDay(ctx),

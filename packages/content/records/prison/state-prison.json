@@ -1,0 +1,28 @@
+{
+  "name": "The state prison",
+  "wage": 150,
+  "standing": {
+    "start": 50,
+    "working": 4,
+    "idle": 2
+  },
+  "letters": {
+    "every": 7,
+    "company": 10
+  },
+  "visit": {
+    "regard": 55,
+    "company": 40
+  },
+  "parole": {
+    "base": 65,
+    "standing": 3,
+    "again": 12,
+    "term": 730
+  },
+  "acts": {
+    "inside": "went-inside",
+    "letter": "wrote-from-inside",
+    "silent": "silent-inside"
+  }
+}
