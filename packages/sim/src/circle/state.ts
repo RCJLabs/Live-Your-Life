@@ -24,9 +24,31 @@ export interface Tie {
   seen: number;
   /** The hour you last talked, counted from the life's first midnight, or -1: once an hour. */
   talked: number;
+  /** The day you started dating, or -1. */
+  since: number;
+  /** Whether they live with you (D95). */
+  living: boolean;
+  /** The minute a date with them last ended, counted from the life's first midnight, or -1. */
+  dated: number;
+  /** Nights spent together. */
+  nights: number;
+  /** The day you last asked them to move in or to marry you, or -1: each has its wait. */
+  proposed: number;
+  /** A marriage licence: the first and last days it can be used. */
+  licence: { from: number; until: number } | null;
+  /** The day the divorce filed comes to judgment, or -1. */
+  hearing: number;
 }
 
-export type Status = 'known' | 'dating' | 'ex';
+/**
+ * What you are to each other (D93, D95): people you know; dating, engaged or married, the three
+ * that are partners; separated; or over, as an ex or divorced.
+ */
+export type Status = 'known' | 'dating' | 'engaged' | 'married' | 'separated' | 'ex' | 'divorced';
+
+/** Dating, engaged or married: together. */
+export const partnered = (t: { readonly status: Status }): boolean =>
+  t.status === 'dating' || t.status === 'engaged' || t.status === 'married';
 
 /** A tie as one is first made. */
 export const newTie = (person: number, together: number, day: number): Tie => ({
@@ -39,6 +61,13 @@ export const newTie = (person: number, together: number, day: number): Tie => ({
   date: null,
   seen: day,
   talked: -1,
+  since: -1,
+  living: false,
+  dated: -1,
+  nights: 0,
+  proposed: -1,
+  licence: null,
+  hearing: -1,
 });
 
 export interface CircleSlice {
@@ -65,3 +94,21 @@ export function migrateCircle2(slice: unknown): CircleSlice {
 
 /** Minutes together at or under which a full list lets a stranger take someone's place: met once. */
 export const MET_ONCE = 60;
+
+/** Version 3 (M2.6 step 3): living together, engagement, marriage and divorce. Ties keep all they had. */
+export function migrateCircle3(slice: unknown): CircleSlice {
+  const old = slice as CircleSlice;
+  return {
+    ...old,
+    ties: old.ties.map((t) => ({
+      ...t,
+      since: t.status === 'dating' ? t.seen : -1,
+      living: false,
+      dated: -1,
+      nights: 0,
+      proposed: -1,
+      licence: null,
+      hearing: -1,
+    })),
+  };
+}

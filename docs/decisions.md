@@ -761,6 +761,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Yes, with consequences (recommended, chosen). One at a time, with affairs left for later.
 
+### D95. Life together: half the rent from a partner who works, a magistrate's wedding, and a divorce without dividing property yet. PROPOSED, 2026-10-25
+
+**Proposal.** A partner who moves in pays half the rent on the 1st if they hold a job, and nothing if they don't. A wedding is a ceremony before a magistrate in office hours, after Michigan's licence and its wait; larger weddings and their costs wait. A divorce is the uncontested kind with no children: the fee, the 60 days, the judgment. Who keeps what is not divided yet, since the game keeps one purse, yours. Built this way in M2.6 step 3 for Evan to confirm or change.
+
+**Options considered.** Half the rent from a working partner (built), a share by each one's pay, or none. A magistrate's wedding (built), or a choice of weddings with their costs. A divorce without property (built), or Michigan's equitable division of what was earned in the marriage.
+
 ---
 
 ## Open items

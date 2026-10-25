@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { createGame, type GameState, loadSave, readPack, stateHash } from '@eb/core';
 import { describe, expect, it } from 'vitest';
 import { LINE_COOK, sliceGame, sliceSim } from '../test/slice.ts';
-import { migrateCircle2, newTie } from './circle/state.ts';
+import { migrateCircle2, migrateCircle3, newTie } from './circle/state.ts';
 import { lifeModules } from './game.ts';
 
 /**
@@ -125,6 +125,29 @@ describe('the save fixtures', () => {
     expect([deal.crew, deal.owed, deal.recruit]).toEqual([false, 0, -1]);
   });
 
+  it('loads the fifth, saved before life together, migrating the circle from 2 to 3 (M2.6)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v5.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'circle', from: 2, to: 3 }]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    const ties = (result.state.circle as { ties: Record<string, unknown>[] }).ties;
+    expect(ties.length).toBeGreaterThan(0);
+    for (const t of ties) {
+      expect(Object.keys(t).sort()).toEqual(Object.keys(newTie(0, 0, 0)).sort());
+      expect([t.living, t.licence, t.hearing]).toEqual([false, null, -1]);
+    }
+  });
+
+  it('migrates a version-2 circle keeping what each tie had, a partner’s time together from when last seen', () => {
+    const v2 = { ...newTie(4, 50, 1), status: 'dating', seen: 9 };
+    const { since: _s, living: _l, dated: _d, nights: _n, proposed: _p, licence: _c, hearing: _h, ...old } = v2;
+    const migrated = migrateCircle3({ ties: [{ ...old, regard: 77 }], out: -1, drawnTo: null, settled: 9 });
+    expect(migrated.ties[0]).toEqual({ ...v2, regard: 77, since: 9 });
+  });
+
   it('migrates a version-1 circle keeping each tie’s regard, as people you know, never asked out', () => {
     const migrated = migrateCircle2({
       ties: [{ person: 7, together: 90, regard: 81, met: 3 }],
@@ -139,12 +162,12 @@ describe('the save fixtures', () => {
     });
   });
 
-  it('loads the fourth, saved with people you know before courting, migrating the circle from 1 to 2 (M2.6)', () => {
+  it('loads the fourth, saved with people you know before courting, migrating the circle from 1 to 3 (M2.6)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v4.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 2 }]);
+    expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 3 }]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);

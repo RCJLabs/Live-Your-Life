@@ -27,7 +27,23 @@ import {
 import { circleDays } from './days.ts';
 import { hauntsOf, meetAt, nameOf, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
-import { type CircleSlice, migrateCircle2, noOne } from './state.ts';
+import { type CircleSlice, migrateCircle2, migrateCircle3, noOne, partnered } from './state.ts';
+import {
+  askIn,
+  fileDivorce,
+  licence,
+  marry,
+  movedIn,
+  moveInRoll,
+  night,
+  nightRoll,
+  proposal,
+  propose,
+  proposeRoll,
+  separate,
+  shareRent,
+  stay,
+} from './together.ts';
 
 /** Your age on the life's first day (D20). */
 export const START_AGE = ADULT;
@@ -35,6 +51,7 @@ export const START_AGE = ADULT;
 const PERSON = { person: { type: 'int', min: 0 } } as const;
 const WHO = { type: 'int', min: 0 } as const;
 const NAME = { type: 'text' } as const;
+const DAY = { type: 'int', min: 0 } as const;
 
 type View = FactView<CircleSlice>;
 
@@ -59,9 +76,9 @@ const tieOf = (v: View, person: number) => v.state.ties.find((t) => t.person ===
 
 export const circleModule = defineModule<CircleSlice>({
   id: 'circle',
-  // 2 (M2.6 step 2): courting.
-  version: 2,
-  migrate: { 2: migrateCircle2 },
+  // 2 (M2.6 step 2): courting. 3 (step 3): living together, marriage, divorce.
+  version: 3,
+  migrate: { 2: migrateCircle2, 3: migrateCircle3 },
   init: noOne,
   events: {
     met: { args: { person: WHO, name: NAME }, label: 'Met someone' },
@@ -72,13 +89,30 @@ export const circleModule = defineModule<CircleSlice>({
     'stood-up': { args: { person: WHO, name: NAME }, label: 'Missed a date' },
     'found-out': { args: { person: WHO, name: NAME }, label: 'A partner found out about another' },
     'broke-up': { args: { person: WHO, name: NAME, by: { type: 'enum', values: ['you', 'them'] } }, label: 'Broke up' },
+    stayed: { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Asked to stay the night' },
+    'moved-in': { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Asked someone to move in' },
+    proposed: { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Proposed' },
+    licensed: { args: { person: WHO, name: NAME, from: DAY, until: DAY }, label: 'Got a marriage licence' },
+    'licence-lapsed': { args: { person: WHO, name: NAME }, label: 'A marriage licence lapsed' },
+    married: { args: { person: WHO, name: NAME }, label: 'Married' },
+    filed: { args: { person: WHO, name: NAME, hearing: DAY }, label: 'Filed for divorce' },
+    divorced: { args: { person: WHO, name: NAME }, label: 'Divorced' },
+    'shared-rent': {
+      args: { person: WHO, cents: { type: 'int', min: 0 } },
+      label: 'A partner paid their share of the rent',
+    },
   },
   facts: {
     known: { read: ({ state }) => state.ties.length, domain: { type: 'int', min: 0 }, label: 'people you know' },
-    dating: {
-      read: ({ state }) => state.ties.filter((t) => t.status === 'dating').length,
+    partners: {
+      read: ({ state }) => state.ties.filter(partnered).length,
       domain: { type: 'int', min: 0 },
-      label: 'people you are dating',
+      label: 'people you are dating, engaged or married to',
+    },
+    living: {
+      read: ({ state }) => state.ties.find((t) => t.living)?.person ?? -1,
+      domain: { type: 'int', min: -1 },
+      label: 'who lives with you, or -1',
     },
     name: {
       args: PERSON,
@@ -157,6 +191,13 @@ export const circleModule = defineModule<CircleSlice>({
     'plan-date': planDate,
     'go-on-date': goOnDate,
     'break-up': breakUp,
+    'stay-night': stay,
+    'ask-in': askIn,
+    propose,
+    licence,
+    marry,
+    separate,
+    'file-divorce': fileDivorce,
   },
   effects: {
     'talk-roll': talkRoll,
@@ -166,10 +207,18 @@ export const circleModule = defineModule<CircleSlice>({
     'date-roll': dateRoll,
     dated,
     'found-out': foundOut,
+    'night-roll': nightRoll,
+    night,
+    'move-in-roll': moveInRoll,
+    'moved-in': movedIn,
+    'propose-roll': proposeRoll,
+    proposal,
   },
   on: {
-    // Missed dates, drift and endings (days.ts).
+    // Missed dates, drift and endings, licences and judgments (days.ts).
     'time/passed': circleDays,
+    // A partner you live with pays their share (together.ts).
+    'home/rent': (ctx) => shareRent(ctx),
     // Doing something other than socialising is leaving the place you went out to.
     'life/started': (ctx, event) => {
       if (event.activity !== 'socialize' && ctx.read().out >= 0) ctx.write().out = -1;

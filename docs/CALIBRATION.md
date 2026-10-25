@@ -222,6 +222,13 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Courting's chances and steps | talking, asking out, dates, drift, endings and finding out, each from attraction, regard and familiarity | `courtship/ridgefield.json` | none: tuned for play until the year's rates (M2.6 step 6) are read against surveys of dating and cohabitation | (tune) |
 | A date's cost | $60 for two | `courtship/ridgefield.json`, `date.cost` | none read | placeholder |
 
+| A marriage licence | $20 for residents ($30 for others), usable after 3 days, the ceremony within 33 days of applying | `courtship/ridgefield.json`, `licence` | the county clerks of Berrien, Mason, Lapeer, Menominee and Newaygo counties, through a search summary; some give the licence 30 days and the ceremony 33 | to check |
+| A magistrate's ceremony | $50 | `courtship/ridgefield.json`, `wedding.fee` | none read | placeholder |
+| A divorce | $175 to file with no children ($255 with), judgment no sooner than 60 days after filing (180 with children), MCL 552.9f | `courtship/ridgefield.json`, `divorce` | divorce.law's Michigan guides, through a search summary | to check |
+| Moving in | asked after 60 days of dating, likelier each month (tune). Of couples who move in, about 25% do by 4 months and 50% by a year | `courtship/ridgefield.json`, `moveIn` | Stanford's How Couples Meet and Stay Together survey, through Quartz's analysis; not yet read against the bots' lives (step 6) | (tune), to read |
+| Cohabitation to marriage | first cohabitations last a median 22 months; 40% of women had married within three years of moving in, 27% had split | `courtship/ridgefield.json`, `propose` | the National Survey of Family Growth, through PMC articles in a search summary | to read against step 6 |
+| A partner's share of the rent | half, if they work (D95) | `courtship/ridgefield.json`, `share` | none: a proposal | (tune) |
+
 **Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
 
 ## Open questions
