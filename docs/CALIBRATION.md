@@ -250,6 +250,15 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 
 **Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
 
+## Lives (M2.7)
+
+| What | Figure | Where it's used | Source | Status |
+| --- | --- | --- | --- | --- |
+| A year's chance of dying, by age and body | per 100,000, a straight line between rows from 18 to 110; a body that can carry reads the life table's female column, one that can't its male | `mortality/united-states.json` | CDC's United States Life Tables, 2021 (NVSR 72-12, Table 2), through search summaries: male 0.001361 at 20, 0.002048 at 40, 0.006679 at 50, 0.014341 at 60. Every other row, and the whole female column, is a placeholder from memory of the table's shape: cdc.gov, ftp.cdc.gov and ssa.gov couldn't be reached from the build environment | 4 male rows traced; the rest placeholders, to check against Table 2 and 3 |
+| A month's chance | the year's over 12, rolled every 30 days; at 18, about 1 in 100,000 a month for a body that can't carry | `lives/module.ts`, `MONTH` | derived. A twelfth of the year's chance understates it slightly when the chance is large (at a year's 10%, by about 5%); kept for whole-number rolls | derived, a departure at old ages |
+| Health let fall | below 20, the chance is tripled | `mortality/united-states.json`, `health` | none: a stand-in until illness (step 2) names what raises it | (tune) |
+| Body for the table | the life table's sex, read as the body's | `lives/module.ts` | the tables are by sex; the game's bodies (D96) are the nearest it holds | a departure |
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).

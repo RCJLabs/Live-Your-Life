@@ -45,6 +45,16 @@ describe('a drug case (M2.4, D78, D82)', () => {
     expect(mode(bail).split(',').sort()).toEqual(['law/post-bail', 'law/remand']);
   });
 
+  it('charges delivery on the sales seen alone when the raid finds nothing on you', () => {
+    const { state } = untilCase('raid-empty');
+    // Sold out before they came: nothing to find, but the sales were seen.
+    let s = { ...state, deal: { ...deal(state), held: 0 } } as GameState;
+    for (let i = 0; i < 12 && law(s).cases.length === 0; i++) s = play(game, sim, s, advance(MINUTES_PER_DAY)).state;
+    const k = law(s).cases[0];
+    expect(k?.evidence).toBe('seen');
+    expect(k?.offence.startsWith('delivery-')).toBe(true);
+  });
+
   it('lets you home on a tenth of the bond, given back when the case ends, or holds you to the court date', () => {
     const { bail } = arraigned('bail', 200, 80_000);
     const cash = (s: GameState) => game.fact(s, 'economy.amount', { resource: 'cash' }, sim) as number;

@@ -34,7 +34,7 @@ import { type Rung, ring } from './alarm.ts';
 import { makeBar, makeToast } from './dom.ts';
 import type { Keeper, Slot } from './keeper.ts';
 import { makeMap } from './map.ts';
-import { itemsAt, makeSheet, modeSheet } from './menus.ts';
+import { itemsAt, LIVES, makeSheet, modeSheet } from './menus.ts';
 import { makePanel } from './panel.ts';
 import { type Waiting, waiting } from './pending.ts';
 import { TRIP_HOME, TRIP_OUT } from './people.ts';
@@ -192,6 +192,11 @@ export function play(
         player.stop();
         panel.hide();
       }
+      return;
+    }
+    if (a.type === LIVES) {
+      save();
+      lives();
       return;
     }
     if (a.type === TRIP_OUT || a.type === TRIP_HOME) {

@@ -1,0 +1,25 @@
+{
+  "name": "United States, 2021",
+  "table": [
+    { "age": 18, "carries": 45, "not": 110 },
+    { "age": 20, "carries": 55, "not": 136 },
+    { "age": 25, "carries": 70, "not": 160 },
+    { "age": 30, "carries": 95, "not": 185 },
+    { "age": 35, "carries": 115, "not": 200 },
+    { "age": 40, "carries": 140, "not": 205 },
+    { "age": 45, "carries": 250, "not": 400 },
+    { "age": 50, "carries": 420, "not": 668 },
+    { "age": 55, "carries": 620, "not": 1000 },
+    { "age": 60, "carries": 900, "not": 1434 },
+    { "age": 65, "carries": 1300, "not": 2000 },
+    { "age": 70, "carries": 1900, "not": 2900 },
+    { "age": 75, "carries": 3000, "not": 4300 },
+    { "age": 80, "carries": 4800, "not": 6500 },
+    { "age": 85, "carries": 8000, "not": 10500 },
+    { "age": 90, "carries": 14000, "not": 17000 },
+    { "age": 95, "carries": 23000, "not": 27000 },
+    { "age": 100, "carries": 34000, "not": 38000 },
+    { "age": 110, "carries": 50000, "not": 55000 }
+  ],
+  "health": { "below": 20, "times": 3 }
+}

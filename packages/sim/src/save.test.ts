@@ -43,7 +43,8 @@ describe('the save fixtures', () => {
     id === 'deal' ||
     id === 'prison' ||
     id === 'circle' ||
-    id === 'family';
+    id === 'family' ||
+    id === 'lives';
   const before = createGame({
     modules: lifeModules({ career: LINE_COOK }).filter((m) => !m.id.startsWith('people')),
     start: 'world',
@@ -91,7 +92,7 @@ describe('the save fixtures', () => {
     const result = load('life-v2.json', then, before);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.added).toEqual(['market', 'deal', 'prison', 'circle', 'family']);
+    expect(result.report.added).toEqual(['market', 'deal', 'prison', 'circle', 'family', 'lives']);
     // Without the market's and the trade's own slices and versions, and the law's migration to 2
     // (M2.4) taken back, the very state saved.
     const {
@@ -100,6 +101,7 @@ describe('the save fixtures', () => {
       prison: _j,
       circle: _c,
       family: _fam,
+      lives: _l,
       law,
       ...rest
     } = result.state as unknown as Record<string, unknown>;
@@ -107,7 +109,7 @@ describe('the save fixtures', () => {
     const probation = lawThen.probation as Record<string, unknown> | null;
     const { trainee: _t, ...probationThen } = probation ?? {};
     const kernel = result.state.kernel as unknown as { versions: Record<string, number> };
-    const { market: __, deal: __d, prison: __j, circle: __c, family: __f, ...versions } = kernel.versions;
+    const { market: __, deal: __d, prison: __j, circle: __c, family: __f, lives: __l, ...versions } = kernel.versions;
     const saved = {
       ...rest,
       law: { ...lawThen, probation: probation ? probationThen : null },
@@ -125,7 +127,7 @@ describe('the save fixtures', () => {
       { module: 'law', from: 2, to: 3 },
     ]);
     // The people you know (M2.6): a save from before them knows no one.
-    expect(result.report.added).toEqual(['circle', 'family']);
+    expect(result.report.added).toEqual(['circle', 'family', 'lives']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const deal = result.state.deal as { crew: boolean; owed: number; recruit: number };
@@ -154,7 +156,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'circle', from: 3, to: 5 }]);
-    expect(result.report.added).toEqual(['family']);
+    expect(result.report.added).toEqual(['family', 'lives']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect((result.state.circle as { carries: unknown }).carries).toBeNull();
@@ -169,7 +171,7 @@ describe('the save fixtures', () => {
       { module: 'circle', from: 4, to: 5 },
       { module: 'family', from: 1, to: 4 },
     ]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['lives']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const fresh = people.init('v7-shape', sim).family as Record<string, unknown>;
@@ -265,7 +267,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 5 }]);
-    expect(result.report.added).toEqual(['family']);
+    expect(result.report.added).toEqual(['family', 'lives']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const saved = (fixture('life-v4.json') as { snapshot: { circle: { ties: { person: number; regard: number }[] } } })
