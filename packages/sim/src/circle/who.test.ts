@@ -51,7 +51,8 @@ describe('who the tier-1 people are (M2.6, D89, D91)', () => {
       const c = chemistry(pop, 13, i, them, you, 0);
       if (!drawnBy(them.drawnTo, 'he')) expect(c).toBe(0);
       if (them.drawnTo === 'men' && them.pronouns === 'he') gay++;
-      if (them.age - 18 > 30) {
+      // Past the gap where the record's fall takes all 100 points, nobody is drawn.
+      if ((them.age - 18 - pop.chemistry.free) * pop.chemistry.per >= 100) {
         gapped++;
         expect(c).toBe(0);
       }

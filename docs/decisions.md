@@ -761,11 +761,11 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Yes, with consequences (recommended, chosen). One at a time, with affairs left for later.
 
-### D95. Life together: half the rent from a partner who works, a magistrate's wedding, and a divorce without dividing property yet. PROPOSED, 2026-10-25
+### D95. Life together: half the rent from a partner who works, a magistrate's wedding, and a divorce without dividing property yet. LOCKED, 2026-10-25 (Evan's call)
 
-**Proposal.** A partner who moves in pays half the rent on the 1st if they hold a job, and nothing if they don't. A wedding is a ceremony before a magistrate in office hours, after Michigan's licence and its wait; larger weddings and their costs wait. A divorce is the uncontested kind with no children: the fee, the 60 days, the judgment. Who keeps what is not divided yet, since the game keeps one purse, yours. Built this way in M2.6 step 3 for Evan to confirm or change.
+**Proposal.** A partner who moves in pays half the rent on the 1st if they hold a job, and nothing if they don't. A wedding is a ceremony before a magistrate in office hours, after Michigan's licence and its wait; larger weddings and their costs wait. A divorce is the uncontested kind with no children: the fee, the 60 days, the judgment. Who keeps what is not divided yet, since the game keeps one purse, yours. Built this way in M2.6 step 3 and confirmed as proposed; property division waits until there is property to divide (ROADMAP open question 80).
 
-**Options considered.** Half the rent from a working partner (built), a share by each one's pay, or none. A magistrate's wedding (built), or a choice of weddings with their costs. A divorce without property (built), or Michigan's equitable division of what was earned in the marriage.
+**Options considered.** Half the rent from a working partner (built, chosen), a share by each one's pay, or none. A magistrate's wedding (built), or a choice of weddings with their costs. A divorce without property (built), or Michigan's equitable division of what was earned in the marriage.
 
 ### D96. Bodies are a trait of each person. LOCKED, 2026-10-25 (Evan's call)
 
@@ -796,6 +796,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 **Decision.** A child who lived with you both stays with the parent who gave more of their care, as a court weighs the established home; the other has Michigan's standard parenting time, alternate weekends and about 73 nights a year. Child support follows the shape of Michigan's formula, with its offset for the nights each parent has the child. Contesting custody in court waits for later.
 
 **Options considered.** Who cared most (recommended, chosen). Who gave birth. You choose and they accept.
+
+### D101. Chemistry falls 2 points a year of age gap past 5, not 4. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** How drawn someone is to you falls 2 points for each year of age between you past the first 5 (`population/ridgefield.json`, `chemistry.per`). At 4, a life that starts at 18 found 837 of 997 people feeling nothing for it, and in a year out every evening 28% of the suitor bot's lives dated, below the 40 to 80 proposed (M2.6 step 6). At 2, a 25-year-old still feels something for an 18-year-old; a 40-year-old mostly doesn't. The age shares stay a placeholder until the Census can be read.
+
+**Options considered.** Soften the age gap (recommended, chosen). Keep it and lower the bar, taking a young life's small pool as real. Read the Census's age shares first.
+
+### D102. A finding of neglect opens a safety plan; more days short of care within it move the child. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** When a child protective services investigation finds a child's care wanting (D98), a safety plan opens, with check-ins over its term. More days short of care within the plan move the child to the other parent, or into foster care when there is none to take them; the chronicle records it. This is the shape of Michigan's process, to be traced in CALIBRATION.md when built. Answers ROADMAP open question 83.
+
+**Options considered.** A safety plan, then removal (recommended, chosen). The finding on your record only, for now. Removal at once.
 
 ---
 
