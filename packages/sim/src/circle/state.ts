@@ -38,6 +38,8 @@ export interface Tie {
   licence: { from: number; until: number } | null;
   /** The day the divorce filed comes to judgment, or -1. */
   hearing: number;
+  /** The day whose night you last asked them to stay, or -1: once a night (M2.6 step 6). */
+  night: number;
 }
 
 /**
@@ -68,6 +70,7 @@ export const newTie = (person: number, together: number, day: number): Tie => ({
   proposed: -1,
   licence: null,
   hearing: -1,
+  night: -1,
 });
 
 export interface CircleSlice {
@@ -86,6 +89,12 @@ export const noOne = (): CircleSlice => ({ ties: [], out: -1, drawnTo: null, set
 
 /** Version 4 (M2.6 step 4): your body, unsaid until you say. */
 export const migrateCircle4 = (slice: unknown): CircleSlice => ({ ...(slice as CircleSlice), carries: null });
+
+/** Version 5 (M2.6 step 6): the night last asked, so staying is asked once a night. */
+export const migrateCircle5 = (slice: unknown): CircleSlice => {
+  const old = slice as CircleSlice;
+  return { ...old, ties: old.ties.map((t) => ({ ...t, night: -1 })) };
+};
 
 /** Version 2 (M2.6 step 2): courting. Ties from before are people you know, never asked out. */
 export function migrateCircle2(slice: unknown): CircleSlice {

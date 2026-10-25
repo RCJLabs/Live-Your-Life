@@ -60,6 +60,7 @@ node tools/city/walks.ts [seeds] [pairs]           # the street network built, a
 node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms to plan a block and its interiors, lay its walk grid, route across it and route the commute
 node packages/sim/test/prison-bench.ts [days] [rounds]   # a day in prison with the 1,000 people, timed: what the page spends a frame passing a sentence
 node packages/sim/test/pays-bench.ts [lives] [weeks]    # dealers against line cooks, worth after what is owed: realism bar B6 (60 lives, 8 weeks)
+node packages/sim/test/couples-bench.ts [lives] [weeks]   # the suitor bot's year: dating, moving in, marrying, nights and pregnancies (40 lives, 52 weeks; about 10 minutes)
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.
@@ -93,7 +94,7 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     and the seeker bot (bot.ts); since M2.4
                     the street trade (deal/: the trade's records, buying, the corner, who passes, heat; crew.ts, the supplier's crew, fronts and the recruit, D84–D86);
                     and prison (prison/: the sentence a day at a time, the job, letters, visits, parole, D81);
-                    since M2.6 who the tier-1 people are (people/who.ts) and the people you know (circle/: meeting them out and at work, D89; court.ts, courting; together.ts, life together, D95; days.ts, what passes with them, D93–D94); and the family (family/: a pregnancy, its choices and birth, the children, D96–D97; care.ts, a child's care and daycare, D98; support.ts, custody and child support, D100);
+                    since M2.6 who the tier-1 people are (people/who.ts) and the people you know (circle/: meeting them out and at work, D89; court.ts, courting; together.ts, life together, D95; days.ts, what passes with them, D93–D94; suitor.ts, the bot that looks for a partner); and the family (family/: a pregnancy, its choices and birth, the children, D96–D97; care.ts, a child's care and daycare, D98; support.ts, custody and child support, D100);
                     test/slice.ts is the slice's life for tests and benches; test/case.ts a drug case brought to court; test/couple.ts a couple, for the circle's tests; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;

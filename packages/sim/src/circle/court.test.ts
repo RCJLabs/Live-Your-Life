@@ -69,6 +69,24 @@ describe('courting (M2.6 step 2, D93, D94)', () => {
     expect(circle(r.state).ties.find((x) => x.person === who)?.date).toBeNull();
   });
 
+  it('plans a date around a shift you signed up for, and ends what you do when the date begins', () => {
+    const { state, who } = dating();
+    const today = fact(state, 'time.day') as number;
+    const job = (state as unknown as { job: { signed: object[] } }).job;
+    const working = {
+      ...withCircle(state, { ties: circle(state).ties.map((t) => (t.person === who ? { ...t, date: null } : t)) }),
+      job: { ...job, signed: [{ day: today + 1, shift: 'dinner' }] },
+    } as typeof state;
+    const r = play(game, sim, working, { type: 'circle/plan-date', person: who });
+    // The dinner shift runs 14:00 to 22:00 tomorrow, so the date is the evening after.
+    expect(circle(r.state).ties.find((x) => x.person === who)?.date?.day).toBe(today + 2);
+    // On the date's day, an evening out stops when the date begins.
+    const before = play(game, sim, state, doing('sleep', 600), waitUntil(court.date.hour - 1)).state;
+    expect(fact(before, 'circle.date-in')).toBe(60);
+    const out = game.options(before, sim).find((a) => a.type === 'life/do' && a.activity === 'socialize');
+    expect(out?.minutes).toBe(60);
+  });
+
   it('misses a date not turned up to, and their regard falls', () => {
     const { state, who } = dating();
     const before = circle(state).ties.find((x) => x.person === who)?.regard as number;

@@ -48,8 +48,10 @@ function canStay(v: View, t: Tie): boolean {
   const n = courtshipOf(v.content).night;
   if (t.dated >= 0 && minuteNow(v) - t.dated <= n.after) return true;
   const hour = Math.floor(minuteOfDay(v) / 60);
-  return t.living && (hour >= 21 || hour < 2);
+  return t.living && (hour >= 21 || hour < 2) && t.night !== nightOf(v);
 }
+/** The day whose night it is: past midnight, the night is still the evening before's. */
+const nightOf = (v: View) => (minuteOfDay(v) < 2 * 60 ? today(v) - 1 : today(v));
 const nightOdds = (v: View, t: Tie) => {
   const n = courtshipOf(v.content).night;
   return clamp(oddsOf(n.odds, attraction(v, t), t.regard, familiarity(v, t)) + (t.living ? n.living : 0));
@@ -96,6 +98,7 @@ export function night(ctx: Ctx, effect: Effect): void {
   const t = write(ctx, effect.person);
   // Asked once a date or a night: a no isn't asked again until the next.
   t.dated = -1;
+  t.night = nightOf(ctx);
   if (effect.yes === true) {
     t.nights++;
     t.regard = clamp(t.regard + courtshipOf(ctx.content).night.regard);
