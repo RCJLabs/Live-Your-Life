@@ -50,6 +50,22 @@ describe('life together (M2.6 step 3, D90, D95)', () => {
     expect(offered(late, 'circle/stay-night')).toEqual([]);
   });
 
+  it('asks a partner you live with to stay once a night, yes or no, and again the next', () => {
+    const { state, who } = dating();
+    const late = set(play(game, sim, state, waitUntil(21)).state, who, { living: true, dated: -1 });
+    expect(offered(late, 'circle/stay-night')).toContain(who);
+    const r = play(game, sim, late, { type: 'circle/stay-night', person: who, protect: true });
+    expect(r.of('circle/stayed').length).toBe(1);
+    expect(offered(r.state, 'circle/stay-night')).toEqual([]);
+    // Past midnight it is still the same night.
+    expect(offered(advance(r.state, 4 * 60), 'circle/stay-night')).toEqual([]);
+    expect(
+      refusal(game, sim, advance(r.state, 4 * 60), { type: 'circle/stay-night', person: who, protect: true }),
+    ).toBe('not-now');
+    // The next evening, it can be asked again.
+    expect(offered(advance(r.state, 24 * 60), 'circle/stay-night')).toContain(who);
+  });
+
   it('asks a partner to move in only after the record’s days, at odds that grow with time, and one at a time', () => {
     const early = together(court.moveIn.after - 1);
     expect(offered(early.state, 'circle/ask-in')).toEqual([]);

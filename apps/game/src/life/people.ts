@@ -52,7 +52,8 @@ const word = <T extends readonly (readonly [number, string])[]>(table: T, n: num
 
 /** The place a roster place is: its building's name, lower-cased, or a bar. */
 function placeName(life: Life, work: Work, place: number): string {
-  const id = work.placed.building[place] ?? '';
+  // The plan numbers a template standing twice on a face (`storefront-2`); the record is the template's.
+  const id = (work.placed.building[place] ?? '').replace(/-\d+$/, '');
   const name = id ? life.sim.content.get<{ name: string }>('building', id)?.name : undefined;
   return name ? `the ${name.toLowerCase()}` : 'a bar';
 }

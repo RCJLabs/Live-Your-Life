@@ -13,7 +13,8 @@
  * M2.6 step 1's, with the 1,000 people and the people you know before courting (circle at version 1);
  * life-v5.json by step 2's, before life together (circle at version 2); life-v6.json by step 3's,
  * before bodies (circle at version 3); life-v7.json by step 4a's, before a child's care (family at version 1);
- * life-v8.json by step 4b's, before custody and support (family at version 2).
+ * life-v8.json by step 4b's, before custody and support (family at version 2); life-v9.json by step 6's,
+ * before the night asked (circle at version 4).
  */
 import { writeFileSync } from 'node:fs';
 import { type Action, createSaveFile, playRun } from '@eb/core';

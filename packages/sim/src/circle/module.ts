@@ -38,7 +38,15 @@ import {
 import { circleDays } from './days.ts';
 import { hauntsOf, meetAt, nameOf, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
-import { type CircleSlice, migrateCircle2, migrateCircle3, migrateCircle4, noOne, partnered } from './state.ts';
+import {
+  type CircleSlice,
+  migrateCircle2,
+  migrateCircle3,
+  migrateCircle4,
+  migrateCircle5,
+  noOne,
+  partnered,
+} from './state.ts';
 import {
   askIn,
   fileDivorce,
@@ -98,8 +106,8 @@ const tieOf = (v: View, person: number) => v.state.ties.find((t) => t.person ===
 export const circleModule = defineModule<CircleSlice>({
   id: 'circle',
   // 2 (M2.6 step 2): courting. 3 (step 3): living together, marriage, divorce. 4 (step 4): your body.
-  version: 4,
-  migrate: { 2: migrateCircle2, 3: migrateCircle3, 4: migrateCircle4 },
+  version: 5,
+  migrate: { 2: migrateCircle2, 3: migrateCircle3, 4: migrateCircle4, 5: migrateCircle5 },
   init: noOne,
   events: {
     met: { args: { person: WHO, name: NAME }, label: 'Met someone' },
