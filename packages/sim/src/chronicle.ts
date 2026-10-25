@@ -61,6 +61,9 @@ export const QUIET: Readonly<Record<string, string>> = {
   'prison/hearing': 'its outcome is told',
   'circle/talked': 'every talk; what it did is theirs, shown in their panel',
   'circle/shared-rent': 'money moving; moving in is told',
+  'family/cared': 'each sitting of care; a day without enough is weighed',
+  'family/short': 'a day short of care; a report, if it comes, is told',
+  'family/daycare': 'money moving',
   'family/conceived': 'nobody knows yet; finding out is told',
   'circle/planned': 'the interface: the date is in the panel, and going or missing it is told',
 };

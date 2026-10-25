@@ -48,5 +48,28 @@
     "week": 38,
     "spread": 21
   },
-  "birth": 265500
+  "birth": 265500,
+  "care": {
+    "needs": [
+      {
+        "under": 6,
+        "minutes": 140
+      },
+      {
+        "under": 18,
+        "minutes": 50
+      }
+    ],
+    "partner": 50,
+    "sitting": 60,
+    "daycare": {
+      "under": 5,
+      "cost": 4600
+    },
+    "neglect": {
+      "days": 3,
+      "window": 14
+    },
+    "investigation": 30
+  }
 }

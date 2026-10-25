@@ -21,6 +21,14 @@ export interface PregnancyRecord {
   readonly partner: number;
   readonly term: { readonly week: number; readonly spread: number };
   readonly birth: number;
+  readonly care: {
+    readonly needs: readonly { readonly under: number; readonly minutes: number }[];
+    readonly partner: number;
+    readonly sitting: number;
+    readonly daycare: { readonly under: number; readonly cost: number };
+    readonly neglect: { readonly days: number; readonly window: number };
+    readonly investigation: number;
+  };
 }
 
 export function pregnancyOf(store: RecordStore): PregnancyRecord {

@@ -37,12 +37,38 @@ export interface Child {
 export interface FamilySlice {
   pregnancy: Pregnancy | null;
   children: Child[];
-  /** Cents a birth cost that couldn't be paid. */
+  /** Cents a birth or daycare cost that couldn't be paid. */
   owed: number;
   settled: number;
+  /** Minutes of care given on a day (D98): today's, until the day is settled. */
+  care: { day: number; minutes: number };
+  /** Days your children went without enough care, within the record's window. */
+  missed: number[];
+  /** A report to child protective services, open until its investigation closes. */
+  report: { made: number; closes: number } | null;
+  /** Investigations that found the care wanting. */
+  findings: number;
+  /** The last day daycare was paid for. */
+  daycare: number;
 }
 
-export const noFamily = (): FamilySlice => ({ pregnancy: null, children: [], owed: 0, settled: 0 });
+export const noFamily = (): FamilySlice => ({
+  pregnancy: null,
+  children: [],
+  owed: 0,
+  settled: 0,
+  care: { day: -1, minutes: 0 },
+  missed: [],
+  report: null,
+  findings: 0,
+  daycare: -1,
+});
+
+/** Version 2 (M2.6 step 4b): a child's care. What was there stays. */
+export const migrateFamily2 = (slice: unknown): FamilySlice => ({
+  ...noFamily(),
+  ...(slice as Partial<FamilySlice>),
+});
 
 /** Anything that reads the family: a fact's view, a module's context or a preview's. */
 export type FamilyView = {

@@ -237,6 +237,10 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | A partner going on with a pregnancy | 80 in 100 | `pregnancy/michigan.json`, `partner` | none: a proposal | (tune) |
 | Birth | from week 38, over 21 days; $2,655 to the one who gives birth | `pregnancy/michigan.json`, `term`, `birth` | Peterson-KFF's analysis of 2018–2020 claims: $2,655 out of pocket for a vaginal birth with large-group insurance, through news coverage; uninsured, about $15,712 | to check; a departure (open question 81) |
 
+| A child's care | 140 minutes a day under 6, 50 from 6 to 17; half of it from a partner you live with | `pregnancy/michigan.json`, `care.needs`, `care.partner` | BLS, American Time Use Survey 2023: adults in households with children under 6 gave 2.3 hours a day of primary childcare, with the youngest 6 to 17, 52 minutes. The half from a partner is a proposal (mothers gave about 2.5 hours and fathers 1.5 in IWPR's reading of the same survey) | to check; partner (tune) |
+| Daycare | $46 a day worked, for a child under 5 | `pregnancy/michigan.json`, `care.daycare` | Child Care Aware's 2023 figures through WXYZ: center care in Michigan over $12,000 a year for an infant or toddler, family child care about $9,000; $12,000 over 260 weekdays | to check |
+| A report and its investigation | 3 days short of care within 14 bring a report; the investigation closes after 30 days | `pregnancy/michigan.json`, `care.neglect`, `care.investigation` | MDHHS: an investigation begins within 24 hours and has 30 days to finish. The days that bring a report are a proposal | 30 days to check; the rest (tune) |
+
 **Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
 
 ## Open questions
