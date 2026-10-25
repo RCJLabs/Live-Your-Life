@@ -1,0 +1,4 @@
+{
+  "beat": "lives/died",
+  "text": "{you} died at the age of {age}."
+}

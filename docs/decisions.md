@@ -809,6 +809,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A safety plan, then removal (recommended, chosen). The finding on your record only, for now. Removal at once.
 
+### D103. Death follows real life tables. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Each year of life carries the chance of dying that the US period life table gives for that age and body, raised by what a life does: health let fall, violence, prison, untreated illness. An 18-year-old's year is about 1 in 1,000, so a first year rarely ends in death; death comes mostly from choices and from age. The table's figures trace to CALIBRATION.md; the ones that couldn't be read from the build environment are marked there.
+
+**Options considered.** Real life tables (recommended, chosen). The same tables with a way to pass years quietly to old age. Compressed odds so lives turn over in a few years, a departure from D10.
+
+### D104. Acute illness and injury now; chronic conditions later. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Colds, flu and injuries from work or violence, each with real recovery days, missed shifts and care costs. Health at zero puts you in hospital. Chronic conditions and addiction wait for a later milestone.
+
+**Options considered.** Acute now, chronic later (recommended, chosen). Acute and chronic together. No named illnesses, only the health need raising the death risk.
+
+### D105. Care is paid by Michigan's real rules. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** The Healthy Michigan Plan (Medicaid) covers a household below 138% of the federal poverty line; a job that carries coverage covers you through the employer; otherwise you pay the uninsured price. Prices trace to CALIBRATION.md (a birth: $2,655 insured, $15,712 not). Answers ROADMAP open question 81.
+
+**Options considered.** Michigan's real rules (recommended, chosen). Everyone uninsured for now. Everyone insured for now.
+
+### D106. The city's people age and die too, and newcomers take their place. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Each tier-1 person ages a year every 365 days and dies by the same tables as you. Someone new moves into the city in their place, so the count holds. A partner, a friend or a child's other parent can die; what follows (widowhood, custody to you, ties ended) is the sim's.
+
+**Options considered.** Yes, with newcomers (recommended, chosen). Only you and your household age and die.
+
 ---
 
 ## Open items

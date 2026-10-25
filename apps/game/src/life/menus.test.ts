@@ -2,7 +2,7 @@ import type { GameState } from '@eb/core';
 import type { LawState } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { blockScene } from '../city/scene.ts';
-import { itemsAt } from './menus.ts';
+import { itemsAt, LIVES, modeSheet } from './menus.ts';
 import { type Place, placesOf } from './places.ts';
 import { walkMinutes } from './player.ts';
 import { Life } from './session.ts';
@@ -93,5 +93,23 @@ describe('what a place offers (M1.6)', () => {
       expect(minutes, seed).toBeLessThanOrEqual(45);
       expect(walkMinutes(block.plan, block.grid, places.bed, places.bed), seed).toBe(1);
     }
+  });
+});
+
+describe('a life that has ended (M2.7, D103)', () => {
+  it('says so, with your age, and leads only back to your lives', () => {
+    const alive = new Life('ended');
+    const s = alive.state;
+    const dead = {
+      ...s,
+      lives: { ...(s.lives as object), died: 3 },
+      kernel: { ...s.kernel, modes: [...s.kernel.modes, { id: 'dead', data: {} }] },
+    } as GameState;
+    const life = new Life({ state: dead, kept: [] });
+    const sheet = modeSheet(life);
+    expect(sheet?.title).toBe('Your life ended');
+    expect(sheet?.lead).toContain(`You died at ${life.fact('circle.your-age')}.`);
+    expect(sheet?.items.map((i) => i.action.type)).toEqual([LIVES]);
+    expect(life.options()).toEqual([]);
   });
 });

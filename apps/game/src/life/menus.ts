@@ -125,6 +125,9 @@ export function makeSheet(id: string, act: (a: Action) => void, closed: () => vo
 const coworkerOf = (life: Life) =>
   (life.state.ties as TiesSlice).coworker ?? { first: 'The other cook', pronouns: 'they' as const };
 
+/** The page's way back to the lives kept on this device, from a life that has ended. */
+export const LIVES = 'page/lives';
+
 /** What a mode the sim is in asks of you, as a sheet's title, line and items; null out in the world. */
 export function modeSheet(life: Life): { title: string; lead: string; items: Item[] } | null {
   const mode = life.mode;
@@ -132,6 +135,15 @@ export function modeSheet(life: Life): { title: string; lead: string; items: Ite
   if (mode.id === 'world') return null;
   const crime = crimeSheet(life);
   if (crime) return crime;
+  // A death (M2.7, D103): the world has stopped; the heir comes with step 3.
+  if (mode.id === 'dead') {
+    const age = life.fact('circle.your-age') as number;
+    return {
+      title: 'Your life ended',
+      lead: `You died at ${age}. The city goes on without you.`,
+      items: [{ label: 'Your lives', action: { type: LIVES } }],
+    };
+  }
   const options = life.options();
   if (mode.id === 'shift-event') {
     const data = mode.data as { event: string; day: number };

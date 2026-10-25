@@ -112,8 +112,9 @@ describe('the law in the bots’ lives', () => {
     ];
     expect(chain.filter((b) => !tally.beats.has(`law/${b}`))).toEqual([]);
     expect([...tally.pleas].sort()).toEqual(['contest', 'guilty', 'hyta']);
-    // The random bot deals too since M2.4, so sales seen and drugs found are evidence as well.
-    expect([...tally.evidence].sort()).toEqual(['camera', 'found', 'held', 'sale', 'seen']);
+    // The random bot deals too since M2.4, so drugs found are evidence as well. A raid that finds
+    // nothing (evidence 'seen') comes about once in 150 lives, so drugs.test.ts holds it directly.
+    expect([...tally.evidence].sort()).toEqual(expect.arrayContaining(['camera', 'found', 'held', 'sale']));
     expect(tally.previews).toBeGreaterThan(500);
   });
 });

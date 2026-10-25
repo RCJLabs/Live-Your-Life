@@ -62,6 +62,8 @@ export const steadyFor = (days: number, name = 'steady'): Policy => ({
   choose(turn) {
     if (done(turn, days)) return null;
     const offered = playable(turn);
+    // Nothing offered, as after a death (M2.7): the life is over.
+    if (offered.length === 0) return null;
     if (turn.mode.id === 'shift-event') return turn.rng.pick(offered);
     const lowest = turn.fact('life.lowest') as Need;
     const answers = offered.filter((a) => a.type === 'ties/answer');
@@ -87,7 +89,7 @@ export const steadyPolicy: Policy = steadyFor(WEEK);
 /** Any playable offer, each as likely, for `days` days: what proves every offer is one the game accepts. */
 export const randomFor = (days: number, name = 'random-life'): Policy => ({
   name,
-  choose: (turn) => (done(turn, days) ? null : turn.rng.pick(playable(turn))),
+  choose: (turn) => (done(turn, days) || playable(turn).length === 0 ? null : turn.rng.pick(playable(turn))),
 });
 
 export const randomLifePolicy: Policy = randomFor(WEEK);

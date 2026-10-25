@@ -1,0 +1,29 @@
+{
+  "title": "Mortality",
+  "description": "The chance of dying in a year of life, by age and body (M2.7, D103): the US period life table's, per 100,000, between rows read as a straight line; and what raises it. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 60 },
+    "table": {
+      "kind": "list",
+      "min": 2,
+      "description": "Rows by age, in order: the chance of dying within a year at that age, per 100,000, for a body that can carry a pregnancy and one that can't (the life table's female and male).",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "age": { "kind": "int", "min": 0, "max": 120 },
+          "carries": { "kind": "int", "min": 0, "max": 100000 },
+          "not": { "kind": "int", "min": 0, "max": 100000 }
+        }
+      }
+    },
+    "health": {
+      "kind": "group",
+      "description": "Health let fall raises the chance: below the level, it is multiplied (tune).",
+      "fields": {
+        "below": { "kind": "int", "min": 0, "max": 100 },
+        "times": { "kind": "int", "min": 1, "max": 100 }
+      }
+    }
+  }
+}
