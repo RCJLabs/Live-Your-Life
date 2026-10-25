@@ -56,6 +56,11 @@ function live(seed: string): Life {
       };
       life.expected += (p.chance / 100) * (p.pregnancy / 10_000);
     }
+    if (action.type === 'circle/ask-in') {
+      const turn = turnFor(game, sim, state, Rng.create('peek'), 0);
+      const p = turn.preview([{ effect: 'move-in-roll', person: action.person }])[0] as unknown as { chance: number };
+      asks.push(`${game.fact(state, 'time.day', {}, sim)}:${p.chance}`);
+    }
     const step = game.reduce(state, action, sim);
     if (!step.accepted) life.refused++;
     const day = game.fact(step.state, 'time.day', {}, sim) as number;
@@ -75,6 +80,8 @@ function live(seed: string): Life {
   return life;
 }
 
+/** Each ask to move in: the day and the chance shown. */
+const asks: string[] = [];
 const started = performance.now();
 const all: Life[] = [];
 for (const seed of seedsOf(lives, 'couples')) all.push(live(seed));
@@ -100,3 +107,4 @@ for (const c of COUNTS) console.log(`${c}: ${all.reduce((n, l) => n + (l.count[c
 console.log(
   `pregnancies: ${all.reduce((n, l) => n + l.conceived, 0)} in all; refused actions: ${all.reduce((n, l) => n + l.refused, 0)}`,
 );
+console.log(`asked to move in (day:chance): ${asks.join(' ')}`);
