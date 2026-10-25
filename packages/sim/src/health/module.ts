@@ -5,6 +5,7 @@
  * medicine can shorten, at the price your coverage sets: the Healthy Michigan Plan below its
  * income line, or the full price. Health at nothing puts you in hospital for the record's days.
  */
+
 import { defineModule, type ModuleContext } from '@eb/core';
 import { dayChance, type IllnessRecord, illnessOf, kindOf, shiftChance } from './records.ts';
 

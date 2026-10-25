@@ -38,4 +38,36 @@ describe('the heir on the page (M2.7 step 3, D107, D109)', () => {
     expect((life.state.you as { first: string }).first).toBe(first);
     expect(modeSheet(life)).toBeNull();
   });
+
+  it('passes a ward’s years at once, says who raised them, and begins their life at 18', () => {
+    const alive = new Life('page-ward');
+    const s = alive.state;
+    const day = alive.fact('time.day') as number;
+    const child = {
+      born: day - 10 * 365,
+      first: 'Mae',
+      last: 'K',
+      pronouns: 'she',
+      carries: true,
+      other: -2,
+      with: 'you',
+      parted: -1,
+    };
+    const dead = {
+      ...s,
+      lives: { ...(s.lives as object), died: day },
+      family: { ...(s.family as object), children: [child] },
+      kernel: { ...s.kernel, modes: [...s.kernel.modes, { id: 'dead', data: {} }] },
+    } as GameState;
+    const life = new Life({ state: dead, kept: [] });
+    const go = modeSheet(life)?.items.find((i) => i.label === 'Go on as Mae, at 18');
+    expect(go).toBeDefined();
+    expect(life.act(go?.action as never)).toBe(true);
+    const sheet = modeSheet(life);
+    expect(sheet?.title).toBe('Mae came of age');
+    expect(sheet?.lead).toContain('8 years have passed. Relatives raised Mae.');
+    expect(life.act(sheet?.items[0]?.action as never)).toBe(true);
+    expect(life.mode.id).toBe('world');
+    expect(life.fact('circle.your-age')).toBe(18);
+  });
 });

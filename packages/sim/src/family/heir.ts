@@ -21,6 +21,7 @@ export const childHeirs = (s: DeepReadonly<FamilySlice>): Candidate[] =>
     pronouns: c.pronouns,
     carries: c.carries,
     born: c.born,
+    other: c.other,
   }));
 
 /** The family as the heir finds it. */

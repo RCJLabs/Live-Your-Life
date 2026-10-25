@@ -28,6 +28,7 @@ function asHeir(v: View, person: number): Candidate {
     pronouns: o.who.pronouns,
     carries: o.who.carries,
     born: o.since - o.who.age * 365,
+    other: -1,
   };
 }
 

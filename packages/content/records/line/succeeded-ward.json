@@ -1,0 +1,8 @@
+{
+  "beat": "lives/succeeded",
+  "when": {
+    "field": "kind",
+    "is": "ward"
+  },
+  "text": "{first} {last}, a child of the family, was left {left}, kept until they came of age."
+}

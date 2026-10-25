@@ -31,6 +31,7 @@ import { peopleModule, shareModule } from './people/module.ts';
 import { workModule } from './people/work.ts';
 import { prisonModule } from './prison/module.ts';
 import { tiesModule } from './ties/module.ts';
+import { midnightTimer } from './timers.ts';
 import { youModule } from './you.ts';
 
 /**
@@ -57,14 +58,7 @@ export const PEOPLE_SHARES = 24;
 export function startingTimers(start: LifeStart): ScheduleSpec[] {
   return [
     { timer: RENT_TIMER, after: { minutes: minutesToNextMonth(start) }, effects: [{ effect: 'rent-due' }] },
-    // Midnight: the job's postings and payday (job/shifts.ts), the coworker's asks (ties/favours.ts),
-    // then heat, warrants and probation (law/police.ts).
-    {
-      timer: 'midnight',
-      after: { minutes: minutesToMidnight(start) },
-      every: { days: 1 },
-      effects: [{ effect: 'job-day' }, { effect: 'ties-day' }, { effect: 'law-day' }],
-    },
+    midnightTimer(minutesToMidnight(start)),
   ];
 }
 
