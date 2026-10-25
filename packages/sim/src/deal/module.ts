@@ -82,5 +82,20 @@ export const dealModule = defineModule<DealSlice>({
   },
   actions: { buy, corner, join, front, 'pay-back': payBack, recruit },
   effects: { 'corner-hour': cornerHour, buyer: buyerCame, sighted, seize },
-  on: { 'time/passed': crewDays },
+  on: {
+    'time/passed': crewDays,
+    // An heir holds nothing, and is no one to the trade; the supplier is still who they are (M2.7 step 3).
+    'lives/succeeded': (ctx) => {
+      const s = ctx.read();
+      Object.assign(ctx.write(), {
+        held: 0,
+        heat: 0,
+        sales: 0,
+        takings: 0,
+        seen: [],
+        ...NO_CREW,
+        settled: s.settled,
+      });
+    },
+  },
 });

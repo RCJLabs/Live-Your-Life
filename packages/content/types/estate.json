@@ -1,0 +1,31 @@
+{
+  "title": "Estate",
+  "description": "What passes when you die (M2.7 step 3, D107, D109): who can be the heir past the family, and how the estate is settled by Michigan's rules, simplified. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 60 },
+    "small": {
+      "kind": "int",
+      "min": 0,
+      "description": "In cents: an estate up to this passes by affidavit, at no cost (Michigan's small-estate limit)."
+    },
+    "probate": {
+      "kind": "int",
+      "min": 0,
+      "max": 100,
+      "description": "Above the limit, probate costs this share of the estate, in whole percent (tune)."
+    },
+    "friend": {
+      "kind": "int",
+      "min": 0,
+      "max": 100,
+      "description": "The regard someone you know must hold for you to be a close friend who can carry on (tune)."
+    },
+    "pull": {
+      "kind": "int",
+      "min": 0,
+      "max": 100,
+      "description": "How far the heir's regard with the people you knew moves toward neutral, in whole percent: they knew you, not the heir (tune)."
+    }
+  }
+}

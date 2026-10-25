@@ -30,3 +30,21 @@ export function yearChance(m: MortalityRecord, age: number, carries: boolean): n
   const hi = rows[i] as MortalityRecord['table'][number];
   return at(lo) + Math.floor(((at(hi) - at(lo)) * (age - lo.age)) / (hi.age - lo.age));
 }
+
+/** The estate record (packages/content/types/estate.json, M2.7 step 3, D109): one, Michigan's. */
+export const ESTATE = 'michigan';
+
+export interface EstateRecord {
+  readonly name: string;
+  /** In cents: an estate up to this passes by affidavit, at no cost. */
+  readonly small: number;
+  /** Above it, probate's share, in whole percent. */
+  readonly probate: number;
+  /** The regard a close friend holds for you. */
+  readonly friend: number;
+  /** How far the heir's regard with those you knew moves toward neutral, in whole percent. */
+  readonly pull: number;
+}
+
+/** The estate record, or null in a pack from before it. */
+export const estateOf = (store: RecordStore): EstateRecord | null => store.get<EstateRecord>('estate', ESTATE) ?? null;

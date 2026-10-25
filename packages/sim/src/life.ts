@@ -174,6 +174,14 @@ export const lifeModule = defineModule<LifeSlice>({
       },
     },
   },
+  on: {
+    // An heir starts the day rested and fed, doing nothing yet (M2.7 step 3).
+    'lives/succeeded': (ctx) => {
+      ctx.apply({ effect: 'cancel-timer', timer: ACTIVITY_TIMER });
+      const now = tickOf(ctx);
+      Object.assign(ctx.write(), { activity: 'awake', since: now, asOf: now, levels: { ...START_LEVELS } });
+    },
+  },
   effects: {
     'end-activity': (ctx) => stop(ctx),
     'adjust-needs': (ctx, effect) => adjustNeeds(ctx, effect.needs),

@@ -8,6 +8,7 @@ import type { Action } from '@eb/core';
 import { fill, type LawState, shiftEventOf, type TiesSlice } from '@lyl/sim';
 import { hospitalSheet } from './care.ts';
 import { button, el } from './dom.ts';
+import { heirSheet } from './heir.ts';
 import type { Place } from './places.ts';
 import type { Life } from './session.ts';
 import { cornerItems, crimeSheet, pleaNotes } from './street.ts';
@@ -138,15 +139,8 @@ export function modeSheet(life: Life): { title: string; lead: string; items: Ite
   if (crime) return crime;
   const hospital = hospitalSheet(life);
   if (hospital) return hospital;
-  // A death (M2.7, D103): the world has stopped; the heir comes with step 3.
-  if (mode.id === 'dead') {
-    const age = life.fact('circle.your-age') as number;
-    return {
-      title: 'Your life ended',
-      lead: `You died at ${age}. The city goes on without you.`,
-      items: [{ label: 'Your lives', action: { type: LIVES } }],
-    };
-  }
+  // A death (M2.7, D103): the world has stopped; the heir goes on (heirSheet, D107).
+  if (mode.id === 'dead') return heirSheet(life);
   const options = life.options();
   if (mode.id === 'shift-event') {
     const data = mode.data as { event: string; day: number };

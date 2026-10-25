@@ -25,6 +25,12 @@ export const homeModule = defineModule<HomeSlice>({
   facts: {
     owed: { read: ({ state }) => state.owed, domain: { type: 'int', min: 0 }, label: 'rent owed' },
   },
+  on: {
+    // Rent owed was the estate's to pay (M2.7 step 3); the heir keeps the flat.
+    'lives/succeeded': (ctx) => {
+      if (ctx.read().owed > 0) ctx.write().owed = 0;
+    },
+  },
   effects: {
     'rent-due': (ctx) => {
       // Paid if the cash is there; owed if not. The attempt keeps a refusal from undoing the month.

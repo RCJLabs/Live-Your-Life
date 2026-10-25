@@ -239,6 +239,13 @@ export const marketModule = (career?: string) =>
       },
     },
     on: {
+      // An heir starts with no employer, nothing applied for and a name of their own (M2.7 step 3).
+      'lives/succeeded': (ctx) => {
+        const s = ctx.read();
+        for (const a of s.applications) ctx.apply({ effect: 'cancel-timer', timer: `answer-${a.opening}` });
+        for (const o of s.offers) ctx.apply({ effect: 'cancel-timer', timer: `offer-${o.opening}` });
+        Object.assign(ctx.write(), { employer: null, reputation: REPUTATION.start, applications: [], offers: [] });
+      },
       'job/let-go': (ctx) => {
         ctx.write().employer = null;
         moveReputation(ctx, REPUTATION.letGo);

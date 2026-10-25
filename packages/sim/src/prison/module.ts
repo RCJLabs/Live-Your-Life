@@ -224,7 +224,20 @@ export const prisonModule = defineModule<PrisonSlice>({
       preview: (ctx: PreviewContext<PrisonSlice>) => ({ chance: paroleOdds(ctx, read(ctx).standing) }),
     },
   },
-  on: { 'law/sentenced': admit },
+  on: {
+    'law/sentenced': admit,
+    // A sentence was yours, not the heir's (M2.7 step 3).
+    'lives/succeeded': (ctx) => {
+      Object.assign(ctx.write(), {
+        term: null,
+        job: false,
+        standing: ctx.content.has('prison', PRISON) ? prisonOf(ctx.content).standing.start : 50,
+        earned: 0,
+        wrote: -1,
+        wroteInMonth: false,
+      });
+    },
+  },
   modes: {
     // The world outside goes on; inside, a day at a time (D81).
     prison: { actions: ['prison/*', 'time/*'] },

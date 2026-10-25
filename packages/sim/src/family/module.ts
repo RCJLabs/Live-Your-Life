@@ -3,8 +3,10 @@
  * begins to a birth or its end, and the children born to you. It hears time pass and settles
  * each day; who people are, their bodies and ages, it reads from the circle's facts.
  */
+
 import { defineModule, type ModuleContext } from '@eb/core';
 import { care, daycare, dayOfCare, givenOn, needOn } from './care.ts';
+import { childHeirs, succeeded } from './heir.ts';
 import { born, chanceWith, conceived, conceiveRoll, known } from './pregnancy.ts';
 import { pregnancyOf } from './records.ts';
 import {
@@ -158,6 +160,13 @@ export const familyModule = defineModule<FamilySlice>({
       domain: { type: 'int', min: 0 },
       label: 'your children who live with you',
     },
+    // The heirs among your children (M2.7 step 3, D107), and child support owed: a debt of the estate (D109).
+    heirs: { read: ({ state }) => childHeirs(state), label: 'your children, as heirs' },
+    behind: {
+      read: ({ state }) => state.arrears.owe,
+      domain: { type: 'int', min: 0 },
+      label: 'child support you are behind on',
+    },
     owed: {
       read: ({ state }) => state.owed,
       domain: { type: 'int', min: 0 },
@@ -251,5 +260,7 @@ export const familyModule = defineModule<FamilySlice>({
     },
     // The 1st of the month: child support, with the rent.
     'home/rent': (ctx) => monthOfSupport(ctx),
+    // You died and someone carries on (heir.ts).
+    'lives/succeeded': (ctx, event) => succeeded(ctx, event.kind as string, event.person as number),
   },
 });

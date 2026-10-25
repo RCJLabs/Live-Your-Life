@@ -12,7 +12,17 @@ import { choose, shiftChoice, shiftEvent, shiftOutcome } from './events.ts';
 import { quit, hire as startJob } from './hire.ts';
 import { payday } from './pay.ts';
 import { clockIn, drop, freeProblem, giveShift, jobDay, paidWork, shiftOver, signUp, takeShift } from './shifts.ts';
-import { activeWarnings, careerFor, type JobSlice, jobless, letGo, shiftNow, skillOf, windowOf } from './state.ts';
+import {
+  activeWarnings,
+  careerFor,
+  type JobSlice,
+  jobless,
+  letGo,
+  shiftNow,
+  skillOf,
+  timerFor,
+  windowOf,
+} from './state.ts';
 import { payFor } from './withholding.ts';
 
 /** Who is hired where when a life starts: the slice's line cook (DESIGN.md, The first slice). */
@@ -171,6 +181,15 @@ export function jobModule(hire?: Hire) {
     },
     actions: { 'sign-up': signUp, drop, choose, quit },
     on: {
+      // An heir carries on (M2.7 step 3): nothing of your job is theirs. Its last pay went to the estate.
+      'lives/succeeded': (ctx) => {
+        for (const s of ctx.read().signed) {
+          ctx.apply({ effect: 'cancel-timer', timer: timerFor(s.day, 'event') });
+          ctx.apply({ effect: 'cancel-timer', timer: timerFor(s.day, 'over') });
+        }
+        ctx.apply({ effect: 'cancel-timer', timer: 'payday' });
+        Object.assign(ctx.write(), jobless());
+      },
       // Taken into prison (D81): an employer doesn't keep the job for years.
       'prison/admitted': (ctx) => {
         if (ctx.read().employed) letGo(ctx, 'prison');

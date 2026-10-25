@@ -107,6 +107,28 @@ export const lawModule = defineModule<LawState>({
     },
   },
   actions: { take, wait, attend, plead, 'check-in': checkIn, pay, sell, eat, 'post-bail': postBail, remand },
+  on: {
+    // A record, a case and what the court was owed were yours, not the heir's (M2.7 step 3).
+    'lives/succeeded': (ctx) => {
+      const s = ctx.read();
+      for (const t of ['law-arraign', 'law-hearing', 'law-release', 'law-review', 'law-police'])
+        ctx.apply({ effect: 'cancel-timer', timer: t });
+      for (const v of s.visits) ctx.apply({ effect: 'cancel-timer', timer: `law-visit-${v.id}` });
+      Object.assign(ctx.write(), {
+        heat: 0,
+        filmed: [],
+        visits: [],
+        cases: [],
+        convictions: 0,
+        felonies: 0,
+        hyta: 'none',
+        probation: null,
+        prison: null,
+        owed: { demand: 0, court: 0 },
+        barred: false,
+      });
+    },
+  },
   effects: {
     theft,
     'got-away': gotAway,

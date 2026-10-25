@@ -1,0 +1,8 @@
+{
+  "beat": "lives/succeeded",
+  "when": {
+    "field": "kind",
+    "is": "child"
+  },
+  "text": "{first} {last}, a grown child, took up the family’s life, with {left} left to them."
+}

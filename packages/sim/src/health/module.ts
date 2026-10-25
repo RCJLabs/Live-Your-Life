@@ -207,6 +207,10 @@ export const healthModule = defineModule<HealthSlice>({
   },
   on: {
     'time/passed': (ctx) => settle(ctx),
+    // An heir is well, and care's bills were the estate's (M2.7 step 3).
+    'lives/succeeded': (ctx) => {
+      Object.assign(ctx.write(), { ill: null, hospital: -1, settled: day(ctx), owed: 0 });
+    },
     // A shift worked: an injury at work's chance for the minutes of it (D104).
     'job/worked': (ctx, event) => {
       const r = illnessOf(ctx.content);
