@@ -78,9 +78,14 @@ export interface CircleSlice {
   drawnTo: DrawnTo | null;
   /** The last day whose drift, missed dates and endings are settled. */
   settled: number;
+  /** Whether your body can carry a pregnancy (D96), or null until you say: then it is drawn from the seed. */
+  carries: boolean | null;
 }
 
-export const noOne = (): CircleSlice => ({ ties: [], out: -1, drawnTo: null, settled: 0 });
+export const noOne = (): CircleSlice => ({ ties: [], out: -1, drawnTo: null, settled: 0, carries: null });
+
+/** Version 4 (M2.6 step 4): your body, unsaid until you say. */
+export const migrateCircle4 = (slice: unknown): CircleSlice => ({ ...(slice as CircleSlice), carries: null });
 
 /** Version 2 (M2.6 step 2): courting. Ties from before are people you know, never asked out. */
 export function migrateCircle2(slice: unknown): CircleSlice {

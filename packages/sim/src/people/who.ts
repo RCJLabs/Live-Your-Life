@@ -21,7 +21,13 @@ export interface Who {
   /** Their age on the life's first day. */
   readonly age: number;
   readonly drawnTo: DrawnTo;
+  /** Whether their body can carry a pregnancy (D96), by their pronouns' share. */
+  readonly carries: boolean;
 }
+
+/** Whether a body can carry, from a roll of a thousand and the pronouns' share (D96). */
+export const carriesFor = (pop: PopulationRecord, pronouns: Pronouns, roll: number): boolean =>
+  roll % 1000 < pop.carry[pronouns];
 
 /** The gender a person's pronouns stand for here: she as a woman, he as a man, they as neither. */
 const genderOf = (p: Pronouns): DrawnTo | null => (p === 'she' ? 'women' : p === 'he' ? 'men' : null);
@@ -64,6 +70,7 @@ export function whoIs(pop: PopulationRecord, pool: NamePool, seed: number, i: nu
     pronouns: first.pronouns,
     age,
     drawnTo: drawnFor(pop, age, first.pronouns, mix(seed, 64, i), mix(seed, 65, i)),
+    carries: carriesFor(pop, first.pronouns, mix(seed, 69, i)),
   };
 }
 

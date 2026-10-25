@@ -39,9 +39,9 @@ describe('life together (M2.6 step 3, D90, D95)', () => {
     const { state, who } = dating();
     const evening = play(game, sim, state, doing('sleep', 600), waitUntil(court.date.hour)).state;
     const after = play(game, sim, evening, { type: 'circle/go-on-date', person: who }).state;
-    expect(offered(after, 'circle/stay-night')).toEqual([who]);
+    expect([...new Set(offered(after, 'circle/stay-night'))]).toEqual([who]);
     const odds = shown(after, 'night-roll', who).chance;
-    const r = play(game, sim, after, { type: 'circle/stay-night', person: who });
+    const r = play(game, sim, after, { type: 'circle/stay-night', person: who, protect: true });
     const yes = r.of('circle/stayed')[0]?.yes === true;
     expect(rolled(r.beats)[0]?.chance).toBe(yes ? odds : 100 - odds);
     expect(tie(r.state, who).nights).toBe(yes ? 1 : 0);

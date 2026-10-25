@@ -3,8 +3,16 @@
   "description": "Who the tier-1 people are and how you come to know them (M2.6, D89, D91): their names, adult ages and whom they are drawn to, worked out from the seed and never stored; and the ties you keep with them. The figures trace to CALIBRATION.md.",
   "nameField": "name",
   "fields": {
-    "name": { "kind": "text", "min": 1, "max": 60 },
-    "names": { "kind": "ref", "to": "name-pool", "description": "The names they are drawn from." },
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "names": {
+      "kind": "ref",
+      "to": "name-pool",
+      "description": "The names they are drawn from."
+    },
     "ages": {
       "kind": "list",
       "min": 1,
@@ -12,9 +20,21 @@
       "of": {
         "kind": "group",
         "fields": {
-          "from": { "kind": "int", "min": 18, "max": 100 },
-          "to": { "kind": "int", "min": 18, "max": 100 },
-          "share": { "kind": "int", "min": 0, "max": 1000 }
+          "from": {
+            "kind": "int",
+            "min": 18,
+            "max": 100
+          },
+          "to": {
+            "kind": "int",
+            "min": 18,
+            "max": 100
+          },
+          "share": {
+            "kind": "int",
+            "min": 0,
+            "max": 1000
+          }
         }
       }
     },
@@ -25,10 +45,26 @@
       "of": {
         "kind": "group",
         "fields": {
-          "from": { "kind": "int", "min": 18, "max": 100 },
-          "to": { "kind": "int", "min": 18, "max": 100 },
-          "same": { "kind": "int", "min": 0, "max": 1000 },
-          "both": { "kind": "int", "min": 0, "max": 1000 }
+          "from": {
+            "kind": "int",
+            "min": 18,
+            "max": 100
+          },
+          "to": {
+            "kind": "int",
+            "min": 18,
+            "max": 100
+          },
+          "same": {
+            "kind": "int",
+            "min": 0,
+            "max": 1000
+          },
+          "both": {
+            "kind": "int",
+            "min": 0,
+            "max": 1000
+          }
         }
       }
     },
@@ -36,19 +72,69 @@
       "kind": "group",
       "description": "How drawn to you someone is, 0 to 100, when they can be: drawn from the seed for the pair, less points a year past the free years of age between you (tune).",
       "fields": {
-        "free": { "kind": "int", "min": 0, "max": 40 },
-        "per": { "kind": "int", "min": 0, "max": 20 }
+        "free": {
+          "kind": "int",
+          "min": 0,
+          "max": 40
+        },
+        "per": {
+          "kind": "int",
+          "min": 0,
+          "max": 20
+        }
       }
     },
     "ties": {
       "kind": "group",
       "description": "The people you know (D89): how many you keep, how many you meet an hour at a shared place, the hours together at which familiarity is half, and the share of an hour at work that counts (per hundred).",
       "fields": {
-        "kept": { "kind": "int", "min": 1, "max": 40 },
-        "perHour": { "kind": "int", "min": 1, "max": 6 },
-        "half": { "kind": "int", "min": 1, "max": 1000 },
-        "atWork": { "kind": "int", "min": 0, "max": 100 },
-        "haunts": { "kind": "int", "min": 1, "max": 6, "description": "The third places you go out to." }
+        "kept": {
+          "kind": "int",
+          "min": 1,
+          "max": 40
+        },
+        "perHour": {
+          "kind": "int",
+          "min": 1,
+          "max": 6
+        },
+        "half": {
+          "kind": "int",
+          "min": 1,
+          "max": 1000
+        },
+        "atWork": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "haunts": {
+          "kind": "int",
+          "min": 1,
+          "max": 6,
+          "description": "The third places you go out to."
+        }
+      }
+    },
+    "carry": {
+      "kind": "group",
+      "description": "Per thousand people who use each set of pronouns, those whose bodies can carry a pregnancy (D96).",
+      "fields": {
+        "she": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000
+        },
+        "he": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000
+        },
+        "they": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000
+        }
       }
     }
   }

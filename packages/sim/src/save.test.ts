@@ -37,7 +37,12 @@ describe('the save fixtures', () => {
   // name their actions; each writes only its own slice, and the market starts you at the diner,
   // so the slices saved replay as they were.
   const since = (id: string) =>
-    id.startsWith('people') || id === 'market' || id === 'deal' || id === 'prison' || id === 'circle';
+    id.startsWith('people') ||
+    id === 'market' ||
+    id === 'deal' ||
+    id === 'prison' ||
+    id === 'circle' ||
+    id === 'family';
   const before = createGame({
     modules: lifeModules({ career: LINE_COOK }).filter((m) => !m.id.startsWith('people')),
     start: 'world',
@@ -85,7 +90,7 @@ describe('the save fixtures', () => {
     const result = load('life-v2.json', then, before);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.added).toEqual(['market', 'deal', 'prison', 'circle']);
+    expect(result.report.added).toEqual(['market', 'deal', 'prison', 'circle', 'family']);
     // Without the market's and the trade's own slices and versions, and the law's migration to 2
     // (M2.4) taken back, the very state saved.
     const {
@@ -93,6 +98,7 @@ describe('the save fixtures', () => {
       deal: _d,
       prison: _j,
       circle: _c,
+      family: _fam,
       law,
       ...rest
     } = result.state as unknown as Record<string, unknown>;
@@ -100,7 +106,7 @@ describe('the save fixtures', () => {
     const probation = lawThen.probation as Record<string, unknown> | null;
     const { trainee: _t, ...probationThen } = probation ?? {};
     const kernel = result.state.kernel as unknown as { versions: Record<string, number> };
-    const { market: __, deal: __d, prison: __j, circle: __c, ...versions } = kernel.versions;
+    const { market: __, deal: __d, prison: __j, circle: __c, family: __f, ...versions } = kernel.versions;
     const saved = {
       ...rest,
       law: { ...lawThen, probation: probation ? probationThen : null },
@@ -118,19 +124,19 @@ describe('the save fixtures', () => {
       { module: 'law', from: 2, to: 3 },
     ]);
     // The people you know (M2.6): a save from before them knows no one.
-    expect(result.report.added).toEqual(['circle']);
+    expect(result.report.added).toEqual(['circle', 'family']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const deal = result.state.deal as { crew: boolean; owed: number; recruit: number };
     expect([deal.crew, deal.owed, deal.recruit]).toEqual([false, 0, -1]);
   });
 
-  it('loads the fifth, saved before life together, migrating the circle from 2 to 3 (M2.6)', () => {
+  it('loads the fifth, saved before life together, migrating the circle from 2 to 4 (M2.6)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v5.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'circle', from: 2, to: 3 }]);
+    expect(result.report.migrated).toEqual([{ module: 'circle', from: 2, to: 4 }]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const ties = (result.state.circle as { ties: Record<string, unknown>[] }).ties;
@@ -139,6 +145,18 @@ describe('the save fixtures', () => {
       expect(Object.keys(t).sort()).toEqual(Object.keys(newTie(0, 0, 0)).sort());
       expect([t.living, t.licence, t.hearing]).toEqual([false, null, -1]);
     }
+  });
+
+  it('loads the sixth, saved before bodies, migrating the circle from 3 to 4 and adding the family (M2.6)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v6.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'circle', from: 3, to: 4 }]);
+    expect(result.report.added).toEqual(['family']);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect((result.state.circle as { carries: unknown }).carries).toBeNull();
   });
 
   it('migrates a version-2 circle keeping what each tie had, a partner’s time together from when last seen', () => {
@@ -162,13 +180,13 @@ describe('the save fixtures', () => {
     });
   });
 
-  it('loads the fourth, saved with people you know before courting, migrating the circle from 1 to 3 (M2.6)', () => {
+  it('loads the fourth, saved with people you know before courting, migrating the circle from 1 to 4 (M2.6)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v4.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 3 }]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 4 }]);
+    expect(result.report.added).toEqual(['family']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const saved = (fixture('life-v4.json') as { snapshot: { circle: { ties: { person: number; regard: number }[] } } })

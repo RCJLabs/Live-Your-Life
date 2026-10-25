@@ -1,0 +1,8 @@
+{
+  "beat": "family/their-choice",
+  "when": {
+    "field": "continue",
+    "is": "false"
+  },
+  "text": "{name} chose to end the pregnancy."
+}

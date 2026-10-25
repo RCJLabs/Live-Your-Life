@@ -1,0 +1,8 @@
+{
+  "beat": "family/pregnant",
+  "when": {
+    "field": "carrier",
+    "is": "you"
+  },
+  "text": "{you} took a test, and it was positive. {name} was told."
+}

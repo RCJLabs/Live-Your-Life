@@ -1,0 +1,52 @@
+{
+  "name": "Pregnancy in Michigan",
+  "night": {
+    "none": 200,
+    "protected": 20
+  },
+  "ages": [
+    {
+      "from": 18,
+      "share": 100
+    },
+    {
+      "from": 30,
+      "share": 90
+    },
+    {
+      "from": 35,
+      "share": 65
+    },
+    {
+      "from": 40,
+      "share": 30
+    },
+    {
+      "from": 45,
+      "share": 3
+    },
+    {
+      "from": 50,
+      "share": 0
+    }
+  ],
+  "known": 5,
+  "loss": {
+    "chance": 100,
+    "early": 80
+  },
+  "end": {
+    "pills": 11,
+    "pillCost": 60000,
+    "limit": 24,
+    "clinicCost": 85000,
+    "opens": 9,
+    "closes": 17
+  },
+  "partner": 80,
+  "term": {
+    "week": 38,
+    "spread": 21
+  },
+  "birth": 265500
+}

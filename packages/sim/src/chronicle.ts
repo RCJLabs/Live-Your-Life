@@ -61,6 +61,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'prison/hearing': 'its outcome is told',
   'circle/talked': 'every talk; what it did is theirs, shown in their panel',
   'circle/shared-rent': 'money moving; moving in is told',
+  'family/conceived': 'nobody knows yet; finding out is told',
   'circle/planned': 'the interface: the date is in the panel, and going or missing it is told',
 };
 
@@ -172,6 +173,7 @@ export function lineFor(
       case 'prison':
         return counted(v as number, 'month');
       case 'rent':
+      case 'cents':
         return money(beat.cents as number);
       case 'grams':
         return weight(v as number);

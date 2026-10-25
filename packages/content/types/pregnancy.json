@@ -1,0 +1,138 @@
+{
+  "title": "Pregnancy",
+  "description": "How a pregnancy begins, is known, is chosen, may be lost and ends in birth (M2.6 step 4, D96, D97). The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "night": {
+      "kind": "group",
+      "description": "The chance in ten thousand that a night together begins a pregnancy: without protection, and with a condom used as most people use one.",
+      "fields": {
+        "none": {
+          "kind": "int",
+          "min": 0,
+          "max": 10000
+        },
+        "protected": {
+          "kind": "int",
+          "min": 0,
+          "max": 10000
+        }
+      }
+    },
+    "ages": {
+      "kind": "list",
+      "min": 1,
+      "description": "The carrier's age and the share of the chance left at it, per hundred: the last band at or under their age counts.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "from": {
+            "kind": "int",
+            "min": 18,
+            "max": 100
+          },
+          "share": {
+            "kind": "int",
+            "min": 0,
+            "max": 100
+          }
+        }
+      }
+    },
+    "known": {
+      "kind": "int",
+      "min": 1,
+      "max": 20,
+      "description": "The week a pregnancy is known: a missed period, then a test."
+    },
+    "loss": {
+      "kind": "group",
+      "description": "Miscarriage: per thousand known pregnancies, and the share of those in the first trimester, per hundred.",
+      "fields": {
+        "chance": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000
+        },
+        "early": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    "end": {
+      "kind": "group",
+      "description": "Ending a pregnancy at a clinic, on a weekday in its hours: by pills up to a week, by a procedure after, until the legal limit (D97).",
+      "fields": {
+        "pills": {
+          "kind": "int",
+          "min": 1,
+          "max": 30,
+          "description": "The last week pills are given."
+        },
+        "pillCost": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000000,
+          "description": "Cents."
+        },
+        "limit": {
+          "kind": "int",
+          "min": 1,
+          "max": 40,
+          "description": "The last week it can be ended."
+        },
+        "clinicCost": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000000,
+          "description": "Cents."
+        },
+        "opens": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        },
+        "closes": {
+          "kind": "int",
+          "min": 0,
+          "max": 24
+        }
+      }
+    },
+    "partner": {
+      "kind": "int",
+      "min": 0,
+      "max": 100,
+      "description": "The chance in a hundred a partner who carries goes on with the pregnancy: their choice, not yours (tune)."
+    },
+    "term": {
+      "kind": "group",
+      "description": "Birth: the week it can come from, and the days after over which it falls.",
+      "fields": {
+        "week": {
+          "kind": "int",
+          "min": 20,
+          "max": 45
+        },
+        "spread": {
+          "kind": "int",
+          "min": 0,
+          "max": 30
+        }
+      }
+    },
+    "birth": {
+      "kind": "int",
+      "min": 0,
+      "max": 10000000,
+      "description": "Cents a birth costs the one who gives birth."
+    }
+  }
+}
