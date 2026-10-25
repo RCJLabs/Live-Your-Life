@@ -66,6 +66,8 @@ export function tiesModule(hire?: Hired) {
         domain: { type: 'int', min: 0, max: 100 },
         label: 'how well you know them',
       },
+      // Their first name, or '' with no coworker: the chronicle's {coworker} for a life gone (M2.7 step 4).
+      name: { read: ({ state }) => state.coworker?.first ?? '', label: 'the coworker’s first name' },
       asking: { read: ({ state }) => state.request !== null, domain: { type: 'bool' }, label: 'a favour asked of you' },
       // Their hours as one of the tier-1 people (D70): the shift they work a day, beside you on yours.
       'their-start': {

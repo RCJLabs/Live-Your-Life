@@ -112,6 +112,9 @@ export const livesModule = defineModule<LivesSlice>({
         carries: { type: 'bool' },
         born: { type: 'int' },
         gen: { type: 'int', min: 1 },
+        // Who carried the chronicle's {you} and {coworker} until now: the journal's names for the life gone.
+        was: { type: 'text' },
+        coworker: { type: 'text' },
         left: { type: 'int', min: 0 },
         debts: { type: 'int', min: 0 },
         probate: { type: 'int', min: 0 },
@@ -147,6 +150,8 @@ export const livesModule = defineModule<LivesSlice>({
         const e = estateNow(ctx);
         if (e.cash > e.left) ctx.apply({ effect: 'pay-cost', cost: { cash: e.cash - e.left } });
         const gen = ctx.read().gen + 1;
+        const was = ctx.fact('you.first') as string;
+        const coworker = ctx.fact('ties.name') as string;
         const { kind, person, child, first, last, pronouns, carries, born } = h;
         const w = ctx.write();
         w.died = -1;
@@ -155,7 +160,7 @@ export const livesModule = defineModule<LivesSlice>({
         w.settled = ctx.fact('time.day') as number;
         while (ctx.modes.current.id !== 'world') ctx.modes.pop();
         ctx.emit('succeeded', {
-          ...{ kind, person, child, first, last, pronouns, carries, born, gen },
+          ...{ kind, person, child, first, last, pronouns, carries, born, gen, was, coworker },
           ...{ left: e.left, debts: e.debts, probate: e.probate },
         });
         if (kind === 'ward') wardYears(ctx, born, h.other);

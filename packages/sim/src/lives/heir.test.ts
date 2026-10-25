@@ -105,9 +105,11 @@ describe('the heir (M2.7 step 3, D20, D107, D109)', () => {
     const name = fact(s, 'circle.name', { person: PARTNER }) as string;
     const age = fact(s, 'circle.age', { person: PARTNER }) as number;
     const carries = fact(s, 'circle.they-carry', { person: PARTNER }) as boolean;
+    const was = (s.you as { first: string }).first;
     const r = play(game, sim, s, { type: 'lives/succeed' });
     s = r.state;
-    expect(r.of('lives/succeeded')[0]).toMatchObject({ kind: 'partner', person: PARTNER, gen: 1 });
+    expect(r.of('lives/succeeded')[0]).toMatchObject({ kind: 'partner', person: PARTNER, gen: 1, was });
+    expect(r.of('lives/succeeded')[0]?.coworker).toBe(fact(s0, 'ties.name'));
     const line = lineFor(
       sim.content,
       r.beats.find((b) => b.type === 'lives/succeeded') as never,

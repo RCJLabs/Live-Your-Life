@@ -32,6 +32,44 @@ function estateLine(e: { cash: number; debts: number; probate: number; left: num
   return `You left ${money(e.cash)}.${from} ${heir.first} is left ${money(e.left)}.`;
 }
 
+/** The chronicle's turns in a life: what an epilogue tells (D110). */
+const MILESTONES: ReadonlySet<string> = new Set([
+  'job/hired',
+  'job/promoted',
+  'job/let-go',
+  'circle/married',
+  'circle/divorced',
+  'family/born',
+  'law/convicted',
+  'prison/admitted',
+  'prison/paroled',
+  'prison/discharged',
+  'circle/died',
+  'lives/came-of-age',
+]);
+/** The most an epilogue tells, the latest kept (tune). */
+export const EPILOGUE = 8;
+
+/**
+ * The life just ended, from the page's journal (D110): its turns since it began, at the start or
+ * at the last heir's, the latest EPILOGUE of them.
+ */
+export function epilogue(life: Life): string[] {
+  const j = life.journal;
+  let from = 0;
+  for (let i = j.length - 1; i >= 0; i--) {
+    if ((j[i] as { beat: { type: string } }).beat.type === 'lives/succeeded') {
+      from = i + 1;
+      break;
+    }
+  }
+  return j
+    .slice(from)
+    .filter((e) => MILESTONES.has(e.beat.type))
+    .slice(-EPILOGUE)
+    .map((e) => e.text);
+}
+
 export function heirSheet(life: Life): { title: string; lead: string; items: Item[] } {
   const age = life.fact('circle.your-age') as number;
   const e = life.peek<{ cash: number; debts: number; probate: number; left: number; heir: Heir | null }>({
@@ -39,7 +77,8 @@ export function heirSheet(life: Life): { title: string; lead: string; items: Ite
   });
   const items: Item[] = [];
   const heir = e.heir;
-  let lead = `You died at ${age}.`;
+  const told = epilogue(life);
+  let lead = `You died at ${age}.${told.length > 0 ? ` ${told.join(' ')}` : ''}`;
   if (!heir) lead += ' Nobody is left to carry on. The city goes on without you.';
   else {
     const years = Math.floor(((life.fact('time.day') as number) - heir.born) / 365);
