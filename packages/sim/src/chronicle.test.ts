@@ -50,6 +50,8 @@ const RARE = [
   'family/miscarried',
   'family/born',
   'family/paid-bill',
+  'family/reported',
+  'family/investigated',
   'deal/paid-back',
   'deal/cut-off',
   'deal/recruited',

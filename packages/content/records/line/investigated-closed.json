@@ -1,0 +1,8 @@
+{
+  "beat": "family/investigated",
+  "when": {
+    "field": "found",
+    "is": "false"
+  },
+  "text": "Child protective services closed its investigation of the home of {you}."
+}

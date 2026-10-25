@@ -55,6 +55,7 @@ describe('the clock', () => {
       'deal/join',
       'deal/pay-back',
       'deal/recruit',
+      'family/care',
       'family/continue',
       'family/end',
       'family/pay-bill',

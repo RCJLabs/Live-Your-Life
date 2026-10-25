@@ -1,6 +1,6 @@
 {
   "title": "Pregnancy",
-  "description": "How a pregnancy begins, is known, is chosen, may be lost and ends in birth (M2.6 step 4, D96, D97). The figures trace to CALIBRATION.md.",
+  "description": "How a pregnancy begins, is known, is chosen, may be lost and ends in birth (M2.6 step 4, D96, D97), and a child's care after (step 4b, D98). The figures trace to CALIBRATION.md.",
   "nameField": "name",
   "fields": {
     "name": {
@@ -133,6 +133,83 @@
       "min": 0,
       "max": 10000000,
       "description": "Cents a birth costs the one who gives birth."
+    },
+    "care": {
+      "kind": "group",
+      "description": "A child living with you (D98): minutes of care a day by age, what a partner you live with takes on, daycare while you work, and what follows care not given.",
+      "fields": {
+        "needs": {
+          "kind": "list",
+          "min": 1,
+          "description": "Minutes of care a day for a child under each age in years: the first band they're under counts.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "under": {
+                "kind": "int",
+                "min": 1,
+                "max": 18
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 0,
+                "max": 1440
+              }
+            }
+          }
+        },
+        "partner": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Per hundred of the care a partner you live with gives."
+        },
+        "sitting": {
+          "kind": "int",
+          "min": 10,
+          "max": 240,
+          "description": "Minutes of care a sitting of it is, at most."
+        },
+        "daycare": {
+          "kind": "group",
+          "description": "Paid care while you work, for a child under the age.",
+          "fields": {
+            "under": {
+              "kind": "int",
+              "min": 1,
+              "max": 18
+            },
+            "cost": {
+              "kind": "int",
+              "min": 0,
+              "max": 100000,
+              "description": "Cents a day you work."
+            }
+          }
+        },
+        "neglect": {
+          "kind": "group",
+          "description": "Days without enough care, within a window of days, that bring a report to child protective services.",
+          "fields": {
+            "days": {
+              "kind": "int",
+              "min": 1,
+              "max": 30
+            },
+            "window": {
+              "kind": "int",
+              "min": 1,
+              "max": 90
+            }
+          }
+        },
+        "investigation": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Days an investigation takes once a report is made."
+        }
+      }
     }
   }
 }

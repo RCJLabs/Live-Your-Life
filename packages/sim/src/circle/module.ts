@@ -129,6 +129,14 @@ export const circleModule = defineModule<CircleSlice>({
       domain: { type: 'int', min: 0 },
       label: 'people you are dating, engaged or married to',
     },
+    'living-works': {
+      read: (v) => {
+        const t = v.state.ties.find((x) => x.living);
+        return t ? (rosterNow(v)?.people[t.person]?.work ?? -1) >= 0 : false;
+      },
+      domain: { type: 'bool' },
+      label: 'whether the partner you live with works',
+    },
     living: {
       read: ({ state }) => state.ties.find((t) => t.living)?.person ?? -1,
       domain: { type: 'int', min: -1 },

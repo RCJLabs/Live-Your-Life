@@ -4,9 +4,10 @@
  * each day; who people are, their bodies and ages, it reads from the circle's facts.
  */
 import { defineModule, type ModuleContext } from '@eb/core';
+import { care, daycare, dayOfCare, givenOn, needOn } from './care.ts';
 import { born, chanceWith, conceived, conceiveRoll, known } from './pregnancy.ts';
 import { pregnancyOf } from './records.ts';
-import { type FamilySlice, type FamilyView, familyOf, noFamily, type Pregnancy, YOU } from './state.ts';
+import { type FamilySlice, type FamilyView, familyOf, migrateFamily2, noFamily, type Pregnancy, YOU } from './state.ts';
 
 type Ctx = ModuleContext<FamilySlice>;
 type View = FamilyView;
@@ -15,34 +16,39 @@ const slice = familyOf;
 const day = (v: { fact(id: string): unknown }) => v.fact('time.day') as number;
 const weekOf = (v: View, p: Pick<Pregnancy, 'conceived'>) => Math.floor((day(v) - p.conceived) / 7);
 
-/** Each day since the last settled: known at its week, lost on its day, born when due. */
+/**
+ * Each day since the last settled: the day before's care weighed (care.ts), and a pregnancy known
+ * at its week, lost on its day, born when due.
+ */
 function settle(ctx: Ctx): void {
   const today = day(ctx);
   const s = ctx.read();
   if (today <= s.settled) return;
-  if (!s.pregnancy) {
-    ctx.write().settled = today;
-    return;
-  }
-  const rec = pregnancyOf(ctx.content);
+  const caring = s.children.some((c) => c.with === 'you') || s.report !== null;
   for (let d = s.settled + 1; d <= today; d++) {
-    const p = ctx.read().pregnancy;
-    if (!p) break;
-    if (!p.known && d >= p.conceived + rec.known * 7) known(ctx);
-    const after = ctx.read().pregnancy;
-    if (!after) break;
-    if (after.known && after.loss >= 0 && d >= after.loss) {
-      ctx.write().pregnancy = null;
-      ctx.emit('miscarried', { carrier: after.carrier === YOU ? 'you' : 'them', name: nameOf(ctx, after) });
-      break;
-    }
-    // Past the legal limit undecided, it goes on (D97).
-    if (after.choice === 'open' && d >= after.conceived + rec.end.limit * 7) {
-      (ctx.write().pregnancy as Pregnancy).choice = 'continue';
-    }
-    if (d >= after.due) born(ctx);
+    if (caring) dayOfCare(ctx, d - 1);
+    if (ctx.read().pregnancy) pregnancyDay(ctx, d);
   }
   ctx.write().settled = today;
+}
+
+function pregnancyDay(ctx: Ctx, d: number): void {
+  const rec = pregnancyOf(ctx.content);
+  const p = ctx.read().pregnancy;
+  if (!p) return;
+  if (!p.known && d >= p.conceived + rec.known * 7) known(ctx);
+  const after = ctx.read().pregnancy;
+  if (!after) return;
+  if (after.known && after.loss >= 0 && d >= after.loss) {
+    ctx.write().pregnancy = null;
+    ctx.emit('miscarried', { carrier: after.carrier === YOU ? 'you' : 'them', name: nameOf(ctx, after) });
+    return;
+  }
+  // Past the legal limit undecided, it goes on (D97).
+  if (after.choice === 'open' && d >= after.conceived + rec.end.limit * 7) {
+    (ctx.write().pregnancy as Pregnancy).choice = 'continue';
+  }
+  if (d >= after.due) born(ctx);
 }
 
 const nameOf = (ctx: Ctx, p: Pregnancy) =>
@@ -76,6 +82,9 @@ const cash = (v: View) => v.fact('economy.amount', { resource: 'cash' }) as numb
 
 export const familyModule = defineModule<FamilySlice>({
   id: 'family',
+  // 2 (M2.6 step 4b): a child's care.
+  version: 2,
+  migrate: { 2: migrateFamily2 },
   init: noFamily,
   events: {
     conceived: { args: {}, label: 'A pregnancy began, not yet known' },
@@ -94,6 +103,11 @@ export const familyModule = defineModule<FamilySlice>({
       label: 'A child was born',
     },
     'paid-bill': { args: { cents: { type: 'int', min: 0 } }, label: 'Paid the birth’s bill' },
+    cared: { args: { minutes: { type: 'int', min: 1 } }, label: 'Cared for your child' },
+    short: { args: { day: { type: 'int', min: 0 } }, label: 'A day your child went without enough care' },
+    reported: { args: { closes: { type: 'int', min: 0 } }, label: 'Reported to child protective services' },
+    investigated: { args: { found: { type: 'bool' } }, label: 'An investigation closed' },
+    daycare: { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'Paid for daycare' },
   },
   facts: {
     pregnant: {
@@ -107,7 +121,21 @@ export const familyModule = defineModule<FamilySlice>({
       label: 'its week, or -1',
     },
     children: { read: ({ state }) => state.children.length, domain: { type: 'int', min: 0 }, label: 'your children' },
-    owed: { read: ({ state }) => state.owed, domain: { type: 'int', min: 0 }, label: 'a birth’s bill unpaid' },
+    owed: {
+      read: ({ state }) => state.owed,
+      domain: { type: 'int', min: 0 },
+      label: 'a birth’s or daycare’s bill unpaid',
+    },
+    'care-left': {
+      read: (v) => Math.max(0, needOn(v, v.fact('time.day') as number) - givenOn(v, v.fact('time.day') as number)),
+      domain: { type: 'int', min: 0 },
+      label: 'minutes of care your children still need today',
+    },
+    findings: {
+      read: ({ state }) => state.findings,
+      domain: { type: 'int', min: 0 },
+      label: 'investigations that found care wanting',
+    },
     chance: {
       args: { person: { type: 'int', min: 0 }, protect: { type: 'bool' } },
       read: (v, { person, protect }) => chanceWith(v, person as number, protect === true),
@@ -141,6 +169,7 @@ export const familyModule = defineModule<FamilySlice>({
         return cost !== null && clinicOpen(v) && cash(v) >= cost ? [{}] : [];
       },
     },
+    care,
     'pay-bill': {
       run: (ctx) => {
         const owed = ctx.read().owed;
@@ -153,5 +182,9 @@ export const familyModule = defineModule<FamilySlice>({
     },
   },
   effects: { 'conceive-roll': conceiveRoll, conceived },
-  on: { 'time/passed': (ctx) => settle(ctx) },
+  on: {
+    'time/passed': (ctx) => settle(ctx),
+    // A shift worked: daycare for a young child, unless a partner is home (care.ts).
+    'job/worked': (ctx) => daycare(ctx),
+  },
 });
