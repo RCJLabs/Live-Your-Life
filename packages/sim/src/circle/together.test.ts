@@ -73,7 +73,8 @@ describe('life together (M2.6 step 3, D90, D95)', () => {
     expect(offered(state, 'circle/ask-in')).toEqual([who]);
     const later = set(state, who, { since: (fact(state, 'time.day') as number) - 360 });
     expect(shown(later, 'move-in-roll', who).chance).toBeGreaterThan(shown(state, 'move-in-roll', who).chance);
-    const moved = untilYes(state, who, { type: 'circle/ask-in', person: who }, 'circle/moved-in');
+    // Asked a year in, when a yes is likely (the record's early odds are low, as the surveys' pace is).
+    const moved = untilYes(later, who, { type: 'circle/ask-in', person: who }, 'circle/moved-in');
     expect(tie(moved, who).living).toBe(true);
     expect(fact(moved, 'circle.living')).toBe(who);
     // A second partner, dating as long: not while someone lives with you.

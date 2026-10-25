@@ -12,7 +12,7 @@ import { STAGE_ONLY, steadyFor } from '../bot.ts';
 const GOES_ON = 80;
 const PROTECTED = 70;
 /** The least chance of a yes it asks someone out at, and what it keeps back for a date (tune). */
-const ASKS_AT = 20;
+const ASKS_AT = 10;
 const DATE_COST = 6000;
 
 /** Couple's steps, the first offered taken. */

@@ -32,6 +32,7 @@ interface Life {
   first: Record<string, number>;
   count: Record<string, number>;
   conceived: number;
+  expected: number;
   refused: number;
 }
 
@@ -39,11 +40,22 @@ function live(seed: string): Life {
   const policy = suitorFor(days);
   let state = game.init(seed, sim);
   const rng = Rng.create(seed).fork('bot');
-  const life: Life = { first: {}, count: {}, conceived: 0, refused: 0 };
+  const life: Life = { first: {}, count: {}, conceived: 0, expected: 0, refused: 0 };
   let pregnant = false;
   for (let turn = 0; turn < days * 200; turn++) {
     const action = policy.choose(turnFor(game, sim, state, rng, turn)) as Action | null;
     if (!action) break;
+    // The chance of a pregnancy the night's preview shows, summed: what the year should have seen.
+    if (action.type === 'circle/stay-night') {
+      const turn = turnFor(game, sim, state, Rng.create('peek'), 0);
+      const p = turn.preview([
+        { effect: 'night-roll', person: action.person, protect: action.protect },
+      ])[0] as unknown as {
+        chance: number;
+        pregnancy: number;
+      };
+      life.expected += (p.chance / 100) * (p.pregnancy / 10_000);
+    }
     const step = game.reduce(state, action, sim);
     if (!step.accepted) life.refused++;
     const day = game.fact(step.state, 'time.day', {}, sim) as number;

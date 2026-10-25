@@ -79,7 +79,7 @@
     "after": 60,
     "month": 4,
     "odds": {
-      "base": -40,
+      "base": -60,
       "attraction": 2,
       "regard": 5,
       "familiarity": 2,
