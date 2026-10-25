@@ -18,15 +18,7 @@ const sim = sliceSim();
 /** The beats whose first day each life records. */
 const FIRSTS = ['circle/met', 'circle/asked-out', 'circle/moved-in', 'circle/proposed', 'circle/married'] as const;
 /** The beats each life counts. */
-const COUNTS = [
-  'yes',
-  'no',
-  'circle/broke-up',
-  'circle/stayed',
-  'family/born',
-  'circle/found-out',
-  'circle/stood-up',
-] as const;
+const COUNTS = ['circle/broke-up', 'circle/stayed', 'family/born', 'circle/found-out', 'circle/stood-up'] as const;
 
 interface Life {
   first: Record<string, number>;
@@ -65,11 +57,14 @@ function live(seed: string): Life {
     if (!step.accepted) life.refused++;
     const day = game.fact(step.state, 'time.day', {}, sim) as number;
     for (const b of step.beats) {
-      // Asked out counts only a yes: the day a couple began.
-      const counts = b.type !== 'circle/asked-out' || b.yes === true;
+      // An ask's beat comes with its answer: only a yes counts as the step taken.
+      const counts = b.yes === undefined || b.yes === true;
       if (counts && (FIRSTS as readonly string[]).includes(b.type) && life.first[b.type] === undefined)
         life.first[b.type] = day;
-      if (b.type === 'circle/asked-out') life.count[b.yes ? 'yes' : 'no'] = (life.count[b.yes ? 'yes' : 'no'] ?? 0) + 1;
+      if (b.yes !== undefined && (FIRSTS as readonly string[]).includes(b.type)) {
+        const key = `${b.type} ${b.yes ? 'yes' : 'no'}`;
+        life.count[key] = (life.count[key] ?? 0) + 1;
+      }
       if ((COUNTS as readonly string[]).includes(b.type)) life.count[b.type] = (life.count[b.type] ?? 0) + 1;
     }
     state = step.state;
@@ -103,6 +98,8 @@ const gaps = all
 console.log(
   `moved in, days after the first yes: median ${median(gaps)}, by 120 days ${gaps.filter((g) => g <= 120).length} of ${gaps.length}`,
 );
+const answers = [...new Set(all.flatMap((l) => Object.keys(l.count)).filter((k) => / (yes|no)$/.test(k)))].sort();
+for (const k of answers) console.log(`${k}: ${all.reduce((n, l) => n + (l.count[k] ?? 0), 0)} in all`);
 for (const c of COUNTS) console.log(`${c}: ${all.reduce((n, l) => n + (l.count[c] ?? 0), 0)} in all`);
 console.log(
   `pregnancies: ${all.reduce((n, l) => n + l.conceived, 0)} in all; refused actions: ${all.reduce((n, l) => n + l.refused, 0)}`,
