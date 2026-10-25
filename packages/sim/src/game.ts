@@ -19,6 +19,7 @@ import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToMidnight, minutes
 import { circleModule } from './circle/module.ts';
 import { clockModule } from './clock.ts';
 import { dealModule } from './deal/module.ts';
+import { educationModule } from './education/module.ts';
 import { familyModule } from './family/module.ts';
 import { healthModule } from './health/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
@@ -92,6 +93,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     livesModule,
     // Illness, injury and care (M2.7 step 2, D104): added to a save from before it, you are well.
     healthModule,
+    // Your schooling (M2.8, D112): added to a save from before it, you have a diploma.
+    educationModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.
