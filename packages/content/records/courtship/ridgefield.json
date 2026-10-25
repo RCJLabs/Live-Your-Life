@@ -14,9 +14,9 @@
     "bad": -2
   },
   "ask": {
-    "familiarity": 20,
+    "familiarity": 5,
     "odds": {
-      "base": -30,
+      "base": -10,
       "attraction": 8,
       "regard": 5,
       "familiarity": 3,

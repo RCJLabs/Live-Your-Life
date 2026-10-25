@@ -118,7 +118,7 @@ function actionsFor(life: Life, t: Tie, act: (a: Action) => void): HTMLElement[]
         case 'circle/ask-out':
           return step(`Ask ${name} out`, `${name} says yes about ${odds(chance('ask-roll'))}.`, a, act);
         case 'circle/plan-date':
-          return step(`Plan a date for ${dayText(life, (life.fact('time.day') as number) + 1)}`, null, a, act);
+          return step('Plan a date', 'It’s set for the next evening you aren’t working.', a, act);
         case 'circle/go-on-date': {
           const p = life.peek<{ chance: number; cost: number; found: { person: number; chance: number }[] }>({
             effect: 'date-roll',

@@ -26,6 +26,7 @@ import {
   askRoll,
   breakUp,
   dated,
+  dateIn,
   dateRoll,
   foundOut,
   goOnDate,
@@ -123,6 +124,11 @@ export const circleModule = defineModule<CircleSlice>({
     },
   },
   facts: {
+    'date-in': {
+      read: (v) => dateIn(v),
+      domain: { type: 'int', min: 1 },
+      label: 'minutes until a date today begins',
+    },
     known: { read: ({ state }) => state.ties.length, domain: { type: 'int', min: 0 }, label: 'people you know' },
     partners: {
       read: ({ state }) => state.ties.filter(partnered).length,

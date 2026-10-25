@@ -85,6 +85,18 @@ const canAsk = (v: View, t: Tie) => {
   );
 };
 
+/**
+ * Minutes until a date planned for today begins, or undefined when none is still to come: what
+ * you do ends then, as it does for a shift (life.ts), so a date isn't slept or talked through.
+ */
+export function dateIn(v: FactView<CircleSlice>): number | undefined {
+  const now = minuteOfDay(v);
+  const ahead = v.state.ties
+    .filter((t) => partnered(t) && t.date?.day === today(v) && t.date.minute > now)
+    .map((t) => (t.date?.minute ?? 0) - now);
+  return ahead.length > 0 ? Math.min(...ahead) : undefined;
+}
+
 /** The date planned for today that you can still turn up to. */
 function dateOpen(v: View, t: Tie): boolean {
   if (!partnered(t) || !t.date || t.date.day !== today(v)) return false;
@@ -176,12 +188,19 @@ export function answered(ctx: Ctx, effect: Effect): void {
   ctx.emit('asked-out', { person: t.person, name: name(ctx, t.person), yes });
 }
 
-/** A date tomorrow at the record's hour, at your first third place. */
+/** A date at the record's hour on the next evening you're not working, at your first third place. */
 function plan(ctx: Ctx, t: Tie): void {
   const roster = rosterNow(ctx);
   const seed = ctx.fact('people.seed') as number;
   const place = roster ? (hauntsOf(roster, seed, populationOf(ctx.content).ties.haunts)[0] ?? -1) : -1;
-  t.date = { day: today(ctx) + 1, minute: courtshipOf(ctx.content).date.hour * 60, place };
+  const d = courtshipOf(ctx.content).date;
+  const minute = d.hour * 60;
+  // The next evening in a week that no shift you signed up for covers, or tomorrow if none is.
+  const busy = (day: number) =>
+    ctx.fact('job.busy', { day, minute }) === true ||
+    ctx.fact('job.busy', { day, minute: minute + d.minutes - 1 }) === true;
+  const ahead = [1, 2, 3, 4, 5, 6, 7].find((n) => !busy(today(ctx) + n)) ?? 1;
+  t.date = { day: today(ctx) + ahead, minute, place };
   ctx.emit('planned', { person: t.person, day: t.date.day });
 }
 

@@ -124,6 +124,19 @@ export function jobModule(hire?: Hire) {
         domain: { type: 'int', min: -1 },
         label: 'the minute of the day your shift that day starts, or -1',
       },
+      // Whether a shift you signed up for covers that minute of that day: dates are planned around it (M2.6).
+      busy: {
+        args: { day: { type: 'int', min: 0 }, minute: { type: 'int', min: 0 } },
+        read: (view, { day, minute }) => {
+          const signed = view.state.signed.find((s) => s.day === day);
+          if (!signed || view.state.career === null) return false;
+          const kind = careerFor(view.content, view.state).shifts.find((k) => k.id === signed.shift);
+          const start = kind ? kind.hour * 60 + kind.minute : -1;
+          return kind !== undefined && (minute as number) >= start && (minute as number) < start + kind.minutes;
+        },
+        domain: { type: 'bool' },
+        label: 'on a shift you signed up for at that minute of that day',
+      },
       // Your shifts not yet started, for whoever asks to cover one: a list, so no domain.
       ahead: (view) => {
         if (!view.state.employed) return [];
