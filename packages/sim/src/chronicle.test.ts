@@ -60,6 +60,10 @@ const RARE = [
   'lives/came-of-age',
   'education/enrolled',
   'education/graded',
+  // Paying for the college (M2.8 step 4): education/aid.test.ts raises them.
+  'education/billed',
+  'education/loan-due',
+  'education/loan-paid',
   'circle/died',
   'job/called-in-sick',
   'health/saw-doctor',

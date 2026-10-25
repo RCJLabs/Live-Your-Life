@@ -25,5 +25,6 @@ export function payday(ctx: JobContext): void {
   w.year = year;
   w.earned = earned + gross;
   if (check.net > 0) ctx.apply({ effect: 'add-resource', resource: 'cash', by: check.net });
-  ctx.emit('paid', { minutes, gross, withheld: check.withheld, net: check.net });
+  // What was withheld in all; the event's arguments are single values, not the table by tax.
+  ctx.emit('paid', { minutes, gross, withheld: gross - check.net, net: check.net });
 }

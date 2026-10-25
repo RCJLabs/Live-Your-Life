@@ -210,5 +210,36 @@
     ],
     "associate": 60,
     "gpa": 200
+  },
+  "aid": {
+    "tuition": 11300,
+    "hourFee": 750,
+    "termFee": 6500,
+    "pell": {
+      "most": 739500,
+      "least": 74000,
+      "line": 1458000,
+      "full": 175,
+      "none": 275,
+      "fullTime": 12
+    },
+    "loans": {
+      "rate": 639,
+      "fee": 1057,
+      "half": 6,
+      "limits": [
+        {
+          "credits": 0,
+          "year": 950000
+        },
+        {
+          "credits": 30,
+          "year": 1050000
+        }
+      ],
+      "grace": 183,
+      "months": 120,
+      "leastMonth": 5000
+    }
   }
 }

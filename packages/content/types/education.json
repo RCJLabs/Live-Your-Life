@@ -1,6 +1,6 @@
 {
   "title": "Education",
-  "description": "Schooling past 18 (M2.8, D111–D114): who starts with a diploma, and the GED for those who don't. The college's terms, courses and aid join it in later steps. The figures trace to CALIBRATION.md.",
+  "description": "Schooling past 18 (M2.8, D111–D114): who starts with a diploma, and the GED for those who don't. The college's terms and courses, and paying for them. The figures trace to CALIBRATION.md.",
   "nameField": "name",
   "fields": {
     "name": {
@@ -225,6 +225,127 @@
           "min": 0,
           "max": 400,
           "description": "The least grade point average for the associate's, in hundredths."
+        }
+      }
+    },
+    "aid": {
+      "kind": "group",
+      "optional": true,
+      "description": "Paying for the college (M2.8 step 4, D113): tuition and fees, the Pell grant by income against the poverty line, and federal Direct loans. Cents unless said. The figures trace to CALIBRATION.md.",
+      "fields": {
+        "tuition": {
+          "kind": "int",
+          "min": 0,
+          "description": "Tuition for a billable contact hour, in district. A course's contact hours are taken as its credits."
+        },
+        "hourFee": {
+          "kind": "int",
+          "min": 0,
+          "description": "Fees charged on each contact hour (technology and facilities)."
+        },
+        "termFee": {
+          "kind": "int",
+          "min": 0,
+          "description": "Fees charged once a term (registration and student services)."
+        },
+        "pell": {
+          "kind": "group",
+          "fields": {
+            "most": {
+              "kind": "int",
+              "min": 0,
+              "description": "The most a year, at full time."
+            },
+            "least": {
+              "kind": "int",
+              "min": 0,
+              "description": "The least awarded a year, at full time; nothing is paid below it."
+            },
+            "line": {
+              "kind": "int",
+              "min": 1,
+              "description": "The poverty line for a household of one, a year, from the year the award year uses."
+            },
+            "full": {
+              "kind": "int",
+              "min": 1,
+              "max": 1000,
+              "description": "Percent of the line at or under which the most is awarded."
+            },
+            "none": {
+              "kind": "int",
+              "min": 1,
+              "max": 1000,
+              "description": "Percent of the line above which nothing is awarded."
+            },
+            "fullTime": {
+              "kind": "int",
+              "min": 1,
+              "max": 30,
+              "description": "Credits a term that count as full time; fewer are paid in proportion."
+            }
+          }
+        },
+        "loans": {
+          "kind": "group",
+          "fields": {
+            "rate": {
+              "kind": "int",
+              "min": 0,
+              "max": 10000,
+              "description": "The yearly interest rate, in hundredths of a percent."
+            },
+            "fee": {
+              "kind": "int",
+              "min": 0,
+              "max": 100000,
+              "description": "The origination fee, in thousandths of a percent of what is borrowed, taken before it is paid out."
+            },
+            "half": {
+              "kind": "int",
+              "min": 1,
+              "max": 30,
+              "description": "Credits a term that count as half time: the least for a loan, and for not repaying while in school."
+            },
+            "limits": {
+              "kind": "list",
+              "min": 1,
+              "max": 10,
+              "of": {
+                "kind": "group",
+                "fields": {
+                  "credits": {
+                    "kind": "int",
+                    "min": 0,
+                    "max": 200,
+                    "description": "Credits earned from which this year's limit applies."
+                  },
+                  "year": {
+                    "kind": "int",
+                    "min": 0,
+                    "description": "The most borrowed in a year (two terms)."
+                  }
+                }
+              }
+            },
+            "grace": {
+              "kind": "int",
+              "min": 0,
+              "max": 400,
+              "description": "Days after the last term before repayment starts."
+            },
+            "months": {
+              "kind": "int",
+              "min": 1,
+              "max": 600,
+              "description": "Months of the standard plan."
+            },
+            "leastMonth": {
+              "kind": "int",
+              "min": 0,
+              "description": "The least monthly payment on the standard plan."
+            }
+          }
         }
       }
     }

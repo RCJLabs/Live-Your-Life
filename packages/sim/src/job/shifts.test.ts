@@ -257,9 +257,12 @@ describe('payday (D38)', () => {
     const state = workDays([1, 2, 3]);
     const friday = play(game, sim, state, at(state, 4, 6, 1));
     const check = paycheck(taxes(), payFor(1440, testCook().wage), 52, 0);
-    expect(friday.of('job/paid')).toEqual([{ type: 'job/paid', minutes: 1440, ...check }]);
+    const { gross, net } = check;
+    expect(friday.of('job/paid')).toEqual([{ type: 'job/paid', minutes: 1440, gross, withheld: gross - net, net }]);
     expect(check.gross).toBe(353_52);
     expect(friday.fact('economy.amount', { resource: 'cash' })).toBe(START_CASH + check.net);
+    // The year's pay, as aid counts it (M2.8 step 4).
+    expect(friday.fact('education.aid-income')).toBe(check.gross);
     expect(friday.fact('job.unpaid')).toBe(0);
     expect(job(friday.state).earned).toBe(353_52);
   });

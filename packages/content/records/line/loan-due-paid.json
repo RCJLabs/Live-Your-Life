@@ -1,0 +1,8 @@
+{
+  "beat": "education/loan-due",
+  "when": {
+    "field": "paid",
+    "is": "true"
+  },
+  "text": "{you} paid {cents} on the student loans."
+}

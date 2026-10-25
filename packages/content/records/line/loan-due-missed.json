@@ -1,0 +1,8 @@
+{
+  "beat": "education/loan-due",
+  "when": {
+    "field": "paid",
+    "is": "false"
+  },
+  "text": "A student loan payment of {cents} came due, and {you} could not pay it."
+}

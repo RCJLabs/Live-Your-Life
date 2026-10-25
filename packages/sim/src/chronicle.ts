@@ -200,6 +200,10 @@ export function lineFor(
       case 'paid':
       case 'demand':
       case 'left':
+      case 'charge':
+      case 'pell':
+      case 'borrowed':
+      case 'cash':
         return money(v as number);
       default:
         return v === undefined ? fail(`"${line.text}" has {${key}}, which ${type} doesn't carry`) : String(v);
