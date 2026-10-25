@@ -1,0 +1,8 @@
+{
+  "beat": "circle/stayed",
+  "when": {
+    "field": "yes",
+    "is": "false"
+  },
+  "text": "{name} went home alone that night."
+}

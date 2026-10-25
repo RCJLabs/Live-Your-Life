@@ -90,6 +90,28 @@ export interface CourtshipRecord {
   readonly leave: { readonly regard: number; readonly chance: number };
   readonly found: { readonly base: number; readonly shared: number; readonly most: number; readonly regard: number };
   readonly split: { readonly regard: number };
+  readonly night: { readonly after: number; readonly living: number; readonly odds: Odds; readonly regard: number };
+  readonly moveIn: Step;
+  readonly propose: Step;
+  readonly licence: {
+    readonly fee: number;
+    readonly wait: number;
+    readonly valid: number;
+    readonly opens: number;
+    readonly closes: number;
+  };
+  readonly wedding: { readonly fee: number; readonly minutes: number };
+  readonly divorce: { readonly fee: number; readonly wait: number };
+  readonly share: { readonly rent: number };
+}
+
+/** A step a couple takes when one asks and the other says yes: after days dating, more likely each month. */
+export interface Step {
+  readonly after: number;
+  readonly month: number;
+  readonly odds: Odds;
+  readonly no: number;
+  readonly again: number;
 }
 
 export function courtshipOf(store: RecordStore): CourtshipRecord {

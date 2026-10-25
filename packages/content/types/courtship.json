@@ -298,6 +298,290 @@
           "description": "Their regard when you end it."
         }
       }
+    },
+    "night": {
+      "kind": "group",
+      "description": "Staying the night (D90), after a date or at home together: the chance they want to, and what it gives.",
+      "fields": {
+        "after": {
+          "kind": "int",
+          "min": 0,
+          "max": 240,
+          "description": "Minutes after a date ends you can still ask."
+        },
+        "living": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Points added when you live together."
+        },
+        "odds": {
+          "kind": "group",
+          "description": "The chance they say yes.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": -100,
+              "max": 100
+            },
+            "attraction": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of their attraction to you."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of regard above 50, taken away below it."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of familiarity."
+            },
+            "low": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "high": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
+          }
+        },
+        "regard": {
+          "kind": "int",
+          "min": 0,
+          "max": 20,
+          "description": "Regard when you do."
+        }
+      }
+    },
+    "moveIn": {
+      "kind": "group",
+      "description": "Asking them to move in, sharing the rent (D95).",
+      "fields": {
+        "after": {
+          "kind": "int",
+          "min": 0,
+          "max": 3650,
+          "description": "Days dating before it can be asked."
+        },
+        "month": {
+          "kind": "int",
+          "min": 0,
+          "max": 20,
+          "description": "Points for each 30 days dating."
+        },
+        "odds": {
+          "kind": "group",
+          "description": "The chance they say yes.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": -100,
+              "max": 100
+            },
+            "attraction": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of their attraction to you."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of regard above 50, taken away below it."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of familiarity."
+            },
+            "low": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "high": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
+          }
+        },
+        "no": {
+          "kind": "int",
+          "min": -30,
+          "max": 0,
+          "description": "Regard after a no."
+        },
+        "again": {
+          "kind": "int",
+          "min": 1,
+          "max": 365,
+          "description": "Days before it can be asked again."
+        }
+      }
+    },
+    "propose": {
+      "kind": "group",
+      "description": "Asking them to marry you.",
+      "fields": {
+        "after": {
+          "kind": "int",
+          "min": 0,
+          "max": 3650,
+          "description": "Days dating before it can be asked."
+        },
+        "month": {
+          "kind": "int",
+          "min": 0,
+          "max": 20,
+          "description": "Points for each 30 days dating."
+        },
+        "odds": {
+          "kind": "group",
+          "description": "The chance they say yes.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": -100,
+              "max": 100
+            },
+            "attraction": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of their attraction to you."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of regard above 50, taken away below it."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 20,
+              "description": "Points for each 10 of familiarity."
+            },
+            "low": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "high": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            }
+          }
+        },
+        "no": {
+          "kind": "int",
+          "min": -30,
+          "max": 0,
+          "description": "Regard after a no."
+        },
+        "again": {
+          "kind": "int",
+          "min": 1,
+          "max": 365,
+          "description": "Days before it can be asked again."
+        }
+      }
+    },
+    "licence": {
+      "kind": "group",
+      "description": "Michigan's marriage licence, from the county clerk on a weekday (CALIBRATION.md).",
+      "fields": {
+        "fee": {
+          "kind": "int",
+          "min": 0,
+          "max": 100000,
+          "description": "Cents."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 30,
+          "description": "Days before it can be used."
+        },
+        "valid": {
+          "kind": "int",
+          "min": 1,
+          "max": 365,
+          "description": "Days after applying it can be used in."
+        },
+        "opens": {
+          "kind": "int",
+          "min": 0,
+          "max": 23,
+          "description": "The clerk's hour of opening."
+        },
+        "closes": {
+          "kind": "int",
+          "min": 0,
+          "max": 24,
+          "description": "And of closing."
+        }
+      }
+    },
+    "wedding": {
+      "kind": "group",
+      "description": "A ceremony before a magistrate in office hours (D95).",
+      "fields": {
+        "fee": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000000,
+          "description": "Cents."
+        },
+        "minutes": {
+          "kind": "int",
+          "min": 10,
+          "max": 600
+        }
+      }
+    },
+    "divorce": {
+      "kind": "group",
+      "description": "A divorce with no children, uncontested (CALIBRATION.md).",
+      "fields": {
+        "fee": {
+          "kind": "int",
+          "min": 0,
+          "max": 1000000,
+          "description": "Cents to file."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 1,
+          "max": 730,
+          "description": "Days from filing to the judgment."
+        }
+      }
+    },
+    "share": {
+      "kind": "group",
+      "description": "What a partner you live with pays toward the rent, if they work.",
+      "fields": {
+        "rent": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Per hundred of the rent."
+        }
+      }
     }
   }
 }

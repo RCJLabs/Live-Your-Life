@@ -18,6 +18,10 @@ export const RENT_TIMER = 'rent';
 export const homeModule = defineModule<HomeSlice>({
   id: 'home',
   init: () => ({ owed: 0 }),
+  events: {
+    // Heard by the people you know (M2.6): a partner you live with pays their share.
+    rent: { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'Rent came due' },
+  },
   facts: {
     owed: { read: ({ state }) => state.owed, domain: { type: 'int', min: 0 }, label: 'rent owed' },
   },

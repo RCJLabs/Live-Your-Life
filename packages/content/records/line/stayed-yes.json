@@ -1,0 +1,8 @@
+{
+  "beat": "circle/stayed",
+  "when": {
+    "field": "yes",
+    "is": "true"
+  },
+  "text": "{you} and {name} spent the night together."
+}

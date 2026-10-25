@@ -1,0 +1,8 @@
+{
+  "beat": "circle/moved-in",
+  "when": {
+    "field": "yes",
+    "is": "false"
+  },
+  "text": "{you} asked {name} to move in. {name} was not ready."
+}

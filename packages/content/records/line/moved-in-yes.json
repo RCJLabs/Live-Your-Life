@@ -1,0 +1,8 @@
+{
+  "beat": "circle/moved-in",
+  "when": {
+    "field": "yes",
+    "is": "true"
+  },
+  "text": "{name} moved in with {you}."
+}

@@ -64,7 +64,7 @@ function together(ctx: ModuleContext<CircleSlice>, seed: number, person: number,
   }
   const kept = populationOf(ctx.content).ties.kept;
   if (slice.ties.length >= kept) {
-    const known = slice.ties.filter((t) => t.status !== 'dating');
+    const known = slice.ties.filter((t) => t.status === 'known' || t.status === 'ex' || t.status === 'divorced');
     if (known.length === 0) return;
     const least = known.reduce((a, b) => (b.together < a.together ? b : a));
     if (least.together > MET_ONCE) return;

@@ -7,7 +7,8 @@
 import type { Beat, ModuleContext } from '@eb/core';
 import { end } from './court.ts';
 import { courtshipOf } from './records.ts';
-import type { CircleSlice } from './state.ts';
+import { type CircleSlice, partnered, type Tie } from './state.ts';
+import { judged } from './together.ts';
 
 type Ctx = ModuleContext<CircleSlice>;
 
@@ -26,14 +27,24 @@ function missedDates(ctx: Ctx, now: number): void {
 
 const nameFor = (ctx: Ctx, person: number) => ctx.fact('circle.name', { person }) as string;
 
-/** A day gone by for each person you're dating: drift apart unseen, and perhaps an end. */
+/**
+ * A day gone by: a licence lapses unused, a divorce comes to judgment, and for each partner the
+ * day apart or together, and perhaps an end. Someone who lives with you is seen every day.
+ */
 function dayFor(ctx: Ctx, day: number): void {
   const c = courtshipOf(ctx.content);
   const rng = ctx.rng('circle');
   for (const t of ctx.read().ties) {
-    if (t.status !== 'dating') continue;
+    if (t.licence && t.licence.until < day) {
+      const w = ctx.write().ties.find((x) => x.person === t.person) as Tie;
+      w.licence = null;
+      ctx.emit('licence-lapsed', { person: w.person, name: nameFor(ctx, w.person) });
+    }
+    if (t.hearing >= 0 && t.hearing <= day) judged(ctx, t);
+    if (!partnered(t)) continue;
     const w = ctx.write().ties.find((x) => x.person === t.person);
     if (!w) continue;
+    if (w.living) w.seen = day;
     if (day - w.seen > c.drift.days) w.regard = Math.max(0, w.regard - c.drift.per);
     if (w.regard < c.leave.regard && rng.int(0, 99) < c.leave.chance) end(ctx, w, 'them');
   }
@@ -45,7 +56,7 @@ export function circleDays(ctx: Ctx, _event: Beat): void {
   const settled = ctx.read().settled;
   // Nobody dated, nothing planned: nothing to settle, and no record read, so a life from content
   // without courtship (a replay by the pack it was saved with) passes its time as it did.
-  if (!ctx.read().ties.some((t) => t.status === 'dating' || t.date)) {
+  if (!ctx.read().ties.some((t) => partnered(t) || t.date || t.licence || t.hearing >= 0)) {
     if (day > settled) ctx.write().settled = day;
     return;
   }

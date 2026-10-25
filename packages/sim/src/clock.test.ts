@@ -33,12 +33,19 @@ describe('minutesUntil', () => {
 describe('the clock', () => {
   it("allows the time, clock, life, home, job, market, trade, circle, ties, law and you actions out in the world, and no shift event's choice", () => {
     expect(game.allowedActions(fresh())).toEqual([
+      'circle/ask-in',
       'circle/ask-out',
       'circle/break-up',
       'circle/drawn-to',
+      'circle/file-divorce',
       'circle/go-on-date',
       'circle/go-out',
+      'circle/licence',
+      'circle/marry',
       'circle/plan-date',
+      'circle/propose',
+      'circle/separate',
+      'circle/stay-night',
       'circle/talk',
       'clock/wait-until',
       'deal/buy',

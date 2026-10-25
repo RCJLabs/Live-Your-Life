@@ -61,5 +61,64 @@
   },
   "split": {
     "regard": -15
+  },
+  "night": {
+    "after": 60,
+    "living": 30,
+    "odds": {
+      "base": 10,
+      "attraction": 4,
+      "regard": 4,
+      "familiarity": 1,
+      "low": 0,
+      "high": 95
+    },
+    "regard": 2
+  },
+  "moveIn": {
+    "after": 60,
+    "month": 4,
+    "odds": {
+      "base": -40,
+      "attraction": 2,
+      "regard": 5,
+      "familiarity": 2,
+      "low": 0,
+      "high": 90
+    },
+    "no": -4,
+    "again": 30
+  },
+  "propose": {
+    "after": 180,
+    "month": 2,
+    "odds": {
+      "base": -60,
+      "attraction": 2,
+      "regard": 6,
+      "familiarity": 2,
+      "low": 0,
+      "high": 90
+    },
+    "no": -8,
+    "again": 60
+  },
+  "licence": {
+    "fee": 2000,
+    "wait": 3,
+    "valid": 33,
+    "opens": 9,
+    "closes": 16
+  },
+  "wedding": {
+    "fee": 5000,
+    "minutes": 60
+  },
+  "divorce": {
+    "fee": 17500,
+    "wait": 60
+  },
+  "share": {
+    "rent": 50
   }
 }

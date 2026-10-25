@@ -1,0 +1,8 @@
+{
+  "beat": "circle/proposed",
+  "when": {
+    "field": "yes",
+    "is": "false"
+  },
+  "text": "{you} asked {name} to marry. {name} said no."
+}
