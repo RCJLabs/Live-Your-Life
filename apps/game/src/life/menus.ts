@@ -6,6 +6,7 @@
  */
 import type { Action } from '@eb/core';
 import { fill, type LawState, shiftEventOf, type TiesSlice } from '@lyl/sim';
+import { hospitalSheet } from './care.ts';
 import { button, el } from './dom.ts';
 import type { Place } from './places.ts';
 import type { Life } from './session.ts';
@@ -135,6 +136,8 @@ export function modeSheet(life: Life): { title: string; lead: string; items: Ite
   if (mode.id === 'world') return null;
   const crime = crimeSheet(life);
   if (crime) return crime;
+  const hospital = hospitalSheet(life);
+  if (hospital) return hospital;
   // A death (M2.7, D103): the world has stopped; the heir comes with step 3.
   if (mode.id === 'dead') {
     const age = life.fact('circle.your-age') as number;

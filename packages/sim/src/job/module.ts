@@ -150,6 +150,10 @@ export function jobModule(hire?: Hire) {
     events: {
       worked: { args: SHIFT_MINUTES, label: 'Worked a shift, or part of it' },
       late: { args: SHIFT_MINUTES, label: 'Started a shift late' },
+      'called-in-sick': {
+        args: { day: { type: 'int', min: 0 }, shift: { type: 'text' } },
+        label: 'Called in sick',
+      },
       'no-show': {
         args: { day: { type: 'int', min: 0 }, shift: { type: 'text' }, warnings: { type: 'int', min: 1 } },
         label: "Didn't show for a shift",

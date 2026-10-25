@@ -4,13 +4,16 @@
  * and someone dating, after a yes. No test runner in here, as in slice.ts.
  */
 import { type Beat, type GameState, Rng, turnFor } from '@eb/core';
+import { PACK } from '@lyl/content';
 import { WEEKDAYS } from '../src/calendar.ts';
 import { presentAt, rosterNow } from '../src/circle/meet.ts';
 import { type CircleSlice, newTie, type Tie } from '../src/circle/state.ts';
 import type { Roster } from '../src/people/roster.ts';
 import { play, sliceGame, sliceSim, waitUntil } from './slice.ts';
 
-export const sim = sliceSim();
+// Without the illness record (M2.7): a cold in a test that skips days unfed would put its couple
+// in hospital, which is the health module's to test, not the circle's.
+export const sim = sliceSim({ ...PACK.records, illness: {} });
 export const game = sliceGame({ people: 1000 });
 
 export const circle = (s: GameState) => (s as unknown as { circle: CircleSlice }).circle;

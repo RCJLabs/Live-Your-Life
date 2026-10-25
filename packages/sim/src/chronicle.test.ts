@@ -57,6 +57,8 @@ const RARE = [
   'family/plan-closed',
   'lives/died',
   'circle/died',
+  'job/called-in-sick',
+  'health/saw-doctor',
   'family/custody',
   'deal/paid-back',
   'deal/cut-off',

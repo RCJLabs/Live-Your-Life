@@ -97,6 +97,8 @@ Figures the sim uses before their ledger row is filled. None is a real figure. E
 When a figure is softened or sharpened for play, it is written here with the real figure beside it.
 
 - **Pay comes the Friday after the work, not a week or two later.** Most restaurants pay a week or two in arrears, so a new hire's first paycheck comes after ten days or more. The slice is one week, and it would see no pay at all.
+- **A hospital takes you in only for an illness or injury.** Health falls at the needs' pace, which brings an unfed day to zero; a real day without food puts nobody in hospital (ROADMAP open question 91).
+- **Coverage is Medicaid or none.** Most Michigan workers are covered by an employer or the Marketplace; the careers don't offer cover yet, and the Marketplace's subsidies aren't modelled.
 - **Withholding is not the tax owed.** A year's withholding is settled by a return, with a refund or a bill. The return is the money milestone's; until then, what is withheld is gone.
 
 ## Theft and the law (M1.5, to fill)
@@ -256,8 +258,14 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | --- | --- | --- | --- | --- |
 | A year's chance of dying, by age and body | per 100,000, a straight line between rows from 18 to 110; a body that can carry reads the life table's female column, one that can't its male | `mortality/united-states.json` | CDC's United States Life Tables, 2021 (NVSR 72-12, Table 2), through search summaries: male 0.001361 at 20, 0.002048 at 40, 0.006679 at 50, 0.014341 at 60. Every other row, and the whole female column, is a placeholder from memory of the table's shape: cdc.gov, ftp.cdc.gov and ssa.gov couldn't be reached from the build environment | 4 male rows traced; the rest placeholders, to check against Table 2 and 3 |
 | A month's chance | the year's over 12, rolled every 30 days; at 18, about 1 in 100,000 a month for a body that can't carry | `lives/module.ts`, `MONTH` | derived. A twelfth of the year's chance understates it slightly when the chance is large (at a year's 10%, by about 5%); kept for whole-number rolls | derived, a departure at old ages |
-| Health let fall | below 20, the chance is tripled | `mortality/united-states.json`, `health` | none: a stand-in until illness (step 2) names what raises it | (tune) |
+| Health let fall | below 20, the chance is tripled | `mortality/united-states.json`, `health` | none: a stand-in. Illness (step 2) takes health but doesn't yet raise the chance of its own | (tune) |
 | Body for the table | the life table's sex, read as the body's | `lives/module.ts` | the tables are by sex; the game's bodies (D96) are the nearest it holds | a departure |
+| A cold | 250 in 100 people a year; 7 days; no work missed | `illness/michigan.json` | CDC's common cold page, through search summaries: adults have 2 to 3 colds a year, lasting 7 to 10 days | secondary |
+| The flu | 12 in 100 a year; 7 days, 4 off work; a visit shortens it by a day | `illness/michigan.json` | CDC's 2023–24 burden estimate, through search summaries: about 40 million illnesses and 18 million medical visits, among about 335 million people. The days off and the day a visit saves (antivirals) are placeholders | rate secondary; days (tune) |
+| An injury at work | 1 in 100 full-time years, by the minutes worked (2,000 hours a year); 10 days, 8 off; a visit saves 2 | `illness/michigan.json`, `shiftChance` | BLS's 2023 Survey of Occupational Injuries and Illnesses, through search summaries: 0.9 cases with days away from work per 100 full-time workers, a median of about 8 days away | secondary |
+| A doctor's visit | $171 without cover; $2 with Medicaid; 90 minutes; weekdays 08:00 to 17:00 | `illness/michigan.json`, `visit` | Zocdoc's 2024 price guide, through search summaries: $171 for a primary care visit without insurance. Healthy Michigan's copay for an office visit, $2, from search summaries | secondary |
+| A hospital day | $3,000 without cover; nothing with Medicaid; 4 days; 20 health a day | `illness/michigan.json`, `hospital` | a placeholder near KFF's expenses per inpatient day for Michigan's hospitals, not traced; the stay and the health are (tune). An emergency visit alone runs about $2,715 (Zocdoc, secondary) | placeholder |
+| Medicaid's line | $1,732 a month for one, $632 for each more in the household; a wage counted at 130 hours a month | `illness/michigan.json`, `medicaid` | Healthy Michigan Plan, 2025: 133% of the poverty line (138% with the disregard), $20,780 a year for one, through search summaries; each more person is the 2025 guideline's step, $5,500, at 138%. 130 hours is 30 a week, the full-time line | secondary |
 
 ## Open questions
 

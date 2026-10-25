@@ -184,6 +184,11 @@ export function shiftOver(ctx: JobContext, day: number): void {
   const today = todayOf(ctx);
   ctx.write().signed = slice.signed.filter((x) => x.day !== day);
   if (s.in === null) {
+    // Too ill or hurt to work (M2.7, D104): a sick call, unpaid, and no warning.
+    if (ctx.fact('health.off-work') === true) {
+      ctx.emit('called-in-sick', { day, shift: s.shift });
+      return;
+    }
     const warnings = [...activeWarnings(slice, career, today.tick), today.tick];
     ctx.write().warnings = warnings;
     ctx.emit('no-show', { day, shift: s.shift, warnings: warnings.length });

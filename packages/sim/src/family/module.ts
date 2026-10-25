@@ -152,6 +152,12 @@ export const familyModule = defineModule<FamilySlice>({
       label: 'its week, or -1',
     },
     children: { read: ({ state }) => state.children.length, domain: { type: 'int', min: 0 }, label: 'your children' },
+    // Your household for Medicaid's line (M2.7, D105): the children who live with you.
+    'with-you': {
+      read: ({ state }) => state.children.filter((c) => c.with === 'you').length,
+      domain: { type: 'int', min: 0 },
+      label: 'your children who live with you',
+    },
     owed: {
       read: ({ state }) => state.owed,
       domain: { type: 'int', min: 0 },
