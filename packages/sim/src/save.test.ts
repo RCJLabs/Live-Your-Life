@@ -266,6 +266,19 @@ describe('the save fixtures', () => {
     expect((result.state.circle as { self: number }).self).toBe(-1);
   });
 
+  it('loads the twelfth, saved before the GED, migrating the education from 1 to 2 (M2.8)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v12.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 1, to: 2 }]);
+    expect(result.report.added).toEqual([]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v12-shape', sim).education));
+    expect((result.state.education as { ged: unknown }).ged).toEqual({ passed: [], prep: {} });
+  });
+
   it('migrates a version-4 circle’s ties as never asked to stay', () => {
     const { night: _n, ...old } = { ...newTie(5, 300, 2), status: 'dating' as const, nights: 4 };
     expect(migrateCircle5({ ...noOne(), ties: [old] }).ties[0]).toEqual({ ...old, night: -1 });
