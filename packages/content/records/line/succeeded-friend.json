@@ -1,0 +1,8 @@
+{
+  "beat": "lives/succeeded",
+  "when": {
+    "field": "kind",
+    "is": "friend"
+  },
+  "text": "{first} {last}, a close friend, took up the life that was left, with {left} to it."
+}

@@ -83,9 +83,14 @@ export interface CircleSlice {
   settled: number;
   /** Whether your body can carry a pregnancy (D96), or null until you say: then it is drawn from the seed. */
   carries: boolean | null;
+  /** Your own place in the city, once an heir who lived there is you (M2.7 step 3), or -1. */
+  self: number;
 }
 
-export const noOne = (): CircleSlice => ({ ties: [], out: -1, drawnTo: null, settled: 0, carries: null });
+export const noOne = (): CircleSlice => ({ ties: [], out: -1, drawnTo: null, settled: 0, carries: null, self: -1 });
+
+/** Version 6 (M2.7 step 3): your own place in the city, none until an heir is you. */
+export const migrateCircle6 = (slice: unknown): CircleSlice => ({ ...(slice as CircleSlice), self: -1 });
 
 /** Version 4 (M2.6 step 4): your body, unsaid until you say. */
 export const migrateCircle4 = (slice: unknown): CircleSlice => ({ ...(slice as CircleSlice), carries: null });

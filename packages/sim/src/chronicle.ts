@@ -189,6 +189,7 @@ export function lineFor(
       case 'owed':
       case 'paid':
       case 'demand':
+      case 'left':
         return money(v as number);
       default:
         return v === undefined ? fail(`"${line.text}" has {${key}}, which ${type} doesn't carry`) : String(v);

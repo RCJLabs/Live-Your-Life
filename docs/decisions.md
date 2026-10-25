@@ -833,6 +833,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Yes, with newcomers (recommended, chosen). Only you and your household age and die.
 
+### D107. The heir can be an adult child, a spouse or live-in partner, or a close friend. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** D20's order, with each kind as the sim holds it. A child born in play, 18 or over, the eldest first. Then a spouse, or a partner who lived with you: the tier-1 person you become. Then a child under 18, as a ward (D108). Then a close friend: someone you know at the highest regard, past a bar (tune). You become them: their name, age and body, with nothing of your skills, your job or your record.
+
+**Options considered.** A child, a spouse and a close friend (recommended, chosen). A child and a spouse only. Children only for now.
+
+### D108. A ward's years pass as a jump to their 18th birthday, with a summary. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** When the heir is a child under 18, the save jumps to their 18th birthday. The city's people are worked out from the seed by the day, so who died and who came is known without passing the years; the summary says who raised them, who died, and what was left. No shifts, rent or illness are lived in those years.
+
+**Options considered.** A jump with a summary (recommended, chosen). The years passed a month at a time with a guardian's household running: truer, slow on a phone, and no guardian model exists.
+
+### D109. The estate follows Michigan's rules, simplified. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Debts are paid from what you leave first: rent owed, the court's, care's, the family's bills and child support behind. Debts beyond the estate die with it; the heir owes nothing of them. An estate within Michigan's small-estate limit passes by affidavit at no cost; above it, probate costs a share (tune). The rest goes to the heir. The intestate shares between a spouse and children wait.
+
+**Options considered.** Michigan's rules, simplified (recommended, chosen). Michigan's intestacy in full (EPIC's shares). All of it less debts, with no probate.
+
+### D110. The epilogue reads the page's journal. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** The life's epilogue, and an heir's reading of the family's record, come from the journal the page keeps beside the save (D52). The sim's chronicle stays where it is. Answers open question 46 in ROADMAP.md.
+
+**Options considered.** The page's journal (recommended, chosen). The chronicle moved into the sim as a module, so bots and replays could read it.
+
 ---
 
 ## Open items

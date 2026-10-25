@@ -97,6 +97,10 @@ export function tiesModule(hire?: Hired) {
       'cover-refused': (ctx, effect) => ctx.emit('refused', { day: dayOf(effect) }),
     },
     on: {
+      // The coworker was yours, at your job: an heir has neither (M2.7 step 3).
+      'lives/succeeded': (ctx) => {
+        Object.assign(ctx.write(), nobody());
+      },
       'job/worked': (ctx, event) => {
         if (ctx.read().coworker && besideOn(ctx, dayOf(event))) ctx.write().together += event.minutes as number;
       },

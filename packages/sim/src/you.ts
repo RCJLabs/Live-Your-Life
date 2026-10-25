@@ -49,6 +49,17 @@ export const youModule = defineModule<YouSlice>({
       ctx.write().commute = minutes;
     },
   },
+  on: {
+    // An heir carries on as you (M2.7 step 3, D107): their name, and a walk the stage has yet to measure.
+    'lives/succeeded': (ctx, event) => {
+      Object.assign(ctx.write(), {
+        first: event.first as string,
+        last: event.last as string,
+        pronouns: event.pronouns as Pronouns,
+        commute: null,
+      });
+    },
+  },
   facts: {
     last: { read: ({ state }) => state.last, label: 'your last name' },
     pronouns: {

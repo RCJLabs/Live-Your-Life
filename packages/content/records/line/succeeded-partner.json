@@ -1,0 +1,8 @@
+{
+  "beat": "lives/succeeded",
+  "when": {
+    "field": "kind",
+    "is": "partner"
+  },
+  "text": "{first} {last}, the partner left behind, took up the family’s life, with {left} left to them."
+}

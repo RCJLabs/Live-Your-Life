@@ -108,7 +108,8 @@ export function meetAt(ctx: ModuleContext<CircleSlice>, place: number, from: num
     for (let m = 0; m < Math.min(perHour, here.length) && counted > 0; m++) {
       const at = mix(seed, 72, hour, m) % here.length;
       const person = here.splice(at, 1)[0] as number;
-      together(ctx, seed, person, counted, onDay);
+      // An heir who lived in the city doesn't meet themselves (M2.7 step 3).
+      if (person !== ctx.read().self) together(ctx, seed, person, counted, onDay);
     }
   }
 }

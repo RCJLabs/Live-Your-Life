@@ -2,10 +2,13 @@
  * Your life's length (M2.7 step 1, D103). Your age is the start's and the days since, never
  * stored; each 30 days the life table's chance of dying within that month at your age and body is
  * rolled, raised while your health is let fall. A death ends the life: the world stops, and the
- * heir (step 3) is the only way on.
+ * heir is the only way on (step 3, D20, D107): the estate is settled (heir.ts), every module hears
+ * `succeeded` and sets aside what was yours alone, and the heir lives on as you.
  */
 import { defineModule, type ModuleContext, type RecordStore } from '@eb/core';
 import { smallRoll } from '../odds.ts';
+import { ADULT } from '../people/who.ts';
+import { estateNow, heirOf } from './heir.ts';
 import { mortalityOf, yearChance } from './records.ts';
 
 /** Days between the rolls: a month (tune). */
@@ -16,7 +19,14 @@ export interface LivesSlice {
   settled: number;
   /** The day you died, or -1. */
   died: number;
+  /** The lives lived before this one in the family: 0 for the first (M2.7 step 3). */
+  gen: number;
+  /** The day you were born, counted from the life's first day: the start's age before it, or an heir's own. */
+  born: number;
 }
+
+/** The first life's birthday: its age on the first day, before it. */
+export const FIRST_BORN = -ADULT * 365;
 
 type View = {
   readonly content: RecordStore;
@@ -50,10 +60,29 @@ function settle(ctx: Ctx): void {
 
 export const livesModule = defineModule<LivesSlice>({
   id: 'lives',
-  version: 1,
-  init: () => ({ settled: -1, died: -1 }),
+  // 2 (M2.7 step 3): the generation and the day you were born, for an heir.
+  version: 2,
+  migrate: { 2: (slice) => ({ ...(slice as object), gen: 0, born: FIRST_BORN }) },
+  init: () => ({ settled: -1, died: -1, gen: 0, born: FIRST_BORN }),
   events: {
     died: { args: { cause: { type: 'enum', values: ['age'] }, age: { type: 'int', min: 0 } }, label: 'You died' },
+    succeeded: {
+      args: {
+        kind: { type: 'enum', values: ['child', 'partner', 'friend'] },
+        person: { type: 'int', min: -1 },
+        child: { type: 'int', min: -1 },
+        first: { type: 'text' },
+        last: { type: 'text' },
+        pronouns: { type: 'enum', values: ['she', 'he', 'they'] },
+        carries: { type: 'bool' },
+        born: { type: 'int' },
+        gen: { type: 'int', min: 1 },
+        left: { type: 'int', min: 0 },
+        debts: { type: 'int', min: 0 },
+        probate: { type: 'int', min: 0 },
+      },
+      label: 'Someone carried on',
+    },
   },
   facts: {
     'month-chance': {
@@ -62,9 +91,47 @@ export const livesModule = defineModule<LivesSlice>({
       label: 'a month’s chance of dying, per 100,000',
     },
     dead: { read: ({ state }) => state.died >= 0, domain: { type: 'bool' }, label: 'whether you have died' },
+    born: { read: ({ state }) => state.born, domain: { type: 'int' }, label: 'the day you were born' },
+    gen: { read: ({ state }) => state.gen, domain: { type: 'int', min: 0 }, label: 'the lives before this one' },
   },
-  actions: {},
+  actions: {
+    // The heir carries on (D20, D107). A ward's jump to 18 is step 3b (D108).
+    succeed: {
+      run: (ctx) => {
+        if (ctx.read().died < 0) return ctx.refuse('alive');
+        const h = heirOf(ctx);
+        if (!h) return ctx.refuse('no-heir');
+        if (h.kind === 'ward') return ctx.refuse('ward');
+        // Wages owed are the estate's: the last paycheck is paid before it is settled.
+        ctx.apply({ effect: 'payday' });
+        const e = estateNow(ctx);
+        if (e.cash > e.left) ctx.apply({ effect: 'pay-cost', cost: { cash: e.cash - e.left } });
+        const gen = ctx.read().gen + 1;
+        const { kind, person, child, first, last, pronouns, carries, born } = h;
+        const w = ctx.write();
+        w.died = -1;
+        w.gen = gen;
+        w.born = born;
+        w.settled = ctx.fact('time.day') as number;
+        while (ctx.modes.current.id !== 'world') ctx.modes.pop();
+        ctx.emit('succeeded', {
+          ...{ kind, person, child, first, last, pronouns, carries, born, gen },
+          ...{ left: e.left, debts: e.debts, probate: e.probate },
+        });
+      },
+      options: (v) => {
+        if (v.state.died < 0) return [];
+        const h = heirOf(v);
+        return h && h.kind !== 'ward' ? [{}] : [];
+      },
+    },
+  },
   effects: {
+    // The estate and the heir as they would be now, for the page to show before you go on (D109).
+    estate: {
+      run: () => {},
+      preview: (ctx) => ({ ...estateNow(ctx), heir: heirOf(ctx) }),
+    },
     die: {
       run: (ctx, effect) => {
         if (ctx.read().died >= 0) return;
@@ -76,6 +143,6 @@ export const livesModule = defineModule<LivesSlice>({
     },
   },
   on: { 'time/passed': (ctx) => settle(ctx) },
-  // A death stops the world; nothing is offered until the heir (step 3).
-  modes: { dead: { actions: [] } },
+  // A death stops the world; only the heir goes on.
+  modes: { dead: { actions: ['lives/*'] } },
 });

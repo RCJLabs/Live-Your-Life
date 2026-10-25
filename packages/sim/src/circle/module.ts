@@ -37,6 +37,7 @@ import {
   talkRoll,
 } from './court.ts';
 import { circleDays } from './days.ts';
+import { circleHeirs, succeeded } from './heir.ts';
 import { hauntsOf, meetAt, nameOf, occupant, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
 import {
@@ -45,6 +46,7 @@ import {
   migrateCircle3,
   migrateCircle4,
   migrateCircle5,
+  migrateCircle6,
   noOne,
   partnered,
 } from './state.ts';
@@ -100,15 +102,18 @@ const occupantOf = (v: View, person: number): Occupant =>
   occupant(v.content, v.fact('people.seed') as number, person, v.fact('time.day') as number);
 const whoOf = (v: View, person: number): Who => occupantOf(v, person).who;
 
-const yourAge = (v: View): number => START_AGE + Math.floor((v.fact('time.day') as number) / 365);
+// The day you were born is the lives module's: the start's age before the first day, or an heir's own (M2.7 step 3).
+const yourAge = (v: View): number =>
+  Math.floor(((v.fact('time.day') as number) - (v.fact('lives.born') as number)) / 365);
 
 const tieOf = (v: View, person: number) => v.state.ties.find((t) => t.person === person);
 
 export const circleModule = defineModule<CircleSlice>({
   id: 'circle',
   // 2 (M2.6 step 2): courting. 3 (step 3): living together, marriage, divorce. 4 (step 4): your body.
-  version: 5,
-  migrate: { 2: migrateCircle2, 3: migrateCircle3, 4: migrateCircle4, 5: migrateCircle5 },
+  // 5 (step 6): the night asked. 6 (M2.7 step 3): your own place in the city, as an heir.
+  version: 6,
+  migrate: { 2: migrateCircle2, 3: migrateCircle3, 4: migrateCircle4, 5: migrateCircle5, 6: migrateCircle6 },
   init: noOne,
   events: {
     met: { args: { person: WHO, name: NAME }, label: 'Met someone' },
@@ -139,6 +144,8 @@ export const circleModule = defineModule<CircleSlice>({
       domain: { type: 'int', min: 1 },
       label: 'minutes until a date today begins',
     },
+    // A spouse or live-in partner, and the closest friend, as heirs (heir.ts, D107).
+    heirs: { read: circleHeirs, label: 'a partner and a close friend, as heirs' },
     known: { read: ({ state }) => state.ties.length, domain: { type: 'int', min: 0 }, label: 'people you know' },
     partners: {
       read: ({ state }) => state.ties.filter(partnered).length,
@@ -293,6 +300,15 @@ export const circleModule = defineModule<CircleSlice>({
   on: {
     // Missed dates, drift and endings, licences and judgments (days.ts).
     'time/passed': circleDays,
+    // You died and someone carries on (heir.ts).
+    'lives/succeeded': (ctx, event) =>
+      succeeded(ctx, {
+        person: event.person as number,
+        pronouns: event.pronouns as Pronouns,
+        carries: event.carries as boolean,
+        born: event.born as number,
+        gen: event.gen as number,
+      }),
     // A partner you live with pays their share (together.ts).
     'home/rent': (ctx) => shareRent(ctx),
     // Doing something other than socialising is leaving the place you went out to.

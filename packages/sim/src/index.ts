@@ -45,7 +45,7 @@ export {
 } from './chronicle.ts';
 export { courtshipOf } from './circle/records.ts';
 // The people you know and your family (M2.6).
-export { type CircleSlice, partnered, type Status, type Tie } from './circle/state.ts';
+export { type CircleSlice, newTie, partnered, type Status, type Tie } from './circle/state.ts';
 export {
   type BackPlan,
   type BlockPlan,
