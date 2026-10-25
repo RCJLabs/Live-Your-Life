@@ -1,0 +1,8 @@
+{
+  "beat": "lives/succeeded",
+  "when": {
+    "field": "kind",
+    "is": "newcomer"
+  },
+  "text": "Nobody was left to carry on the life of {was}. {first} {last} came to the city with nothing of it."
+}

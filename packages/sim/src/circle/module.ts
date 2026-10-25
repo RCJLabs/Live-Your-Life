@@ -303,6 +303,7 @@ export const circleModule = defineModule<CircleSlice>({
     // You died and someone carries on (heir.ts).
     'lives/succeeded': (ctx, event) =>
       succeeded(ctx, {
+        kind: event.kind as string,
         person: event.person as number,
         pronouns: event.pronouns as Pronouns,
         carries: event.carries as boolean,

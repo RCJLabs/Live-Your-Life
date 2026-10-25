@@ -1,5 +1,6 @@
 {
   "name": "Police recruit",
+  "insurance": true,
   "wage": 2604,
   "employers": {
     "districts": ["downtown"],

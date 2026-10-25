@@ -3,7 +3,7 @@
  * doctor and what a visit costs you, a hospital stay, and care's bills. Prices and days come from
  * the illness record and the sim's facts, never typed here (CLAUDE.md: no hand-typed numbers).
  */
-import { type HealthSlice, illnessOf, kindOf } from '@lyl/sim';
+import { type Coverage, type HealthSlice, hospitalCost, illnessOf, kindOf } from '@lyl/sim';
 import type { Item } from './menus.ts';
 import type { Waiting } from './pending.ts';
 import type { Life } from './session.ts';
@@ -11,13 +11,17 @@ import { dayText, money } from './words.ts';
 
 const health = (life: Life) => life.state.health as HealthSlice | undefined;
 
-/** What a visit or a hospital day costs you, said plainly. */
-const priced = (cents: number, medicaid: boolean) =>
-  medicaid
-    ? cents > 0
-      ? `Medicaid pays the rest; you pay ${money(cents)}.`
-      : 'Medicaid pays for it.'
-    : `It costs ${money(cents)}.`;
+/** What a visit or a hospital day costs you, said plainly, by who pays the rest. */
+const PAYER: Readonly<Record<Coverage, string | null>> = {
+  employer: 'Your employer’s plan',
+  medicaid: 'Medicaid',
+  none: null,
+};
+const priced = (cents: number, c: Coverage) => {
+  const payer = PAYER[c];
+  if (!payer) return `It costs ${money(cents)}.`;
+  return cents > 0 ? `${payer} pays the rest; you pay ${money(cents)}.` : `${payer} pays for it.`;
+};
 
 /** An illness or injury, and the doctor while the clinic is open; then what care has left owed. */
 export function careWaiting(life: Life): Waiting[] {
@@ -32,12 +36,12 @@ export function careWaiting(life: Life): Waiting[] {
     const off = s.ill.off > today ? ` You’re too ill to work until ${dayText(life, s.ill.off)}.` : '';
     const text = `${what}${off} You should be well ${dayText(life, s.ill.until)}.`;
     const visit = life.options().filter((a) => a.type === 'health/see-doctor');
-    const medicaid = life.fact('health.coverage') === 'medicaid';
+    const cover = life.fact('health.coverage') as Coverage;
     const cost = life.fact('health.visit-cost') as number;
     const doctor =
       s.ill.seen || k.visit === 0
         ? ''
-        : ` A doctor could see you on a weekday, ${String(r.visit.opens).padStart(2, '0')}:00 to ${r.visit.closes}:00. ${priced(cost, medicaid)}`;
+        : ` A doctor could see you on a weekday, ${String(r.visit.opens).padStart(2, '0')}:00 to ${r.visit.closes}:00. ${priced(cost, cover)}`;
     out.push({
       id: 'ill',
       kind: 'health',
@@ -64,9 +68,8 @@ export function hospitalSheet(life: Life): { title: string; lead: string; items:
   const s = health(life);
   const r = illnessOf(life.sim.content);
   if (life.mode.id !== 'hospital' || !s || !r) return null;
-  const medicaid = life.fact('health.coverage') === 'medicaid';
-  const cents = r.hospital[medicaid ? 'medicaid' : 'none'];
-  const lead = `You’re in hospital until ${dayText(life, s.hospital)}. Each day here: ${priced(cents, medicaid)}`;
+  const cover = life.fact('health.coverage') as Coverage;
+  const lead = `You’re in hospital until ${dayText(life, s.hospital)}. Each day here: ${priced(hospitalCost(r, cover), cover)}`;
   const items = life
     .options()
     .filter((a) => a.type === 'health/rest')

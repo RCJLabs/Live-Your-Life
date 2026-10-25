@@ -1,5 +1,6 @@
 {
   "name": "Detective",
+  "insurance": true,
   "wage": 2828,
   "employers": {
     "districts": ["downtown"],

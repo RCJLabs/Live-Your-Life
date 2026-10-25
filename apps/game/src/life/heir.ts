@@ -79,8 +79,11 @@ export function heirSheet(life: Life): { title: string; lead: string; items: Ite
   const heir = e.heir;
   const told = epilogue(life);
   let lead = `You died at ${age}.${told.length > 0 ? ` ${told.join(' ')}` : ''}`;
-  if (!heir) lead += ' Nobody is left to carry on. The city goes on without you.';
-  else {
+  if (!heir) {
+    lead += ' Nobody is left to carry on. What you left goes to the state, and the city goes on.';
+    const anew = life.options().find((a) => a.type === 'lives/start-over');
+    if (anew) items.push({ label: 'Start a new life in this city', action: anew });
+  } else {
     const years = Math.floor(((life.fact('time.day') as number) - heir.born) / 365);
     const who =
       heir.kind === 'ward'

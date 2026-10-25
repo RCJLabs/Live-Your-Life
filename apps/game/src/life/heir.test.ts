@@ -3,6 +3,7 @@ import { newTie } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { epilogue } from './heir.ts';
 import { modeSheet } from './menus.ts';
+import { monthLine } from './panel.ts';
 import { Life } from './session.ts';
 import { money } from './words.ts';
 
@@ -112,5 +113,23 @@ describe('the heir on the page (M2.7 step 3, D107, D109)', () => {
     // The epilogue is this life's, since the heir took it up: not the one before.
     expect(epilogue(life)).toEqual([`${you} and Sam were married before a magistrate.`]);
     expect(modeSheet(life)?.lead).toContain(`You died at ${life.fact('circle.your-age')}. ${you} and Sam were married`);
+  });
+
+  it('shows your chance of dying this month as the month’s roll has it, and why it rises with health let fall', () => {
+    const life = new Life('page-month');
+    const chance = life.fact('lives.month-chance') as number;
+    expect(monthLine(life)).toBe(
+      `At 18, your chance of dying this month is about 1 in ${Math.round(100_000 / chance).toLocaleString('en-US')}.`,
+    );
+    const s = life.state;
+    const low = new Life({
+      state: {
+        ...s,
+        life: { ...(s.life as object), levels: { ...(s.life as { levels: object }).levels, health: 1 } },
+      } as GameState,
+      kept: [],
+    });
+    expect(low.fact('lives.month-chance') as number).toBeGreaterThan(chance);
+    expect(monthLine(low)).toContain('With your health this low, that is 3 times what it would be.');
   });
 });

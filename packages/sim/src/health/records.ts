@@ -20,6 +20,7 @@ export interface IllnessRecord {
   readonly visit: {
     readonly none: number;
     readonly medicaid: number;
+    readonly employer?: number;
     readonly minutes: number;
     readonly opens: number;
     readonly closes: number;
@@ -28,6 +29,7 @@ export interface IllnessRecord {
     readonly days: number;
     readonly none: number;
     readonly medicaid: number;
+    readonly employer?: number;
     readonly health: number;
   };
   readonly medicaid: { readonly one: number; readonly each: number; readonly hours: number };
@@ -48,3 +50,12 @@ export const dayChance = (k: Kind): number => Math.round((k.perYear * 1000) / 36
 
 /** A shift's chance of a work injury, per 100,000: its yearly cases per 100 full-time workers, a year being 2,000 hours. */
 export const shiftChance = (k: Kind, minutes: number): number => Math.round((k.perYear * 1000 * minutes) / (2000 * 60));
+
+/** Who pays for your care (D105): an employer's plan, Healthy Michigan, or nobody. */
+export type Coverage = 'employer' | 'medicaid' | 'none';
+export const COVERAGES: readonly Coverage[] = ['employer', 'medicaid', 'none'];
+
+/** What a visit costs you by coverage. A record from before employer cover prices it as none. */
+export const visitCost = (r: IllnessRecord, c: Coverage): number => r.visit[c] ?? r.visit.none;
+/** What a day in hospital costs you by coverage. */
+export const hospitalCost = (r: IllnessRecord, c: Coverage): number => r.hospital[c] ?? r.hospital.none;

@@ -53,6 +53,8 @@ export interface CareerRecord {
   readonly place?: string;
   /** Cents an hour, before tax. */
   readonly wage: number;
+  /** Whether the employer offers health cover (D105). */
+  readonly insurance?: boolean;
   readonly employers: Employers;
   readonly requires?: { readonly record?: 'none' | 'no-theft' | 'no-felony' };
   readonly hiring: Hiring;

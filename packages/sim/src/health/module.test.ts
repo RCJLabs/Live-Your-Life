@@ -4,7 +4,17 @@ import { describe, expect, it } from 'vitest';
 import { advance, play, sliceGame, sliceSim, TEST_COOK, testCook, withCareer } from '../../test/slice.ts';
 import { MINUTES_PER_DAY } from '../calendar.ts';
 import { coverage, type HealthSlice } from './module.ts';
-import { dayChance, ILLNESS, type IllnessRecord, illnessOf, kindOf, shiftChance } from './records.ts';
+import type { Coverage } from './records.ts';
+import {
+  dayChance,
+  hospitalCost,
+  ILLNESS,
+  type IllnessRecord,
+  illnessOf,
+  kindOf,
+  shiftChance,
+  visitCost,
+} from './records.ts';
 
 const base = illnessOf(sliceSim().content) as IllnessRecord;
 /** The record with each kind's yearly rate set: 36,500 a hundred is a certain day. */
@@ -66,15 +76,15 @@ describe('illness, injury and care (M2.7 step 2, D104, D105)', () => {
     // Into a weekday's clinic hours.
     for (let i = 0; i < 8 && !game.options(s, sim).some((a) => a.type === 'health/see-doctor'); i++)
       s = play(game, sim, s, advance(60)).state;
-    const cov = game.fact(s, 'health.coverage', {}, sim) as 'medicaid' | 'none';
+    const cov = game.fact(s, 'health.coverage', {}, sim) as Coverage;
     expect(cov).toBe(coverage({ fact: (id, a) => game.fact(s, id, a ?? {}, sim) }, base));
-    expect(game.fact(s, 'health.visit-cost', {}, sim)).toBe(base.visit[cov]);
+    expect(game.fact(s, 'health.visit-cost', {}, sim)).toBe(visitCost(base, cov));
     const before = health(s).ill as NonNullable<HealthSlice['ill']>;
     const cash = game.fact(s, 'economy.amount', { resource: 'cash' }, sim) as number;
     const r = play(game, sim, s, { type: 'health/see-doctor' });
     const after = health(r.state).ill as NonNullable<HealthSlice['ill']>;
     expect(after.until).toBe(before.until - kindOf(base, 'flu').visit);
-    expect(game.fact(r.state, 'economy.amount', { resource: 'cash' }, sim)).toBe(cash - base.visit[cov]);
+    expect(game.fact(r.state, 'economy.amount', { resource: 'cash' }, sim)).toBe(cash - visitCost(base, cov));
     expect(game.options(r.state, sim).some((a) => a.type === 'health/see-doctor')).toBe(false);
   });
 
@@ -93,6 +103,18 @@ describe('illness, injury and care (M2.7 step 2, D104, D105)', () => {
     expect(at(Math.ceil(line) + 1)).toBe('none');
     // A partner and a child raise the line two steps.
     expect(at(Math.ceil(line) + 1, true, 7, 1)).toBe('medicaid');
+    // An employer's plan comes first, whatever the line (D105): the police's, not the diner's.
+    const insured = coverage(
+      {
+        fact: (id) =>
+          ({ 'job.insured': true, 'job.employed': true, 'job.wage': 0, 'circle.living': -1, 'family.with-you': 0 })[id],
+      },
+      base,
+    );
+    expect(insured).toBe('employer');
+    expect(visitCost(base, 'employer')).toBeLessThan(base.visit.none);
+    expect(sliceSim().content.get<{ insurance?: boolean }>('career', 'police-officer')?.insurance).toBe(true);
+    expect(sliceSim().content.get<{ insurance?: boolean }>('career', 'line-cook')?.insurance).toBeUndefined();
   });
 
   it('puts you in hospital when an illness takes your health to nothing, bills each day, and lets you out', () => {
@@ -115,8 +137,8 @@ describe('illness, injury and care (M2.7 step 2, D104, D105)', () => {
       s = play(game, sim, s, { type: 'health/rest' }).state;
     expect(game.fact(s, 'health.in-hospital', {}, sim)).toBe(false);
     expect(day(s, sim)).toBeGreaterThanOrEqual(until);
-    const cov = r.of('health/admitted')[0]?.coverage as 'medicaid' | 'none';
-    if (base.hospital[cov] > 0) {
+    const cov = r.of('health/admitted')[0]?.coverage as Coverage;
+    if (hospitalCost(base, cov) > 0) {
       const billed = (game.fact(s, 'health.owed', {}, sim) as number) > 0 || cov === 'medicaid';
       expect(billed || (game.fact(s, 'economy.amount', { resource: 'cash' }, sim) as number) >= 0).toBe(true);
     }
