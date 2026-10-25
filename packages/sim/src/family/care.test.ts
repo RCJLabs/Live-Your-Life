@@ -84,6 +84,59 @@ describe('a child’s care (M2.6 step 4b, D98)', () => {
     }
     expect(found).toBe(true);
     expect(fact(t, 'family.findings')).toBe(1);
+    // A finding opens a safety plan for the record's days (D102).
+    const plan = family(t).plan;
+    expect(plan).not.toBeNull();
+    expect((plan?.until as number) - (plan?.from as number)).toBe(care.plan.days);
+  });
+
+  it('moves a child short of care under a safety plan to the other parent, or into foster care (D102)', () => {
+    const planned = (seed: string) => {
+      const s = withBaby(seed);
+      const today = fact(s, 'time.day') as number;
+      return withFamily(s, { plan: { from: today, until: today + care.plan.days } });
+    };
+    // The other parent lives apart: the child goes to them.
+    let s = planned('plan-other');
+    const moved: string[] = [];
+    for (let d = 0; d < care.plan.short + 1 && moved.length === 0; d++) {
+      const r = play(game, sim, s, doing('sleep', 600), waitUntil(8));
+      moved.push(...r.of('family/removed').map((b) => b.to as string));
+      s = r.state;
+    }
+    expect(moved).toEqual(['them']);
+    expect(family(s).children[0]?.with).toBe('them');
+    expect(family(s).plan).toBeNull();
+    // The other parent lives with you: foster care.
+    let t = withCircle(planned('plan-care'), {
+      ties: [{ ...newTie(3, 6000, 0), status: 'married', living: true, since: 0 }],
+    });
+    for (let d = 0; d < care.plan.short + 1; d++) t = nextDay(t);
+    expect(family(t).children[0]?.with).toBe('care');
+    expect(fact(t, 'family.care-left')).toBe(0);
+  });
+
+  it('closes a safety plan at its end while the care is given', () => {
+    let s = withBaby('plan-kept');
+    const today = fact(s, 'time.day') as number;
+    s = withFamily(s, { plan: { from: today, until: today + 3 } });
+    let closed = false;
+    for (let d = 0; d < 6 && !closed; d++) {
+      const r = play(game, sim, careAll(s), doing('sleep', 600), waitUntil(8));
+      closed = r.of('family/plan-closed').length > 0;
+      s = r.state;
+    }
+    expect(closed).toBe(true);
+    expect(family(s).children[0]?.with).toBe('you');
+    // A plan still closes when no child lives with you any more, as after a parting.
+    let t = withBaby('plan-apart');
+    const day = fact(t, 'time.day') as number;
+    t = withFamily(t, {
+      plan: { from: day, until: day + 2 },
+      children: family(t).children.map((c) => ({ ...c, with: 'them' as const, parted: day })),
+    });
+    for (let d = 0; d < 4; d++) t = nextDay(t);
+    expect(family(t).plan).toBeNull();
   });
 
   it('brings no report while the care is given', () => {

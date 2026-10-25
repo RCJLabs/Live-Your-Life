@@ -1,0 +1,8 @@
+{
+  "beat": "family/removed",
+  "when": {
+    "field": "to",
+    "is": "them"
+  },
+  "text": "Under the safety plan, {child} was moved out of the home of {you} to live with the other parent."
+}

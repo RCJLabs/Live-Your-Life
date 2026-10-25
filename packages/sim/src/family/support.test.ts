@@ -85,6 +85,16 @@ describe('custody and child support (M2.6 step 4c, D100)', () => {
     expect(fact(gone, 'family.support', { person: other }) as number).toBeLessThanOrEqual(0);
   });
 
+  it('asks no support for a child in foster care (D102)', () => {
+    const { state, other } = family0();
+    const apart = breakUp(withFamily(state, { given: { you: 900, them: 0 } }), other).state;
+    expect(fact(apart, 'family.support', { person: other })).not.toBe(0);
+    const fostered = withFamily(apart, {
+      children: family(apart).children.map((c) => ({ ...c, with: 'care' as const })),
+    });
+    expect(fact(fostered, 'family.support', { person: other })).toBe(0);
+  });
+
   it('pays the month’s support with the rent, or owes it', () => {
     const { state, other } = family0();
     const gone = breakUp(withFamily(state, { given: { you: 0, them: 900 } }), other).state;

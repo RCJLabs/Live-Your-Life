@@ -75,16 +75,45 @@ export function dayOfCare(ctx: Ctx, d: number): void {
     w.missed = [...w.missed.filter((m) => m > d - c.neglect.window), d];
     ctx.emit('short', { day: d });
   }
+  safetyPlan(ctx, d);
   const s = ctx.read();
   if (s.report && d >= s.report.closes) {
     const found = s.missed.some((m) => m >= (s.report as { made: number }).made);
     const w = ctx.write();
     w.report = null;
-    if (found) w.findings++;
+    if (found) {
+      w.findings++;
+      w.plan = { from: d + 1, until: d + 1 + c.plan.days };
+    }
     ctx.emit('investigated', { found });
+    if (found) ctx.emit('planned', { until: d + 1 + c.plan.days });
   } else if (!s.report && s.missed.filter((m) => m > d - c.neglect.window).length >= c.neglect.days) {
     ctx.write().report = { made: d + 1, closes: d + 1 + c.investigation };
     ctx.emit('reported', { closes: d + 1 + c.investigation });
+  }
+}
+
+/**
+ * A safety plan's day (D102): enough days short of care within it, and the children who live
+ * with you go to their other parent, or into foster care when that parent lives with you too;
+ * at its end, it closes.
+ */
+function safetyPlan(ctx: Ctx, d: number): void {
+  const plan = ctx.read().plan;
+  if (!plan) return;
+  const short = ctx.read().missed.filter((m) => m >= plan.from).length;
+  if (short >= pregnancyOf(ctx.content).care.plan.short) {
+    const living = ctx.fact('circle.living') as number;
+    ctx.write().children = ctx.read().children.map((child) => {
+      if (child.with !== 'you') return child;
+      const to = child.other !== living && child.other >= 0 ? 'them' : 'care';
+      ctx.emit('removed', { child: child.first, to });
+      return { ...child, with: to, parted: child.parted >= 0 ? child.parted : d };
+    });
+    ctx.write().plan = null;
+  } else if (d >= plan.until) {
+    ctx.write().plan = null;
+    ctx.emit('plan-closed', {});
   }
 }
 

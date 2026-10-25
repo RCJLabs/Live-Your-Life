@@ -167,7 +167,7 @@ describe('the save fixtures', () => {
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([
       { module: 'circle', from: 4, to: 5 },
-      { module: 'family', from: 1, to: 3 },
+      { module: 'family', from: 1, to: 4 },
     ]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
@@ -183,7 +183,7 @@ describe('the save fixtures', () => {
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([
       { module: 'circle', from: 4, to: 5 },
-      { module: 'family', from: 2, to: 3 },
+      { module: 'family', from: 2, to: 4 },
     ]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -196,12 +196,28 @@ describe('the save fixtures', () => {
     const result = load('life-v9.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'circle', from: 4, to: 5 }]);
+    expect(result.report.migrated).toEqual([
+      { module: 'circle', from: 4, to: 5 },
+      { module: 'family', from: 3, to: 4 },
+    ]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const ties = (result.state.circle as { ties: { night: number }[] }).ties;
     expect(ties.length).toBeGreaterThan(0);
     for (const t of ties) expect(Object.keys(t).sort()).toEqual(Object.keys(newTie(0, 0, 0)).sort());
+  });
+
+  it('loads the tenth, saved before the safety plan, migrating the family from 3 to 4 (M2.6, D102)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v10.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'family', from: 3, to: 4 }]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    const fresh = people.init('v10-shape', sim).family as Record<string, unknown>;
+    expect(keysOf(result.state.family)).toEqual(keysOf(fresh));
+    expect((result.state.family as { plan: unknown }).plan).toBeNull();
   });
 
   it('migrates a version-4 circle’s ties as never asked to stay', () => {

@@ -70,7 +70,8 @@
       "days": 3,
       "window": 14
     },
-    "investigation": 30
+    "investigation": 30,
+    "plan": { "days": 90, "short": 2 }
   },
   "support": {
     "hours": 30,

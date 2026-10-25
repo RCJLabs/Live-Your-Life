@@ -43,8 +43,10 @@ export function pow25(n: number): number {
  * The month's support between you and another parent for `children` of theirs who live with one
  * of you: positive, they pay you; negative, you pay them (the formula's sign, you as parent A).
  */
-export function supportFor(v: FamilyView, other: number, children: readonly Child[]): number {
+export function supportFor(v: FamilyView, other: number, all: readonly Child[]): number {
   const s = pregnancyOf(v.content).support;
+  // A child in foster care (D102) is owed by neither parent here: what the state charges waits.
+  const children = all.filter((c) => c.with !== 'care');
   if (children.length === 0) return 0;
   const a = monthlyNet(v, v.fact('job.wage') as number);
   const b = monthlyNet(v, wageOf(v, other));
@@ -70,7 +72,7 @@ export function parted(ctx: Ctx, other: number): void {
   const today = ctx.fact('time.day') as number;
   const name = ctx.fact('circle.name', { person: other }) as string;
   ctx.write().children = s.children.map((c) => {
-    if (c.other !== other || c.parted >= 0) return c;
+    if (c.other !== other || c.parted >= 0 || c.with === 'care') return c;
     const keep = c.with === 'you' && s.given.you >= s.given.them ? 'you' : 'them';
     ctx.emit('custody', { child: c.first, other: name, with: keep });
     return { ...c, with: keep, parted: today };
