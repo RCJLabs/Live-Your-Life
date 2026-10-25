@@ -6,6 +6,7 @@
  */
 import type { Beat, ModuleContext } from '@eb/core';
 import { end } from './court.ts';
+import { nameOf, occupant } from './meet.ts';
 import { courtshipOf } from './records.ts';
 import { type CircleSlice, partnered, type Tie } from './state.ts';
 import { judged } from './together.ts';
@@ -50,10 +51,25 @@ function dayFor(ctx: Ctx, day: number): void {
   }
 }
 
-/** On every passage of time: missed dates now, and each whole day since the last settled. */
+/**
+ * Someone you know who has died (D106): whoever holds their place came after you met them. The
+ * tie ends, a partner's home with you with it, and the family hears of it for the children.
+ */
+function deaths(ctx: Ctx, day: number): void {
+  const seed = ctx.fact('people.seed') as number;
+  for (const t of ctx.read().ties) {
+    if (occupant(ctx.content, seed, t.person, day).since <= t.met) continue;
+    const name = nameOf(ctx.content, seed, t.person, t.met);
+    ctx.write().ties = ctx.read().ties.filter((x) => x.person !== t.person);
+    ctx.emit('died', { person: t.person, name, partner: partnered(t) });
+  }
+}
+
+/** On every passage of time: deaths, missed dates now, and each whole day since the last settled. */
 export function circleDays(ctx: Ctx, _event: Beat): void {
   const day = ctx.fact('time.day') as number;
   const settled = ctx.read().settled;
+  if (day > settled && ctx.read().ties.length > 0) deaths(ctx, day);
   // Nobody dated, nothing planned: nothing to settle, and no record read, so a life from content
   // without courtship (a replay by the pack it was saved with) passes its time as it did.
   if (!ctx.read().ties.some((t) => partnered(t) || t.date || t.licence || t.hearing >= 0)) {

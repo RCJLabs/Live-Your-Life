@@ -9,7 +9,7 @@ import type { ModuleContext } from '@eb/core';
 import { rosterNow } from '../circle/meet.ts';
 import { careerOf } from '../job/records.ts';
 import { pregnancyOf } from './records.ts';
-import type { Child, FamilySlice, FamilyView } from './state.ts';
+import { type Child, type FamilySlice, type FamilyView, OTHER_DIED } from './state.ts';
 
 type Ctx = ModuleContext<FamilySlice>;
 
@@ -46,7 +46,7 @@ export function pow25(n: number): number {
 export function supportFor(v: FamilyView, other: number, all: readonly Child[]): number {
   const s = pregnancyOf(v.content).support;
   // A child in foster care (D102) is owed by neither parent here: what the state charges waits.
-  const children = all.filter((c) => c.with !== 'care');
+  const children = all.filter((c) => c.with !== 'care' && c.other !== OTHER_DIED);
   if (children.length === 0) return 0;
   const a = monthlyNet(v, v.fact('job.wage') as number);
   const b = monthlyNet(v, wageOf(v, other));

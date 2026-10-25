@@ -6,6 +6,7 @@
  * supplier are known through their own modules.
  */
 import { defineModule, type FactView } from '@eb/core';
+import { ageOn, type Occupant } from '../people/lifespans.ts';
 import { mix } from '../people/roster.ts';
 import {
   ADULT,
@@ -36,7 +37,7 @@ import {
   talkRoll,
 } from './court.ts';
 import { circleDays } from './days.ts';
-import { hauntsOf, meetAt, nameOf, rosterNow } from './meet.ts';
+import { hauntsOf, meetAt, nameOf, occupant, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
 import {
   type CircleSlice,
@@ -94,10 +95,10 @@ export function yourCarries(v: View): boolean {
   );
 }
 
-const whoOf = (v: View, person: number): Who => {
-  const pop = populationOf(v.content);
-  return whoIs(pop, namePoolOf(v.content, pop.names), v.fact('people.seed') as number, person);
-};
+/** Who holds the person's place today (D106). */
+const occupantOf = (v: View, person: number): Occupant =>
+  occupant(v.content, v.fact('people.seed') as number, person, v.fact('time.day') as number);
+const whoOf = (v: View, person: number): Who => occupantOf(v, person).who;
 
 const yourAge = (v: View): number => START_AGE + Math.floor((v.fact('time.day') as number) / 365);
 
@@ -118,6 +119,7 @@ export const circleModule = defineModule<CircleSlice>({
     'stood-up': { args: { person: WHO, name: NAME }, label: 'Missed a date' },
     'found-out': { args: { person: WHO, name: NAME }, label: 'A partner found out about another' },
     'broke-up': { args: { person: WHO, name: NAME, by: { type: 'enum', values: ['you', 'them'] } }, label: 'Broke up' },
+    died: { args: { person: WHO, name: NAME, partner: { type: 'bool' } }, label: 'Someone you knew died' },
     stayed: { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Asked to stay the night' },
     'moved-in': { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Asked someone to move in' },
     proposed: { args: { person: WHO, name: NAME, yes: { type: 'bool' } }, label: 'Proposed' },
@@ -158,7 +160,8 @@ export const circleModule = defineModule<CircleSlice>({
     },
     name: {
       args: PERSON,
-      read: (v, { person }) => nameOf(v.content, v.fact('people.seed') as number, person as number),
+      read: (v, { person }) =>
+        nameOf(v.content, v.fact('people.seed') as number, person as number, v.fact('time.day') as number),
       label: 'their name',
     },
     out: { read: ({ state }) => state.out, domain: { type: 'int', min: -1 }, label: 'the place you are going out to' },
@@ -171,7 +174,7 @@ export const circleModule = defineModule<CircleSlice>({
     },
     age: {
       args: PERSON,
-      read: (v, { person }) => whoOf(v, person as number).age + Math.floor((v.fact('time.day') as number) / 365),
+      read: (v, { person }) => ageOn(occupantOf(v, person as number), v.fact('time.day') as number),
       domain: { type: 'int', min: 0 },
       label: 'their age',
     },
@@ -194,15 +197,19 @@ export const circleModule = defineModule<CircleSlice>({
     },
     attraction: {
       args: PERSON,
-      read: (v, { person }) =>
-        chemistry(
+      read: (v, { person }) => {
+        const o = occupantOf(v, person as number);
+        const seed = v.fact('people.seed') as number;
+        // A newcomer's chemistry is their own, and their age counts from the day they came.
+        return chemistry(
           populationOf(v.content),
-          v.fact('people.seed') as number,
+          o.gen === 0 ? seed : mix(seed, 95, o.gen),
           person as number,
-          whoOf(v, person as number),
+          o.who,
           { pronouns: v.fact('you.pronouns') as Pronouns, age: yourAge(v) },
-          v.fact('time.day') as number,
-        ),
+          (v.fact('time.day') as number) - o.since,
+        );
+      },
       domain: { type: 'int', min: 0, max: 100 },
       label: 'how drawn to you they are',
     },

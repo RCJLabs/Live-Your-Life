@@ -69,7 +69,7 @@ function childrenView(life: Life, act: (a: Action) => void): HTMLElement | null 
 function moneyView(life: Life, act: (a: Action) => void): HTMLElement | null {
   const f = familyOf(life);
   const lines: (HTMLElement | null)[] = [];
-  const others = [...new Set(f.children.filter((c) => c.parted >= 0).map((c) => c.other))];
+  const others = [...new Set(f.children.filter((c) => c.parted >= 0 && c.other >= 0).map((c) => c.other))];
   for (const o of others) {
     const s = life.fact('family.support', { person: o }) as number;
     if (s < 0) lines.push(el('p', {}, `You pay ${first(life, o)} ${money(-s)} a month in child support.`));
