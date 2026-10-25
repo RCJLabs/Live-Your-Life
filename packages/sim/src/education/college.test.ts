@@ -26,12 +26,13 @@ describe('the community college (M2.8 step 3, D111)', () => {
   it('opens enrolling the record’s days before a term, to those with a diploma or GED', () => {
     expect(offered(beforeFall(c.enroll + 2), 'education/enroll')).toEqual([]);
     const open = beforeFall(c.enroll - 1);
-    expect(offered(open, 'education/enroll').map((a) => a.courses)).toEqual(c.slots.map((_, i) => i + 1));
+    const counts = new Set(offered(open, 'education/enroll').map((a) => a.courses));
+    expect([...counts]).toEqual(c.slots.map((_, i) => i + 1));
     expect(offered(withCollege(open, {}, 'none'), 'education/enroll')).toEqual([]);
   });
 
   it('enrolls in the next courses in order, which meet at their slots from the term’s first day', () => {
-    let s = play(game, sim, beforeFall(10), { type: 'education/enroll', courses: 2 }).state;
+    let s = play(game, sim, beforeFall(10), { type: 'education/enroll', courses: 2, borrow: 'none' }).state;
     const term = edu(s).college.term as Term;
     expect(term.courses.map((x) => x.id)).toEqual(['c01', 'c02']);
     expect(term.start).toBe((fact(s, 'time.day') as number) + 10);
@@ -43,6 +44,7 @@ describe('the community college (M2.8 step 3, D111)', () => {
     const again = play(game, sim, withCollege(beforeFall(10), { passed: ['c01'] }), {
       type: 'education/enroll',
       courses: 1,
+      borrow: 'none',
     }).state;
     expect((edu(again).college.term as Term).courses.map((x) => x.id)).toEqual(['c02']);
     // To the first Monday or Tuesday at 18:00 inside the term: a class of yours meets.

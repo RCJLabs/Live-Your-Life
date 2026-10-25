@@ -31,6 +31,32 @@ export interface College {
   readonly gpa: number;
 }
 
+/** Paying for the college (step 4, D113), in cents unless said. */
+export interface Aid {
+  readonly tuition: number;
+  readonly hourFee: number;
+  readonly termFee: number;
+  readonly pell: {
+    readonly most: number;
+    readonly least: number;
+    readonly line: number;
+    readonly full: number;
+    readonly none: number;
+    readonly fullTime: number;
+  };
+  readonly loans: {
+    /** Hundredths of a percent a year. */
+    readonly rate: number;
+    /** Thousandths of a percent of what is borrowed. */
+    readonly fee: number;
+    readonly half: number;
+    readonly limits: readonly { readonly credits: number; readonly year: number }[];
+    readonly grace: number;
+    readonly months: number;
+    readonly leastMonth: number;
+  };
+}
+
 export interface EducationRecord {
   readonly name: string;
   /** In 10,000 eighteen-year-olds, those with a high school diploma. */
@@ -45,6 +71,8 @@ export interface EducationRecord {
   };
   /** The community college (step 3); absent in a pack from before it. */
   readonly college?: College;
+  /** Paying for it (step 4); absent in a pack from before it, when a term is free. */
+  readonly aid?: Aid;
 }
 
 /** The record, or null in a pack from before it. */

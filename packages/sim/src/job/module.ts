@@ -166,6 +166,16 @@ export function jobModule(hire?: Hire) {
     },
     events: {
       worked: { args: SHIFT_MINUTES, label: 'Worked a shift, or part of it' },
+      // Payday (pay.ts): heard by education, which counts the year's pay for aid (M2.8 step 4).
+      paid: {
+        args: {
+          minutes: { type: 'int', min: 0 },
+          gross: { type: 'int', min: 0 },
+          withheld: { type: 'int', min: 0 },
+          net: { type: 'int', min: 0 },
+        },
+        label: 'Paid',
+      },
       late: { args: SHIFT_MINUTES, label: 'Started a shift late' },
       'called-in-sick': {
         args: { day: { type: 'int', min: 0 }, shift: { type: 'text' } },

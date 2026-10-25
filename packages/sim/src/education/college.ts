@@ -4,11 +4,13 @@
  * through the term's weeks; you go to class (`attend`) and study for it. At the term's end each
  * course is graded on a score, half the share of classes attended and half the study a full grade
  * asks (the record's hours a week a credit), and earns its credits at a D or better. The
- * associate's comes at the record's credits with the grade point average it asks. Paying is
- * step 4; until then a term is free (open question 100).
+ * associate's comes at the record's credits with the grade point average it asks. A term is paid
+ * for when you enroll (aid.ts), and a loan's grace runs from the end of a term (loans.ts).
  */
 import type { DeepReadonly, FactView, ModuleContext } from '@eb/core';
 import { MONTHS, type WEEKDAYS } from '../calendar.ts';
+import { aidOf, type Borrow, billFor, payOptions } from './aid.ts';
+import { borrow, defer, leftSchool } from './loans.ts';
 import type { EducationSlice } from './module.ts';
 import { type College, educationOf } from './records.ts';
 
@@ -64,24 +66,35 @@ export function nextTerm(v: View, c: College): { id: string; start: number; week
   return best;
 }
 
-/** How many courses you could enroll in now: none outside the window, enrolled already, or without a diploma. */
-export function enrollOptions(v: View): { courses: number }[] {
+/**
+ * How many courses you could enroll in now, and how you could pay: none outside the window,
+ * enrolled already, or without a diploma; and only the ways the cash you have covers.
+ */
+export function enrollOptions(v: View): { courses: number; borrow: Borrow }[] {
   const c = collegeOf(v);
   const s = slice(v);
   if (!c || s.college.term || s.finished === 'none' || s.finished === 'associate') return [];
   const t = nextTerm(v, c);
   if (!t || t.start - (v.fact('time.day') as number) > c.enroll) return [];
   const left = c.courses.filter((x) => !s.college.passed.includes(x.id)).length;
-  return Array.from({ length: Math.min(c.slots.length, left) }, (_, i) => ({ courses: i + 1 }));
+  return Array.from({ length: Math.min(c.slots.length, left) }, (_, i) => i + 1).flatMap((courses) =>
+    payOptions(v, c, courses).map((borrow) => ({ courses, borrow })),
+  );
 }
 
-export function enroll(ctx: Ctx, courses: unknown): void {
+export function enroll(ctx: Ctx, courses: unknown, how: unknown): void {
   const c = collegeOf(ctx);
-  if (!c || !enrollOptions(ctx).some((o) => o.courses === courses)) ctx.refuse('no-enrolling');
+  if (!c || !enrollOptions(ctx).some((o) => o.courses === courses && o.borrow === how)) ctx.refuse('no-enrolling');
   const college = c as College;
   const t = nextTerm(ctx, college) as { id: string; start: number; weeks: number };
   const s = ctx.read().college;
   const picked = college.courses.filter((x) => !s.passed.includes(x.id)).slice(0, courses as number);
+  const bill = billFor(ctx, college, courses as number, how as Borrow);
+  if (bill.cash > 0) ctx.apply({ effect: 'pay-cost', cost: { cash: bill.cash } });
+  if (bill.refund > 0) ctx.apply({ effect: 'add-resource', resource: 'cash', by: bill.refund });
+  borrow(ctx, bill.borrowed);
+  // At half time or more, in school: nothing is due on the loans.
+  if (bill.credits >= (aidOf(ctx)?.loans.half ?? Number.POSITIVE_INFINITY)) defer(ctx);
   ctx.write().college.term = {
     id: t.id,
     start: t.start,
@@ -89,6 +102,8 @@ export function enroll(ctx: Ctx, courses: unknown): void {
     courses: picked.map((x, slot) => ({ id: x.id, slot, attended: 0, study: 0 })),
   };
   ctx.emit('enrolled', { term: t.id, courses: picked.length, start: t.start });
+  const { credits: _c, ...paid } = bill;
+  ctx.emit('billed', paid);
 }
 
 /** The course meeting now, if a class of yours starts within the quarter hour. */
@@ -165,6 +180,7 @@ export function endTerm(ctx: Ctx): void {
     ctx.emit('graded', { course: x.id, grade: grade.letter, score: sc });
   }
   w.college.term = null;
+  leftSchool(ctx, term.end);
   const gpa = w.college.graded > 0 ? Math.floor((w.college.points * 100) / w.college.graded) : 0;
   if (w.college.credits >= c.associate && gpa >= c.gpa) {
     w.finished = 'associate';

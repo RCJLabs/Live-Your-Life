@@ -875,11 +875,19 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Real tuition and Pell, no loans (recommended). Tuition only. Tuition, Pell and loans (chosen).
 
+**Amended 2026-10-25 (Evan's call).** Federal Direct loans are discharged at the borrower's death, so the estate owes nothing for them and the heir inherits none of it (34 CFR 685.212, read through consumer guides; the regulation itself is to be checked). The decision had said the loans were a debt of the estate. Options considered: discharged, as the real rule has it (recommended, chosen); kept as a debt of the estate, a departure written beside the figure.
+
 ### D114. Credentials gate careers as the real ones do, and move pay and odds. LOCKED, 2026-10-25 (Evan's call)
 
 **Decision.** Careers name what they require as data: the police a diploma or GED, after MCOLES's standard. An employer that prefers an associate's hires at better odds, shown before you apply. Pay by credential traces to BLS's earnings by education.
 
 **Options considered.** Real requirements and pay (recommended, chosen). Requirements only. Nothing yet.
+
+### D115. Aid counts you as an independent student, on your own pay. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Pell and the loan limits treat you as an independent student at any age, with your own gross pay over the past year as the income, against the poverty line for one person. The real rules count a student under 24 as dependent, on the parents' income, and the game has no parents with an income. This is a departure, written beside the figures in CALIBRATION.md.
+
+**Options considered.** You, as independent (recommended, chosen). Dependent by background: a parents' income drawn from the start's family means, under 24, with the dependent loan limit.
 
 ---
 
