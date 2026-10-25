@@ -162,7 +162,9 @@ export const lifeModule = defineModule<LifeSlice>({
         const offered: { activity: Activity; minutes: unknown }[] = [];
         for (const activity of ACTIVITIES) {
           if (activity === 'work') {
-            if (onShift) offered.push({ activity, minutes: view.fact('job.shift-left') });
+            // Too ill or hurt to work (M2.7): the shift goes as a sick call.
+            if (onShift && view.fact('health.off-work') !== true)
+              offered.push({ activity, minutes: view.fact('job.shift-left') });
           } else if (COSTS[activity] <= cash) {
             const usual = STANDARD_MINUTES[activity];
             offered.push({ activity, minutes: until === undefined ? usual : Math.max(1, Math.min(usual, until)) });
@@ -210,6 +212,7 @@ export const lifeModule = defineModule<LifeSlice>({
         'deal/*',
         'circle/*',
         'family/*',
+        'health/*',
         'ties/*',
         'you/*',
         'law/take',

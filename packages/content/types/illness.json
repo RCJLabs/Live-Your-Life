@@ -1,0 +1,66 @@
+{
+  "title": "Illness",
+  "description": "Acute illness and injury, and what care costs (M2.7 step 2, D104, D105): each kind's yearly rate, how long it lasts, whether it keeps you from work, and what it takes from your health; a doctor's visit, a hospital stay and their prices with and without Medicaid; and the income below which Medicaid covers you. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 60 },
+    "kinds": {
+      "kind": "list",
+      "min": 1,
+      "description": "The illnesses and injuries, each caught at its rate a day.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "id": { "kind": "text", "min": 1, "max": 20 },
+          "name": { "kind": "text", "min": 1, "max": 40 },
+          "perYear": {
+            "kind": "int",
+            "min": 0,
+            "max": 1000,
+            "description": "Cases a year per 100 adults; for a work injury, per 100 full-time workers, caught only on a shift."
+          },
+          "work": { "kind": "bool", "description": "Caught only on a shift." },
+          "days": { "kind": "int", "min": 1, "max": 120, "description": "Days it lasts." },
+          "off": {
+            "kind": "int",
+            "min": 0,
+            "max": 120,
+            "description": "Of those, the first days it keeps you from work."
+          },
+          "health": { "kind": "int", "min": 0, "max": 100, "description": "Health it takes a day while it lasts." },
+          "visit": { "kind": "int", "min": 0, "max": 30, "description": "Days a doctor's visit takes off it." }
+        }
+      }
+    },
+    "visit": {
+      "kind": "group",
+      "description": "A doctor's visit: its price, in cents, by coverage, and the hours it takes.",
+      "fields": {
+        "none": { "kind": "int", "min": 0 },
+        "medicaid": { "kind": "int", "min": 0 },
+        "minutes": { "kind": "int", "min": 1, "max": 600 },
+        "opens": { "kind": "int", "min": 0, "max": 23 },
+        "closes": { "kind": "int", "min": 1, "max": 24 }
+      }
+    },
+    "hospital": {
+      "kind": "group",
+      "description": "A stay in hospital when health reaches nothing: the days, and the price a day, in cents, by coverage; health is given back by the day.",
+      "fields": {
+        "days": { "kind": "int", "min": 1, "max": 60 },
+        "none": { "kind": "int", "min": 0 },
+        "medicaid": { "kind": "int", "min": 0 },
+        "health": { "kind": "int", "min": 1, "max": 100 }
+      }
+    },
+    "medicaid": {
+      "kind": "group",
+      "description": "The Healthy Michigan Plan: monthly gross income below the line for a household of one, and the line's rise for each more person, in cents.",
+      "fields": {
+        "one": { "kind": "int", "min": 0 },
+        "each": { "kind": "int", "min": 0 },
+        "hours": { "kind": "int", "min": 1, "max": 744, "description": "Hours a month a wage is counted at." }
+      }
+    }
+  }
+}

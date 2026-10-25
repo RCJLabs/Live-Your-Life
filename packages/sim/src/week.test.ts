@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 import { LINE_COOK, sliceGame, sliceSim } from '../test/slice.ts';
 import { randomLifePolicy, steadyFor, steadyPolicy } from './bot.ts';
 import { DEFAULT_START } from './calendar.ts';
-import { START_CASH } from './dials.ts';
+import { RENT, START_CASH } from './dials.ts';
 import { careerOf, eventsFor, shiftEventOf } from './job/records.ts';
 
 const game = sliceGame();
@@ -93,8 +93,14 @@ describe('a week of life, headless', () => {
     expect(reached(report, 'home/rent')).toBe(200);
     // The steady bot's play: its pay covers what is owed, and it pays once a week of meals can
     // be kept back. Paying with its last cash, it starved: health fell under 20% in a tenth of runs.
-    expect(reached(report, 'home/paid-owed')).toBe(200);
-    expect(range(report, 0)).toEqual([0, 0]);
+    // Since M2.7 a shift can go to a sick call, unpaid (D104): a life that loses one may not
+    // have the rent by the second payday. Only those fall short.
+    const sick = reached(report, 'job/called-in-sick');
+    expect(reached(report, 'home/paid-owed') + sick).toBeGreaterThanOrEqual(200);
+    expect(sick).toBeLessThan(20);
+    // Most owe nothing at the end; one short of a sick day's pay may still owe the month.
+    expect(range(report, 0)[0]).toBe(0);
+    expect(range(report, 0)[1]).toBeLessThanOrEqual(sick > 0 ? RENT : 0);
     expect(range(report, 1)[0]).toBeGreaterThanOrEqual(60);
   });
 

@@ -20,6 +20,7 @@ import { circleModule } from './circle/module.ts';
 import { clockModule } from './clock.ts';
 import { dealModule } from './deal/module.ts';
 import { familyModule } from './family/module.ts';
+import { healthModule } from './health/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
 import { lawModule } from './law/module.ts';
@@ -95,6 +96,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     familyModule,
     // Your life's length (M2.7, D103): added to a save from before it, its months start that day.
     livesModule,
+    // Illness, injury and care (M2.7 step 2, D104): added to a save from before it, you are well.
+    healthModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

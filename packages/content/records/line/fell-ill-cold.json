@@ -1,0 +1,5 @@
+{
+  "beat": "health/fell-ill",
+  "when": { "field": "kind", "is": "cold" },
+  "text": "{you} came down with a cold."
+}

@@ -159,6 +159,9 @@ export {
   REAL_TIME,
   startingTimers,
 } from './game.ts';
+// Illness, injury and care (M2.7 step 2).
+export { type HealthSlice, healthModule } from './health/module.ts';
+export { type IllnessRecord, illnessOf, kindOf } from './health/records.ts';
 export { type HomeSlice, homeModule, RENT_TIMER } from './home.ts';
 export { drawFrom, LEAST, MOST, oddsOf } from './job/events.ts';
 export { type Hire, jobModule } from './job/module.ts';

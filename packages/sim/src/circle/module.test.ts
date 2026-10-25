@@ -1,4 +1,5 @@
 import type { Action, Beat, GameState } from '@eb/core';
+import { PACK } from '@lyl/content';
 import { describe, expect, it } from 'vitest';
 import { doing, play, sliceGame, sliceSim, waitUntil } from '../../test/slice.ts';
 import { DEFAULT_START, WEEKDAYS } from '../calendar.ts';
@@ -10,7 +11,8 @@ import { presentAt, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
 import type { CircleSlice } from './state.ts';
 
-const sim = sliceSim();
+// Without illness: the tests' long skips leave you unfed, and a flu on top would put you in hospital.
+const sim = sliceSim({ ...PACK.records, illness: {} });
 const game = sliceGame({ people: 1000 });
 const kept = populationOf(sim.content).ties.kept;
 
