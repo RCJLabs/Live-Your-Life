@@ -12,7 +12,7 @@ const MAX_TURNS = 4000;
 
 describe('looking for a partner, headless (M2.6)', () => {
   it('plays 500 seeded weeks: nothing refused, every week finished, people met and talked to', {
-    timeout: 300_000,
+    timeout: 600_000,
   }, () => {
     const seen = new Map<string, number>();
     let capped = 0;

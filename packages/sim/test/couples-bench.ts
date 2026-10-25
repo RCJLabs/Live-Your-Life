@@ -102,6 +102,6 @@ const answers = [...new Set(all.flatMap((l) => Object.keys(l.count)).filter((k) 
 for (const k of answers) console.log(`${k}: ${all.reduce((n, l) => n + (l.count[k] ?? 0), 0)} in all`);
 for (const c of COUNTS) console.log(`${c}: ${all.reduce((n, l) => n + (l.count[c] ?? 0), 0)} in all`);
 console.log(
-  `pregnancies: ${all.reduce((n, l) => n + l.conceived, 0)} in all; refused actions: ${all.reduce((n, l) => n + l.refused, 0)}`,
+  `pregnancies: ${all.reduce((n, l) => n + l.conceived, 0)} in all, ${all.reduce((n, l) => n + l.expected, 0).toFixed(1)} expected from the nights' previews; refused actions: ${all.reduce((n, l) => n + l.refused, 0)}`,
 );
 console.log(`asked to move in (day:chance): ${asks.join(' ')}`);
