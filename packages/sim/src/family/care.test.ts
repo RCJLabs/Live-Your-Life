@@ -20,6 +20,7 @@ const child = (born: number, other = 3): Child => ({
   carries: true,
   other,
   with: 'you',
+  parted: -1,
 });
 
 /** A life with a baby born today, at 08:00 of day 1. */
@@ -52,6 +53,7 @@ describe('a child’s care (M2.6 step 4b, D98)', () => {
     expect(offer?.minutes).toBe(Math.min(care.sitting, need));
     const after = play(game, sim, s, offer as Action).state;
     expect(fact(after, 'family.care-left')).toBe(need - (offer?.minutes as number));
+    expect(family(after).given.you).toBe(offer?.minutes);
     expect(fact(after, 'time.of-day')).toBe((fact(s, 'time.of-day') as number) + (offer?.minutes as number));
     expect(refusal(game, sim, after, { type: 'family/care', minutes: care.sitting + 1 })).toBe('bad-minutes');
     const together = withCircle(s, { ties: [{ ...newTie(3, 6000, 0), status: 'married', living: true, since: 0 }] });

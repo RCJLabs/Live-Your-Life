@@ -32,6 +32,8 @@ export interface Child {
   readonly other: number;
   /** Who they live with: you, or the other parent. */
   with: 'you' | 'them';
+  /** The day their parents parted, or -1 while together or never. */
+  parted: number;
 }
 
 export interface FamilySlice {
@@ -50,6 +52,10 @@ export interface FamilySlice {
   findings: number;
   /** The last day daycare was paid for. */
   daycare: number;
+  /** Minutes of care given, by you and by a partner you lived with: who cared most (D100). */
+  given: { you: number; them: number };
+  /** Child support owed and unpaid, in cents: what you owe, and what is owed to you. */
+  arrears: { owe: number; owed: number };
 }
 
 export const noFamily = (): FamilySlice => ({
@@ -62,6 +68,8 @@ export const noFamily = (): FamilySlice => ({
   report: null,
   findings: 0,
   daycare: -1,
+  given: { you: 0, them: 0 },
+  arrears: { owe: 0, owed: 0 },
 });
 
 /** Version 2 (M2.6 step 4b): a child's care. What was there stays. */
@@ -77,3 +85,15 @@ export type FamilyView = {
 } & ({ readonly state: DeepReadonly<FamilySlice> } | { read(): DeepReadonly<FamilySlice> });
 
 export const familyOf = (v: FamilyView): DeepReadonly<FamilySlice> => ('state' in v ? v.state : v.read());
+
+/** Version 3 (M2.6 step 4c): custody and support. Children from before haven't parted. */
+export const migrateFamily3 = (slice: unknown): FamilySlice => {
+  const old = slice as FamilySlice;
+  return {
+    ...noFamily(),
+    ...old,
+    children: old.children.map((c) => ({ ...c, parted: -1 })),
+    given: { you: 0, them: 0 },
+    arrears: { owe: 0, owed: 0 },
+  };
+};

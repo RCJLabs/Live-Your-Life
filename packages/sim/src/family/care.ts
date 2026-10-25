@@ -14,15 +14,15 @@ const day = (v: FamilyView) => v.fact('time.day') as number;
 const ageOn = (born: number, d: number) => Math.floor((d - born) / 365);
 const yours = (v: FamilyView) => familyOf(v).children.filter((c) => c.with === 'you');
 
-/** Minutes of care your children need on a day, less what a partner you live with gives. */
-export function needOn(v: FamilyView, d: number): number {
+/** Minutes of care your children need on a day, less what a partner you live with gives unless `whole`. */
+export function needOn(v: FamilyView, d: number, whole = false): number {
   const c = pregnancyOf(v.content).care;
   let need = 0;
   for (const child of yours(v)) {
     const age = ageOn(child.born, d);
     need += c.needs.find((n) => age < n.under)?.minutes ?? 0;
   }
-  const partner = (v.fact('circle.living') as number) >= 0;
+  const partner = !whole && (v.fact('circle.living') as number) >= 0;
   return partner ? Math.ceil((need * (100 - c.partner)) / 100) : need;
 }
 
@@ -49,6 +49,7 @@ export const care = {
     const today = day(ctx);
     const w = ctx.write();
     w.care = { day: today, minutes: givenOn(ctx, today) + minutes };
+    w.given = { ...w.given, you: w.given.you + minutes };
     ctx.apply({ effect: 'end-activity' });
     ctx.emit('cared', { minutes });
     ctx.apply({ effect: 'wait', minutes });
@@ -63,6 +64,12 @@ export const care = {
 export function dayOfCare(ctx: Ctx, d: number): void {
   const c = pregnancyOf(ctx.content).care;
   const need = needOn(ctx, d);
+  // What a partner you live with gave that day: who cared most is weighed at a parting (D100).
+  const theirs = needOn(ctx, d, true) - need;
+  if (theirs > 0) {
+    const g = ctx.write().given;
+    ctx.write().given = { ...g, them: g.them + theirs };
+  }
   if (need > 0 && givenOn(ctx, d) < need) {
     const w = ctx.write();
     w.missed = [...w.missed.filter((m) => m > d - c.neglect.window), d];

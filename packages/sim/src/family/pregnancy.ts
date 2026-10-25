@@ -127,6 +127,7 @@ export function born(ctx: Ctx): void {
     carries: carriesFor(pop, first.pronouns, mix(seed, 83)),
     other,
     with: preg.carrier === YOU || living ? 'you' : 'them',
+    parted: living ? -1 : day(ctx),
   });
   if (preg.carrier === YOU) {
     const paid = ctx.attempt(() => ctx.apply({ effect: 'pay-cost', cost: { cash: p.birth } }));

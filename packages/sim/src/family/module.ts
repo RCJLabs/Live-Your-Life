@@ -7,7 +7,17 @@ import { defineModule, type ModuleContext } from '@eb/core';
 import { care, daycare, dayOfCare, givenOn, needOn } from './care.ts';
 import { born, chanceWith, conceived, conceiveRoll, known } from './pregnancy.ts';
 import { pregnancyOf } from './records.ts';
-import { type FamilySlice, type FamilyView, familyOf, migrateFamily2, noFamily, type Pregnancy, YOU } from './state.ts';
+import {
+  type FamilySlice,
+  type FamilyView,
+  familyOf,
+  migrateFamily2,
+  migrateFamily3,
+  noFamily,
+  type Pregnancy,
+  YOU,
+} from './state.ts';
+import { monthOfSupport, parted, supportFor } from './support.ts';
 
 type Ctx = ModuleContext<FamilySlice>;
 type View = FamilyView;
@@ -82,9 +92,9 @@ const cash = (v: View) => v.fact('economy.amount', { resource: 'cash' }) as numb
 
 export const familyModule = defineModule<FamilySlice>({
   id: 'family',
-  // 2 (M2.6 step 4b): a child's care.
-  version: 2,
-  migrate: { 2: migrateFamily2 },
+  // 2 (M2.6 step 4b): a child's care. 3 (step 4c): custody and support.
+  version: 3,
+  migrate: { 2: migrateFamily2, 3: migrateFamily3 },
   init: noFamily,
   events: {
     conceived: { args: {}, label: 'A pregnancy began, not yet known' },
@@ -108,6 +118,19 @@ export const familyModule = defineModule<FamilySlice>({
     reported: { args: { closes: { type: 'int', min: 0 } }, label: 'Reported to child protective services' },
     investigated: { args: { found: { type: 'bool' } }, label: 'An investigation closed' },
     daycare: { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'Paid for daycare' },
+    custody: {
+      args: { child: { type: 'text' }, other: { type: 'text' }, with: { type: 'enum', values: ['you', 'them'] } },
+      label: 'Custody decided at a parting',
+    },
+    support: {
+      args: {
+        name: { type: 'text' },
+        cents: { type: 'int', min: 0 },
+        by: { type: 'enum', values: ['you', 'them'] },
+        paid: { type: 'bool' },
+      },
+      label: 'Child support for a month',
+    },
   },
   facts: {
     pregnant: {
@@ -130,6 +153,18 @@ export const familyModule = defineModule<FamilySlice>({
       read: (v) => Math.max(0, needOn(v, v.fact('time.day') as number) - givenOn(v, v.fact('time.day') as number)),
       domain: { type: 'int', min: 0 },
       label: 'minutes of care your children still need today',
+    },
+    // The month's support with another parent, as the formula has it now: positive to you, negative from you.
+    support: {
+      args: { person: { type: 'int', min: 0 } },
+      read: (v, { person }) =>
+        supportFor(
+          v,
+          person as number,
+          v.state.children.filter((c) => c.parted >= 0 && c.other === person),
+        ),
+      domain: { type: 'int' },
+      label: 'a month’s child support with another parent, in cents',
     },
     findings: {
       read: ({ state }) => state.findings,
@@ -186,5 +221,9 @@ export const familyModule = defineModule<FamilySlice>({
     'time/passed': (ctx) => settle(ctx),
     // A shift worked: daycare for a young child, unless a partner is home (care.ts).
     'job/worked': (ctx) => daycare(ctx),
+    // A parting: who keeps a child (support.ts).
+    'circle/broke-up': (ctx, event) => parted(ctx, event.person as number),
+    // The 1st of the month: child support, with the rent.
+    'home/rent': (ctx) => monthOfSupport(ctx),
   },
 });

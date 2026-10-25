@@ -72,6 +72,12 @@ export function jobModule(hire?: Hire) {
     init: (ctx) => (hire ? hiredAt(ctx, hire) : jobless()),
     facts: {
       employed: { read: ({ state }) => state.employed, domain: { type: 'bool' }, label: 'has a job' },
+      // Heard by the family (M2.6 step 4c): what child support is worked out from.
+      wage: {
+        read: ({ state, content }) => (state.employed && state.career ? careerFor(content, state).wage : 0),
+        domain: { type: 'int', min: 0 },
+        label: 'cents an hour at your job, or 0',
+      },
       standing: {
         read: ({ state }) => state.standing,
         domain: { type: 'int', min: 0, max: 100 },

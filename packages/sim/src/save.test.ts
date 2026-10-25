@@ -3,7 +3,7 @@ import { createGame, type GameState, loadSave, readPack, stateHash } from '@eb/c
 import { describe, expect, it } from 'vitest';
 import { LINE_COOK, sliceGame, sliceSim } from '../test/slice.ts';
 import { migrateCircle2, migrateCircle3, newTie } from './circle/state.ts';
-import { migrateFamily2, noFamily } from './family/state.ts';
+import { migrateFamily2, migrateFamily3, noFamily } from './family/state.ts';
 import { lifeModules } from './game.ts';
 
 /**
@@ -160,17 +160,37 @@ describe('the save fixtures', () => {
     expect((result.state.circle as { carries: unknown }).carries).toBeNull();
   });
 
-  it('loads the seventh, saved before a child’s care, migrating the family from 1 to 2 (M2.6)', () => {
+  it('loads the seventh, saved before a child’s care, migrating the family from 1 to 3 (M2.6)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v7.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'family', from: 1, to: 2 }]);
+    expect(result.report.migrated).toEqual([{ module: 'family', from: 1, to: 3 }]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const fresh = people.init('v7-shape', sim).family as Record<string, unknown>;
     expect(keysOf(result.state.family)).toEqual(keysOf(fresh));
+  });
+
+  it('loads the eighth, saved before custody, migrating the family from 2 to 3 (M2.6)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v8.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'family', from: 2, to: 3 }]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    const fresh = people.init('v8-shape', sim).family as Record<string, unknown>;
+    expect(keysOf(result.state.family)).toEqual(keysOf(fresh));
+  });
+
+  it('migrates a version-2 family’s children as never parted', () => {
+    const child = { born: 3, first: 'Ava', last: 'K', pronouns: 'she', carries: true, other: 9, with: 'you' };
+    const v2 = { ...noFamily(), children: [child] };
+    const { given: _g, arrears: _a, ...old } = v2;
+    expect(migrateFamily3(old).children).toEqual([{ ...child, parted: -1 }]);
+    expect(migrateFamily3(old).arrears).toEqual({ owe: 0, owed: 0 });
   });
 
   it('migrates a version-1 family keeping its children and what is owed', () => {
