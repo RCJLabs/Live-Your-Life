@@ -273,6 +273,18 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Probate's cost | 5% of an estate above the limit | `estate/michigan.json`, `probate` | none: a placeholder for court fees and an attorney's, which vary with the estate | placeholder (tune) |
 | Debts and the estate | debts are paid from what you left; past it, they die with it and the heir owes none | `lives/heir.ts` | the general rule of Michigan's EPIC, by search summaries: an heir isn't liable for the dead's debts beyond the estate. A creditor's claim period and the order of claims aren't modelled | a simplification |
 
+## Education (M2.8)
+
+| What | Figure | Where it's used | Source | Status |
+| --- | --- | --- | --- | --- |
+| A diploma at 18 | 83 in 100 (82.8%, the class of 2024's four-year rate) | the start (D112) | Michigan Department of Education, through search summaries (press release of 21 February 2025); the class of 2025's rate was just over 84% | secondary |
+| The GED | four subject tests at $43.50 each, $174 in all, in person; one discounted retake each | the GED (step 2) | Michigan's Workforce Development page on high school equivalency, through search summaries; older pages give $37.50 | secondary |
+| Community college tuition | about $113 to $155 a credit or contact hour in district, 2025–26; fees about $407 a year on average across the 28 colleges | the college (step 3) | Macomb Community College ($113 a billable contact hour), Gogebic ($149 a credit), Mid Michigan ($155 in 2024–25), and the House Fiscal Agency's fee average, all through search summaries | secondary; one college to be picked |
+| The Pell grant | at most $7,395 a year, at least $740 (2025–26); the most for an independent student without children at an income up to 175% of the poverty line, some up to 275% | aid (step 4) | the Department of Education (FSA partners), and CRS's report on the FAFSA Simplification Act, through search summaries | secondary |
+| Federal Direct loans | 6.39% fixed for undergraduates, first paid out from 1 July 2025 to 30 June 2026 | loans (step 4) | one college's financial aid page, through search summaries; one source only | secondary, to confirm |
+| The police's requirement | a high school diploma or GED for an employed recruit; an associate's for a pre-service recruit by the academy's end | careers (step 5) | MCOLES's licensing standards (updated July 2025), through search summaries | secondary |
+| Pay by credential | median weekly earnings, full-time, 25 and over, 2024: $930 with a diploma, $1,020 with some college and no degree, $1,099 with an associate's, $738 without a diploma | careers (step 5) | BLS, Employment Projections' education-pays table and CPS table 37b, through search summaries | secondary |
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).

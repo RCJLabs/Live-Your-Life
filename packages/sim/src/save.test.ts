@@ -46,7 +46,8 @@ describe('the save fixtures', () => {
     id === 'circle' ||
     id === 'family' ||
     id === 'lives' ||
-    id === 'health';
+    id === 'health' ||
+    id === 'education';
   const before = createGame({
     modules: lifeModules({ career: LINE_COOK }).filter((m) => !m.id.startsWith('people')),
     start: 'world',
@@ -94,7 +95,16 @@ describe('the save fixtures', () => {
     const result = load('life-v2.json', then, before);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.added).toEqual(['market', 'deal', 'prison', 'circle', 'family', 'lives', 'health']);
+    expect(result.report.added).toEqual([
+      'market',
+      'deal',
+      'prison',
+      'circle',
+      'family',
+      'lives',
+      'health',
+      'education',
+    ]);
     // Without the market's and the trade's own slices and versions, and the law's migration to 2
     // (M2.4) taken back, the very state saved.
     const {
@@ -105,6 +115,7 @@ describe('the save fixtures', () => {
       family: _fam,
       lives: _l,
       health: _h,
+      education: _e,
       law,
       ...rest
     } = result.state as unknown as Record<string, unknown>;
@@ -120,6 +131,7 @@ describe('the save fixtures', () => {
       family: __f,
       lives: __l,
       health: __h,
+      education: __e,
       ...versions
     } = kernel.versions;
     const saved = {
@@ -139,7 +151,7 @@ describe('the save fixtures', () => {
       { module: 'law', from: 2, to: 3 },
     ]);
     // The people you know (M2.6): a save from before them knows no one.
-    expect(result.report.added).toEqual(['circle', 'family', 'lives', 'health']);
+    expect(result.report.added).toEqual(['circle', 'family', 'lives', 'health', 'education']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const deal = result.state.deal as { crew: boolean; owed: number; recruit: number };
@@ -168,7 +180,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'circle', from: 3, to: 6 }]);
-    expect(result.report.added).toEqual(['family', 'lives', 'health']);
+    expect(result.report.added).toEqual(['family', 'lives', 'health', 'education']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect((result.state.circle as { carries: unknown }).carries).toBeNull();
@@ -183,7 +195,7 @@ describe('the save fixtures', () => {
       { module: 'circle', from: 4, to: 6 },
       { module: 'family', from: 1, to: 4 },
     ]);
-    expect(result.report.added).toEqual(['lives', 'health']);
+    expect(result.report.added).toEqual(['lives', 'health', 'education']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const fresh = people.init('v7-shape', sim).family as Record<string, unknown>;
@@ -246,7 +258,7 @@ describe('the save fixtures', () => {
       { module: 'circle', from: 5, to: 6 },
       { module: 'lives', from: 1, to: 2 },
     ]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['education']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.lives)).toEqual(keysOf(people.init('v11-shape', sim).lives));
@@ -299,7 +311,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'circle', from: 1, to: 6 }]);
-    expect(result.report.added).toEqual(['family', 'lives', 'health']);
+    expect(result.report.added).toEqual(['family', 'lives', 'health', 'education']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const saved = (fixture('life-v4.json') as { snapshot: { circle: { ties: { person: number; regard: number }[] } } })

@@ -147,6 +147,9 @@ export { buyerOdds, MOST_HELD, seenOdds } from './deal/trade.ts';
 export { outNow, passingNow } from './deal/witnesses.ts';
 export { dealerFor } from './dealer.ts';
 export * from './dials.ts';
+// Your schooling (M2.8).
+export { type EducationSlice, educationModule, SCHOOLING, type Schooling } from './education/module.ts';
+export { type EducationRecord, educationOf } from './education/records.ts';
 export { endCost } from './family/module.ts';
 export { pregnancyOf } from './family/records.ts';
 export { type Child, type FamilySlice, type Pregnancy, YOU } from './family/state.ts';

@@ -857,6 +857,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** The page's journal (recommended, chosen). The chronicle moved into the sim as a module, so bots and replays could read it.
 
+### D111. Education to community college: a diploma or GED, and an associate's, for adults. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** M2.8 builds the GED for those without a diploma and a community college's associate's degree, as terms, courses in the week, credits and grades. Adults only: the schooling of children in your household waits, since heirs born in play are few in the first year.
+
+**Options considered.** A diploma or GED and community college (recommended, chosen). The same with children's schooling. University as well.
+
+### D112. The first life starts with a diploma at Michigan's graduation rate. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** By the seed, a first life starts with a high school diploma at Michigan's four-year graduation rate; without one, the GED is the way. The background pick at the start (D21) stays for later.
+
+**Options considered.** By Michigan's rate (recommended, chosen). Everyone has one. Build the background pick now.
+
+### D113. College is paid by real tuition, a Pell grant and federal loans. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Tuition and fees per credit at a Michigan community college's real rate. A Pell grant by income against the poverty line, by the federal rules as simplified in 2024. Federal Direct loans at their real rate, repaid after you leave school, and a debt of the estate when you die (D109).
+
+**Options considered.** Real tuition and Pell, no loans (recommended). Tuition only. Tuition, Pell and loans (chosen).
+
+### D114. Credentials gate careers as the real ones do, and move pay and odds. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Careers name what they require as data: the police a diploma or GED, after MCOLES's standard. An employer that prefers an associate's hires at better odds, shown before you apply. Pay by credential traces to BLS's earnings by education.
+
+**Options considered.** Real requirements and pay (recommended, chosen). Requirements only. Nothing yet.
+
 ---
 
 ## Open items
