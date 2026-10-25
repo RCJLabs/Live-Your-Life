@@ -50,6 +50,7 @@ export const youModule = defineModule<YouSlice>({
     },
   },
   facts: {
+    last: { read: ({ state }) => state.last, label: 'your last name' },
     pronouns: {
       read: ({ state }) => state.pronouns,
       domain: { type: 'enum', values: ['she', 'he', 'they'] },

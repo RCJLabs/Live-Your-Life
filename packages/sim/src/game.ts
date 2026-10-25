@@ -19,6 +19,7 @@ import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToMidnight, minutes
 import { circleModule } from './circle/module.ts';
 import { clockModule } from './clock.ts';
 import { dealModule } from './deal/module.ts';
+import { familyModule } from './family/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
 import { lawModule } from './law/module.ts';
@@ -89,6 +90,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     prisonModule,
     // The people you know (M2.6, D89): added to a save from before it, you know no one yet.
     circleModule,
+    // A pregnancy and your children (M2.6 step 4): added to a save from before it, there are none.
+    familyModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

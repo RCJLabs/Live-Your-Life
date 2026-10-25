@@ -14,6 +14,8 @@ export interface PopulationRecord {
   readonly ages: readonly (Band & { readonly share: number })[];
   readonly drawn: readonly (Band & { readonly same: number; readonly both: number })[];
   readonly chemistry: { readonly free: number; readonly per: number };
+  /** Per thousand who use each set of pronouns, whose bodies can carry a pregnancy (D96). */
+  readonly carry: { readonly she: number; readonly he: number; readonly they: number };
   readonly ties: {
     readonly kept: number;
     readonly perHour: number;

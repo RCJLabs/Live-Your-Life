@@ -21,6 +21,7 @@ export const STAGE_ONLY: ReadonlySet<string> = new Set([
   'time/advance',
   'you/commute',
   'circle/drawn-to',
+  'circle/carries',
 ]);
 
 /** What a pressing need sends the steady bot to do. Health has no activity of its own: rest is what lets it recover. */

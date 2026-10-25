@@ -1,0 +1,8 @@
+{
+  "beat": "family/pregnant",
+  "when": {
+    "field": "carrier",
+    "is": "them"
+  },
+  "text": "{name} was pregnant, and told {you}."
+}

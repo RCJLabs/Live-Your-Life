@@ -767,6 +767,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Half the rent from a working partner (built), a share by each one's pay, or none. A magistrate's wedding (built), or a choice of weddings with their costs. A divorce without property (built), or Michigan's equitable division of what was earned in the marriage.
 
+### D96. Bodies are a trait of each person. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** Each person, you included, has a body that can or can't carry a pregnancy, drawn from the seed to match their pronouns at real shares (CALIBRATION.md). You pick yours at the start, and can change it in settings. A pregnancy can follow a night only between one body that can carry and one that can't.
+
+**Options considered.** A trait per person (recommended, chosen). Following pronouns: anyone who uses she can carry.
+
+### D97. A pregnancy comes with Michigan's real options. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** A pregnancy you carry is yours to go on with or to end at a clinic, as Michigan's constitution has allowed since 2022, at its real costs and weeks, told plainly in the chronicle. A partner who carries chooses for themself. Miscarriage comes at the real rate.
+
+**Options considered.** Michigan's real options (recommended, chosen). Always continuing, apart from miscarriage.
+
+### D98. A child asks for hours and money. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** A child takes care hours each day, shared with a partner you live with; childcare costs its real weekly price while you work; a child left without care has consequences later, a report to child protective services among them. Built in step 4b.
+
+**Options considered.** Hours and money (recommended, chosen). Money only.
+
+### D99. Couples first; adoption and other routes later. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** In M2.6, a child comes of a pregnancy between partners. Adoption, fostering and donor routes wait for a later milestone, listed in ROADMAP's ideas.
+
+**Options considered.** Couples now, others later (recommended, chosen). Adoption through an agency in this step too.
+
 ---
 
 ## Open items

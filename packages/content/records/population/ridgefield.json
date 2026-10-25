@@ -2,20 +2,83 @@
   "name": "Ridgefield's people",
   "names": "rust-belt",
   "ages": [
-    { "from": 18, "to": 24, "share": 116 },
-    { "from": 25, "to": 34, "share": 170 },
-    { "from": 35, "to": 44, "share": 165 },
-    { "from": 45, "to": 54, "share": 153 },
-    { "from": 55, "to": 64, "share": 166 },
-    { "from": 65, "to": 85, "share": 230 }
+    {
+      "from": 18,
+      "to": 24,
+      "share": 116
+    },
+    {
+      "from": 25,
+      "to": 34,
+      "share": 170
+    },
+    {
+      "from": 35,
+      "to": 44,
+      "share": 165
+    },
+    {
+      "from": 45,
+      "to": 54,
+      "share": 153
+    },
+    {
+      "from": 55,
+      "to": 64,
+      "share": 166
+    },
+    {
+      "from": 65,
+      "to": 85,
+      "share": 230
+    }
   ],
   "drawn": [
-    { "from": 18, "to": 28, "same": 95, "both": 136 },
-    { "from": 29, "to": 44, "same": 68, "both": 74 },
-    { "from": 45, "to": 60, "same": 31, "both": 20 },
-    { "from": 61, "to": 79, "same": 18, "both": 12 },
-    { "from": 80, "to": 100, "same": 11, "both": 7 }
+    {
+      "from": 18,
+      "to": 28,
+      "same": 95,
+      "both": 136
+    },
+    {
+      "from": 29,
+      "to": 44,
+      "same": 68,
+      "both": 74
+    },
+    {
+      "from": 45,
+      "to": 60,
+      "same": 31,
+      "both": 20
+    },
+    {
+      "from": 61,
+      "to": 79,
+      "same": 18,
+      "both": 12
+    },
+    {
+      "from": 80,
+      "to": 100,
+      "same": 11,
+      "both": 7
+    }
   ],
-  "chemistry": { "free": 5, "per": 4 },
-  "ties": { "kept": 12, "perHour": 2, "half": 90, "atWork": 50, "haunts": 3 }
+  "chemistry": {
+    "free": 5,
+    "per": 4
+  },
+  "ties": {
+    "kept": 12,
+    "perHour": 2,
+    "half": 90,
+    "atWork": 50,
+    "haunts": 3
+  },
+  "carry": {
+    "she": 994,
+    "he": 6,
+    "they": 500
+  }
 }

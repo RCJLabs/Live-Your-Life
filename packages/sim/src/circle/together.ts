@@ -59,27 +59,36 @@ export const stay = {
   run(ctx: Ctx, action: Act) {
     const t = tieOf(ctx, action.person);
     if (!t || !canStay(ctx, t)) return ctx.refuse('not-now');
-    ctx.apply({ effect: 'night-roll', person: t.person });
+    if (typeof action.protect !== 'boolean') return ctx.refuse('bad-protect');
+    ctx.apply({ effect: 'night-roll', person: t.person, protect: action.protect });
   },
+  // With protection or without (M2.6 step 4): the chance of a pregnancy is shown with each.
   options: (v: View) =>
     others(v)
       .filter((t) => canStay(v, t))
-      .map((t) => ({ person: t.person })),
+      .flatMap((t) => [
+        { person: t.person, protect: true },
+        { person: t.person, protect: false },
+      ]),
 };
 
 export const nightRoll = {
   run(ctx: Ctx, effect: Effect) {
     const t = tieOf(ctx, effect.person) as Tie;
+    const protect = effect.protect === true;
     roll(
       ctx,
       nightOdds(ctx, t),
-      [{ effect: 'night', person: t.person, yes: true }],
-      [{ effect: 'night', person: t.person, yes: false }],
+      [{ effect: 'night', person: t.person, yes: true, protect }],
+      [{ effect: 'night', person: t.person, yes: false, protect }],
     );
   },
+  // The chance they say yes, and in ten thousand the chance of a pregnancy if they do (the family's).
   preview: (ctx: PreviewContext<CircleSlice>, effect: Effect) => {
     const t = tieOf(ctx, effect.person);
-    return t ? { chance: nightOdds(ctx, t) } : { refused: 'unknown' };
+    if (!t) return { refused: 'unknown' };
+    const pregnancy = ctx.fact('family.chance', { person: t.person, protect: effect.protect === true }) as number;
+    return { chance: nightOdds(ctx, t), pregnancy };
   },
 };
 
@@ -93,6 +102,7 @@ export function night(ctx: Ctx, effect: Effect): void {
     t.seen = today(ctx);
   }
   ctx.emit('stayed', { person: t.person, name: name(ctx, t.person), yes: effect.yes === true });
+  if (effect.yes === true) ctx.apply({ effect: 'conceive-roll', person: t.person, protect: effect.protect === true });
 }
 
 // --- Moving in and proposing: asked of a partner, at odds that grow with time together. ---

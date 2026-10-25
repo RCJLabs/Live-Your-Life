@@ -7,7 +7,17 @@
  */
 import { defineModule, type FactView } from '@eb/core';
 import { mix } from '../people/roster.ts';
-import { ADULT, chemistry, DRAWN_TO, type DrawnTo, drawnBy, drawnFor, type Who, whoIs } from '../people/who.ts';
+import {
+  ADULT,
+  carriesFor,
+  chemistry,
+  DRAWN_TO,
+  type DrawnTo,
+  drawnBy,
+  drawnFor,
+  type Who,
+  whoIs,
+} from '../people/who.ts';
 import { familiarityOf } from '../ties/memory.ts';
 import { namePoolOf, type Pronouns } from '../ties/records.ts';
 import {
@@ -27,7 +37,7 @@ import {
 import { circleDays } from './days.ts';
 import { hauntsOf, meetAt, nameOf, rosterNow } from './meet.ts';
 import { populationOf } from './records.ts';
-import { type CircleSlice, migrateCircle2, migrateCircle3, noOne, partnered } from './state.ts';
+import { type CircleSlice, migrateCircle2, migrateCircle3, migrateCircle4, noOne, partnered } from './state.ts';
 import {
   askIn,
   fileDivorce,
@@ -65,6 +75,16 @@ export function yourDrawnTo(v: View): DrawnTo {
   return drawnFor(populationOf(v.content), START_AGE, v.fact('you.pronouns') as Pronouns, mix(seed, 67), mix(seed, 68));
 }
 
+/** Whether your body can carry (D96): what you said, or until then drawn from the seed by your pronouns' share. */
+export function yourCarries(v: View): boolean {
+  if (v.state.carries !== null) return v.state.carries;
+  return carriesFor(
+    populationOf(v.content),
+    v.fact('you.pronouns') as Pronouns,
+    mix(v.fact('people.seed') as number, 70),
+  );
+}
+
 const whoOf = (v: View, person: number): Who => {
   const pop = populationOf(v.content);
   return whoIs(pop, namePoolOf(v.content, pop.names), v.fact('people.seed') as number, person);
@@ -76,9 +96,9 @@ const tieOf = (v: View, person: number) => v.state.ties.find((t) => t.person ===
 
 export const circleModule = defineModule<CircleSlice>({
   id: 'circle',
-  // 2 (M2.6 step 2): courting. 3 (step 3): living together, marriage, divorce.
-  version: 3,
-  migrate: { 2: migrateCircle2, 3: migrateCircle3 },
+  // 2 (M2.6 step 2): courting. 3 (step 3): living together, marriage, divorce. 4 (step 4): your body.
+  version: 4,
+  migrate: { 2: migrateCircle2, 3: migrateCircle3, 4: migrateCircle4 },
   init: noOne,
   events: {
     met: { args: { person: WHO, name: NAME }, label: 'Met someone' },
@@ -120,6 +140,20 @@ export const circleModule = defineModule<CircleSlice>({
       label: 'their name',
     },
     out: { read: ({ state }) => state.out, domain: { type: 'int', min: -1 }, label: 'the place you are going out to' },
+    carries: { read: yourCarries, domain: { type: 'bool' }, label: 'whether your body can carry a pregnancy' },
+    'they-carry': {
+      args: PERSON,
+      read: (v, { person }) => whoOf(v, person as number).carries,
+      domain: { type: 'bool' },
+      label: 'whether their body can carry a pregnancy',
+    },
+    age: {
+      args: PERSON,
+      read: (v, { person }) => whoOf(v, person as number).age + Math.floor((v.fact('time.day') as number) / 365),
+      domain: { type: 'int', min: 0 },
+      label: 'their age',
+    },
+    'your-age': { read: yourAge, domain: { type: 'int', min: 0 }, label: 'your age' },
     'drawn-to': { read: yourDrawnTo, domain: { type: 'enum', values: DRAWN_TO }, label: 'whom you are drawn to' },
     familiarity: {
       args: PERSON,
@@ -185,6 +219,11 @@ export const circleModule = defineModule<CircleSlice>({
     'drawn-to': (ctx, action) => {
       if (!DRAWN_TO.includes(action.to as DrawnTo)) return ctx.refuse('bad-drawn-to');
       ctx.write().drawnTo = action.to as DrawnTo;
+    },
+    // Your body (D96): a setting, as whom you are drawn to is.
+    carries: (ctx, action) => {
+      if (typeof action.carries !== 'boolean') return ctx.refuse('bad-carries');
+      ctx.write().carries = action.carries;
     },
     talk,
     'ask-out': askOut,

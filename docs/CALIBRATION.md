@@ -229,6 +229,14 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Cohabitation to marriage | first cohabitations last a median 22 months; 40% of women had married within three years of moving in, 27% had split | `courtship/ridgefield.json`, `propose` | the National Survey of Family Growth, through PMC articles in a search summary | to read against step 6 |
 | A partner's share of the rent | half, if they work (D95) | `courtship/ridgefield.json`, `share` | none: a proposal | (tune) |
 
+| Whose body can carry | per thousand: 994 of those who use she, 6 of those who use he, 500 of those who use they | `population/ridgefield.json`, `carry` | Gallup 2024: 1.3% of adults transgender, through news coverage, split half each way; they at half is a guess | (tune) |
+| A night's chance of a pregnancy | 2 in 100 without protection; 2 in 1,000 with a condom | `pregnancy/michigan.json`, `night` | Wilcox and colleagues, through Duke's and PMC's pages: a single act falls in the fertile window 25% of the time, with a chance there up to about 10% a day; 25% × about 8% gives 2%. A condom used as most do fails 13% a year (Trussell); at about 80 nights a year that is about 0.2% a night. Both are derived, not read as such | derived |
+| By the carrier's age | the chance's share left: 100% to 29, 90% from 30, 65% from 35, 30% from 40, 3% from 45, none from 50 | `pregnancy/michigan.json`, `ages` | none read: the shape of fertility by age is to read | (tune) |
+| Miscarriage | 10 in 100 known pregnancies, 80% of them in the first trimester | `pregnancy/michigan.json`, `loss` | ACOG Practice Bulletin 200 (2018), through an excerpt | to check |
+| Ending a pregnancy | pills to week 11, $600; a procedure after, $850, to week 24 | `pregnancy/michigan.json`, `end` | Hey Jane's Michigan page (state average $600 for pills, $700–$950 in clinic, from ANSIRH 2017–2023) and Michigan Public (2023); week 24 as viability under Proposal 3 is from memory | to check |
+| A partner going on with a pregnancy | 80 in 100 | `pregnancy/michigan.json`, `partner` | none: a proposal | (tune) |
+| Birth | from week 38, over 21 days; $2,655 to the one who gives birth | `pregnancy/michigan.json`, `term`, `birth` | Peterson-KFF's analysis of 2018–2020 claims: $2,655 out of pocket for a vaginal birth with large-group insurance, through news coverage; uninsured, about $15,712 | to check; a departure (open question 81) |
+
 **Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
 
 ## Open questions

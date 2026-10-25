@@ -1,0 +1,8 @@
+{
+  "beat": "family/miscarried",
+  "when": {
+    "field": "carrier",
+    "is": "them"
+  },
+  "text": "{name} lost the pregnancy."
+}

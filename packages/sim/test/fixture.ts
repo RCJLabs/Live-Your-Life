@@ -11,7 +11,8 @@
  * walk to work (D61), with the page's `you/commute` in its log; life-v3.json by M2.4 step 3's, with
  * the street trade before the crew (deal at version 1), the law at 2 and prison; life-v4.json by
  * M2.6 step 1's, with the 1,000 people and the people you know before courting (circle at version 1);
- * life-v5.json by step 2's, before life together (circle at version 2).
+ * life-v5.json by step 2's, before life together (circle at version 2); life-v6.json by step 3's,
+ * before bodies (circle at version 3).
  */
 import { writeFileSync } from 'node:fs';
 import { type Action, createSaveFile, playRun } from '@eb/core';
