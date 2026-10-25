@@ -20,7 +20,8 @@ export const today = (v: View) => fact(v, 'time.day') as number;
 export const minuteOfDay = (v: View) => fact(v, 'time.of-day') as number;
 export const hourNow = (v: View) => today(v) * 24 + Math.floor(minuteOfDay(v) / 60);
 export const tieOf = (v: View, person: unknown) => slice(v).ties.find((t) => t.person === person);
-export const name = (v: View, person: number) => nameOf(v.content, fact(v, 'people.seed') as number, person);
+export const name = (v: View, person: number) =>
+  nameOf(v.content, fact(v, 'people.seed') as number, person, fact(v, 'time.day') as number);
 
 /**
  * Where you are with others now: the third place you've gone out to, until you do something else

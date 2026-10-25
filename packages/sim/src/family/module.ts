@@ -15,6 +15,7 @@ import {
   migrateFamily3,
   migrateFamily4,
   noFamily,
+  OTHER_DIED,
   type Pregnancy,
   YOU,
 } from './state.ts';
@@ -230,6 +231,18 @@ export const familyModule = defineModule<FamilySlice>({
     'job/worked': (ctx) => daycare(ctx),
     // A parting: who keeps a child (support.ts).
     'circle/broke-up': (ctx, event) => parted(ctx, event.person as number),
+    // Someone you knew died (D106): a child of theirs comes to live with you, and a pregnancy they carried ends.
+    'circle/died': (ctx, event) => {
+      const person = event.person as number;
+      const s = ctx.read();
+      if (s.children.some((c) => c.other === person)) {
+        ctx.write().children = s.children.map((c) =>
+          c.other !== person ? c : { ...c, other: OTHER_DIED, with: c.with === 'care' ? 'care' : 'you' },
+        );
+      }
+      if (s.pregnancy?.carrier === person) ctx.write().pregnancy = null;
+      else if (s.pregnancy?.other === person) ctx.write().pregnancy = { ...s.pregnancy, other: OTHER_DIED };
+    },
     // The 1st of the month: child support, with the rent.
     'home/rent': (ctx) => monthOfSupport(ctx),
   },

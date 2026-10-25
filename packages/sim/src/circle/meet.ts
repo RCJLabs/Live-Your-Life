@@ -6,11 +6,12 @@
  */
 import type { FactView, ModuleContext, PreviewContext, RecordStore } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
+import { MORTALITY, type MortalityRecord, mortalityOf } from '../lives/records.ts';
 import { rosterWith } from '../people/careers.ts';
 import { type HourKind, placeOf } from '../people/day.ts';
 import { planAt } from '../people/gather.ts';
+import { type Occupant, occupantAt } from '../people/lifespans.ts';
 import { LINKED, mix, type Roster } from '../people/roster.ts';
-import { whoIs } from '../people/who.ts';
 import { namePoolOf } from '../ties/records.ts';
 import { populationOf } from './records.ts';
 import { type CircleSlice, MET_ONCE, newTie } from './state.ts';
@@ -46,10 +47,23 @@ export function presentAt(roster: Roster, seed: number, hour: number, weekday: n
   return here;
 }
 
-/** A person's full name, for the chronicle. */
-export function nameOf(store: RecordStore, seed: number, person: number): string {
+/** Who holds a person's place on `day` (D106): the one there first, or a newcomer after a death. */
+export function occupant(store: RecordStore, seed: number, person: number, day: number): Occupant {
   const pop = populationOf(store);
-  const who = whoIs(pop, namePoolOf(store, pop.names), seed, person);
+  // A replay by a pack from before M2.7 has no life table: everyone there first stays.
+  const m = store.get<MortalityRecord>('mortality', MORTALITY) ? mortalityOf(store) : NOBODY_DIES;
+  return occupantAt(pop, namePoolOf(store, pop.names), m, seed, person, day);
+}
+
+const NOBODY_DIES: MortalityRecord = {
+  name: 'none',
+  table: [{ age: 0, carries: 0, not: 0 }],
+  health: { below: 0, times: 1 },
+};
+
+/** A person's full name on `day`, for the chronicle. */
+export function nameOf(store: RecordStore, seed: number, person: number, day: number): string {
+  const who = occupant(store, seed, person, day).who;
   return `${who.first} ${who.last}`;
 }
 
@@ -71,7 +85,7 @@ function together(ctx: ModuleContext<CircleSlice>, seed: number, person: number,
     slice.ties = slice.ties.filter((t) => t !== least);
   }
   slice.ties.push(newTie(person, minutes, day));
-  ctx.emit('met', { person, name: nameOf(ctx.content, seed, person) });
+  ctx.emit('met', { person, name: nameOf(ctx.content, seed, person, ctx.fact('time.day') as number) });
 }
 
 /**

@@ -6,8 +6,8 @@ import { rosterNow } from '../circle/meet.ts';
 import { newTie } from '../circle/state.ts';
 import type { Roster } from '../people/roster.ts';
 import { pregnancyOf } from './records.ts';
-import type { Child, FamilySlice } from './state.ts';
-import { monthlyNet, pow25, wageOf } from './support.ts';
+import { type Child, type FamilySlice, OTHER_DIED } from './state.ts';
+import { monthlyNet, pow25, supportFor, wageOf } from './support.ts';
 
 const rec = pregnancyOf(sim.content).support;
 const family = (s: GameState) => (s as unknown as { family: FamilySlice }).family;
@@ -93,6 +93,17 @@ describe('custody and child support (M2.6 step 4c, D100)', () => {
       children: family(apart).children.map((c) => ({ ...c, with: 'care' as const })),
     });
     expect(fact(fostered, 'family.support', { person: other })).toBe(0);
+    // Nor for one whose other parent has died (D106): whoever came to their place owes nothing.
+    const bereft = withFamily(apart, {
+      children: family(apart).children.map((c) => ({ ...c, with: 'you' as const, other: OTHER_DIED })),
+    });
+    expect(
+      supportFor(
+        { fact: (id: string, a?: Record<string, unknown>) => fact(bereft, id, a ?? {}), content: sim.content } as never,
+        other,
+        family(bereft).children,
+      ),
+    ).toBe(0);
   });
 
   it('pays the month’s support with the rent, or owes it', () => {

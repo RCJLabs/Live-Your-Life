@@ -22,13 +22,16 @@ export interface Pregnancy {
   readonly due: number;
 }
 
+/** A child's other parent who has died (M2.7, D106): their place in the city is someone else's now. */
+export const OTHER_DIED = -2;
+
 export interface Child {
   readonly born: number;
   readonly first: string;
   readonly last: string;
   readonly pronouns: Pronouns;
   readonly carries: boolean;
-  /** The other parent's number. */
+  /** The other parent's number, or OTHER_DIED once they have died (D106). */
   readonly other: number;
   /** Who they live with: you, the other parent, or foster care after a safety plan failed (D102). */
   with: 'you' | 'them' | 'care';

@@ -1,0 +1,8 @@
+{
+  "beat": "circle/died",
+  "when": {
+    "field": "partner",
+    "is": "false"
+  },
+  "text": "{name}, whom {you} knew, died."
+}
