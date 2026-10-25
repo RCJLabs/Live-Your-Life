@@ -35,7 +35,7 @@ describe('meeting the people (M2.6, D89)', () => {
     expect(game.reduce(start, { type: 'circle/go-out', place: 0 }, sim).accepted).toBe(false);
   });
 
-  it('meets people at your third place in the evening, names them in the chronicle, and ends the outing', () => {
+  it('meets people at your third place in the evening, names them in the chronicle, and keeps you there until you leave', () => {
     let met = 0;
     for (let i = 0; i < 6; i++) {
       const start = game.init(`circle-out-${i}`, sim);
@@ -49,7 +49,14 @@ describe('meeting the people (M2.6, D89)', () => {
         expect(b.person as number).toBeGreaterThanOrEqual(LINKED.count);
       }
       expect(circle(state).ties.length).toBe(meetings.length);
-      expect(game.fact(state, 'circle.out', {}, sim)).toBe(-1);
+      // Still there after the evening, until you walk home or do something else.
+      const place = haunts(start)[0] as number;
+      expect(game.fact(state, 'circle.out', {}, sim)).toBe(place);
+      const home = game.reduce(state, { type: 'circle/home' }, sim);
+      expect(home.accepted).toBe(true);
+      expect(game.fact(home.state, 'circle.out', {}, sim)).toBe(-1);
+      const slept = play(game, sim, state, doing('sleep', 60)).state;
+      expect(game.fact(slept, 'circle.out', {}, sim)).toBe(-1);
     }
     expect(met).toBeGreaterThan(0);
   });

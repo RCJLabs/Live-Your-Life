@@ -1,6 +1,6 @@
 /**
  * The panel the badge opens (D50): what waits on you, the week's shifts to sign up for, jobs
- * (M2.3), all six needs, and the journal (D52). The clock stops while it is open. Every button sends an action
+ * (M2.3), the people you know and your family (M2.6), all six needs, and the journal (D52). The clock stops while it is open. Every button sends an action
  * the game offers now; nothing here decides what can be done.
  */
 import type { Action } from '@eb/core';
@@ -9,14 +9,16 @@ import type { Work } from '../city/workplace.ts';
 import { button, el, needMeter } from './dom.ts';
 import { jobsView } from './jobs.ts';
 import { waiting } from './pending.ts';
+import { peopleView } from './people.ts';
 import type { Life } from './session.ts';
 import { dayText, money, odds } from './words.ts';
 
-export type Tab = 'waiting' | 'week' | 'jobs' | 'needs' | 'journal';
+export type Tab = 'waiting' | 'week' | 'jobs' | 'people' | 'needs' | 'journal';
 const TABS: readonly [Tab, string][] = [
   ['waiting', 'Waiting'],
   ['week', 'Shifts'],
   ['jobs', 'Jobs'],
+  ['people', 'People'],
   ['needs', 'Needs'],
   ['journal', 'Journal'],
 ];
@@ -149,9 +151,11 @@ export function makePanel(
           ? weekView(life, send)
           : tab === 'jobs'
             ? jobsView(life, work, send)
-            : tab === 'needs'
-              ? needsView(life)
-              : journalView(life);
+            : tab === 'people'
+              ? peopleView(life, work, send)
+              : tab === 'needs'
+                ? needsView(life)
+                : journalView(life);
     body.replaceChildren(view, ...(owed > 0 && tab === 'waiting' ? [rent(life, owed, send)] : []));
   }
   function hide(): void {

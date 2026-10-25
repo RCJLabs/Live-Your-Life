@@ -37,6 +37,7 @@ import { makeMap } from './map.ts';
 import { itemsAt, makeSheet, modeSheet } from './menus.ts';
 import { makePanel } from './panel.ts';
 import { type Waiting, waiting } from './pending.ts';
+import { TRIP_HOME, TRIP_OUT } from './people.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
 import { Player, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
@@ -193,6 +194,10 @@ export function play(
       }
       return;
     }
+    if (a.type === TRIP_OUT || a.type === TRIP_HOME) {
+      goOut(a);
+      return;
+    }
     const before = life.fact('time.tick') as number;
     const ok = life.act(a);
     s.waitingAt = 0;
@@ -203,9 +208,31 @@ export function play(
     const after = life.fact('time.tick') as number;
     const f = at?.fixture?.use;
     if (at && f) player.use(at, f.pose === 'lie' ? 'lie' : f.pose, a.activity === 'sleep' ? 'sleep' : null);
-    const ms = Math.min(FF.max, Math.max(FF.min, (after - before) * FF.perMinute));
-    s.ff = { from: before, to: after, start: performance.now(), ms };
+    s.ff = { from: before, to: after, start: performance.now(), ms: ffMs(after - before) };
   }
+
+  /** Out to a haunt or home from one (M2.6): the walk passes, then the circle hears where you are. */
+  function goOut(a: Action): void {
+    const out = life.fact('circle.out') as number;
+    const place = a.type === TRIP_OUT ? (a.place as number) : out;
+    if (place < 0) return;
+    const walk = work.walkToPlace(place)?.minutes ?? 0;
+    const before = life.fact('time.tick') as number;
+    const steps: Action[] =
+      a.type === TRIP_OUT
+        ? [
+            { type: 'time/advance', minutes: walk },
+            { type: 'circle/go-out', place },
+          ]
+        : [{ type: 'circle/home' }, { type: 'time/advance', minutes: walk }];
+    for (const step of steps) if (!life.act(step)) break;
+    save();
+    player.stop();
+    panel.refresh();
+    const after = life.fact('time.tick') as number;
+    if (after > before) s.ff = { from: before, to: after, start: performance.now(), ms: ffMs(after - before) };
+  }
+  const ffMs = (minutes: number) => Math.min(FF.max, Math.max(FF.min, minutes * FF.perMinute));
 
   let here: Place | null = null;
   const sheet = makeSheet(
@@ -430,6 +457,8 @@ export function play(
             serves: p.serves ?? [],
           })),
         options: () => life.options().map((a) => ({ ...a })),
+        /** A preview, as the panel reads it, so a test can hold the odds on screen to the odds rolled. */
+        peek: (q: Record<string, unknown>) => life.peek(q as never),
         /** Whether the page is busy on its own: walking, or an activity's time passing on screen. */
         busy: () => player.walking || s.ff !== null || trip !== null,
         /** Where a trip to work is (M2.3), or null. */

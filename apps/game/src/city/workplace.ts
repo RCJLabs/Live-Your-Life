@@ -35,6 +35,8 @@ export interface Work {
   lotOf(employer: string): number;
   /** The walk from your door to an employer's, in metres and game minutes; null for your block's own. */
   walkTo(employer: string): { readonly metres: number; readonly minutes: number } | null;
+  /** The walk from your door to a roster place's lot (M2.6: a third place you go out to). */
+  walkToPlace(place: number): { readonly metres: number; readonly minutes: number } | null;
 }
 
 const kept = new WeakMap<TownScene, Map<string, Work>>();
@@ -86,8 +88,15 @@ export function workOf(town: TownScene, seed: number, n: number): Work {
     placed,
     lotOf,
     walkTo(id) {
-      if (walks.has(id)) return walks.get(id) ?? null;
-      const lot = lotOf(id);
+      return walkToLot(id, lotOf(id));
+    },
+    walkToPlace(place) {
+      return walkToLot(`place-${place}`, placed.lot[place] ?? -1);
+    },
+  };
+  function walkToLot(id: string, lot: number): { metres: number; minutes: number } | null {
+    if (walks.has(id)) return walks.get(id) ?? null;
+    {
       let out: { metres: number; minutes: number } | null = null;
       if (lot >= 0) {
         streets ??= streetsOf(town.city, records);
@@ -100,8 +109,8 @@ export function workOf(town: TownScene, seed: number, n: number): Work {
       }
       walks.set(id, out);
       return out;
-    },
-  };
+    }
+  }
   if (!kept.has(town)) kept.set(town, new Map());
   kept.get(town)?.set(key, work);
   return work;
