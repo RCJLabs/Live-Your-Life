@@ -41,6 +41,7 @@ describe('the clock', () => {
       'circle/file-divorce',
       'circle/go-on-date',
       'circle/go-out',
+      'circle/home',
       'circle/licence',
       'circle/marry',
       'circle/plan-date',

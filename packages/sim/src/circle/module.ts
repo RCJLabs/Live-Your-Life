@@ -222,6 +222,14 @@ export const circleModule = defineModule<CircleSlice>({
           .map((place) => ({ place }));
       },
     },
+    // Going home from the place you went out to (M2.6 step 5): you're no longer there.
+    home: {
+      run: (ctx) => {
+        if (ctx.read().out < 0) return ctx.refuse('not-out');
+        ctx.write().out = -1;
+      },
+      options: (view) => (view.state.out >= 0 ? [{}] : []),
+    },
     // Whom you are drawn to (D91): yours to say at the start and to change in settings. A setting,
     // not a turn's choice, so nothing offers it.
     'drawn-to': (ctx, action) => {
@@ -270,13 +278,13 @@ export const circleModule = defineModule<CircleSlice>({
     'life/started': (ctx, event) => {
       if (event.activity !== 'socialize' && ctx.read().out >= 0) ctx.write().out = -1;
     },
-    // An evening out: the people at your third place, hour by hour, as long as you stayed.
+    // An evening out: the people at your third place, hour by hour, as long as you stayed. You're
+    // still there after it, to stay longer or walk home (step 5); doing anything else ends it.
     'life/ended': (ctx, event) => {
       const out = ctx.read().out;
       if (out < 0 || event.activity !== 'socialize') return;
       const now = minuteNow(ctx);
       meetAt(ctx, out, now - (event.minutes as number), now, 100);
-      ctx.write().out = -1;
     },
     // A shift at a tier-1 workplace: the people on with you, counted for less (Hall).
     'job/worked': (ctx, event) => {

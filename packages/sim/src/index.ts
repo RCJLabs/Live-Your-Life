@@ -43,6 +43,9 @@ export {
   QUIET,
   weight,
 } from './chronicle.ts';
+export { courtshipOf } from './circle/records.ts';
+// The people you know and your family (M2.6).
+export { type CircleSlice, partnered, type Status, type Tie } from './circle/state.ts';
 export {
   type BackPlan,
   type BlockPlan,
@@ -144,6 +147,9 @@ export { buyerOdds, MOST_HELD, seenOdds } from './deal/trade.ts';
 export { outNow, passingNow } from './deal/witnesses.ts';
 export { dealerFor } from './dealer.ts';
 export * from './dials.ts';
+export { endCost } from './family/module.ts';
+export { pregnancyOf } from './family/records.ts';
+export { type Child, type FamilySlice, type Pregnancy, YOU } from './family/state.ts';
 export {
   createLifeGame,
   type LifeOptions,
