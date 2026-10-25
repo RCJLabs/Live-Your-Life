@@ -25,6 +25,8 @@ export interface Candidate {
   readonly carries: boolean;
   /** The day they were born, counted from the life's first day: before it for anyone older. */
   readonly born: number;
+  /** A child's other parent, who raises a ward (D108): their number, or below 0 for none. */
+  readonly other: number;
 }
 
 export interface Heir extends Candidate {

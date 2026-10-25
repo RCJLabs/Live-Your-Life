@@ -99,6 +99,7 @@ When a figure is softened or sharpened for play, it is written here with the rea
 - **Pay comes the Friday after the work, not a week or two later.** Most restaurants pay a week or two in arrears, so a new hire's first paycheck comes after ten days or more. The slice is one week, and it would see no pay at all.
 - **A hospital takes you in only for an illness or injury.** Health falls at the needs' pace, which brings an unfed day to zero; a real day without food puts nobody in hospital (ROADMAP open question 91).
 - **Coverage is Medicaid or none.** Most Michigan workers are covered by an employer or the Marketplace; the careers don't offer cover yet, and the Marketplace's subsidies aren't modelled.
+- **A ward's years are nobody's.** A child under 18 who carries on doesn't die, fall ill or spend in the years to 18, and what was left them waits without interest (ROADMAP open question 96).
 - **An heir brings nothing of their own.** A partner or friend who carries on starts with the estate alone, no savings and no job of their own; a child who carries on leaves their brothers and sisters out of the save (ROADMAP open question 93).
 - **Withholding is not the tax owed.** A year's withholding is settled by a return, with a refund or a bill. The return is the money milestone's; until then, what is withheld is gone.
 

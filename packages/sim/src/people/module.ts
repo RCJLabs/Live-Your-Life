@@ -9,9 +9,11 @@
  * people, as flat arrays of numbers: the kernel copies and freezes a module's whole slice in
  * every action that writes to it, so a share moved on alone costs only its own copy.
  */
+
 import { type Beat, defineModule, type Module, type ModuleContext } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
 import { START_LEVELS } from '../dials.ts';
+import { inWardYears } from '../lives/ward.ts';
 import { type Activity, type Levels, NEEDS, PERCENT, settle } from '../needs.ts';
 import { rosterWith } from './careers.ts';
 import { HOURS, type HourKind } from './day.ts';
@@ -146,6 +148,11 @@ const inDays = (ctx: ModuleContext<City>, event: Beat) => {
   if (span <= 0) return;
   const now = minuteNow(ctx);
   let from = now - span;
+  // A ward's years (D108): passed on whole, once, for every share to step over.
+  if (inWardYears(ctx)) {
+    ctx.emit('passed', { from, to: now });
+    return;
+  }
   for (let midnight = (Math.floor(from / DAY) + 1) * DAY; midnight < now; midnight += DAY) {
     ctx.emit('passed', { from, to: midnight });
     from = midnight;
@@ -218,6 +225,12 @@ const onItsHour = (k: number, of: number) => (ctx: ModuleContext<PeopleSlice>, e
   const from = event.from as number;
   const to = event.to as number;
   if (to <= from) return;
+  // A ward's years (D108): the people aren't lived hour by hour for 18 years. They pick up where
+  // they are, the hour settled moved to now; who holds each place is the seed's (lifespans.ts).
+  if (inWardYears(ctx)) {
+    ctx.write().hour = Math.floor(to / 60);
+    return;
+  }
   // The first hour after the passage began that is this share's, and whether it came.
   const startHour = Math.floor(from / 60) + 1;
   const due = startHour + ((((k - startHour) % of) + of) % of);

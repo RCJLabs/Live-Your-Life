@@ -5,7 +5,9 @@
  * works its career's shifts. Which person is drawn from the seed and the opening. Only the moves
  * are kept; everyone else is where the roster puts them (careers.ts).
  */
+
 import { type Beat, defineModule, type ModuleContext } from '@eb/core';
+import { inWardYears } from '../lives/ward.ts';
 import { type Employer, employersOf, hashOf } from '../market/employers.ts';
 import { FILL, postedIn } from '../market/openings.ts';
 import { LINKED, mix, rosterOf } from './roster.ts';
@@ -80,6 +82,11 @@ function onPassed(ctx: Ctx, event: Beat): void {
   const to = Math.floor((event.to as number) / DAY);
   const from = ctx.read().day;
   if (to <= from) return;
+  // A ward's years (D108): the jobs people hold stay as they were, not heard day by day for 18 years.
+  if (inWardYears(ctx)) {
+    ctx.write().day = to;
+    return;
+  }
   const seed = ctx.fact('people.seed') as number;
   const n = ctx.fact('people.count') as number;
   const workplaces = employersOf(ctx.content, seed, rosterOf(seed, n), HOME).filter((e) => e.place >= 0);

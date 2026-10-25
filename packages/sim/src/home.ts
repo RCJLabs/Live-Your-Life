@@ -32,6 +32,12 @@ export const homeModule = defineModule<HomeSlice>({
     },
   },
   effects: {
+    // The next 1st's rent, set again at midnight after a ward's years, which pass without it (D108).
+    'rent-next': (ctx) => {
+      const days = daysToNextMonth(ctx.fact('time.month') as string, ctx.fact('time.day-of-month') as number);
+      const minutes = days * 1440 - (ctx.fact('time.of-day') as number);
+      ctx.apply({ effect: 'schedule', timer: RENT_TIMER, after: { minutes }, effects: [{ effect: 'rent-due' }] });
+    },
     'rent-due': (ctx) => {
       // Paid if the cash is there; owed if not. The attempt keeps a refusal from undoing the month.
       const paid = ctx.attempt(() => ctx.apply({ effect: 'pay-cost', cost: { cash: RENT } }));

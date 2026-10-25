@@ -41,14 +41,33 @@ export function heirSheet(life: Life): { title: string; lead: string; items: Ite
   const heir = e.heir;
   let lead = `You died at ${age}.`;
   if (!heir) lead += ' Nobody is left to carry on. The city goes on without you.';
-  else if (heir.kind === 'ward') {
+  else {
     const years = Math.floor(((life.fact('time.day') as number) - heir.born) / 365);
-    lead += ` ${heir.first}, ${RELATION.ward}, is ${years}: too young yet to carry on.`;
-  } else {
-    lead += ` ${heir.first} ${heir.last}, ${RELATION[heir.kind]}, carries on. ${estateLine(e, heir)}`;
+    const who =
+      heir.kind === 'ward'
+        ? `${heir.first}, ${RELATION.ward}, is ${years}, and will carry on at 18; the years until then pass at once.`
+        : `${heir.first} ${heir.last}, ${RELATION[heir.kind]}, carries on.`;
+    lead += ` ${who} ${estateLine(e, heir)}`;
     const go = life.options().find((a) => a.type === 'lives/succeed');
-    if (go) items.push({ label: `Go on as ${heir.first}`, action: go });
+    const label = heir.kind === 'ward' ? `Go on as ${heir.first}, at 18` : `Go on as ${heir.first}`;
+    if (go) items.push({ label, action: go });
   }
   items.push({ label: 'Your lives', action: { type: LIVES } });
   return { title: 'Your life ended', lead, items };
+}
+
+/** A ward's 18th birthday (D108): the years passed, who raised them, and their first morning of their own. */
+export function wardSheet(life: Life): { title: string; lead: string; items: Item[] } {
+  const { from, guardian } = life.mode.data as { from: number; guardian: number };
+  const day = life.fact('time.day') as number;
+  const years = Math.floor((day - from) / 365);
+  const first = (life.state.you as { first: string }).first;
+  const raised =
+    guardian >= 0
+      ? `${life.fact('circle.name', { person: guardian }) as string} raised ${first}`
+      : `Relatives raised ${first}`;
+  const cash = life.fact('economy.amount', { resource: 'cash' }) as number;
+  const lead = `${years} years have passed. ${raised}. You are ${first} now, 18 today, with ${money(cash)} left to you.`;
+  const begin = life.options().find((a) => a.type === 'lives/begin');
+  return { title: `${first} came of age`, lead, items: begin ? [{ label: 'Begin', action: begin }] : [] };
 }

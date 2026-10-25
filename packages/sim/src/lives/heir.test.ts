@@ -73,10 +73,9 @@ describe('the heir (M2.7 step 3, D20, D107, D109)', () => {
     const notClose = withCircle(friendOnly, { ties: [{ ...friend, regard: estate.friend - 1 }] });
     expect(heirOf(v(notClose))).toBeNull();
     expect(game.options(notClose, sim)).toEqual([]);
-    // A ward waits for step 3b: not offered, and refused.
+    // A ward goes on too, after the jump (D108).
     const ward = withCircle(noAdult, { ties: [] });
-    expect(game.options(ward, sim).map((a) => a.type)).toEqual([]);
-    expect(game.reduce(ward, { type: 'lives/succeed' }, sim).accepted).toBe(false);
+    expect(game.options(ward, sim).map((a) => a.type)).toEqual(['lives/succeed']);
   });
 
   it('settles the estate: debts first, probate above the small-estate limit, nothing owed past it', () => {
@@ -146,6 +145,53 @@ describe('the heir (M2.7 step 3, D20, D107, D109)', () => {
     // Your spouse is their parent now, a person they know.
     expect(circle(s).ties[0]).toMatchObject({ person: PARTNER, status: 'known' });
     expect(circle(s).self).toBe(-1);
+  });
+
+  it('passes a ward’s years to 8:00 on their 18th birthday, and they wake as you, the city’s timers set again', () => {
+    const s0 = died('heir-ward');
+    const day = fact(s0, 'time.day') as number;
+    const owing = {
+      ...withFamily(withCircle(s0, { ties: [] }), { children: [kid(day - 5 * 365, PARTNER, 'Mae')] }),
+      home: { owed: 0 },
+    } as GameState;
+    const t0 = performance.now();
+    const r = play(game, sim, withCash(owing, 300_000), { type: 'lives/succeed' }, { type: 'lives/begin' });
+    const ms = performance.now() - t0;
+    const s = r.state;
+    expect(r.of('lives/succeeded')[0]).toMatchObject({ kind: 'ward', first: 'Mae' });
+    expect(r.of('lives/came-of-age')[0]?.years).toBe(13);
+    const aged = r.beats.find((b) => b.type === 'lives/came-of-age') as never;
+    expect(lineFor(sim.content, aged, { you: 'Mae K' }, DEFAULT_START)).toBe(
+      'Mae K came of age, 13 years on, and took up the family’s life.',
+    );
+    expect(fact(s, 'time.day')).toBe(day - 5 * 365 + 18 * 365);
+    expect(fact(s, 'time.of-day')).toBe(8 * 60);
+    expect(fact(s, 'circle.your-age')).toBe(18);
+    expect((s.you as { first: string }).first).toBe('Mae');
+    expect(game.allowedActions(s)).toContain('life/do');
+    // No rent ran up while they were raised elsewhere, and the cash left them waited.
+    expect(fact(s, 'home.owed')).toBe(0);
+    expect(cashOf(s)).toBe(300_000);
+    expect(fact(s, 'life.need', { need: 'food' })).toBe(fact(game.init('fresh', sim), 'life.need', { need: 'food' }));
+    const timers = (s.time as { timers: { id: string; due: number }[] }).timers.map((t) => t.id).sort();
+    expect(timers).toEqual(expect.arrayContaining(['midnight', 'rent']));
+    // And the first midnight after comes that night, not 18 years of them at once.
+    const next = play(game, sim, s, advance(MINUTES_PER_DAY));
+    expect(next.of('time/fired').filter((b) => b.timer === 'midnight').length).toBe(1);
+    // 13 years in about 13 ms; lived by the people and their jobs, 2 to 50 s (ROADMAP Readings).
+    expect(ms).toBeLessThan(1000);
+  });
+
+  it('rolls neither death nor illness for a ward’s years, nor all of them at once after', () => {
+    // Certain death a year, and illness at its rates: none of it is the ward's until they are 18.
+    const harsh = sliceSim({ ...PACK.records, mortality: { [MORTALITY]: deadly.content.get('mortality', MORTALITY) } });
+    const s0 = died('heir-ward-safe');
+    const day = fact(s0, 'time.day') as number;
+    const s1 = withFamily(withCircle(s0, { ties: [] }), { children: [kid(day - 2 * 365, PARTNER, 'Mae')] });
+    const r = play(game, harsh, s1, { type: 'lives/succeed' }, { type: 'lives/begin' }, advance(MINUTES_PER_DAY));
+    expect(r.of('lives/died')).toEqual([]);
+    expect(r.of('health/fell-ill').length).toBeLessThanOrEqual(1);
+    expect(lives(r.state).died).toBe(-1);
   });
 
   it('meets everyone at a place but yourself, once an heir who lived in the city is you', () => {
