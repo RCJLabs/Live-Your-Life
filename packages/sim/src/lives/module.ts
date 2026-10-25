@@ -6,10 +6,14 @@
  * `succeeded` and sets aside what was yours alone, and the heir lives on as you.
  */
 import { defineModule, type ModuleContext, type RecordStore } from '@eb/core';
+import { populationOf } from '../circle/records.ts';
+import { START_CASH } from '../dials.ts';
 import { RENT_TIMER } from '../home.ts';
 import { smallRoll } from '../odds.ts';
-import { ADULT } from '../people/who.ts';
+import { ADULT, carriesFor } from '../people/who.ts';
+import { namePoolOf } from '../ties/records.ts';
 import { MIDNIGHT_TIMER, midnightTimer } from '../timers.ts';
+import { NAMES } from '../you.ts';
 import { estateNow, heirOf } from './heir.ts';
 import { mortalityOf, yearChance } from './records.ts';
 import { inWardYears, WARD } from './ward.ts';
@@ -93,6 +97,37 @@ function begin(ctx: Ctx): void {
   ctx.emit('came-of-age', { years: Math.floor((day - from) / 365) });
 }
 
+/**
+ * A newcomer of 18 in the city, when nobody is left to carry on (D20): someone with nothing of the
+ * life before. What you left goes to the state, debts and all, and the newcomer starts with a new
+ * life's cash. Drawn from the name pool and the population's bands, as anyone is.
+ */
+function startOver(ctx: Ctx): void {
+  const pool = namePoolOf(ctx.content, NAMES);
+  const rng = ctx.rng('lives');
+  const name = rng.pick(pool.first);
+  const day = ctx.fact('time.day') as number;
+  const pronouns = name.pronouns;
+  const carries = carriesFor(populationOf(ctx.content), pronouns, rng.int(0, 999));
+  const born = day - ADULT * 365;
+  const was = ctx.fact('you.first') as string;
+  const coworker = ctx.fact('ties.name') as string;
+  const cash = ctx.fact('economy.amount', { resource: 'cash' }) as number;
+  if (cash > START_CASH) ctx.apply({ effect: 'pay-cost', cost: { cash: cash - START_CASH } });
+  else if (cash < START_CASH) ctx.apply({ effect: 'add-resource', resource: 'cash', by: START_CASH - cash });
+  const gen = ctx.read().gen + 1;
+  const w = ctx.write();
+  w.died = -1;
+  w.gen = gen;
+  w.born = born;
+  w.settled = day;
+  while (ctx.modes.current.id !== 'world') ctx.modes.pop();
+  ctx.emit('succeeded', {
+    ...{ kind: 'newcomer', person: -1, child: -1, first: name.name, last: rng.pick(pool.last), pronouns, carries },
+    ...{ born, gen, was, coworker, left: 0, debts: 0, probate: 0 },
+  });
+}
+
 export const livesModule = defineModule<LivesSlice>({
   id: 'lives',
   // 2 (M2.7 step 3): the generation and the day you were born, for an heir.
@@ -103,7 +138,7 @@ export const livesModule = defineModule<LivesSlice>({
     died: { args: { cause: { type: 'enum', values: ['age'] }, age: { type: 'int', min: 0 } }, label: 'You died' },
     succeeded: {
       args: {
-        kind: { type: 'enum', values: ['child', 'partner', 'ward', 'friend'] },
+        kind: { type: 'enum', values: ['child', 'partner', 'ward', 'friend', 'newcomer'] },
         person: { type: 'int', min: -1 },
         child: { type: 'int', min: -1 },
         first: { type: 'text' },
@@ -138,6 +173,15 @@ export const livesModule = defineModule<LivesSlice>({
       run: (ctx) => (inWardYears(ctx) ? begin(ctx) : ctx.refuse('not-a-ward')),
       // Only the dead and ward modes allow the lives' actions; dead, it is the heir's turn instead.
       options: (v) => (v.state.died < 0 ? [{}] : []),
+    },
+    // With nobody to carry on, the chronicle closes and a new life starts in the same city (D20).
+    'start-over': {
+      run: (ctx) => {
+        if (ctx.read().died < 0) return ctx.refuse('alive');
+        if (heirOf(ctx)) return ctx.refuse('an-heir');
+        startOver(ctx);
+      },
+      options: (v) => (v.state.died >= 0 && !heirOf(v) ? [{}] : []),
     },
     // The heir carries on (D20, D107); a ward after the jump to their 18th birthday (D108).
     succeed: {

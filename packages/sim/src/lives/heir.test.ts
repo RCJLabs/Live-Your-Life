@@ -72,7 +72,7 @@ describe('the heir (M2.7 step 3, D20, D107, D109)', () => {
     expect(heirOf(v(friendOnly))).toMatchObject({ kind: 'friend', person: FRIEND });
     const notClose = withCircle(friendOnly, { ties: [{ ...friend, regard: estate.friend - 1 }] });
     expect(heirOf(v(notClose))).toBeNull();
-    expect(game.options(notClose, sim)).toEqual([]);
+    expect(game.options(notClose, sim)).toEqual([{ type: 'lives/start-over' }]);
     // A ward goes on too, after the jump (D108).
     const ward = withCircle(noAdult, { ties: [] });
     expect(game.options(ward, sim).map((a) => a.type)).toEqual(['lives/succeed']);

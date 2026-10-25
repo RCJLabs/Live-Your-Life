@@ -61,6 +61,7 @@ node packages/sim/test/block-bench.ts [seeds] [rounds]   # the block bench: ms t
 node packages/sim/test/prison-bench.ts [days] [rounds]   # a day in prison with the 1,000 people, timed: what the page spends a frame passing a sentence
 node packages/sim/test/pays-bench.ts [lives] [weeks]    # dealers against line cooks, worth after what is owed: realism bar B6 (60 lives, 8 weeks)
 node packages/sim/test/couples-bench.ts [lives] [weeks]   # the suitor bot's year: dating, moving in, marrying, nights and pregnancies (40 lives, 52 weeks; about 10 minutes)
+node packages/sim/test/lives-bench.ts [lives]          # the year in lives (M2.7): deaths by age band against the life table, illnesses against the record (1,000 lives; about 12 minutes)
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.

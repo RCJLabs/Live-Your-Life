@@ -7,7 +7,17 @@
  */
 
 import { defineModule, type ModuleContext } from '@eb/core';
-import { dayChance, type IllnessRecord, illnessOf, kindOf, shiftChance } from './records.ts';
+import {
+  COVERAGES,
+  type Coverage,
+  dayChance,
+  hospitalCost,
+  type IllnessRecord,
+  illnessOf,
+  kindOf,
+  shiftChance,
+  visitCost,
+} from './records.ts';
 
 export interface HealthSlice {
   /** What you have and when it ends, and the day it stops keeping you from work. */
@@ -27,7 +37,9 @@ type View = { fact(id: string, args?: Readonly<Record<string, unknown>>): unknow
 const day = (v: View) => v.fact('time.day') as number;
 
 /** Medicaid when your gross month is under the line for your household (D105), or none. */
-export function coverage(v: View, r: IllnessRecord): 'medicaid' | 'none' {
+export function coverage(v: View, r: IllnessRecord): Coverage {
+  // An employer's plan first: those who have one take it, whatever Medicaid would give.
+  if (v.fact('job.insured') === true) return 'employer';
   const household = 1 + ((v.fact('circle.living') as number) >= 0 ? 1 : 0) + (v.fact('family.with-you') as number);
   const month = ((v.fact('job.employed') === true ? (v.fact('job.wage') as number) : 0) * r.medicaid.hours) | 0;
   return month < r.medicaid.one + (household - 1) * r.medicaid.each ? 'medicaid' : 'none';
@@ -60,7 +72,7 @@ function dayOf(ctx: Ctx, r: IllnessRecord, d: number): void {
     } else {
       // Fed, rested and washed, as prison's day is, and treated: health given back by the day.
       ctx.apply({ effect: 'adjust-needs', needs: { ...CARED, health: r.hospital.health } });
-      bill(ctx, r.hospital[coverage(ctx, r)]);
+      bill(ctx, hospitalCost(r, coverage(ctx, r)));
     }
   }
   const ill = ctx.read().ill;
@@ -115,7 +127,7 @@ export const healthModule = defineModule<HealthSlice>({
     recovered: { args: { kind: { type: 'text' } }, label: 'Got better' },
     'saw-doctor': { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'Saw a doctor' },
     admitted: {
-      args: { days: { type: 'int', min: 1 }, coverage: { type: 'enum', values: ['medicaid', 'none'] } },
+      args: { days: { type: 'int', min: 1 }, coverage: { type: 'enum', values: COVERAGES } },
       label: 'Taken into hospital',
     },
     discharged: { args: {}, label: 'Let out of hospital' },
@@ -141,13 +153,13 @@ export const healthModule = defineModule<HealthSlice>({
         const r = illnessOf(v.content);
         return r ? coverage(v, r) : 'none';
       },
-      domain: { type: 'enum', values: ['medicaid', 'none'] },
+      domain: { type: 'enum', values: COVERAGES },
       label: 'who pays for your care',
     },
     'visit-cost': {
       read: (v) => {
         const r = illnessOf(v.content);
-        return r ? r.visit[coverage(v, r)] : 0;
+        return r ? visitCost(r, coverage(v, r)) : 0;
       },
       domain: { type: 'int', min: 0 },
       label: 'what a doctor’s visit costs you',
@@ -166,7 +178,7 @@ export const healthModule = defineModule<HealthSlice>({
         const r = illnessOf(ctx.content);
         if (!r || !canVisit(ctx, ctx.read(), r)) return ctx.refuse('no-visit');
         const ill = ctx.read().ill as NonNullable<HealthSlice['ill']>;
-        const cents = r.visit[coverage(ctx, r)];
+        const cents = visitCost(r, coverage(ctx, r));
         const paid = bill(ctx, cents);
         const k = kindOf(r, ill.kind);
         ctx.write().ill = {

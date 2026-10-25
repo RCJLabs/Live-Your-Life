@@ -1,5 +1,6 @@
 import type { GameState } from '@eb/core';
 import type { LawState } from '@lyl/sim';
+import { newTie } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { blockScene } from '../city/scene.ts';
 import { itemsAt, LIVES, modeSheet } from './menus.ts';
@@ -97,19 +98,32 @@ describe('what a place offers (M1.6)', () => {
 });
 
 describe('a life that has ended (M2.7, D103)', () => {
-  it('says so, with your age, and leads only back to your lives', () => {
+  it('says so, with your age, and starts a new life in the same city, or leads back to your lives', () => {
     const alive = new Life('ended');
     const s = alive.state;
     const dead = {
       ...s,
       lives: { ...(s.lives as object), died: 3 },
+      circle: { ...(s.circle as object), ties: [newTie(40, 600, 0)] },
+      economy: { ...(s.economy as object), amounts: { cash: 5_000_000 } },
       kernel: { ...s.kernel, modes: [...s.kernel.modes, { id: 'dead', data: {} }] },
     } as GameState;
     const life = new Life({ state: dead, kept: [] });
     const sheet = modeSheet(life);
     expect(sheet?.title).toBe('Your life ended');
     expect(sheet?.lead).toContain(`You died at ${life.fact('circle.your-age')}.`);
-    expect(sheet?.items.map((i) => i.action.type)).toEqual([LIVES]);
-    expect(life.options()).toEqual([]);
+    expect(sheet?.items.map((i) => i.action.type)).toEqual(['lives/start-over', LIVES]);
+    expect(life.options().map((a) => a.type)).toEqual(['lives/start-over']);
+    // A newcomer of 18 in the same city, with a new life's cash and nobody known (D20).
+    const seed = life.fact('people.seed');
+    expect(life.act(sheet?.items[0]?.action as never)).toBe(true);
+    expect(life.mode.id).toBe('world');
+    expect(life.fact('circle.your-age')).toBe(18);
+    expect(life.fact('people.seed')).toBe(seed);
+    expect(life.fact('circle.known')).toBe(0);
+    expect(life.fact('economy.amount', { resource: 'cash' })).toBe(alive.fact('economy.amount', { resource: 'cash' }));
+    expect(life.journal.at(-1)?.text).toMatch(
+      /^Nobody was left to carry on the life of .+\. .+ came to the city with nothing of it\.$/,
+    );
   });
 });

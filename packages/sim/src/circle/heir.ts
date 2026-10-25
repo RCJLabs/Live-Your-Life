@@ -69,6 +69,7 @@ const asKnown = (t: Tie, pull: number): Tie => ({
 });
 
 export interface Succession {
+  readonly kind: string;
   readonly person: number;
   readonly pronouns: Pronouns;
   readonly carries: boolean;
@@ -84,7 +85,8 @@ export function succeeded(ctx: ModuleContext<CircleSlice>, h: Succession): void 
   const age = Math.floor((day - h.born) / 365);
   const s = ctx.read();
   const w = ctx.write();
-  w.ties = s.ties.filter((t) => t.person !== h.person).map((t) => asKnown(t as Tie, pull));
+  // A newcomer knows nobody yet; an heir knows those you knew.
+  w.ties = h.kind === 'newcomer' ? [] : s.ties.filter((t) => t.person !== h.person).map((t) => asKnown(t as Tie, pull));
   w.self = h.person;
   w.out = -1;
   w.carries = h.carries;

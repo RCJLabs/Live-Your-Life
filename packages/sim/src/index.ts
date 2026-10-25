@@ -161,7 +161,7 @@ export {
 } from './game.ts';
 // Illness, injury and care (M2.7 step 2).
 export { type HealthSlice, healthModule } from './health/module.ts';
-export { type IllnessRecord, illnessOf, kindOf } from './health/records.ts';
+export { type Coverage, hospitalCost, type IllnessRecord, illnessOf, kindOf, visitCost } from './health/records.ts';
 export { type HomeSlice, homeModule, RENT_TIMER } from './home.ts';
 export { drawFrom, LEAST, MOST, oddsOf } from './job/events.ts';
 export { type Hire, jobModule } from './job/module.ts';
@@ -198,6 +198,8 @@ export {
 export { oddsAt, shopOn, stockOf } from './law/shop.ts';
 export type { Case, Hold, LawSlice, Visit } from './law/state.ts';
 export { ACTIVITY_TIMER, type LifeSlice, levelsNow, lifeModule } from './life.ts';
+// Your life's length and the heir (M2.7).
+export { type MortalityRecord, mortalityOf, yearChance } from './lives/records.ts';
 export { type Employer, employersOf, hashOf, homeEmployer, SITES } from './market/employers.ts';
 export {
   type Application,

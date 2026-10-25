@@ -82,6 +82,13 @@ export function jobModule(hire?: Hire) {
     init: (ctx) => (hire ? hiredAt(ctx, hire) : jobless()),
     facts: {
       employed: { read: ({ state }) => state.employed, domain: { type: 'bool' }, label: 'has a job' },
+      // Heard by health (M2.7, D105): a job whose employer offers health cover.
+      insured: {
+        read: ({ state, content }) =>
+          state.employed && state.career !== null && careerFor(content, state).insurance === true,
+        domain: { type: 'bool' },
+        label: 'covered by an employer’s health plan',
+      },
       // Heard by the family (M2.6 step 4c): what child support is worked out from.
       wage: {
         read: ({ state, content }) => (state.employed && state.career ? careerFor(content, state).wage : 0),

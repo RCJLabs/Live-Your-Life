@@ -11,7 +11,7 @@ import { ADULT } from '../people/who.ts';
 import type { Pronouns } from '../ties/records.ts';
 import { estateOf } from './records.ts';
 
-export type HeirKind = 'child' | 'partner' | 'ward' | 'friend';
+export type HeirKind = 'child' | 'partner' | 'ward' | 'friend' | 'newcomer';
 
 /** Someone who could carry on: a child of yours, by their place in your family, or a tier-1 person. */
 export interface Candidate {

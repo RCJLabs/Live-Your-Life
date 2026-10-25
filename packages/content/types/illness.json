@@ -38,6 +38,12 @@
       "fields": {
         "none": { "kind": "int", "min": 0 },
         "medicaid": { "kind": "int", "min": 0 },
+        "employer": {
+          "kind": "int",
+          "min": 0,
+          "optional": true,
+          "description": "The copay on an employer's plan (M2.7 step 5)."
+        },
         "minutes": { "kind": "int", "min": 1, "max": 600 },
         "opens": { "kind": "int", "min": 0, "max": 23 },
         "closes": { "kind": "int", "min": 1, "max": 24 }
@@ -50,6 +56,12 @@
         "days": { "kind": "int", "min": 1, "max": 60 },
         "none": { "kind": "int", "min": 0 },
         "medicaid": { "kind": "int", "min": 0 },
+        "employer": {
+          "kind": "int",
+          "min": 0,
+          "optional": true,
+          "description": "What an employer's plan leaves you to pay a day."
+        },
         "health": { "kind": "int", "min": 1, "max": 100 }
       }
     },

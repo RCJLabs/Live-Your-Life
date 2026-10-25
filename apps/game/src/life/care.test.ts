@@ -1,5 +1,13 @@
 import type { GameState } from '@eb/core';
-import { type HealthSlice, type IllnessRecord, illnessOf, kindOf } from '@lyl/sim';
+import {
+  type Coverage,
+  type HealthSlice,
+  hospitalCost,
+  type IllnessRecord,
+  illnessOf,
+  kindOf,
+  visitCost,
+} from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
 import { modeSheet } from './menus.ts';
 import { waiting } from './pending.ts';
@@ -40,7 +48,7 @@ describe('illness and care on the page (M2.7 step 2)', () => {
     const r = illnessOf(life.sim.content) as IllnessRecord;
     const line = waiting(life).find((w) => w.kind === 'health');
     expect(line?.text).toContain('You have the flu.');
-    const cents = r.visit[life.fact('health.coverage') as 'medicaid' | 'none'];
+    const cents = visitCost(r, life.fact('health.coverage') as Coverage);
     expect(line?.text).toContain(money(cents));
     expect(line?.actions.map((a) => a.action.type)).toEqual(['health/see-doctor']);
     life.act(line?.actions[0]?.action as never);
@@ -56,8 +64,9 @@ describe('illness and care on the page (M2.7 step 2)', () => {
     const sheet = modeSheet(life);
     expect(sheet?.title).toBe('In hospital');
     const r = illnessOf(life.sim.content) as IllnessRecord;
-    const medicaid = life.fact('health.coverage') === 'medicaid';
-    const cents = r.hospital[medicaid ? 'medicaid' : 'none'];
+    const cover = life.fact('health.coverage') as Coverage;
+    const medicaid = cover === 'medicaid';
+    const cents = hospitalCost(r, cover);
     expect(sheet?.lead).toContain(medicaid && cents === 0 ? 'Medicaid pays for it.' : money(cents));
     expect(sheet?.items.map((i) => i.label)).toEqual(['Rest a day']);
     for (let i = 0; i <= r.hospital.days && life.mode.id === 'hospital'; i++) life.act({ type: 'health/rest' });

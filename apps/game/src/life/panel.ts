@@ -4,7 +4,7 @@
  * the game offers now; nothing here decides what can be done.
  */
 import type { Action } from '@eb/core';
-import { careerOf, NEEDS, type Need } from '@lyl/sim';
+import { careerOf, mortalityOf, NEEDS, type Need } from '@lyl/sim';
 import type { Work } from '../city/workplace.ts';
 import { button, el, needMeter } from './dom.ts';
 import { jobsView } from './jobs.ts';
@@ -81,7 +81,22 @@ function needsView(life: Life): HTMLElement {
     'div',
     { class: 'needs-all', id: 'needs-all' },
     ...NEEDS.map((n: Need) => needMeter(n, life.fact('life.need', { need: n }) as number)),
+    el('p', { class: 'quiet', id: 'month-chance' }, monthLine(life)),
   );
+}
+
+/**
+ * Your chance of dying this month (D103), the chance the month's roll uses (lives.month-chance),
+ * and why it is raised when health is let fall: shown before the choices that change it.
+ */
+export function monthLine(life: Life): string {
+  const chance = life.fact('lives.month-chance') as number;
+  const age = life.fact('circle.your-age') as number;
+  const m = mortalityOf(life.sim.content);
+  const one = Math.max(1, Math.round(100_000 / Math.max(1, chance)));
+  const low = (life.fact('life.need', { need: 'health' }) as number) < m.health.below;
+  const why = low ? ` With your health this low, that is ${m.health.times} times what it would be.` : '';
+  return `At ${age}, your chance of dying this month is about 1 in ${one.toLocaleString('en-US')}.${why}`;
 }
 
 function journalView(life: Life): HTMLElement {

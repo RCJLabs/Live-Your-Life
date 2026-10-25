@@ -78,7 +78,7 @@ describe('your life’s length (M2.7 step 1, D103)', () => {
     expect(r.beats.filter((b) => b.type === 'logic/rolled')).toEqual([]);
   });
 
-  it('dies when the month’s roll comes up, tells it, and offers nothing after', () => {
+  it('dies when the month’s roll comes up, tells it, and offers only a new life after', () => {
     // A table where every year is certain death: a month's chance is a twelfth of it.
     const certain = { ...table, table: table.table.map((r) => ({ ...r, carries: 100_000, not: 100_000 })) };
     const doomed = sliceSim({ ...PACK.records, mortality: { [MORTALITY]: certain } });
@@ -93,7 +93,7 @@ describe('your life’s length (M2.7 step 1, D103)', () => {
     expect(died.length).toBe(1);
     expect(died[0]?.age).toBe(game.fact(s, 'circle.your-age', {}, doomed));
     expect(game.fact(s, 'lives.dead', {}, doomed)).toBe(true);
-    expect(game.options(s, doomed)).toEqual([]);
+    expect(game.options(s, doomed)).toEqual([{ type: 'lives/start-over' }]);
     expect(game.reduce(s, advance(60), doomed).accepted).toBe(false);
   });
 });

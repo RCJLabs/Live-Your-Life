@@ -1,5 +1,6 @@
 {
   "name": "Patrol officer",
+  "insurance": true,
   "wage": 2828,
   "employers": {
     "districts": ["downtown"],
