@@ -26,6 +26,7 @@ import {
   type LawState,
   lifeSim,
   lineFor,
+  type Names,
   REAL_TIME,
   type YouSlice,
 } from '@lyl/sim';
@@ -58,11 +59,7 @@ export class Life {
     this.session = createSession(this.game, this.sim, state);
     this.session.drain();
     if (typeof from === 'string') return;
-    for (const k of from.kept) {
-      if (k.step > state.kernel.step) continue;
-      const text = this.#line(k.beat);
-      if (text) this.journal.push({ ...k, text });
-    }
+    this.journal.push(...this.#lines(from.kept.filter((k) => k.step <= state.kernel.step)));
   }
 
   get seed(): string {
@@ -137,18 +134,34 @@ export class Life {
     };
   }
 
-  #line(beat: Beat): string | null {
-    return lineFor(this.sim.content, beat, this.names, DEFAULT_START);
+  /**
+   * Lines for kept entries, oldest first, each in the names of the life it belongs to: back from
+   * now, each heir's succession hands the lines before it to the one who died (M2.7, D110).
+   */
+  #lines<K extends Kept>(kept: readonly K[]): (K & { text: string })[] {
+    let names: Names = this.names;
+    const out: (K & { text: string })[] = [];
+    for (let i = kept.length - 1; i >= 0; i--) {
+      const k = kept[i] as K;
+      const text = lineFor(this.sim.content, k.beat, names, DEFAULT_START);
+      if (text) out.push({ ...k, text });
+      if (k.beat.type === 'lives/succeeded') names = before(names, k.beat);
+    }
+    return out.reverse();
   }
 
   #write(beats: readonly Beat[]): void {
     const day = this.fact('time.day') as number;
     const step = this.state.kernel.step;
-    for (const beat of beats) {
-      const text = this.#line(beat);
-      if (!text) continue;
-      this.journal.push({ step, day, beat, text });
-      this.fresh.push(text);
+    for (const e of this.#lines(beats.map((beat) => ({ step, day, beat })))) {
+      this.journal.push(e);
+      this.fresh.push(e.text);
     }
   }
+}
+
+/** The names before a succession: the one who died as {you}, and their coworker. A life with none wrote no line naming one. */
+function before(names: Names, beat: Beat): Names {
+  const coworker = String(beat.coworker ?? '');
+  return { ...names, you: String(beat.was ?? names.you), ...(coworker ? { coworker } : {}) };
 }

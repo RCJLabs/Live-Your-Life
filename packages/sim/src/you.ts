@@ -61,6 +61,7 @@ export const youModule = defineModule<YouSlice>({
     },
   },
   facts: {
+    first: { read: ({ state }) => state.first, label: 'your first name' },
     last: { read: ({ state }) => state.last, label: 'your last name' },
     pronouns: {
       read: ({ state }) => state.pronouns,

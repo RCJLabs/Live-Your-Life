@@ -1,6 +1,7 @@
 import type { GameState } from '@eb/core';
 import { newTie } from '@lyl/sim';
 import { describe, expect, it } from 'vitest';
+import { epilogue } from './heir.ts';
 import { modeSheet } from './menus.ts';
 import { Life } from './session.ts';
 import { money } from './words.ts';
@@ -69,5 +70,47 @@ describe('the heir on the page (M2.7 step 3, D107, D109)', () => {
     expect(life.act(sheet?.items[0]?.action as never)).toBe(true);
     expect(life.mode.id).toBe('world');
     expect(life.fact('circle.your-age')).toBe(18);
+  });
+
+  it('tells the life that ended from the journal, and keeps each life’s lines in its own names after an heir', () => {
+    const alive = new Life('page-epilogue');
+    alive.act({ type: 'time/advance', minutes: 60 });
+    const s = alive.state;
+    const step = s.kernel.step;
+    const kept = [
+      { step, day: 0, beat: { type: 'job/hired', career: 'line-cook' } },
+      { step, day: 1, beat: { type: 'ties/refused', day: 2 } },
+      { step, day: 3, beat: { type: 'lives/died', cause: 'age', age: 40 } },
+      {
+        step,
+        day: 3,
+        beat: {
+          type: 'lives/succeeded',
+          kind: 'friend',
+          first: 'Rae',
+          last: 'Q',
+          left: 0,
+          was: 'Lou',
+          coworker: 'Kim',
+        },
+      },
+      { step, day: 4, beat: { type: 'circle/married', person: 41, name: 'Sam' } },
+      { step, day: 5, beat: { type: 'lives/died', cause: 'age', age: 50 } },
+    ];
+    const you = (s.you as { first: string }).first;
+    const dead = {
+      ...s,
+      lives: { ...(s.lives as object), died: 5 },
+      kernel: { ...s.kernel, modes: [...s.kernel.modes, { id: 'dead', data: {} }] },
+    } as GameState;
+    const life = new Life({ state: dead, kept: kept as never });
+    const texts = life.journal.map((e) => e.text);
+    expect(texts[0]).toBe('Lou started a new job, as a line cook.');
+    expect(texts[1]).toContain('Kim could not cover Lou');
+    expect(texts[2]).toBe('Lou died at the age of 40.');
+    expect(texts[4]).toBe(`${you} and Sam were married before a magistrate.`);
+    // The epilogue is this life's, since the heir took it up: not the one before.
+    expect(epilogue(life)).toEqual([`${you} and Sam were married before a magistrate.`]);
+    expect(modeSheet(life)?.lead).toContain(`You died at ${life.fact('circle.your-age')}. ${you} and Sam were married`);
   });
 });
