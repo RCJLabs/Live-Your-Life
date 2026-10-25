@@ -12,10 +12,42 @@
     },
     "ged": {
       "kind": "group",
-      "description": "The GED: its subject tests and the price of each, in cents.",
+      "description": "The GED (M2.8 step 2): its subject tests, the price of each in cents, the test centre's hours, and what study does for the chance of passing.",
       "fields": {
-        "subjects": { "kind": "int", "min": 1, "max": 10 },
-        "price": { "kind": "int", "min": 0 }
+        "subjects": {
+          "kind": "list",
+          "min": 1,
+          "max": 10,
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": { "kind": "text", "min": 1, "max": 24 },
+              "name": { "kind": "text", "min": 1, "max": 60 },
+              "minutes": { "kind": "int", "min": 1, "max": 600, "description": "The test's length." },
+              "pass": {
+                "kind": "int",
+                "min": 1,
+                "max": 99,
+                "description": "In 100 who sit it, those who pass, with no study of their own here."
+              }
+            }
+          }
+        },
+        "price": { "kind": "int", "min": 0 },
+        "opens": { "kind": "int", "min": 0, "max": 23 },
+        "closes": { "kind": "int", "min": 1, "max": 24 },
+        "perHour": {
+          "kind": "int",
+          "min": 0,
+          "max": 20,
+          "description": "Points on the chance of passing for each hour studied for the subject (tune)."
+        },
+        "most": {
+          "kind": "int",
+          "min": 1,
+          "max": 99,
+          "description": "The chance of passing at most, however long you study (tune)."
+        }
       }
     }
   }

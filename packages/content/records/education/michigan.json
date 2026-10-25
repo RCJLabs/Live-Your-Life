@@ -1,1 +1,37 @@
-{ "name": "Michigan", "diploma": 8283, "ged": { "subjects": 4, "price": 4350 } }
+{
+  "name": "Michigan",
+  "diploma": 8283,
+  "ged": {
+    "subjects": [
+      {
+        "id": "math",
+        "name": "Mathematical Reasoning",
+        "minutes": 115,
+        "pass": 55
+      },
+      {
+        "id": "language",
+        "name": "Reasoning Through Language Arts",
+        "minutes": 150,
+        "pass": 59
+      },
+      {
+        "id": "science",
+        "name": "Science",
+        "minutes": 90,
+        "pass": 77
+      },
+      {
+        "id": "social",
+        "name": "Social Studies",
+        "minutes": 70,
+        "pass": 58
+      }
+    ],
+    "price": 4350,
+    "opens": 9,
+    "closes": 17,
+    "perHour": 2,
+    "most": 95
+  }
+}

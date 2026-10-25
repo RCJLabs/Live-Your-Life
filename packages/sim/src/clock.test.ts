@@ -31,7 +31,7 @@ describe('minutesUntil', () => {
 });
 
 describe('the clock', () => {
-  it("allows the time, clock, life, home, job, market, trade, circle, ties, law, health and you actions out in the world, and no shift event's choice", () => {
+  it("allows the time, clock, life, home, job, market, trade, circle, ties, law, health, education and you actions out in the world, and no shift event's choice", () => {
     expect(game.allowedActions(fresh())).toEqual([
       'circle/ask-in',
       'circle/ask-out',
@@ -56,6 +56,8 @@ describe('the clock', () => {
       'deal/join',
       'deal/pay-back',
       'deal/recruit',
+      'education/study',
+      'education/take-test',
       'family/care',
       'family/continue',
       'family/end',

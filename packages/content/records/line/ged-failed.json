@@ -1,0 +1,8 @@
+{
+  "beat": "education/sat",
+  "when": {
+    "field": "passed",
+    "is": "false"
+  },
+  "text": "{you} sat the GED test in {subject} and did not pass."
+}

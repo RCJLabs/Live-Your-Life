@@ -15,7 +15,7 @@
  * before bodies (circle at version 3); life-v7.json by step 4a's, before a child's care (family at version 1);
  * life-v8.json by step 4b's, before custody and support (family at version 2); life-v9.json by step 6's,
  * before the night asked (circle at version 4); life-v10.json by the same step's, before the safety plan
- * (family at version 3); life-v11.json by M2.7 step 2's, before the heir (circle at version 5, lives at 1).
+ * (family at version 3); life-v11.json by M2.7 step 2's, before the heir (circle at version 5, lives at 1); life-v12.json by M2.8 step 1's, before the GED (education at version 1).
  */
 import { writeFileSync } from 'node:fs';
 import { type Action, createSaveFile, playRun } from '@eb/core';
