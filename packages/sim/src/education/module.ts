@@ -5,6 +5,7 @@
  * when they carry on: what they finished is their own, not yours (open question 98).
  */
 import { defineModule, type ModuleContext } from '@eb/core';
+import { attend, attendOptions, type CollegeSlice, endTerm, enroll, enrollOptions, NO_COLLEGE } from './college.ts';
 import { gedChance, result, sit, study, studyOptions, subjectOf, testOptions } from './ged.ts';
 import { educationOf } from './records.ts';
 
@@ -16,6 +17,8 @@ export interface EducationSlice {
   finished: Schooling;
   /** The GED's subjects passed, and the minutes studied for each (step 2). */
   ged: { passed: string[]; prep: Record<string, number> };
+  /** The community college: a term enrolled for, and what has been earned (step 3). */
+  college: CollegeSlice;
 }
 
 const NO_GED = (): EducationSlice['ged'] => ({ passed: [], prep: {} });
@@ -34,11 +37,14 @@ function drawn(ctx: Pick<Ctx, 'content' | 'rng'>): Schooling {
 
 export const educationModule = defineModule<EducationSlice>({
   id: 'education',
-  // 2 (step 2): the GED's subjects passed and studied for.
-  version: 2,
-  migrate: { 2: (slice) => ({ ...(slice as object), ged: NO_GED() }) },
+  // 2 (step 2): the GED's subjects passed and studied for. 3 (step 3): the college.
+  version: 3,
+  migrate: {
+    2: (slice) => ({ ...(slice as object), ged: NO_GED() }),
+    3: (slice) => ({ ...(slice as object), college: NO_COLLEGE() }),
+  },
   // Added to a save from before it, the life has a diploma: it was lived as if it had.
-  init: (ctx) => ({ finished: drawn(ctx), ged: NO_GED() }),
+  init: (ctx) => ({ finished: drawn(ctx), ged: NO_GED(), college: NO_COLLEGE() }),
   events: {
     studied: { args: { subject: { type: 'text' }, minutes: { type: 'int', min: 1 } }, label: 'Studied' },
     sat: {
@@ -46,10 +52,21 @@ export const educationModule = defineModule<EducationSlice>({
       label: 'Sat a GED test',
     },
     earned: { args: { credential: { type: 'enum', values: SCHOOLING } }, label: 'Earned a credential' },
+    enrolled: {
+      args: { term: { type: 'text' }, courses: { type: 'int', min: 1 }, start: { type: 'int', min: 0 } },
+      label: 'Enrolled for a term',
+    },
+    attended: { args: { course: { type: 'text' } }, label: 'Went to class' },
+    graded: {
+      args: { course: { type: 'text' }, grade: { type: 'text' }, score: { type: 'int', min: 0, max: 100 } },
+      label: 'Graded',
+    },
   },
   actions: {
     study: { run: (ctx, a) => study(ctx, a.subject, a.minutes), options: studyOptions },
     'take-test': { run: (ctx, a) => sit(ctx, a.subject), options: testOptions },
+    enroll: { run: (ctx, a) => enroll(ctx, a.courses), options: enrollOptions },
+    attend: { run: (ctx, a) => attend(ctx, a.course), options: attendOptions },
   },
   effects: {
     'ged-result': (ctx, e) => result(ctx, e.subject as string, e.passed === true, e.chance as number),
@@ -70,6 +87,18 @@ export const educationModule = defineModule<EducationSlice>({
       label: 'the highest schooling you have finished',
     },
     // A high school diploma or its equivalent: what most jobs that ask for schooling ask for.
+    credits: {
+      read: ({ state }) => state.college.credits,
+      domain: { type: 'int', min: 0 },
+      label: 'college credits earned',
+    },
+    // Hundredths: 250 is a 2.50.
+    gpa: {
+      read: ({ state }) =>
+        state.college.graded > 0 ? Math.floor((state.college.points * 100) / state.college.graded) : 0,
+      domain: { type: 'int', min: 0, max: 400 },
+      label: 'your college grade point average, in hundredths',
+    },
     'high-school': {
       read: ({ state }) => state.finished !== 'none',
       domain: { type: 'bool' },
@@ -77,9 +106,11 @@ export const educationModule = defineModule<EducationSlice>({
     },
   },
   on: {
+    // A term's end, graded (college.ts).
+    'time/passed': (ctx) => endTerm(ctx),
     // An heir finished their own schooling (M2.7 step 3): drawn as anyone's is.
     'lives/succeeded': (ctx) => {
-      Object.assign(ctx.write(), { finished: drawn(ctx), ged: NO_GED() });
+      Object.assign(ctx.write(), { finished: drawn(ctx), ged: NO_GED(), college: NO_COLLEGE() });
     },
   },
 });

@@ -5,6 +5,7 @@
  * Passing all four is the GED, a diploma's equal to most employers.
  */
 import type { FactView, ModuleContext } from '@eb/core';
+import { studyCourse } from './college.ts';
 import type { EducationSlice } from './module.ts';
 import { type EducationRecord, educationOf, type GedSubject } from './records.ts';
 
@@ -35,7 +36,9 @@ function centreOpen(v: View, r: EducationRecord): boolean {
 export function studyOptions(v: View): { subject: string; minutes: number }[] {
   const r = educationOf(v.content);
   if (!r) return [];
-  return r.ged.subjects.filter((s) => open(v, s.id)).map((s) => ({ subject: s.id, minutes: 60 }));
+  // A term's courses, enrolled for (college.ts), and the GED's subjects without a diploma.
+  const courses = (slice(v).college.term?.courses ?? []).map((x) => ({ subject: x.id, minutes: 60 }));
+  return [...courses, ...r.ged.subjects.filter((s) => open(v, s.id)).map((s) => ({ subject: s.id, minutes: 60 }))];
 }
 
 /** The tests you could sit now: the centre open, the price in hand. */
@@ -49,13 +52,19 @@ export function testOptions(v: View): { subject: string }[] {
 
 export function study(ctx: Ctx, subject: unknown, minutes: unknown): void {
   const r = educationOf(ctx.content);
-  if (!r || typeof subject !== 'string' || !subjectOf(r, subject) || !open(ctx, subject)) ctx.refuse('no-subject');
+  if (typeof subject !== 'string') ctx.refuse('no-subject');
   if (typeof minutes !== 'number' || !Number.isSafeInteger(minutes) || minutes < 15 || minutes > 480)
     ctx.refuse('bad-minutes');
-  const w = ctx.write();
-  w.ged.prep = { ...w.ged.prep, [subject]: (w.ged.prep[subject] ?? 0) + minutes };
-  ctx.apply({ effect: 'wait', minutes });
-  ctx.emit('studied', { subject, minutes });
+  const id = subject as string;
+  const m = minutes as number;
+  // A course of this term's first; otherwise a GED subject still to pass.
+  if (!studyCourse(ctx, id, m)) {
+    if (!r || !subjectOf(r, id) || !open(ctx, id)) ctx.refuse('no-subject');
+    const w = ctx.write();
+    w.ged.prep = { ...w.ged.prep, [id]: (w.ged.prep[id] ?? 0) + m };
+  }
+  ctx.apply({ effect: 'wait', minutes: m });
+  ctx.emit('studied', { subject: id, minutes: m });
 }
 
 export function sit(ctx: Ctx, subject: unknown): void {

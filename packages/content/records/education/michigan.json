@@ -33,5 +33,182 @@
     "closes": 17,
     "perHour": 2,
     "most": 95
+  },
+  "college": {
+    "name": "the community college",
+    "terms": [
+      {
+        "id": "fall",
+        "month": 9,
+        "day": 1,
+        "weeks": 16
+      },
+      {
+        "id": "spring",
+        "month": 1,
+        "day": 13,
+        "weeks": 16
+      }
+    ],
+    "enroll": 28,
+    "courses": [
+      {
+        "id": "c01",
+        "name": "English Composition I",
+        "credits": 3
+      },
+      {
+        "id": "c02",
+        "name": "English Composition II",
+        "credits": 3
+      },
+      {
+        "id": "c03",
+        "name": "College Algebra",
+        "credits": 3
+      },
+      {
+        "id": "c04",
+        "name": "Statistics",
+        "credits": 3
+      },
+      {
+        "id": "c05",
+        "name": "Introduction to Psychology",
+        "credits": 3
+      },
+      {
+        "id": "c06",
+        "name": "Introduction to Sociology",
+        "credits": 3
+      },
+      {
+        "id": "c07",
+        "name": "American Government",
+        "credits": 3
+      },
+      {
+        "id": "c08",
+        "name": "United States History",
+        "credits": 3
+      },
+      {
+        "id": "c09",
+        "name": "Biology",
+        "credits": 3
+      },
+      {
+        "id": "c10",
+        "name": "Chemistry",
+        "credits": 3
+      },
+      {
+        "id": "c11",
+        "name": "Public Speaking",
+        "credits": 3
+      },
+      {
+        "id": "c12",
+        "name": "Introduction to Computers",
+        "credits": 3
+      },
+      {
+        "id": "c13",
+        "name": "Economics",
+        "credits": 3
+      },
+      {
+        "id": "c14",
+        "name": "Ethics",
+        "credits": 3
+      },
+      {
+        "id": "c15",
+        "name": "Art Appreciation",
+        "credits": 3
+      },
+      {
+        "id": "c16",
+        "name": "World Literature",
+        "credits": 3
+      },
+      {
+        "id": "c17",
+        "name": "Earth Science",
+        "credits": 3
+      },
+      {
+        "id": "c18",
+        "name": "Introduction to Business",
+        "credits": 3
+      },
+      {
+        "id": "c19",
+        "name": "Human Development",
+        "credits": 3
+      },
+      {
+        "id": "c20",
+        "name": "Elective",
+        "credits": 3
+      }
+    ],
+    "slots": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 18,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 18,
+        "minutes": 75
+      },
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 10,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 10,
+        "minutes": 75
+      },
+      {
+        "days": ["friday"],
+        "hour": 9,
+        "minutes": 150
+      }
+    ],
+    "study": 2,
+    "grades": [
+      {
+        "letter": "A",
+        "least": 90,
+        "points": 4
+      },
+      {
+        "letter": "B",
+        "least": 80,
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "least": 70,
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "least": 60,
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "least": 0,
+        "points": 0
+      }
+    ],
+    "associate": 60,
+    "gpa": 200
   }
 }

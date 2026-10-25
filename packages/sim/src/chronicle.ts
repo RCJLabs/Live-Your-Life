@@ -65,7 +65,8 @@ export const QUIET: Readonly<Record<string, string>> = {
   'family/short': 'a day short of care; a report, if it comes, is told',
   'family/daycare': 'money moving',
   'family/support': 'money moving, each month; custody is told',
-  'education/studied': 'each hour of study; the test it was for is told',
+  'education/studied': 'each hour of study; the test or grade it was for is told',
+  'education/attended': 'each class; the grade is told',
   'family/conceived': 'nobody knows yet; finding out is told',
   'circle/planned': 'the interface: the date is in the panel, and going or missing it is told',
 };
@@ -157,6 +158,10 @@ export function lineFor(
         return named(store, 'offence', v);
       case 'event':
         return named(store, 'shift-event', v);
+      case 'course': {
+        const r = store.get<{ college?: { courses: { id: string; name: string }[] } }>('education', 'michigan');
+        return r?.college?.courses.find((c) => c.id === v)?.name ?? fail(`no course "${String(v)}"`);
+      }
       case 'subject': {
         const r = store.get<{ ged: { subjects: { id: string; name: string }[] } }>('education', 'michigan');
         return r?.ged.subjects.find((s) => s.id === v)?.name ?? fail(`no GED subject "${String(v)}"`);

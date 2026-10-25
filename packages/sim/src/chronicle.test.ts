@@ -58,6 +58,8 @@ const RARE = [
   'lives/died',
   'lives/succeeded',
   'lives/came-of-age',
+  'education/enrolled',
+  'education/graded',
   'circle/died',
   'job/called-in-sick',
   'health/saw-doctor',
