@@ -30,8 +30,8 @@ export interface Child {
   readonly carries: boolean;
   /** The other parent's number. */
   readonly other: number;
-  /** Who they live with: you, or the other parent. */
-  with: 'you' | 'them';
+  /** Who they live with: you, the other parent, or foster care after a safety plan failed (D102). */
+  with: 'you' | 'them' | 'care';
   /** The day their parents parted, or -1 while together or never. */
   parted: number;
 }
@@ -50,6 +50,8 @@ export interface FamilySlice {
   report: { made: number; closes: number } | null;
   /** Investigations that found the care wanting. */
   findings: number;
+  /** The safety plan a finding opened (D102): the days it runs, or null. */
+  plan: { from: number; until: number } | null;
   /** The last day daycare was paid for. */
   daycare: number;
   /** Minutes of care given, by you and by a partner you lived with: who cared most (D100). */
@@ -67,6 +69,7 @@ export const noFamily = (): FamilySlice => ({
   missed: [],
   report: null,
   findings: 0,
+  plan: null,
   daycare: -1,
   given: { you: 0, them: 0 },
   arrears: { owe: 0, owed: 0 },
@@ -97,3 +100,6 @@ export const migrateFamily3 = (slice: unknown): FamilySlice => {
     arrears: { owe: 0, owed: 0 },
   };
 };
+
+/** Version 4 (M2.6 step 6, D102): the safety plan. None open in a save from before. */
+export const migrateFamily4 = (slice: unknown): FamilySlice => ({ ...(slice as FamilySlice), plan: null });

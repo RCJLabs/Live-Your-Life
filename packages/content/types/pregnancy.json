@@ -208,6 +208,19 @@
           "min": 1,
           "max": 120,
           "description": "Days an investigation takes once a report is made."
+        },
+        "plan": {
+          "kind": "group",
+          "description": "The safety plan a finding opens (D102): its term, and the days short of care within it that move the child.",
+          "fields": {
+            "days": { "kind": "int", "min": 1, "max": 365, "description": "Days the plan stays open." },
+            "short": {
+              "kind": "int",
+              "min": 1,
+              "max": 30,
+              "description": "Days short of care within the plan that move the child to the other parent, or into foster care."
+            }
+          }
         }
       }
     },

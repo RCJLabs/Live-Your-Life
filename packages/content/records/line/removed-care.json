@@ -1,0 +1,8 @@
+{
+  "beat": "family/removed",
+  "when": {
+    "field": "to",
+    "is": "care"
+  },
+  "text": "Under the safety plan, {child} was taken out of the home of {you} and placed in foster care."
+}

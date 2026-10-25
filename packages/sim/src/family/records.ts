@@ -28,6 +28,7 @@ export interface PregnancyRecord {
     readonly daycare: { readonly under: number; readonly cost: number };
     readonly neglect: { readonly days: number; readonly window: number };
     readonly investigation: number;
+    readonly plan: { readonly days: number; readonly short: number };
   };
   readonly support: {
     readonly hours: number;

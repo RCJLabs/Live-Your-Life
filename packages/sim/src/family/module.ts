@@ -13,6 +13,7 @@ import {
   familyOf,
   migrateFamily2,
   migrateFamily3,
+  migrateFamily4,
   noFamily,
   type Pregnancy,
   YOU,
@@ -34,7 +35,7 @@ function settle(ctx: Ctx): void {
   const today = day(ctx);
   const s = ctx.read();
   if (today <= s.settled) return;
-  const caring = s.children.some((c) => c.with === 'you') || s.report !== null;
+  const caring = s.children.some((c) => c.with === 'you') || s.report !== null || s.plan !== null;
   for (let d = s.settled + 1; d <= today; d++) {
     if (caring) dayOfCare(ctx, d - 1);
     if (ctx.read().pregnancy) pregnancyDay(ctx, d);
@@ -93,8 +94,8 @@ const cash = (v: View) => v.fact('economy.amount', { resource: 'cash' }) as numb
 export const familyModule = defineModule<FamilySlice>({
   id: 'family',
   // 2 (M2.6 step 4b): a child's care. 3 (step 4c): custody and support.
-  version: 3,
-  migrate: { 2: migrateFamily2, 3: migrateFamily3 },
+  version: 4,
+  migrate: { 2: migrateFamily2, 3: migrateFamily3, 4: migrateFamily4 },
   init: noFamily,
   events: {
     conceived: { args: {}, label: 'A pregnancy began, not yet known' },
@@ -117,6 +118,12 @@ export const familyModule = defineModule<FamilySlice>({
     short: { args: { day: { type: 'int', min: 0 } }, label: 'A day your child went without enough care' },
     reported: { args: { closes: { type: 'int', min: 0 } }, label: 'Reported to child protective services' },
     investigated: { args: { found: { type: 'bool' } }, label: 'An investigation closed' },
+    planned: { args: { until: { type: 'int', min: 0 } }, label: 'A safety plan opened after a finding (D102)' },
+    removed: {
+      args: { child: { type: 'text' }, to: { type: 'enum', values: ['them', 'care'] } },
+      label: 'A child moved out of your home under a safety plan',
+    },
+    'plan-closed': { args: {}, label: 'A safety plan closed' },
     daycare: { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'Paid for daycare' },
     custody: {
       args: { child: { type: 'text' }, other: { type: 'text' }, with: { type: 'enum', values: ['you', 'them'] } },

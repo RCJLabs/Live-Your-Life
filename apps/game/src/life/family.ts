@@ -5,7 +5,7 @@
  * facts, never typed here.
  */
 import type { Action } from '@eb/core';
-import { endCost, type FamilySlice, YOU } from '@lyl/sim';
+import { endCost, type FamilySlice, pregnancyOf, YOU } from '@lyl/sim';
 import { button, el } from './dom.ts';
 import type { Life } from './session.ts';
 import { dayText, hours, money } from './words.ts';
@@ -47,7 +47,12 @@ function childrenView(life: Life, act: (a: Action) => void): HTMLElement | null 
   const items = f.children.map((c) => {
     const age = Math.floor((today - c.born) / 365);
     const ageText = age === 0 ? `${Math.max(1, Math.floor((today - c.born) / 30))} months old` : `${age}`;
-    const home = c.with === 'you' ? 'lives with you' : `lives with ${first(life, c.other)}`;
+    const home =
+      c.with === 'you'
+        ? 'lives with you'
+        : c.with === 'care'
+          ? 'is in foster care'
+          : `lives with ${first(life, c.other)}`;
     return el('li', {}, el('p', {}, `${c.first}, ${ageText}, ${home}.`));
   });
   return el(
@@ -89,6 +94,16 @@ function moneyView(life: Life, act: (a: Action) => void): HTMLElement | null {
         `Child protective services is looking into your children’s care until ${dayText(life, f.report.closes)}.`,
       ),
     );
+  if (f.plan) {
+    const short = pregnancyOf(life.sim.content).care.plan.short;
+    lines.push(
+      el(
+        'p',
+        {},
+        `You’re under a safety plan until ${dayText(life, f.plan.until)}. If your children go without care ${short} more days, they’ll be moved out of your home.`,
+      ),
+    );
+  }
   return lines.length > 0 ? el('div', { id: 'family-money' }, ...lines) : null;
 }
 
