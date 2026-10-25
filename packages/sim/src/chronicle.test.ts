@@ -52,6 +52,7 @@ const RARE = [
   'family/paid-bill',
   'family/reported',
   'family/investigated',
+  'family/custody',
   'deal/paid-back',
   'deal/cut-off',
   'deal/recruited',

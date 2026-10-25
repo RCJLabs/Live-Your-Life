@@ -29,6 +29,12 @@ export interface PregnancyRecord {
     readonly neglect: { readonly days: number; readonly window: number };
     readonly investigation: number;
   };
+  readonly support: {
+    readonly hours: number;
+    readonly keep: number;
+    readonly base: readonly number[];
+    readonly nights: { readonly custodial: number; readonly parenting: number };
+  };
 }
 
 export function pregnancyOf(store: RecordStore): PregnancyRecord {

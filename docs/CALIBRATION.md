@@ -241,6 +241,11 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Daycare | $46 a day worked, for a child under 5 | `pregnancy/michigan.json`, `care.daycare` | Child Care Aware's 2023 figures through WXYZ: center care in Michigan over $12,000 a year for an infant or toddler, family child care about $9,000; $12,000 over 260 weekdays | to check |
 | A report and its investigation | 3 days short of care within 14 bring a report; the investigation closes after 30 days | `pregnancy/michigan.json`, `care.neglect`, `care.investigation` | MDHHS: an investigation begins within 24 hours and has 30 days to finish. The days that bring a report are a proposal | 30 days to check; the rest (tune) |
 
+| Child support's base | 20 in 100 of the parents' combined net income for one child, 30 for two, 35 for three, 38 for four | `pregnancy/michigan.json`, `support.base` | none read: Michigan's base schedule wasn't reachable | placeholder |
+| The parenting time offset | (A's nights^2.5 × B's base − B's nights^2.5 × A's base) / (A's nights^2.5 + B's nights^2.5) | `packages/sim/src/family/support.ts`, `supportFor` | the 2025 Michigan Child Support Formula Manual, section 3.03, through a search summary | to check |
+| Nights a year | 292 with the parent the child lives with, 73 with the other (alternate weekends and a weeknight) | `pregnancy/michigan.json`, `support.nights` | divorce.law's Michigan parenting-time calculator (about 73 nights for every other weekend and a weeknight); county guidelines give 64.5 to 95.5 by age | to check |
+| Net income for support | an hourly wage at 30 hours a week, 85 in 100 kept | `pregnancy/michigan.json`, `support.hours`, `support.keep` | none: a proposal until a household's money is kept | (tune) |
+
 **Departures.** Transgender adults (1.3% in the same survey) are counted with LGBTQ+ adults as not straight; the game has no gender identity apart from pronouns yet. People who use they are drawn to women or men at the binary shares, or to anyone; nobody is drawn to no one, though about 1% of adults name another identity, asexual among them.
 
 ## Open questions

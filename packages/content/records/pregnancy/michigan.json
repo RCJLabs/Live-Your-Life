@@ -71,5 +71,14 @@
       "window": 14
     },
     "investigation": 30
+  },
+  "support": {
+    "hours": 30,
+    "keep": 85,
+    "base": [20, 30, 35, 38],
+    "nights": {
+      "custodial": 292,
+      "parenting": 73
+    }
   }
 }

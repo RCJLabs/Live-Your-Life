@@ -210,6 +210,50 @@
           "description": "Days an investigation takes once a report is made."
         }
       }
+    },
+    "support": {
+      "kind": "group",
+      "description": "Custody and child support when parents part (step 4c, D100), by the shape of Michigan's formula: each parent's share of the base support from their share of the income, offset by the nights each has the child.",
+      "fields": {
+        "hours": {
+          "kind": "int",
+          "min": 1,
+          "max": 80,
+          "description": "Hours a week a working parent is taken to work."
+        },
+        "keep": {
+          "kind": "int",
+          "min": 1,
+          "max": 100,
+          "description": "Per hundred of gross pay kept after tax."
+        },
+        "base": {
+          "kind": "list",
+          "min": 1,
+          "description": "Per hundred of the parents' combined net income, the base support for one child, two, and so on.",
+          "of": {
+            "kind": "int",
+            "min": 0,
+            "max": 100
+          }
+        },
+        "nights": {
+          "kind": "group",
+          "description": "Nights a year with each parent under the standard parenting time.",
+          "fields": {
+            "custodial": {
+              "kind": "int",
+              "min": 0,
+              "max": 366
+            },
+            "parenting": {
+              "kind": "int",
+              "min": 0,
+              "max": 366
+            }
+          }
+        }
+      }
     }
   }
 }

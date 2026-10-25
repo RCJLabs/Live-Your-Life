@@ -791,6 +791,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Couples now, others later (recommended, chosen). Adoption through an agency in this step too.
 
+### D100. When parents part, the child stays with whoever cared more. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** A child who lived with you both stays with the parent who gave more of their care, as a court weighs the established home; the other has Michigan's standard parenting time, alternate weekends and about 73 nights a year. Child support follows the shape of Michigan's formula, with its offset for the nights each parent has the child. Contesting custody in court waits for later.
+
+**Options considered.** Who cared most (recommended, chosen). Who gave birth. You choose and they accept.
+
 ---
 
 ## Open items

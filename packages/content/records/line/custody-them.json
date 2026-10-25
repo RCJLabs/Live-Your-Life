@@ -1,0 +1,8 @@
+{
+  "beat": "family/custody",
+  "when": {
+    "field": "with",
+    "is": "them"
+  },
+  "text": "When {you} and {other} parted, {child} went to live with {other}."
+}
