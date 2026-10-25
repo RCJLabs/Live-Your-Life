@@ -1,0 +1,8 @@
+{
+  "beat": "education/earned",
+  "when": {
+    "field": "credential",
+    "is": "associate"
+  },
+  "text": "{you} earned an associate's degree."
+}

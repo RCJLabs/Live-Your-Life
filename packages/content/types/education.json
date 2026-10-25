@@ -3,7 +3,11 @@
   "description": "Schooling past 18 (M2.8, D111–D114): who starts with a diploma, and the GED for those who don't. The college's terms, courses and aid join it in later steps. The figures trace to CALIBRATION.md.",
   "nameField": "name",
   "fields": {
-    "name": { "kind": "text", "min": 1, "max": 60 },
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
     "diploma": {
       "kind": "int",
       "min": 0,
@@ -21,9 +25,22 @@
           "of": {
             "kind": "group",
             "fields": {
-              "id": { "kind": "text", "min": 1, "max": 24 },
-              "name": { "kind": "text", "min": 1, "max": 60 },
-              "minutes": { "kind": "int", "min": 1, "max": 600, "description": "The test's length." },
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "name": {
+                "kind": "text",
+                "min": 1,
+                "max": 60
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 1,
+                "max": 600,
+                "description": "The test's length."
+              },
               "pass": {
                 "kind": "int",
                 "min": 1,
@@ -33,9 +50,20 @@
             }
           }
         },
-        "price": { "kind": "int", "min": 0 },
-        "opens": { "kind": "int", "min": 0, "max": 23 },
-        "closes": { "kind": "int", "min": 1, "max": 24 },
+        "price": {
+          "kind": "int",
+          "min": 0
+        },
+        "opens": {
+          "kind": "int",
+          "min": 0,
+          "max": 23
+        },
+        "closes": {
+          "kind": "int",
+          "min": 1,
+          "max": 24
+        },
         "perHour": {
           "kind": "int",
           "min": 0,
@@ -47,6 +75,156 @@
           "min": 1,
           "max": 99,
           "description": "The chance of passing at most, however long you study (tune)."
+        }
+      }
+    },
+    "college": {
+      "kind": "group",
+      "optional": true,
+      "description": "The community college (M2.8 step 3): its terms, the courses toward an associate's, when they meet, and how grades are earned.",
+      "fields": {
+        "name": {
+          "kind": "text",
+          "min": 1,
+          "max": 60
+        },
+        "terms": {
+          "kind": "list",
+          "min": 1,
+          "max": 4,
+          "description": "When each term starts in the year, and its weeks of classes.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 16
+              },
+              "month": {
+                "kind": "int",
+                "min": 1,
+                "max": 12
+              },
+              "day": {
+                "kind": "int",
+                "min": 1,
+                "max": 31
+              },
+              "weeks": {
+                "kind": "int",
+                "min": 1,
+                "max": 20
+              }
+            }
+          }
+        },
+        "enroll": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Days before a term starts that enrolling opens."
+        },
+        "courses": {
+          "kind": "list",
+          "min": 1,
+          "max": 40,
+          "description": "The courses toward the associate's, taken in order.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "name": {
+                "kind": "text",
+                "min": 1,
+                "max": 60
+              },
+              "credits": {
+                "kind": "int",
+                "min": 1,
+                "max": 6
+              }
+            }
+          }
+        },
+        "slots": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "When a term's courses meet, the first course at the first slot: two days a week, an hour of the day, minutes a meeting.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          }
+        },
+        "study": {
+          "kind": "int",
+          "min": 0,
+          "max": 10,
+          "description": "Hours of study a week for each credit that a full grade asks (the rule of thumb's two)."
+        },
+        "grades": {
+          "kind": "list",
+          "min": 1,
+          "max": 6,
+          "description": "The least score, in 100, for each grade, highest first, with its points: the score is half attendance and half study done (tune).",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "letter": {
+                "kind": "text",
+                "min": 1,
+                "max": 2
+              },
+              "least": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "points": {
+                "kind": "int",
+                "min": 0,
+                "max": 4
+              }
+            }
+          }
+        },
+        "associate": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Credits for the associate's."
+        },
+        "gpa": {
+          "kind": "int",
+          "min": 0,
+          "max": 400,
+          "description": "The least grade point average for the associate's, in hundredths."
         }
       }
     }

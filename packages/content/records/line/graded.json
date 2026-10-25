@@ -1,0 +1,4 @@
+{
+  "beat": "education/graded",
+  "text": "{you} finished {course} with a grade of {grade}."
+}
