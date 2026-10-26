@@ -79,7 +79,11 @@ describe('life events (M2.10 step 4, D134, D135)', () => {
     const seeds = seedsOf(300, 'lend');
     for (const seed of seeds) {
       const r = asked(waitingWith('loan-asked', seed));
-      const shown = game.preview(r.state, [{ effect: 'life-choice', event: 'loan-asked', choice: 'lend' }], sim)[0] as {
+      const shown = game.preview(
+        r.state,
+        [{ effect: 'life-choice', event: 'loan-asked', choice: 'lend' }],
+        sim,
+      )[0] as unknown as {
         chance: number;
       };
       expect(shown.chance).toBe(lifeEventOf(sim.content, 'loan-asked').choices[1]?.odds);

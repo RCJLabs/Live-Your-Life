@@ -77,8 +77,8 @@ function outcomeNow(ctx: Ctx, o: LifeOutcome): void {
 /** What an outcome would do, without its words: for the preview. */
 const stakes = (o: LifeOutcome | undefined) => (o ? { cash: o.cash ?? 0, needs: o.needs ?? {} } : null);
 
-const asked = (v: { mode: { data: unknown } } | { modes: { current: { data: unknown } } }): string =>
-  ('mode' in v ? (v.mode.data as { event: string }) : (v.modes.current.data as { event: string })).event;
+/** The event the `life-event` mode is asking about. */
+const asked = (ctx: Ctx): string => (ctx.modes.current.data as { event: string }).event;
 
 export const eventsModule = defineModule<EventsSlice>({
   id: 'event',
