@@ -279,4 +279,13 @@ export {
   type Pronouns,
 } from './ties/records.ts';
 export type { TiesSlice } from './ties/state.ts';
+export {
+  type BusTrip,
+  busTrip,
+  type Grid as TransitGrid,
+  type Transit,
+  transitOf,
+  WALK_PACE,
+  walkMinutesBetween,
+} from './travel/bus.ts';
 export { ALARM_MARGIN, LONGEST_WALK, NAMES, type YouSlice, youModule } from './you.ts';

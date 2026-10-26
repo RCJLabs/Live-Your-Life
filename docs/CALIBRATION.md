@@ -179,6 +179,17 @@ Nine careers added with what they ask for (D114, D116). Each wage is the 25th pe
 
 **Pay by credential, a realism bar.** The median starting wage of the careers that ask for each credential, against those that ask for none: a diploma or GED 1.20 times, an associate's 1.60. BLS's median weekly earnings for full-time workers of 25 and over in 2024 give 1.26 ($930 against $738) and 1.49 ($1,099). The test (`market/credentials.test.ts`) holds each within 15%. The game's are starting wages, BLS's are all ages', and one career (the paralegal) stands for the associate's: the bar is thin until more careers come.
 
+## The buses (M2.9)
+
+Ridgefield's buses run along the arterials, every fourth cell edge: a mile apart, as Michigan's mile roads are. Every figure is from search summaries of the agencies' own pages, and is to be checked against them.
+
+| Figure | Value | Record or code | Source, as read on 2026-10-26 | Status |
+| --- | --- | --- | --- | --- |
+| The fare | $1.75 a ride, at most $5.25 a day; a second bus free within 105 minutes of boarding (with a fare card) | `transit/ridgefield.json`, `fare`, `dayCap`, `transfer` | Grand Rapids' The Rapid, through the city's Paid Transit page and Experience Grand Rapids. Lansing's CATA charges $1.25 | secondary |
+| How often a bus comes | every 15 minutes in the weekday rushes (6–9 and 15–18), 30 otherwise until 23:00; Saturday every 30 from 7 to 22; Sunday every 60 from 8 to 20 (tune) | `service` | one Grand Rapids line runs every 15 minutes by day and 30 in the evening; older pages give 30 minutes on neighbourhood routes. No network-wide figure found | placeholder |
+| The speed | 360 m a minute, about 13.5 mph, stops and lights included | `speed` | a Transportation Research Board survey of 11 transit systems, as Streetsblog reported it (2014); large cities run nearer 8 mph | secondary, dated |
+| Stops | every 400 m, a quarter mile | `stops` | the common spacing on US local routes (general knowledge) | placeholder |
+
 ## Street dealing (M2.4)
 
 Cocaine on the street (D78, D82). Every figure was read on 2026-10-23 through search results. Michigan's legislature and court sites, and every page a fetch was tried on, were blocked from the build environment, so each row is secondary until checked (D83).
