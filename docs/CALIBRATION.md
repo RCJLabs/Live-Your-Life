@@ -179,6 +179,30 @@ Nine careers added with what they ask for (D114, D116). Each wage is the 25th pe
 
 **Pay by credential, a realism bar.** The median starting wage of the careers that ask for each credential, against those that ask for none: a diploma or GED 1.20 times, an associate's 1.60. BLS's median weekly earnings for full-time workers of 25 and over in 2024 give 1.26 ($930 against $738) and 1.49 ($1,099). The test (`market/credentials.test.ts`) holds each within 15%. The game's are starting wages, BLS's are all ages', and one career (the paralegal) stands for the associate's: the bar is thin until more careers come.
 
+## The last 17 careers (M2.3, D126)
+
+Each wage is the 25th percentile of the federal occupational wage survey for a hire with no experience, as before (D116): Michigan's for May 2024 where a summary gave it, else a Michigan metro's for May 2025, else the nation's, read through search summaries quoting WageDex or O*NET. Every figure is secondary (D77). Annual figures are divided by 2,080 hours. The share of the city's jobs is national employment over about 150 million jobs; where no summary gave the employment, it is from memory of OEWS's counts and marked to check. Six staff a site and 5 in 100 applicants taken, as the nine of M2.8 (tune). Michigan's minimum wage is $12.48 from 21 February 2025 ($13.73 from 2026, $15.00 from 2027), through LEO's schedule in a search summary; none of the 30 pays under it.
+
+| Career | Wage, an hour | Source | Share in 10,000 | Turnover | Note |
+| --- | --- | --- | --- | --- | --- |
+| Server (`career/server.json`) | $12.97 ($26,970), tips included | Michigan, SOC 35-3031, May 2024 | 151 | 54, food service | Paid as one hourly figure with its tips; Michigan's tipped minimum ($4.74 an hour in 2025, 38% of the minimum) with tips on top isn't modelled |
+| Fast-food crew member (`career/fast-food-crew.json`) | $12.83 ($26,680) | Flint, SOC 35-3023, May 2025 (Michigan median $13.91, 2025) | 257 | 54, food service |  |
+| Host (`career/host.json`) | $12.48, the minimum wage | Michigan's 25th, SOC 35-9031, May 2024, is $12.28 ($25,550), under the minimum; raised to it, as an employer must make a tipped worker up to it | 29 | 54, food service | departure: raised to the minimum |
+| Retail salesperson (`career/retail-salesperson.json`) | $13.88 ($28,870) | Kalamazoo-Portage, SOC 41-2031, May 2025 | 253 | 40, retail |  |
+| Stocker (`career/stocker.json`) | $15.51 ($32,270) | Grand Rapids-Wyoming-Kentwood, SOC 53-7065, May 2025 | 189 | 40, retail | Overnight stocking moved to 05:00 and 13:00, since a shift may not run past midnight |
+| Hand packer (`career/hand-packer.json`) | $14.29 ($29,720) | Battle Creek, SOC 53-7064, May 2025 (national 25th $32,220) | 37 | 39, transportation and warehousing |  |
+| Forklift operator (`career/forklift-operator.json`) | $19.25 ($40,030) | national, SOC 53-7051, May 2025: no Michigan figure found | 52 | 39, transportation and warehousing | secondary, national |
+| Team assembler (`career/team-assembler.json`) | $19.32 ($40,190) | Lansing-East Lansing, SOC 51-2090, May 2025 | 94 | 27, manufacturing |  |
+| Housekeeper (`career/housekeeper.json`) | $14.19 ($29,510) | Michigan, SOC 37-2012, May 2024 | 56 (employment from memory, to check) | 54, accommodation and food services |  |
+| Landscaper (`career/landscaper.json`) | $16.98 ($35,320) | Michigan, SOC 37-3011, May 2024 | 62 (to check) | 40, construction (tune) | All year: the work is seasonal in Michigan, which isn't modelled |
+| Home health aide (`career/home-health-aide.json`) | $14.14 ($29,420) | Michigan, SOC 31-1120, May 2024 (another summary gave $28,080 for 31-1122, year unclear) | 287 | 30, health care and social assistance |  |
+| Nursing assistant (`career/nursing-assistant.json`) | $17.88 ($37,180) | Michigan, SOC 31-1131, May 2024; the gap to the median ($38,900) is narrow and wasn't confirmed | 91 (to check) | 30, health care and social assistance | Assumes Michigan's 75-hour course is done (R 400.335: 16 hours in class before any resident, 16 clinical, 43 more) |
+| Childcare worker (`career/childcare-worker.json`) | $14.23 ($29,590) | Lansing-East Lansing, SOC 39-9011, May 2025 | 31 (to check) | 30, health care and social assistance | Asks a diploma or GED (tune) |
+| Construction laborer (`career/construction-laborer.json`) | $19.39 ($40,330) | Michigan, SOC 47-2061, May 2024 | 69 (to check) | 40, construction |  |
+| Carpenter's helper (`career/carpenters-helper.json`) | $17.66 ($36,730) | national, SOC 47-3012, May 2025, through O*NET: no Michigan figure found | 1 | 40, construction | secondary, national |
+| Receptionist (`career/receptionist.json`) | $15.34 ($31,910) | Michigan, SOC 43-4171, May 2024 | 69 (to check) | 44, business services | Asks a diploma or GED (tune) |
+| Delivery driver (`career/delivery-driver.json`) | $18.49 ($38,450) | Lansing-East Lansing, SOC 53-3033, May 2025 (Saginaw's 25th $35,840) | 69 (to check) | 39, transportation and warehousing | Drives the employer's van; the licence is assumed (D126) |
+
 ## The food ladder (M2.5)
 
 Line cook, kitchen lead, chef (D121), each promoted to at your own kitchen once practice and standing are enough, as patrol to detective (D122). The two new ranks work the diner's shifts. Every figure here is secondary: bls.gov and WageDex can't be reached from the build environment (D77), so they come through search summaries quoting the federal occupational wage survey (OEWS).
