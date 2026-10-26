@@ -43,13 +43,13 @@ function free(ctx: Ctx): boolean {
   return ctx.modes.current.id === 'world' && ctx.fact('life.activity') === 'awake' && now >= FROM && now < UNTIL;
 }
 
-function settle(ctx: Ctx): void {
+function settle(ctx: Ctx, draw: boolean): void {
   const today = ctx.fact('time.day') as number;
   const s = ctx.read();
   // Added to a save from before it, or after a ward's years: nothing rolled for the days gone.
   if (s.settled < 0 || today - s.settled > 31) {
     ctx.write().settled = today;
-  } else if (ctx.modes.current.id === 'world' || ctx.modes.current.id === LIFE_EVENT) {
+  } else if (draw && (ctx.modes.current.id === 'world' || ctx.modes.current.id === LIFE_EVENT)) {
     for (let d = s.settled + 1; d <= today; d++) {
       ctx.write().settled = d;
       const pool = eligible(ctx);
@@ -80,93 +80,98 @@ const stakes = (o: LifeOutcome | undefined) => (o ? { cash: o.cash ?? 0, needs: 
 /** The event the `life-event` mode is asking about. */
 const asked = (ctx: Ctx): string => (ctx.modes.current.data as { event: string }).event;
 
-export const eventsModule = defineModule<EventsSlice>({
-  id: 'event',
-  init: () => ({ settled: -1, waiting: [] }),
-  events: {
-    asked: { args: { event: { type: 'text' } }, label: 'Something happened' },
-    happened: {
-      args: { event: { type: 'text' }, choice: { type: 'text' }, failed: { type: 'bool' } },
-      label: 'What followed',
-    },
-  },
-  facts: {
-    cash: { read: (v) => cashOf(v), domain: { type: 'int', min: 0 }, label: 'your cash, in cents' },
-    waiting: { read: ({ state }) => state.waiting.length, domain: { type: 'int', min: 0 }, label: 'events waiting' },
-  },
-  actions: {
-    choose: {
-      run: (ctx, action) => {
-        const event = asked(ctx);
-        const e = lifeEventOf(ctx.content, event);
-        const c = e.choices.find((x) => x.id === action.choice);
-        if (!c) return ctx.refuse('bad-choice');
-        if ((c.cost ?? 0) > cashOf(ctx)) return ctx.refuse('cannot-afford');
-        if (c.cost) ctx.apply({ effect: 'pay-cost', cost: { cash: c.cost } });
-        ctx.modes.pop();
-        ctx.apply({ effect: 'life-choice', event, choice: c.id });
-        if (c.minutes) ctx.apply({ effect: 'wait', minutes: c.minutes });
-      },
-      // The choices you can pay for; the first costs nothing (D135), so there is always one.
-      options: (v) => {
-        const data = v.mode.data as { event?: string } | undefined;
-        if (v.mode.id !== LIFE_EVENT || !data?.event) return [];
-        const cash = cashOf(v);
-        return lifeEventOf(v.content, data.event)
-          .choices.filter((c) => (c.cost ?? 0) <= cash)
-          .map((c) => ({ choice: c.id }));
+/**
+ * The life events. `draw` false keeps the module, so a save has the same shape, but draws nothing:
+ * for tests whose scripted days an event would interrupt (test/slice.ts).
+ */
+export const eventsModule = (draw = true) =>
+  defineModule<EventsSlice>({
+    id: 'event',
+    init: () => ({ settled: -1, waiting: [] }),
+    events: {
+      asked: { args: { event: { type: 'text' } }, label: 'Something happened' },
+      happened: {
+        args: { event: { type: 'text' }, choice: { type: 'text' }, failed: { type: 'bool' } },
+        label: 'What followed',
       },
     },
-  },
-  effects: {
-    // One of the events that can come today, by its share of the day's chance.
-    'event-pick': (ctx) => {
-      const pool = eligible(ctx);
-      if (pool.length === 0 || ctx.read().waiting.length >= MOST_WAITING) return;
-      const at = ctx.rng('life-events').weightedIndex(pool.map(([, c]) => Math.max(1, Math.round(c * 100))));
-      ctx.write().waiting.push((pool[at] as [string, number])[0]);
+    facts: {
+      cash: { read: (v) => cashOf(v), domain: { type: 'int', min: 0 }, label: 'your cash, in cents' },
+      waiting: { read: ({ state }) => state.waiting.length, domain: { type: 'int', min: 0 }, label: 'events waiting' },
     },
-    // A choice made: rolled if it has odds. Its preview is what the page shows.
-    'life-choice': {
-      run: (ctx, effect) => {
-        const event = effect.event as string;
-        const c = choiceOf(ctx.content, event, effect.choice);
-        const follow = (failed: boolean) => ({ effect: 'life-outcome', event, choice: c.id, failed });
-        if (c.odds === undefined) return ctx.apply(follow(false));
-        ctx.apply({
-          effect: 'roll',
-          outcomes: [
-            { chance: c.odds, effects: [follow(false)] },
-            { chance: 100 - c.odds, effects: [follow(true)] },
-          ],
-        });
+    actions: {
+      choose: {
+        run: (ctx, action) => {
+          const event = asked(ctx);
+          const e = lifeEventOf(ctx.content, event);
+          const c = e.choices.find((x) => x.id === action.choice);
+          if (!c) return ctx.refuse('bad-choice');
+          if ((c.cost ?? 0) > cashOf(ctx)) return ctx.refuse('cannot-afford');
+          if (c.cost) ctx.apply({ effect: 'pay-cost', cost: { cash: c.cost } });
+          ctx.modes.pop();
+          ctx.apply({ effect: 'life-choice', event, choice: c.id });
+          if (c.minutes) ctx.apply({ effect: 'wait', minutes: c.minutes });
+        },
+        // The choices you can pay for; the first costs nothing (D135), so there is always one.
+        options: (v) => {
+          const data = v.mode.data as { event?: string } | undefined;
+          if (v.mode.id !== LIFE_EVENT || !data?.event) return [];
+          const cash = cashOf(v);
+          return lifeEventOf(v.content, data.event)
+            .choices.filter((c) => (c.cost ?? 0) <= cash)
+            .map((c) => ({ choice: c.id }));
+        },
       },
-      preview: (ctx: PreviewContext<EventsSlice>, effect) => {
+    },
+    effects: {
+      // One of the events that can come today, by its share of the day's chance.
+      'event-pick': (ctx) => {
+        const pool = eligible(ctx);
+        if (pool.length === 0 || ctx.read().waiting.length >= MOST_WAITING) return;
+        const at = ctx.rng('life-events').weightedIndex(pool.map(([, c]) => Math.max(1, Math.round(c * 100))));
+        ctx.write().waiting.push((pool[at] as [string, number])[0]);
+      },
+      // A choice made: rolled if it has odds. Its preview is what the page shows.
+      'life-choice': {
+        run: (ctx, effect) => {
+          const event = effect.event as string;
+          const c = choiceOf(ctx.content, event, effect.choice);
+          const follow = (failed: boolean) => ({ effect: 'life-outcome', event, choice: c.id, failed });
+          if (c.odds === undefined) return ctx.apply(follow(false));
+          ctx.apply({
+            effect: 'roll',
+            outcomes: [
+              { chance: c.odds, effects: [follow(false)] },
+              { chance: 100 - c.odds, effects: [follow(true)] },
+            ],
+          });
+        },
+        preview: (ctx: PreviewContext<EventsSlice>, effect) => {
+          const c = choiceOf(ctx.content, effect.event as string, effect.choice);
+          return {
+            chance: c.odds ?? 100,
+            cost: c.cost ?? 0,
+            minutes: c.minutes ?? 0,
+            outcome: stakes(c.outcome),
+            failure: stakes(c.failure),
+          };
+        },
+      },
+      'life-outcome': (ctx, effect) => {
         const c = choiceOf(ctx.content, effect.event as string, effect.choice);
-        return {
-          chance: c.odds ?? 100,
-          cost: c.cost ?? 0,
-          minutes: c.minutes ?? 0,
-          outcome: stakes(c.outcome),
-          failure: stakes(c.failure),
-        };
+        const failed = effect.failed === true;
+        outcomeNow(ctx, (failed ? c.failure : c.outcome) as LifeOutcome);
+        ctx.emit('happened', { event: effect.event as string, choice: c.id, failed });
       },
     },
-    'life-outcome': (ctx, effect) => {
-      const c = choiceOf(ctx.content, effect.event as string, effect.choice);
-      const failed = effect.failed === true;
-      outcomeNow(ctx, (failed ? c.failure : c.outcome) as LifeOutcome);
-      ctx.emit('happened', { event: effect.event as string, choice: c.id, failed });
+    on: {
+      'time/passed': (ctx) => settle(ctx, draw),
+      // The heir starts with nothing waiting (M2.7 step 3).
+      'lives/succeeded': (ctx) => {
+        ctx.write().waiting = [];
+      },
     },
-  },
-  on: {
-    'time/passed': (ctx) => settle(ctx),
-    // The heir starts with nothing waiting (M2.7 step 3).
-    'lives/succeeded': (ctx) => {
-      ctx.write().waiting = [];
-    },
-  },
-  modes: { [LIFE_EVENT]: { actions: ['event/choose'] } },
-});
+    modes: { [LIFE_EVENT]: { actions: ['event/choose'] } },
+  });
 
 export type { LifeEventRecord };

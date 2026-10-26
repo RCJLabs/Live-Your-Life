@@ -52,6 +52,8 @@ export interface LifeOptions {
   readonly career?: string;
   /** The tier-1 people (D31, M2.2): 1,000 by default; a test may want fewer. */
   readonly people?: number;
+  /** Whether life events are drawn (M2.10 step 4): yes by default; a scripted test may not want them. */
+  readonly events?: boolean;
 }
 
 /** The tier-1 people a life holds (D31), and the shares they are moved on in, one an hour (D30). */
@@ -105,7 +107,7 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     // The season (M2.10 step 3): added to a save from before it, its first day is heard, not told.
     seasonModule,
     // Life events (M2.10 step 4, D134): added to a save from before it, nothing is rolled for the days gone.
-    eventsModule,
+    eventsModule(options.events ?? true),
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

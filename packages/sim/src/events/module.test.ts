@@ -8,7 +8,7 @@ import { LIFE_EVENT } from './module.ts';
 import { lifeEventOf, lifeEventsOf } from './records.ts';
 
 const sim = sliceSim();
-const game = sliceGame({ career: undefined });
+const game = sliceGame({ career: undefined, events: true });
 const fact = (s: GameState, id: string, args: Record<string, unknown> = {}) => game.fact(s, id, args, sim);
 const cash = (s: GameState) => fact(s, 'economy.amount', { resource: 'cash' }) as number;
 
