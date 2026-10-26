@@ -33,7 +33,10 @@ export function freeProblem(view: Viewer, day: number): string | null {
   const today = todayOf(view);
   if (day <= today.day) return 'too-soon';
   const week = weekOf(today, day);
-  const taken = slice.signed.filter((s) => weekOf(today, s.day) === week).length;
+  // Shifts already over count too: the week holds `perWeek` at most, the 40 hours CALIBRATION.md says.
+  const taken =
+    slice.signed.filter((s) => weekOf(today, s.day) === week).length +
+    slice.done.filter((d) => weekOf(today, d) === week).length;
   return taken >= careerFor(view.content, slice).perWeek ? 'week-full' : null;
 }
 
@@ -163,6 +166,7 @@ export function paidWork(ctx: JobContext, minutes: number): void {
   const slice = ctx.write();
   slice.unpaid += minutes;
   slice.practice += minutes;
+  if (slice.career !== null) slice.experience[slice.career] = (slice.experience[slice.career] ?? 0) + minutes;
   const today = todayOf(ctx);
   const career = careerFor(ctx.content, slice);
   const s = slice.signed.find((x) => {
@@ -182,7 +186,9 @@ export function shiftOver(ctx: JobContext, day: number): void {
   const career = careerFor(ctx.content, slice);
   const rules = career.standing;
   const today = todayOf(ctx);
-  ctx.write().signed = slice.signed.filter((x) => x.day !== day);
+  const w = ctx.write();
+  w.signed = slice.signed.filter((x) => x.day !== day);
+  w.done = [...slice.done.filter((d) => d > day - 14), day];
   if (s.in === null) {
     // Too ill or hurt to work (M2.7, D104): a sick call, unpaid, and no warning.
     if (ctx.fact('health.off-work') === true) {

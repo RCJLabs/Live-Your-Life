@@ -1,0 +1,40 @@
+{
+  "name": "A cook to keep or let go",
+  "tags": ["the-menu"],
+  "weight": 3,
+  "prompt": "The new prep cook has been late four times in two weeks. The owner says it's your kitchen and your call.",
+  "choices": [
+    {
+      "id": "let-go",
+      "text": "Let them go at the end of the shift",
+      "outcome": {
+        "told": "You tell them after close. They pack their knives and leave. There's a hole in next week's schedule now.",
+        "standing": 1,
+        "needs": {
+          "calm": -10
+        }
+      }
+    },
+    {
+      "id": "chance",
+      "text": "Give them one more chance, and say plainly what happens next time",
+      "odds": {
+        "base": 50,
+        "skill": 30,
+        "tired": 0
+      },
+      "outcome": {
+        "told": "They're in early every day the next week, and they thank you for saying it straight.",
+        "standing": 2,
+        "practice": 20
+      },
+      "failure": {
+        "told": "They're late again on Friday, and the line is a cook short through the rush.",
+        "standing": -2,
+        "needs": {
+          "calm": -10
+        }
+      }
+    }
+  ]
+}

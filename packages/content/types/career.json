@@ -75,6 +75,20 @@
           "optional": true,
           "values": ["high-school", "associate"],
           "description": "The least schooling it hires (M2.8 step 5, D114): high-school takes a diploma or a GED; associate an associate's degree. Traced in CALIBRATION.md."
+        },
+        "experience": {
+          "kind": "group",
+          "optional": true,
+          "description": "Minutes worked in any of these careers, at any employer, that hiring asks for (M2.5, D122). Promotion doesn't ask it.",
+          "fields": {
+            "careers": {
+              "kind": "list",
+              "min": 1,
+              "max": 5,
+              "of": { "kind": "ref", "to": "career" }
+            },
+            "minutes": { "kind": "int", "min": 1 }
+          }
         }
       }
     },

@@ -3,7 +3,7 @@
   "wage": 1824,
   "employers": {
     "districts": ["inner-ring", "downtown", "strip"],
-    "staff": 0,
+    "staff": 1,
     "turnover": 54,
     "share": 0
   },
@@ -65,5 +65,11 @@
     "next": "chef",
     "practice": 240000,
     "standing": 70
+  },
+  "requires": {
+    "experience": {
+      "careers": ["line-cook", "kitchen-lead", "chef"],
+      "minutes": 120000
+    }
   }
 }

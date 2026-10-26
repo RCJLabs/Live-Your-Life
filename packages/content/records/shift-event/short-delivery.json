@@ -1,0 +1,37 @@
+{
+  "name": "The delivery comes in short",
+  "tags": ["running-the-line"],
+  "weight": 4,
+  "prompt": "The produce order comes in half filled: half the lettuce, no tomatoes, and the driver doesn't know why.",
+  "choices": [
+    {
+      "id": "pull",
+      "text": "Take the salads off for tonight and tell the servers",
+      "outcome": {
+        "told": "The servers tell their tables. A few people grumble and order something else.",
+        "standing": 1
+      }
+    },
+    {
+      "id": "run",
+      "text": "Send someone to the grocery for what's missing",
+      "odds": {
+        "base": 60,
+        "skill": 20,
+        "tired": 0
+      },
+      "outcome": {
+        "told": "They're back before the rush with what you need. It cost more than the order would have, and the owner pays it.",
+        "standing": 2,
+        "practice": 15
+      },
+      "failure": {
+        "told": "The store is out of tomatoes too. The rush starts with half the menu, and the servers hear about it all night.",
+        "standing": -2,
+        "needs": {
+          "calm": -10
+        }
+      }
+    }
+  ]
+}

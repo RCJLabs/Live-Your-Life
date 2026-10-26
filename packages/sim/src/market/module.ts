@@ -54,6 +54,9 @@ const applicant = (v: View) => ({
   felonies: v.fact('law.felonies') as number,
   reputation: sliceOf(v).reputation,
   schooling: (v.fact('education.finished') as string | undefined) ?? 'diploma',
+  worked: Object.fromEntries(
+    v.content.entries('career').map(([id]) => [id, (v.fact('job.worked', { career: id }) as number | undefined) ?? 0]),
+  ),
 });
 
 /** Why you can't apply for an opening today, or null. */

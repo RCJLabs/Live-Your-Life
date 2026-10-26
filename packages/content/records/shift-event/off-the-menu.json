@@ -1,0 +1,37 @@
+{
+  "name": "A dish that doesn't pay",
+  "tags": ["the-menu"],
+  "weight": 3,
+  "prompt": "The fish special costs more to make than it sells for, and half of what you prep is thrown out at night.",
+  "choices": [
+    {
+      "id": "cut",
+      "text": "Take it off the menu",
+      "outcome": {
+        "told": "You take it off. Two regulars ask after it, and you tell them why.",
+        "standing": 2
+      }
+    },
+    {
+      "id": "rework",
+      "text": "Rework it: a smaller cut, a cheaper side",
+      "odds": {
+        "base": 40,
+        "skill": 45,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "The new plate costs a third less, and it sells. The owner asks what else you'd change.",
+        "standing": 5,
+        "practice": 60
+      },
+      "failure": {
+        "told": "The new plate comes back twice the first night. You take it off anyway.",
+        "standing": -1,
+        "needs": {
+          "calm": -10
+        }
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@
   "wage": 2354,
   "employers": {
     "districts": ["inner-ring", "downtown", "strip"],
-    "staff": 0,
+    "staff": 1,
     "turnover": 54,
     "share": 0
   },
@@ -62,6 +62,10 @@
     "chance": 50
   },
   "requires": {
-    "schooling": "high-school"
+    "schooling": "high-school",
+    "experience": {
+      "careers": ["kitchen-lead", "chef"],
+      "minutes": 240000
+    }
   }
 }
