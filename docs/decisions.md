@@ -907,6 +907,8 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Walk, bus, rideshare (recommended, chosen). The same with a bicycle. Walk and bus only.
 
+**Built 2026-10-26 (M2.9 step 5).** The way is chosen where a trip starts, not on the map: Go to work, Go out and Go home each open the ways with their minutes and price. Nothing is travelled to from the map yet; when it is, the same choice opens there.
+
 ### D119. One walking pace, the real one. LOCKED, 2026-10-26 (Evan's call)
 
 **Decision.** Everywhere walks at about 1.3 m a second, 80 m a game minute, your block as the city, so the two agree at your door. This replaces D49's 1.95 m a game minute on the block.
@@ -914,6 +916,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 **Options considered.** One real pace (recommended, chosen). Keep the block's slow pace for play, the city alone at the real one.
 
 **Amended 2026-10-26 (Evan's call).** At speed 1 the clock runs two game minutes a second, so a walker at the real pace would cross the block in a fraction of a second. The walker keeps D49's pace on screen, a walk a player can follow, and the clock counts only the real walk while you walk: it slows. Options considered: a watchable walk, real minutes (recommended, chosen); the real pace on screen too; D49's slow pace kept on the block.
+
+### D120. Food comes next. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** M2.5 Food is worked after M2.9, before M2.10 Words, so the voice pass reads every career's strings once. Its wages come from secondary sources quoting the federal survey, marked as such, since bls.gov can't be reached from the build environment (D77, D116).
+
+**Options considered.** M2.5 Food (recommended, chosen). M2.10 Words. M2.3's remaining 17 careers on secondary wages. M2.11 Editions.
+
+### D121. The food ladder is line cook, kitchen lead, chef. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Three rungs: the line cook at $14.73 an hour (as now), the kitchen lead at $18.24 (Michigan's median for first-line supervisors of food preparation and serving workers, SOC 35-1012, $37,940 a year, May 2025), and the chef at $23.54 (the 25th percentile of Michigan's chefs and head cooks, SOC 35-1011, $48,970 a year). The lead's is a median, not a 25th percentile, because the supervisors' figure includes fast-food shift leads; written beside it in CALIBRATION.md.
+
+**Options considered.** Cook, lead, chef (recommended, chosen). Cook, chef. Cook, sous chef, chef, with the sous chef's wage estimated between the two, since the survey has no sous chef.
+
+### D122. Promoted where you work, then hired anywhere. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Your own kitchen promotes you once your practice and standing are enough, as patrol to detective works (M2.4). Once you have held a rank, other kitchens in the city post its openings too, asking for that experience, as real kitchens hire. Experience is the minutes you have worked in a career, kept across employers, so a chef who quits is hired as a chef elsewhere. The career records gain a requirement for experience.
+
+**Options considered.** Promotion, then hired (recommended, chosen). Promotion only. Hired on the market only, no promotions.
+
+### D123. The lead and the chef have their own shifts. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** A lead or chef meets shift events a line cook doesn't: a cook who doesn't show, a supplier short on an order, the health inspector's visit, a cook to keep or let go, a dish to take off the menu. Their odds are shown first and rolled as shown, and what comes of them shows in standing and pay. The kitchen keeps no books of its own; owning the restaurant stays in Phase 4.
+
+**Options considered.** The chef's own shifts (recommended, chosen). The same with the kitchen's books (covers, food cost, staff hours, an inspection grade). Wage and title only.
 
 ---
 
