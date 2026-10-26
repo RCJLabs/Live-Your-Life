@@ -269,8 +269,10 @@ test.describe('on a phone', () => {
     await arrive(page);
     const took = (await L<number>(page, 'tick')) - before;
     // D119: the bed to the diner's door is 30 to 50 m on the slice's blocks, under a minute at 80 m a
-    // game minute; the walk on screen still takes seconds a player can follow (D49's pace).
-    expect(took).toBeLessThanOrEqual(2);
+    // game minute; the walk on screen still takes seconds a player can follow (D49's pace). The
+    // reading also holds the clock at full rate while the map opens and is tapped, a minute or two on
+    // a slow runner; a clock that didn't slow while walking would read about 20 (D49's 12 to 30).
+    expect(took).toBeLessThanOrEqual(5);
     expect(Date.now() - started).toBeGreaterThan(3000);
   });
 
