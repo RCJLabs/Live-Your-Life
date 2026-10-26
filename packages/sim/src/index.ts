@@ -172,6 +172,7 @@ export { type HomeSlice, homeModule, RENT_TIMER } from './home.ts';
 export { drawFrom, LEAST, MOST, oddsOf } from './job/events.ts';
 export { type Hire, jobModule } from './job/module.ts';
 export { PERIODS } from './job/pay.ts';
+export { POST_OPEN_DAYS, postOpen } from './job/posts.ts';
 export {
   type CareerRecord,
   type Choice,

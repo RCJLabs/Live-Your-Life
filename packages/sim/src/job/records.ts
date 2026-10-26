@@ -79,7 +79,13 @@ export interface CareerRecord {
   readonly crew?: Crew;
   readonly events: { readonly tags: readonly string[]; readonly chance: number };
   /** The rank it leads to, with the same employer, once practice and standing are enough (M2.4). */
-  readonly ladder?: { readonly next: string; readonly practice: number; readonly standing: number };
+  readonly ladder?: {
+    readonly next: string;
+    readonly practice: number;
+    readonly standing: number;
+    /** One post, held by someone: promotion waits for it to come open (D124). */
+    readonly post?: boolean;
+  };
 }
 
 export interface Outcome {

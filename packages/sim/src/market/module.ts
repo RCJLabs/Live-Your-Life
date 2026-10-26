@@ -193,6 +193,12 @@ export const marketModule = (career?: string) =>
     }),
     facts: {
       // Still at the job the life began with, beside its crew (ties/state.ts).
+      // Heard by the job (M2.5, D124): whose post you would be promoted into.
+      employer: {
+        read: ({ state }) => state.employer ?? '',
+        domain: { type: 'text' },
+        label: 'the employer you work for',
+      },
       'at-diner': {
         read: ({ state }) => state.employer?.endsWith('-home') === true,
         domain: { type: 'bool' },

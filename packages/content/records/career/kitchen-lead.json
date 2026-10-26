@@ -64,7 +64,8 @@
   "ladder": {
     "next": "chef",
     "practice": 240000,
-    "standing": 70
+    "standing": 70,
+    "post": true
   },
   "requires": {
     "experience": {

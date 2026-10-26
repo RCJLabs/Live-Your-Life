@@ -7,6 +7,7 @@ import { lineFor } from '../chronicle.ts';
 import { createLifeGame } from '../game.ts';
 import type { Listing } from '../market/module.ts';
 import { barred, REPUTATION } from '../market/odds.ts';
+import { POST_OPEN_DAYS, postOpen } from './posts.ts';
 import { type CareerRecord, careerOf, eventsFor, shiftEventOf } from './records.ts';
 import type { JobSlice } from './state.ts';
 
@@ -25,9 +26,22 @@ const fact = (s: GameState, id: string) => game.fact(s, id, {}, sim);
 const cook = careerOf(sim.content, 'line-cook');
 const lead = careerOf(sim.content, 'kitchen-lead');
 
+/** Whether the next rank's post at the diner is open on a seed's first posted day (D124). */
+function openOn(seed: string, next: string): boolean {
+  const s = game.init(seed, sim);
+  const day = (job(s).posted[0] as { day: number }).day;
+  const turnover = careerOf(sim.content, next).employers.turnover;
+  return postOpen(fact(s, 'people.seed') as number, fact(s, 'market.employer') as string, next, turnover, day);
+}
+/** The first seed whose post is open, or shut, on its first posted day. */
+const seedWhere = (next: string, open: boolean): string => {
+  for (let i = 0; i < 400; i++) if (openOn(`kitchen-${i}`, next) === open) return `kitchen-${i}`;
+  throw new Error(`no seed with the ${next}'s post ${open ? 'open' : 'shut'}`);
+};
+
 /** A whole shift worked on the first day posted, as `career` with `practice` minutes and `standing`. */
-function shift(career: string, practice: number, standing: number) {
-  const s = game.init('kitchen', sim);
+function shift(career: string, practice: number, standing: number, seed = 'kitchen') {
+  const s = game.init(seed, sim);
   const start = { ...s, job: { ...job(s), career, practice, standing } } as GameState;
   const first = job(start).posted[0] as { day: number; shift: string };
   const kind = careerOf(sim.content, career).shifts.find((k) => k.id === first.shift) as {
@@ -53,9 +67,10 @@ describe('the food ladder (M2.5, D121, D122)', () => {
   it('makes a line cook the kitchen lead at the diner with the hours and the standing', () => {
     const practice = (cook.ladder?.practice as number) - 480;
     const standing = cook.ladder?.standing as number;
-    expect(shift('line-cook', practice - 480, standing).of('job/promoted')).toEqual([]);
-    expect(shift('line-cook', practice, standing - 10).of('job/promoted')).toEqual([]);
-    const done = shift('line-cook', practice, standing);
+    const open = seedWhere('kitchen-lead', true);
+    expect(shift('line-cook', practice - 480, standing, open).of('job/promoted')).toEqual([]);
+    expect(shift('line-cook', practice, standing - 10, open).of('job/promoted')).toEqual([]);
+    const done = shift('line-cook', practice, standing, open);
     expect(done.of('job/promoted')).toEqual([{ type: 'job/promoted', from: 'line-cook', career: 'kitchen-lead' }]);
     expect(lineFor(sim.content, done.of('job/promoted')[0] as never, { you: 'Dana' }, DEFAULT_START)).toBe(
       'Dana became a kitchen lead.',
@@ -69,8 +84,40 @@ describe('the food ladder (M2.5, D121, D122)', () => {
 
   it('makes the kitchen lead the chef after the lead’s own hours', () => {
     const practice = (lead.ladder?.practice as number) - 480;
-    const done = shift('kitchen-lead', practice, lead.ladder?.standing as number);
+    const done = shift('kitchen-lead', practice, lead.ladder?.standing as number, seedWhere('chef', true));
     expect(done.of('job/promoted').map((b) => b.career)).toEqual(['chef']);
+  });
+
+  it('waits for the post: ready, but no promotion while someone holds it (D124)', () => {
+    const practice = (cook.ladder?.practice as number) - 480;
+    const shut = shift('line-cook', practice, cook.ladder?.standing as number, seedWhere('kitchen-lead', false));
+    expect(shut.of('job/promoted')).toEqual([]);
+    expect(job(shut.state).career).toBe('line-cook');
+  });
+
+  it('opens a post about as often as its holder leaves, and keeps it open three weeks', () => {
+    const turnover = lead.employers.turnover;
+    let open = 0;
+    let runs = 0;
+    let run = 0;
+    const days = 20000;
+    for (const seed of [1, 2, 3, 7, 99, 12345]) {
+      for (let d = 0; d < days; d++) {
+        if (postOpen(seed, 'line-cook-home', 'kitchen-lead', turnover, d)) {
+          open++;
+          run++;
+        } else if (run > 0) {
+          runs++;
+          run = 0;
+        }
+      }
+      run = 0;
+    }
+    // A holder leaves on about turnover/30,000 of days; each leaving opens the post three weeks.
+    const leavings = (6 * days * turnover) / 30000;
+    expect(runs).toBeGreaterThan(leavings * 0.75);
+    expect(runs).toBeLessThan(leavings * 1.25);
+    expect(open / runs).toBeGreaterThanOrEqual(POST_OPEN_DAYS - 1);
   });
 });
 

@@ -6,7 +6,7 @@
  * the sim refuses them when they don't apply.
  */
 import type { Action } from '@eb/core';
-import { careerOf, type Listing, type MarketSlice } from '@lyl/sim';
+import { careerOf, type Listing, type MarketSlice, postOpen } from '@lyl/sim';
 import type { Work } from '../city/workplace.ts';
 import { button, el } from './dom.ts';
 import type { Life } from './session.ts';
@@ -50,6 +50,18 @@ function where(life: Life, work: Work, employer: string): string {
 /** A whole number with its thousands marked, "1,240". */
 const whole = (n: number): string => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
+const article = (word: string) => (/^[aeiou]/.test(word) ? 'an' : 'a');
+
+/** Whether the post of `career` where you work is open today: the sim's own reckoning (D124). */
+const openHere = (life: Life, career: string): boolean =>
+  postOpen(
+    life.fact('people.seed') as number,
+    life.fact('market.employer') as string,
+    career,
+    careerOf(life.sim.content, career).employers.turnover,
+    life.fact('time.day') as number,
+  );
+
 /**
  * The rank your job leads to and what it takes (M2.5, D122), from the career's ladder and your
  * practice and standing in this job; null for a job that leads nowhere.
@@ -67,9 +79,11 @@ export function nextRank(life: Life): string | null {
     const hours = `${whole(left)} more hour${left === 1 ? '' : 's'} of work`;
     return `Next here: ${next}, after ${hours}${low ? `, with your standing at ${ladder.standing} or more; ${now}` : ''}.`;
   }
-  return low
-    ? `Next here: ${next}, once your standing reaches ${ladder.standing}; ${now}.`
-    : `Next here: ${next}, at the end of your next shift.`;
+  if (low) return `Next here: ${next}, once your standing reaches ${ladder.standing}; ${now}.`;
+  // One post, held by someone (D124): ready, but it waits for them to leave.
+  if (ladder.post && !openHere(life, ladder.next))
+    return `You’re ready to be ${article(next)} ${next} here once the post comes open. Other kitchens in the city hire for it too.`;
+  return `Next here: ${next}, at the end of your next shift.`;
 }
 
 function yourJob(life: Life, work: Work, act: (a: Action) => void): HTMLElement {

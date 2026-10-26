@@ -88,6 +88,7 @@
   "ladder": {
     "next": "kitchen-lead",
     "practice": 120000,
-    "standing": 70
+    "standing": 70,
+    "post": true
   }
 }

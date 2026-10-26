@@ -455,6 +455,11 @@
           "kind": "int",
           "min": 0,
           "max": 100
+        },
+        "post": {
+          "kind": "bool",
+          "optional": true,
+          "description": "The next rank is one post at the employer, held by someone (D124): promotion waits until its holder leaves, at the next rank's turnover, and the post stays open three weeks."
         }
       }
     }
