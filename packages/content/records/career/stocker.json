@@ -1,0 +1,64 @@
+{
+  "name": "Stocker",
+  "wage": 1551,
+  "employers": {
+    "districts": ["strip", "suburbs"],
+    "staff": 6,
+    "turnover": 40,
+    "share": 189
+  },
+  "hiring": {
+    "base": 5,
+    "record": 3,
+    "reputation": 20
+  },
+  "shifts": [
+    {
+      "id": "early",
+      "hour": 5,
+      "minute": 0,
+      "minutes": 480
+    },
+    {
+      "id": "late",
+      "hour": 13,
+      "minute": 0,
+      "minutes": 480
+    }
+  ],
+  "open": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+  "posting": {
+    "weekday": "thursday",
+    "fewest": 3,
+    "most": 6
+  },
+  "perWeek": 5,
+  "pay": {
+    "weekday": "friday",
+    "hour": 6,
+    "minute": 0
+  },
+  "withholding": ["federal-single", "social-security", "medicare", "michigan", "city-resident"],
+  "standing": {
+    "start": 50,
+    "shift": 2,
+    "lateAfter": 5,
+    "late": 4,
+    "missedAfter": 30,
+    "leftEarly": 6,
+    "noShow": 15,
+    "dropBefore": 1440,
+    "drop": 1
+  },
+  "warnings": {
+    "letGoAt": 2,
+    "lapse": 28
+  },
+  "skill": {
+    "half": 24000
+  },
+  "events": {
+    "tags": ["work"],
+    "chance": 15
+  }
+}

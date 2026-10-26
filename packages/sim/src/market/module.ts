@@ -7,10 +7,10 @@
  */
 import { type Action, type Beat, defineModule, type FactView, type ModuleContext } from '@eb/core';
 import { MINUTES_PER_DAY } from '../calendar.ts';
-import { careerOf } from '../job/records.ts';
+import { type CareerRecord, careerOf } from '../job/records.ts';
 import { rosterOf } from '../people/roster.ts';
 import { type Employer, employersOf, homeEmployer } from './employers.ts';
-import { barred, hireOdds, OFFER_DAYS, PENDING, REPUTATION } from './odds.ts';
+import { type Applicant, barred, hireOdds, OFFER_DAYS, PENDING, REPUTATION } from './odds.ts';
 import { type Opening, openingOf, openingsOn } from './openings.ts';
 
 /** The district your block stands in (D67). */
@@ -54,19 +54,33 @@ const applicant = (v: View) => ({
   felonies: v.fact('law.felonies') as number,
   reputation: sliceOf(v).reputation,
   schooling: (v.fact('education.finished') as string | undefined) ?? 'diploma',
+  // Only the careers some career asks experience in: one fact each, not one for every career.
   worked: Object.fromEntries(
-    v.content.entries('career').map(([id]) => [id, (v.fact('job.worked', { career: id }) as number | undefined) ?? 0]),
+    countedOf(v.content).map((id) => [id, (v.fact('job.worked', { career: id }) as number | undefined) ?? 0]),
   ),
 });
 
+const counted = new WeakMap<object, readonly string[]>();
+/** The careers any career's experience asks for, worked out once per content. */
+function countedOf(content: View['content']): readonly string[] {
+  const known = counted.get(content);
+  if (known) return known;
+  const ids = new Set<string>();
+  for (const [, c] of content.entries<CareerRecord>('career'))
+    for (const id of c.requires?.experience?.careers ?? []) ids.add(id);
+  const out = [...ids].sort();
+  counted.set(content, out);
+  return out;
+}
+
 /** Why you can't apply for an opening today, or null. */
-function applyProblem(v: View, o: Opening | null): string | null {
+function applyProblem(v: View, o: Opening | null, you: Applicant = applicant(v)): string | null {
   if (!o) return 'no-opening';
   const s = sliceOf(v);
   if (s.employer === o.employer.id) return 'works-there';
   if (s.applications.some((a) => a.opening === o.id) || s.offers.some((x) => x.opening === o.id)) return 'applied';
   if (s.applications.length >= PENDING) return 'too-many';
-  return barred(careerOf(v.content, o.employer.career), applicant(v));
+  return barred(careerOf(v.content, o.employer.career), you);
 }
 
 export interface Listing {
@@ -80,17 +94,29 @@ export interface Listing {
   readonly problem: string | null;
 }
 
+// A day's openings are the same all day for the same employers: kept, since every turn's options ask.
+const today = new WeakMap<readonly Employer[], { seed: number; day: number; openings: Opening[] }>();
+function openingsToday(seed: number, employers: readonly Employer[], day: number): Opening[] {
+  const known = today.get(employers);
+  if (known && known.seed === seed && known.day === day) return known.openings;
+  const openings = openingsOn(seed, employers, day);
+  today.set(employers, { seed, day, openings });
+  return openings;
+}
+
 /** The openings up today, as the Jobs panel lists them, odds and all. */
 function listings(v: View): Listing[] {
   const day = v.fact('time.day') as number;
-  return openingsOn(v.fact('people.seed') as number, employersFor(v), day).map((o) => ({
+  // The applicant once for the whole list: each fact read costs, and nothing changes between openings.
+  const you = applicant(v);
+  return openingsToday(v.fact('people.seed') as number, employersFor(v), day).map((o) => ({
     opening: o.id,
     career: o.employer.career,
     employer: o.employer.id,
     district: o.employer.district,
     closes: o.closes,
-    odds: hireOdds(careerOf(v.content, o.employer.career), applicant(v)),
-    problem: applyProblem(v, o),
+    odds: hireOdds(careerOf(v.content, o.employer.career), you),
+    problem: applyProblem(v, o, you),
   }));
 }
 

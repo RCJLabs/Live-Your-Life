@@ -2,6 +2,7 @@ import { type Action, type GameState, type Policy, playRun, Rng, seedsOf, type T
 import { describe, expect, it } from 'vitest';
 import { LINE_COOK, sliceGame, sliceSim } from '../../test/slice.ts';
 import { randomFor, steadyFor } from '../bot.ts';
+import { dealerFor } from '../dealer.ts';
 import { createLifeGame } from '../game.ts';
 import { thiefFor } from '../thief.ts';
 
@@ -91,6 +92,9 @@ describe('the law in the bots’ lives', () => {
     const tally: Tally = { beats: new Set(), pleas: new Set(), evidence: new Set(), previews: 0 };
     playLives(createLifeGame({ people: 0 }), () => thiefFor(DAYS), seedsOf(150, 'law-thief'), tally);
     playLives(sliceGame(), () => randomFor(DAYS), seedsOf(150, 'law-random'), tally);
+    // Dealers too: since M2.3's 30 careers the random bot spreads its choices over more jobs and
+    // deals less, and drugs found in a raid stopped coming up in its 150 lives.
+    playLives(createLifeGame({ people: 0 }), () => dealerFor(DAYS), seedsOf(30, 'law-dealer'), tally);
     const chain = [
       'took',
       'held',

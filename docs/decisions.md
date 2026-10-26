@@ -947,6 +947,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Wait for the post (recommended, chosen). Keep promotion on hours and standing alone. A monthly chance at shown odds once eligible (tune), not tied to anyone leaving.
 
+### D125. M2.3's remaining careers come next. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** After M2.5's [auto] gates, the marker goes back to M2.3 to finish its 30 entry-level careers, on secondary wage sources as the nine of M2.8 and the food ladder were (D116, D121), so the voice pass of M2.10 reads every career's strings once.
+
+**Options considered.** M2.3's careers (recommended, chosen). M2.10 Words. M2.11 Editions. Phase 2's year gate first.
+
+### D126. The last 17 careers. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Server, fast-food crew, host, retail salesperson, stocker, hand packer, forklift operator, team assembler, housekeeper, landscaper, home health aide, nursing assistant, childcare worker, construction laborer, carpenter's helper, receptionist, and a delivery driver in the employer's van. Each with Michigan's wage from the federal survey through a secondary source, real shifts and real requirements, traced in CALIBRATION.md. The driver assumes the licence most eighteen-year-olds hold, since owning and driving a car wait for Phase 4 (D118); the nursing assistant assumes Michigan's short training course is done.
+
+**Options considered.** The list with a telemarketer (recommended). The same with a delivery driver in its place (chosen). Fewer careers with deeper shift events, changing M2.3's gate.
+
 ---
 
 ## Open items
