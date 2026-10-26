@@ -103,7 +103,8 @@ describe('the crew (M2.4, D79, D84–D86)', () => {
     if (arrested.length === 0) expect(deal(week.state).held).toBe(499 - sales * trade.sale.grams);
   });
 
-  it('names you once arrested, less often the more they think of you', () => {
+  // About 6 s with the whole suite running (M2.10): over the 5 s default.
+  it('names you once arrested, less often the more they think of you', { timeout: 30_000 }, () => {
     const named = (regard: number) => {
       let n = 0;
       let arrests = 0;
