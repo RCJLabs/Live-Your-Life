@@ -60,6 +60,9 @@ const RARE = [
   'lives/came-of-age',
   'education/enrolled',
   'education/graded',
+  // A coworker covering for you: with the careers of M2.8 step 5 the census's coworker lives no
+  // longer meet it; ties/favours.test.ts raises it.
+  'ties/covered',
   // Paying for the college (M2.8 step 4): education/aid.test.ts raises them.
   'education/billed',
   'education/loan-due',

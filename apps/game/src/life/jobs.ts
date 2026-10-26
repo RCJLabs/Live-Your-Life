@@ -17,6 +17,8 @@ const LISTED = 12;
 
 const PROBLEM: Readonly<Record<string, string>> = {
   record: 'They won’t take anyone with a conviction.',
+  'high-school': 'They hire only with a high school diploma or a GED.',
+  associate: 'They hire only with an associate’s degree.',
   'too-many': 'You’re waiting on five answers already.',
   applied: 'You’ve applied.',
   'works-there': 'You work there.',
@@ -106,7 +108,9 @@ function openings(life: Life, work: Work, act: (a: Action) => void): HTMLElement
   return shown.map((l) => {
     const career = careerOf(life.sim.content, l.career);
     const go = apply.find((a) => a.opening === l.opening);
-    const chance = l.problem === null ? ` About ${odds(l.odds)} who apply are taken.` : '';
+    // A preferred credential is in the odds listed (D114); said, so the reason for them is plain.
+    const prefers = career.hiring.prefers ? ' They prefer an associate’s degree.' : '';
+    const chance = l.problem === null ? `${prefers} About ${odds(l.odds)} who apply are taken.` : '';
     return el(
       'li',
       { 'data-kind': 'opening', 'data-opening': l.opening },

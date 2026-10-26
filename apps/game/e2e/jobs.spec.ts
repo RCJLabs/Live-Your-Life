@@ -68,11 +68,27 @@ test('quits, applies across the city, takes the offer and goes to work off scree
     const away = page
       .locator('#openings li', { hasNotText: 'on your block' })
       .locator('button[data-action="market/apply"]');
-    // Up to three at once, as the seeker bot does: the line cook takes 15 in 100 (D76).
     if ((await away.count()) > 0) {
       await expect(page.locator('#openings li', { hasText: 'who apply are taken' }).first()).toBeVisible();
     }
-    for (let n = 0; n < 3 && (await away.count()) > 0; n++) await away.first().click();
+    // Up to three at once, as the seeker bot does, the best odds listed first: the line cook takes
+    // 15 in 100 (D76), most of M2.8's careers 5, too few for the rounds here.
+    const listed = await L<{ opening: string; odds: number; problem: string | null }[]>(
+      page,
+      'fact',
+      'market.openings',
+    );
+    const best = listed.filter((l) => l.problem === null).sort((a, b) => b.odds - a.odds);
+    let sent = 0;
+    for (const l of best) {
+      if (sent >= 3) break;
+      const go = page
+        .locator(`#openings li[data-opening="${l.opening}"]`, { hasNotText: 'on your block' })
+        .locator('button[data-action="market/apply"]');
+      if ((await go.count()) === 0) continue;
+      await go.click();
+      sent++;
+    }
     await page.click('#panel-close');
     for (let n = 0; n < 6 && (await L<number>(page, 'fact', 'market.waiting')) > 0; n++) await sleepOnce(page, bed);
   }

@@ -139,7 +139,9 @@ describe('the labor market (M2.3, D74)', () => {
     expect(l.problem).toBe('record');
     expect(refusal(game, sim, convicted, apply(l.opening))).toBe('record');
     const cook = listed(convicted).find((x) => x.career === 'line-cook' && x.problem === null) as Listing;
-    expect(cook.odds).toBe(hireOdds(lineCook(), { convictions: 1, felonies: 0, reputation: REPUTATION.start }));
+    expect(cook.odds).toBe(
+      hireOdds(lineCook(), { convictions: 1, felonies: 0, reputation: REPUTATION.start, schooling: 'diploma' }),
+    );
     expect(cook.odds).toBe(lineCook().hiring.base - lineCook().hiring.record);
   });
 });

@@ -16,13 +16,17 @@ const set = (s: GameState, person: number, change: Partial<Tie>) =>
   withCircle(s, { ties: circle(s).ties.map((t) => (t.person === person ? { ...t, ...change } : t)) });
 const advance = (s: GameState, minutes: number) => play(game, sim, s, { type: 'time/advance', minutes }).state;
 
-/** An ask taken until it's a yes: each no is set aside, with a minute passed so the next roll is another. */
+/**
+ * An ask taken until it's a yes: each no is set aside, the tie put back as it was, and a minute
+ * passed. The retry starts from the state after the roll, whose random stream has moved on: from
+ * the state before it, every retry would roll the same number.
+ */
 function untilYes(state: GameState, person: number, action: Action, beat: string): GameState {
   let s = state;
   for (let k = 0; k < 60; k++) {
     const r = play(game, sim, s, action);
     if (r.of(beat)[0]?.yes === true) return r.state;
-    s = advance(set(s, person, { proposed: -1, dated: tie(s, person).dated }), 1);
+    s = advance(set(r.state, person, tie(s, person)), 1);
   }
   throw new Error(`${beat}: never a yes`);
 }

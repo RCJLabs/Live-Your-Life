@@ -67,7 +67,14 @@
         "record": {
           "kind": "enum",
           "values": ["none", "no-theft", "no-felony"],
-          "description": "none: no conviction at all; no-theft: none for theft or dishonesty; no-felony: no felony (MCOLES's standard for a police licence). A no-felony job is lost on a felony sentence."
+          "description": "none: no conviction at all; no-theft: none for theft or dishonesty; no-felony: no felony (MCOLES's standard for a police licence). A no-felony job is lost on a felony sentence.",
+          "optional": true
+        },
+        "schooling": {
+          "kind": "enum",
+          "optional": true,
+          "values": ["high-school", "associate"],
+          "description": "The least schooling it hires (M2.8 step 5, D114): high-school takes a diploma or a GED; associate an associate's degree. Traced in CALIBRATION.md."
         }
       }
     },
@@ -91,6 +98,22 @@
           "min": 0,
           "max": 50,
           "description": "Added at full reputation, taken at none."
+        },
+        "prefers": {
+          "kind": "group",
+          "optional": true,
+          "description": "A credential it prefers but doesn't ask for (D114): points added to the odds for those who hold it, shown before you apply (tune).",
+          "fields": {
+            "schooling": {
+              "kind": "enum",
+              "values": ["associate"]
+            },
+            "points": {
+              "kind": "int",
+              "min": 1,
+              "max": 50
+            }
+          }
         }
       }
     },

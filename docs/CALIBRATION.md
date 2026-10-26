@@ -156,6 +156,29 @@ How often jobs come up, how hiring goes, and how far away work is (D73, D74). Th
 
 **The other 29 careers' wages are not in.** The federal occupational wage survey couldn't be reached from the build environment (bls.gov and the sites that quote it were blocked). A search found May 2024 figures for 7 of the 30 and part of 3 more, which are leads, not readings. The May 2025 figures, the base year's, came out on 15 May 2026.
 
+## Careers by credential (M2.8 step 5)
+
+Nine careers added with what they ask for (D114, D116). Each wage is the 25th percentile of the federal occupational wage survey (OEWS) for a hire with no experience, as the line cook's is, read through WageDex's pages quoting it: Michigan's figure for May 2024 where WageDex has one, otherwise a mid-size Michigan metro's (Lansing, Flint) for May 2025, the city's class (D14). Annual figures are divided by 2,080 hours. Every figure is secondary: bls.gov can't be reached from the build environment (D77). The share of the city's jobs is national OEWS employment over about 150 million jobs, from general knowledge, and is to be checked. Turnover is the industry's from the labor market's table above.
+
+| Career | Wage, an hour | Asks for | Record | Share in 10,000 | Turnover | Source | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Dishwasher (`career/dishwasher.json`) | $13.01 ($27,070 a year) | nothing | none | 27 | 54, food service | WageDex, Michigan, SOC 35-9021, May 2024 (median $13.94) | secondary |
+| Cashier (`career/cashier.json`) | $13.14 ($27,340) | nothing | none | 211 | 40, retail | WageDex, Michigan, SOC 41-2011, May 2024 (median $14.03) | secondary |
+| Janitor (`career/janitor.json`) | $15.43 ($32,100) | nothing | none | 141 | 44, business services | WageDex, Detroit-Warren-Dearborn, SOC 37-2011, May 2025 (no statewide page found; Saginaw's 25th is $29,420) | secondary, a larger metro's |
+| Warehouse worker (`career/warehouse-worker.json`) | $17.94 ($37,310) | nothing | none | 204 | 39, transportation and warehousing | WageDex, Lansing-East Lansing, SOC 53-7062, May 2025 | secondary |
+| Bank teller (`career/bank-teller.json`) | $17.70 ($36,820) | a diploma or GED, BLS's typical entry education | no theft | 22 | 19, finance | WageDex, Flint, SOC 43-3071, May 2025 | secondary |
+| Customer service representative (`career/customer-service.json`) | $17.38 ($36,150) | a diploma or GED, BLS's typical entry education | none | 184 | 44, business services | WageDex, Michigan, SOC 43-4051 | secondary |
+| Security guard (`career/security-guard.json`) | $16.16 ($33,620) | a diploma or GED, and no felony: Michigan's rule for a guard employed by a licensed agency (MCL 338.1067(2)) | no felony | 72 | 44, business services | wage: WageDex, Lansing-East Lansing, SOC 33-9032, May 2025; the rule: LARA's guard employee requirements page, through a search summary | secondary |
+| Computer support specialist (`career/computer-support.json`) | $23.56 ($49,000) | a diploma or GED; prefers an associate's, 15 points on the odds (tune) | none | 45 | 44, business services | wage: national, OEWS 2025 through O*NET (no Michigan figure found); entry: BLS's handbook, "some college, no degree", an associate's for network support | secondary, national |
+| Paralegal (`career/paralegal.json`) | $23.61 ($49,100) | an associate's, BLS's typical entry education | none | 24 | 44, business services | WageDex, Lansing-East Lansing, SOC 23-2011, May 2025 (Michigan's median $61,490, May 2024) | secondary |
+| Police recruit (`career/police-recruit.json`) | as above | a diploma or GED (MCOLES); prefers an associate's, 10 points on the odds (tune) | no felony | 43 | 15 | MCOLES's standards, above | secondary |
+
+**Hiring odds and staff (tune).** The nine take 5 in 100 who apply, 3 fewer with a conviction they don't bar, and 6 staff a site, the line cook's. Given 10 to 20 in 100 and up to 25 staff, a jobless bot was working within a week 3 times in 4, against 2 in 5 before the careers and a 9.6-week median spell in the household survey: more careers are more openings to apply to at once. At 5 the share is back near the M2.3 reading (`market/seeker.test.ts`, 25% to 60%). Callback studies would replace it (open question 66 in ROADMAP).
+
+**Employer cover.** Banks, call centres, warehouses, offices and law firms are marked as offering health cover; dishwashing, cashiering, janitorial and guard work are not (tune: by the common pattern of large employers in those industries, not a reading). The real share of workers offered cover by industry is in the Employer Costs for Employee Compensation and the National Compensation Survey, to be read.
+
+**Pay by credential, a realism bar.** The median starting wage of the careers that ask for each credential, against those that ask for none: a diploma or GED 1.20 times, an associate's 1.60. BLS's median weekly earnings for full-time workers of 25 and over in 2024 give 1.26 ($930 against $738) and 1.49 ($1,099). The test (`market/credentials.test.ts`) holds each within 15%. The game's are starting wages, BLS's are all ages', and one career (the paralegal) stands for the associate's: the bar is thin until more careers come.
+
 ## Street dealing (M2.4)
 
 Cocaine on the street (D78, D82). Every figure was read on 2026-10-23 through search results. Michigan's legislature and court sites, and every page a fetch was tried on, were blocked from the build environment, so each row is secondary until checked (D83).

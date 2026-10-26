@@ -41,13 +41,25 @@ function shift(game: typeof recruitGame, practice: number, standing?: number) {
 
 describe('the police (M2.4, D80)', () => {
   it('bars a recruit with a felony, and only lowers the odds for a misdemeanour', () => {
-    expect(barred(recruit, { convictions: 1, felonies: 1, reputation: 50 })).toBe('record');
-    expect(barred(recruit, { convictions: 1, felonies: 0, reputation: 50 })).toBeNull();
-    const clean = hireOdds(recruit, { convictions: 0, felonies: 0, reputation: REPUTATION.start });
-    const marked = hireOdds(recruit, { convictions: 1, felonies: 0, reputation: REPUTATION.start });
+    expect(barred(recruit, { convictions: 1, felonies: 1, reputation: 50, schooling: 'diploma' })).toBe('record');
+    expect(barred(recruit, { convictions: 1, felonies: 0, reputation: 50, schooling: 'diploma' })).toBeNull();
+    const clean = hireOdds(recruit, {
+      convictions: 0,
+      felonies: 0,
+      reputation: REPUTATION.start,
+      schooling: 'diploma',
+    });
+    const marked = hireOdds(recruit, {
+      convictions: 1,
+      felonies: 0,
+      reputation: REPUTATION.start,
+      schooling: 'diploma',
+    });
     expect(clean - marked).toBe(recruit.hiring.record);
     // The line cook, which bars no record of any kind, still takes a felon.
-    expect(barred(careerOf(sim.content, 'line-cook'), { convictions: 1, felonies: 1, reputation: 50 })).toBeNull();
+    expect(
+      barred(careerOf(sim.content, 'line-cook'), { convictions: 1, felonies: 1, reputation: 50, schooling: 'diploma' }),
+    ).toBeNull();
   });
 
   it('works the academy as ten-hour weekdays, and makes you a patrol officer once its hours are done', () => {
@@ -138,10 +150,18 @@ describe('the police (M2.4, D80)', () => {
     const employers = employersOf(sim.content, 7, roster, 'inner-ring');
     const tier1 = employers.filter((e) => e.place >= 0);
     expect(tier1.some((e) => e.career === 'detective' || e.career === 'police-officer')).toBe(false);
-    const police = tier1.filter((e) => e.career === 'police-recruit').length / tier1.length;
-    // 43 in 137 of the jobs the careers share (tune): about a third.
-    expect(police).toBeGreaterThan(0.2);
-    expect(police).toBeLessThan(0.45);
+    // The recruit's share of the jobs all the careers share, about 4 in 100 with M2.8's careers:
+    // a few workplaces in a city of 55, so counted over 20 cities, within three standard deviations.
+    const shares = sim.content.ids('career').map((id) => careerOf(sim.content, id).employers.share);
+    const p = careerOf(sim.content, 'police-recruit').employers.share / shares.reduce((n, x) => n + x, 0);
+    let police = 0;
+    let all = 0;
+    for (let seed = 1; seed <= 20; seed++) {
+      const places = employersOf(sim.content, seed, rosterOf(seed, 1000), 'inner-ring').filter((e) => e.place >= 0);
+      police += places.filter((e) => e.career === 'police-recruit').length;
+      all += places.length;
+    }
+    expect(Math.abs(police - all * p)).toBeLessThan(3 * Math.sqrt(all * p * (1 - p)));
     for (const e of employers.filter((x) => x.career === 'detective')) expect(e.staff).toBe(0);
   });
 });
