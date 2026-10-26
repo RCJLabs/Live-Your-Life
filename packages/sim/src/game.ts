@@ -33,6 +33,7 @@ import { workModule } from './people/work.ts';
 import { prisonModule } from './prison/module.ts';
 import { tiesModule } from './ties/module.ts';
 import { midnightTimer } from './timers.ts';
+import { travelModule } from './travel/module.ts';
 import { youModule } from './you.ts';
 
 /**
@@ -95,6 +96,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     healthModule,
     // Your schooling (M2.8, D112): added to a save from before it, you have a diploma.
     educationModule,
+    // The bus and a hailed ride (M2.9, D118): added to a save from before it, no fares paid today.
+    travelModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

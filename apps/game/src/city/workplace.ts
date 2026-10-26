@@ -34,9 +34,17 @@ export interface Work {
   /** An employer's lot; -1 for your block's own. */
   lotOf(employer: string): number;
   /** The walk from your door to an employer's, in metres and game minutes; null for your block's own. */
-  walkTo(employer: string): { readonly metres: number; readonly minutes: number } | null;
+  walkTo(employer: string): WalkThere | null;
   /** The walk from your door to a roster place's lot (M2.6: a third place you go out to). */
-  walkToPlace(place: number): { readonly metres: number; readonly minutes: number } | null;
+  walkToPlace(place: number): WalkThere | null;
+}
+
+/** A walk along the streets, and its two ends in the city's metres for the bus and a ride (M2.9). */
+export interface WalkThere {
+  readonly metres: number;
+  readonly minutes: number;
+  readonly from: { readonly x: number; readonly y: number };
+  readonly to: { readonly x: number; readonly y: number };
 }
 
 const kept = new WeakMap<TownScene, Map<string, Work>>();
@@ -82,7 +90,7 @@ export function workOf(town: TownScene, seed: number, n: number): Work {
     const mid = (town.city.lots.start[lot] as number) + (town.city.lots.width[lot] as number) / 2;
     return { block, side, x: side === 1 ? mid : (town.city.blocks.w[block] as number) - mid };
   };
-  const walks = new Map<string, { metres: number; minutes: number } | null>();
+  const walks = new Map<string, WalkThere | null>();
   const work: Work = {
     employers,
     placed,
@@ -94,18 +102,25 @@ export function workOf(town: TownScene, seed: number, n: number): Work {
       return walkToLot(`place-${place}`, placed.lot[place] ?? -1);
     },
   };
-  function walkToLot(id: string, lot: number): { metres: number; minutes: number } | null {
+  function walkToLot(id: string, lot: number): WalkThere | null {
     if (walks.has(id)) return walks.get(id) ?? null;
     {
-      let out: { metres: number; minutes: number } | null = null;
+      let out: WalkThere | null = null;
       if (lot >= 0) {
         streets ??= streetsOf(town.city, records);
         const d = door(lot);
         // From your door: the walk-up's on the slice's block, the south face of yours (D67).
         const flat = town.plan.buildings.find((b) => b.interior?.template === 'walk-up');
         const from = inFront(town.city, records, streets, town.home.block, 1, flat?.door ?? 0);
-        const walk = walkBetween(streets, from, inFront(town.city, records, streets, d.block, d.side, d.x));
-        if (walk) out = { metres: Math.round(walk.metres), minutes: Math.max(1, Math.ceil(walk.metres / WALK_PACE)) };
+        const to = inFront(town.city, records, streets, d.block, d.side, d.x);
+        const walk = walkBetween(streets, from, to);
+        if (walk)
+          out = {
+            metres: Math.round(walk.metres),
+            minutes: Math.max(1, Math.ceil(walk.metres / WALK_PACE)),
+            from: { x: from.x, y: from.y },
+            to: { x: to.x, y: to.y },
+          };
       }
       walks.set(id, out);
       return out;

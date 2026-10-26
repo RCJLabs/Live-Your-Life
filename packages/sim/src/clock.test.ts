@@ -86,6 +86,8 @@ describe('the clock', () => {
       'ties/ask-cover',
       'time/advance',
       'time/elapse',
+      'travel/bus',
+      'travel/ride',
       'you/commute',
     ]);
   });

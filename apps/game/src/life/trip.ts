@@ -2,22 +2,26 @@
  * Going to work off screen (M2.3, D73): a job away from your block is reached from the panel. The
  * walk there takes the real walk along the streets (city/workplace.ts); if you're early you wait
  * for the shift; the shift is worked as at the griddle, its events stopping it for a choice; then
- * the walk home, and you are at your door. Each step is an action the sim takes as any other: the
- * page only says how long the walk is, as it says how long the walk to the diner is (D61).
+ * the way home, and you are at your door. Each step is an action the sim takes as any other: the
+ * page only says how long the walk is, as it says how long the walk to the diner is (D61). Since
+ * M2.9 the way there is yours to choose, on foot, by bus or by a ride (ways.ts); home goes the same
+ * way if it still can, or on foot once the last bus has gone or the ride is more than you have.
  */
 import type { Action } from '@eb/core';
 import type { Life } from './session.ts';
+import { back, type Leg, type Way, wayOrWalk } from './ways.ts';
 
 /** What the panel's "Go to work" sends: the page's, never the sim's. */
 export const GO_TO_WORK = 'trip/work';
 
 export interface Trip {
   step: 'there' | 'wait' | 'work' | 'back' | 'done';
-  /** Game minutes each way. */
-  readonly walk: number;
+  /** From your door to work's, and the walk's minutes. */
+  readonly leg: Leg;
+  readonly way: Way;
 }
 
-export const startTrip = (walk: number): Trip => ({ step: 'there', walk });
+export const startTrip = (leg: Leg, way: Way): Trip => ({ step: 'there', leg, way });
 
 /** Minutes before a shift that going to work is offered, beyond the walk (tune). */
 export const EARLY = 60;
@@ -35,7 +39,7 @@ export function tripAction(life: Life, trip: Trip): Action | null {
   switch (trip.step) {
     case 'there':
       trip.step = 'wait';
-      return { type: 'time/advance', minutes: trip.walk };
+      return wayOrWalk(life, trip.way, trip.leg);
     case 'wait': {
       trip.step = 'work';
       const next = life.fact('job.next-shift-in') as number | undefined;
@@ -51,7 +55,7 @@ export function tripAction(life: Life, trip: Trip): Action | null {
     }
     case 'back':
       trip.step = 'done';
-      return { type: 'time/advance', minutes: trip.walk };
+      return wayOrWalk(life, trip.way, back(trip.leg));
     default:
       return null;
   }
