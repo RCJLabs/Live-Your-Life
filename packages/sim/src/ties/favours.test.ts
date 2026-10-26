@@ -21,7 +21,7 @@ import type { Crew } from './records.ts';
 import type { TiesSlice } from './state.ts';
 
 // Monday 2 June 2025, 07:00, is tick 0. The test cook is offered every day's one shift, 15:00 to 23:00.
-const game = createLifeGame({ events: false, people: 0, career: TEST_COOK });
+const game = createLifeGame({ events: false, unlocked: true, people: 0, career: TEST_COOK });
 const crew = lineCook().crew as Crew;
 const simWith = (changes: Partial<Crew>): SimContext =>
   sliceSim(withCareer(testCook({ crew: { ...crew, ...changes } })));

@@ -7,8 +7,8 @@ import { RENT, START_CASH } from './dials.ts';
 import { createLifeGame } from './game.ts';
 import { climateOf, gasBill } from './season/climate.ts';
 
-const game = createLifeGame({ events: false, people: 0 });
-const cook = createLifeGame({ events: false, people: 0, career: TEST_COOK });
+const game = createLifeGame({ events: false, unlocked: true, people: 0 });
+const cook = createLifeGame({ events: false, unlocked: true, people: 0, career: TEST_COOK });
 /** The test cook's records, and cash to start with. */
 const withCash = (cents: number): SimContext => ({
   content: createRecordStore({
