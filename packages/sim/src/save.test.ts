@@ -54,7 +54,8 @@ describe('the save fixtures', () => {
     id === 'lives' ||
     id === 'health' ||
     id === 'education' ||
-    id === 'travel';
+    id === 'travel' ||
+    id === 'season';
   const before = createGame({
     modules: lifeModules({ career: LINE_COOK }).filter((m) => !m.id.startsWith('people')),
     start: 'world',
@@ -114,6 +115,7 @@ describe('the save fixtures', () => {
       'health',
       'education',
       'travel',
+      'season',
     ]);
     // Without the market's and the trade's own slices and versions, and the law's migration to 2
     // (M2.4) taken back, the very state saved.
@@ -127,6 +129,7 @@ describe('the save fixtures', () => {
       health: _h,
       education: _e,
       travel: _tr,
+      season: _se,
       law,
       job,
       ...rest
@@ -147,6 +150,7 @@ describe('the save fixtures', () => {
       health: __h,
       education: __e,
       travel: __tr,
+      season: __se,
       ...versions
     } = kernel.versions;
     const saved = {
@@ -169,7 +173,7 @@ describe('the save fixtures', () => {
       ]),
     );
     // The people you know (M2.6): a save from before them knows no one.
-    expect(result.report.added).toEqual(['circle', 'family', 'lives', 'health', 'education', 'travel']);
+    expect(result.report.added).toEqual(['circle', 'family', 'lives', 'health', 'education', 'travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const deal = result.state.deal as { crew: boolean; owed: number; recruit: number };
@@ -198,7 +202,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withJob([{ module: 'circle', from: 3, to: 6 }]));
-    expect(result.report.added).toEqual(['family', 'lives', 'health', 'education', 'travel']);
+    expect(result.report.added).toEqual(['family', 'lives', 'health', 'education', 'travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect((result.state.circle as { carries: unknown }).carries).toBeNull();
@@ -215,7 +219,7 @@ describe('the save fixtures', () => {
         { module: 'family', from: 1, to: 4 },
       ]),
     );
-    expect(result.report.added).toEqual(['lives', 'health', 'education', 'travel']);
+    expect(result.report.added).toEqual(['lives', 'health', 'education', 'travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const fresh = people.init('v7-shape', sim).family as Record<string, unknown>;
@@ -286,7 +290,7 @@ describe('the save fixtures', () => {
         { module: 'lives', from: 1, to: 2 },
       ]),
     );
-    expect(result.report.added).toEqual(['education', 'travel']);
+    expect(result.report.added).toEqual(['education', 'travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.lives)).toEqual(keysOf(people.init('v11-shape', sim).lives));
@@ -300,7 +304,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withJob([{ module: 'education', from: 1, to: 5 }]));
-    expect(result.report.added).toEqual(['travel']);
+    expect(result.report.added).toEqual(['travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v12-shape', sim).education));
@@ -351,7 +355,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withJob([]));
-    expect(result.report.added).toEqual(['travel']);
+    expect(result.report.added).toEqual(['travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     // No fares paid on any day before.
@@ -364,7 +368,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'job', from: 1, to: 2 }]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const job = result.state.job as { career: string; practice: number; experience: Record<string, number> };
@@ -372,6 +376,20 @@ describe('the save fixtures', () => {
     // The snapshot's practice, then the minutes the log worked on top of it.
     expect(job.experience['line-cook']).toBeGreaterThanOrEqual(0);
     expect(job.experience['line-cook']).toBe(job.practice);
+  });
+
+  it('loads the eighteenth, saved before the season, adding the season module (M2.10)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v18.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([]);
+    expect(result.report.added).toEqual(['season']);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    // The log's time passing set the clocks' timer and the last day told.
+    expect((result.state.season as { told: number }).told).toBe(people.fact(result.state, 'time.day', {}, sim));
+    expect(people.fact(result.state, 'time.pending', { timer: 'clocks' }, sim)).toBe(true);
   });
 
   it('migrates a version-1 job’s practice into its experience, and nothing for someone never hired', () => {
@@ -427,7 +445,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withJob([{ module: 'circle', from: 1, to: 6 }]));
-    expect(result.report.added).toEqual(['family', 'lives', 'health', 'education', 'travel']);
+    expect(result.report.added).toEqual(['family', 'lives', 'health', 'education', 'travel', 'season']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const saved = (fixture('life-v4.json') as { snapshot: { circle: { ties: { person: number; regard: number }[] } } })

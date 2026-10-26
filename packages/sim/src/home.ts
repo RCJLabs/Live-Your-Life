@@ -1,14 +1,16 @@
 /**
  * The home module: rent, due at midnight on the 1st of each month, paid from the economy kit's
  * cash. Rent that can't be paid is owed, not refused: the month still turns, and what is owed
- * waits until the player pays it. Eviction and its notice come with housing (Phase 2).
+ * waits until the player pays it. Eviction and its notice come with housing (Phase 2). The gas
+ * bill for the month just past comes due with it (D130), paid or owed the same way.
  */
 import { defineModule } from '@eb/core';
-import { daysToNextMonth } from './calendar.ts';
+import { daysToNextMonth, MONTHS } from './calendar.ts';
 import { RENT } from './dials.ts';
+import { climateIn, gasBill } from './season/climate.ts';
 
 export interface HomeSlice {
-  /** Cents of rent due and not paid. */
+  /** Cents of rent and gas due and not paid. */
   owed: number;
 }
 
@@ -21,6 +23,7 @@ export const homeModule = defineModule<HomeSlice>({
   events: {
     // Heard by the people you know (M2.6): a partner you live with pays their share.
     rent: { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'Rent came due' },
+    gas: { args: { cents: { type: 'int', min: 0 }, paid: { type: 'bool' } }, label: 'The gas bill came due' },
   },
   facts: {
     owed: { read: ({ state }) => state.owed, domain: { type: 'int', min: 0 }, label: 'rent owed' },
@@ -43,6 +46,15 @@ export const homeModule = defineModule<HomeSlice>({
       const paid = ctx.attempt(() => ctx.apply({ effect: 'pay-cost', cost: { cash: RENT } }));
       if (!paid.ok) ctx.write().owed += RENT;
       ctx.emit('rent', { cents: RENT, paid: paid.ok });
+      // The gas for the month just past (D130).
+      const month = MONTHS.findIndex((m) => m.id === ctx.fact('time.month'));
+      const climate = climateIn(ctx.content);
+      if (climate) {
+        const gas = gasBill(climate, month === 0 ? 12 : month);
+        const gasPaid = ctx.attempt(() => ctx.apply({ effect: 'pay-cost', cost: { cash: gas } }));
+        if (!gasPaid.ok) ctx.write().owed += gas;
+        ctx.emit('gas', { cents: gas, paid: gasPaid.ok });
+      }
       const days = daysToNextMonth(ctx.fact('time.month') as string, ctx.fact('time.day-of-month') as number);
       ctx.apply({ effect: 'schedule', timer: RENT_TIMER, after: { days }, effects: [{ effect: 'rent-due' }] });
     },

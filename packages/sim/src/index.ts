@@ -264,6 +264,18 @@ export { ADULT } from './people/who.ts';
 export { type WorkSlice, workModule } from './people/work.ts';
 export { type PrisonSlice, paroleOdds, prisonModule, type Term } from './prison/module.ts';
 export { PRISON, type PrisonRecord, prisonOf } from './prison/records.ts';
+export {
+  CLIMATE,
+  type ClimateRecord,
+  climateIn,
+  climateOf,
+  clocksOn,
+  gasBill,
+  holidayOn,
+  nthWeekday,
+  snowOn,
+} from './season/climate.ts';
+export { CLOCKS_TIMER, holidayToday, type SeasonSlice, seasonModule, snowy } from './season/module.ts';
 export { thiefFor } from './thief.ts';
 export { familiarityOf, KEPT, type Memory, NEUTRAL, remember } from './ties/memory.ts';
 export { type Hired, tiesModule } from './ties/module.ts';

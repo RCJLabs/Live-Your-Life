@@ -3,7 +3,7 @@
  * is formatted from what the sim says, never typed in: times from the clock's facts, money from
  * cents, odds from the preview the roll uses.
  */
-import { DEFAULT_START, dateOf, hours, money, type Need } from '@lyl/sim';
+import { DEFAULT_START, dateOf, holidayToday, hours, money, type Need } from '@lyl/sim';
 import type { Life } from './session.ts';
 
 export { hours, money };
@@ -15,6 +15,13 @@ export function clockText(life: Life, minuteOfDay = life.fact('time.of-day') as 
   const hh = String(Math.floor(minuteOfDay / 60) % 24).padStart(2, '0');
   const mm = String(minuteOfDay % 60).padStart(2, '0');
   return `${cap(String(life.fact('time.weekday')))} ${life.fact('time.day-of-month')} ${cap(String(life.fact('time.month')))}, ${hh}:${mm}`;
+}
+
+/** What the day is beside its date (D131, D132): a holiday's name, snow on the ground, or nothing. */
+export function seasonText(life: Life): string {
+  const holiday = holidayToday({ content: life.sim.content, fact: (id, args) => life.fact(id, args) });
+  const snow = life.fact('season.snow') === true ? 'Snow' : '';
+  return [holiday ?? '', snow].filter(Boolean).join(', ');
 }
 
 /** A day of the life: "Thursday 5 June", or "today" and "tomorrow". */

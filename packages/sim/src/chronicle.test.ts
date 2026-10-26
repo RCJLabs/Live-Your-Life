@@ -87,6 +87,10 @@ const RARE = [
   'law/sentenced',
   'law/released',
   'law/violated',
+  // The season (M2.10 step 3): the census's lives start in June and don't reach winter or the clocks;
+  // season/module.test.ts raises them.
+  'season/snow',
+  'season/clocks',
   // Prison (M2.4, D81): prison/module.test.ts raises them.
   'prison/admitted',
   'prison/paroled',

@@ -1,0 +1,5 @@
+{
+  "beat": "season/clocks",
+  "when": { "field": "way", "is": "forward" },
+  "text": "The clocks went forward an hour in the night."
+}

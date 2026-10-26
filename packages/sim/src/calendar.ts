@@ -87,6 +87,24 @@ export function lifeCalendar(start: LifeStart = DEFAULT_START): CalendarDef {
 /** The weekday a start falls on, from Monday (0). */
 export const weekdayOf = (start: LifeStart): number => weekdayIndex(start.year, dayOfYear(start));
 
+/** The weekday of a date, from Monday (0). Throws on a date the calendar doesn't have. */
+export const weekdayOfDate = (year: number, month: number, day: number): number =>
+  weekdayIndex(year, dayOfYear({ year, month, day, hour: 0, minute: 0 }));
+
+/** The day of the year a date falls on, from 0. */
+export const dayOfYearOf = (year: number, month: number, day: number): number =>
+  dayOfYear({ year, month, day, hour: 0, minute: 0 });
+
+/** The month (1 to 12) and its day of a day of the year, from 0. */
+export function dateOfDay(dayOfYear: number): { month: number; day: number } {
+  let left = dayOfYear;
+  for (const [i, m] of MONTHS.entries()) {
+    if (left < m.days) return { month: i + 1, day: left + 1 };
+    left -= m.days;
+  }
+  throw new Error(`No day ${dayOfYear} in a year`);
+}
+
 /** Minutes from a start to the next midnight. */
 export const minutesToMidnight = (start: LifeStart): number => MINUTES_PER_DAY - minuteOfDay(start);
 

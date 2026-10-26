@@ -5,9 +5,11 @@
  * in jail until then. A felony conviction is sentenced by the offence's record: jail then
  * probation for a first, prison for a repeat (served by step 3's days, D81).
  */
+
 import type { Effect, OptionsView } from '@eb/core';
 import { chargeFor, TRADE, tradeOf } from '../deal/records.ts';
 import { todayOf } from '../job/days.ts';
+import { courtDay } from '../season/module.ts';
 import { offenceOf } from './records.ts';
 import {
   between,
@@ -56,7 +58,8 @@ export function raid(ctx: LawContext): void {
     offence,
     value: 0,
     evidence: held > 0 ? 'found' : 'seen',
-    court: today.day + between(ctx, t.court.min, t.court.max),
+    // Never on a holiday, when the court is closed (D132).
+    court: courtDay(ctx, today.day + between(ctx, t.court.min, t.court.max)),
     warrant: false,
   };
   w.cases.push(kase);

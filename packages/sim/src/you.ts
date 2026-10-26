@@ -69,7 +69,11 @@ export const youModule = defineModule<YouSlice>({
       label: 'your pronouns',
     },
     alarm: {
-      read: ({ state }) => (state.commute === null ? ALARM_MINUTES : state.commute + ALARM_MARGIN),
+      // Snow slows the walk (D131), so the alarm sets aside the walk as it would be today.
+      read: ({ state, fact }) =>
+        state.commute === null
+          ? ALARM_MINUTES
+          : Math.ceil((state.commute * ((fact('season.pace') as number | undefined) ?? 100)) / 100) + ALARM_MARGIN,
       domain: { type: 'int', min: 1 },
       label: 'minutes the alarm sets aside before a shift',
     },

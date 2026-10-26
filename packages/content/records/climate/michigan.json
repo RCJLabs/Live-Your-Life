@@ -1,0 +1,21 @@
+{
+  "name": "Mid-Michigan's year",
+  "snowDays": [400, 300, 200, 40, 0, 0, 0, 0, 0, 10, 80, 300],
+  "degreeDays": [1367, 1179, 980, 580, 270, 60, 10, 20, 130, 460, 790, 1197],
+  "gas": { "fixed": 1500, "perCcf": 109, "heating": 300, "base": 10 },
+  "snow": { "pace": 115, "late": 5 },
+  "holidays": [
+    { "name": "New Year's Day", "month": 1, "day": 1 },
+    { "name": "Martin Luther King Jr. Day", "month": 1, "weekday": "monday", "nth": 3 },
+    { "name": "Presidents' Day", "month": 2, "weekday": "monday", "nth": 3 },
+    { "name": "Memorial Day", "month": 5, "weekday": "monday", "nth": -1 },
+    { "name": "Juneteenth", "month": 6, "day": 19 },
+    { "name": "Independence Day", "month": 7, "day": 4 },
+    { "name": "Labor Day", "month": 9, "weekday": "monday", "nth": 1 },
+    { "name": "Columbus Day", "month": 10, "weekday": "monday", "nth": 2 },
+    { "name": "Veterans Day", "month": 11, "day": 11 },
+    { "name": "Thanksgiving", "month": 11, "weekday": "thursday", "nth": 4 },
+    { "name": "Christmas Day", "month": 12, "day": 25 }
+  ],
+  "clocks": { "forward": { "month": 3, "nth": 2 }, "back": { "month": 11, "nth": 1 }, "hour": 2, "rest": 13 }
+}

@@ -5,6 +5,7 @@ import { DEFAULT_START, daysToNextMonth, minutesToMidnight, minutesToNextMonth }
 import { lifeSim } from './content.ts';
 import { RENT, START_CASH } from './dials.ts';
 import { createLifeGame } from './game.ts';
+import { climateOf, gasBill } from './season/climate.ts';
 
 const game = createLifeGame({ people: 0 });
 const cook = createLifeGame({ people: 0, career: TEST_COOK });
@@ -59,7 +60,10 @@ describe('rent', () => {
   it('is paid at midnight on the 1st when the cash is there', () => {
     const { beats, cash, fact } = play(withCash(1000_00), { type: 'time/advance', days: 29 });
     expect(beats).toContainEqual({ type: 'home/rent', cents: RENT, paid: true });
-    expect(cash()).toBe(1000_00 - RENT);
+    // June's gas comes with July's rent (D130).
+    const june = gasBill(climateOf(withCash(0).content), 6);
+    expect(beats).toContainEqual({ type: 'home/gas', cents: june, paid: true });
+    expect(cash()).toBe(1000_00 - RENT - june);
     expect(fact('home.owed')).toBe(0);
   });
 
@@ -95,7 +99,8 @@ describe('rent', () => {
     const paid = after.beats.find((b) => b.type === 'job/paid') as Beat & { net: number };
     expect(paid.net).toBe(107_49);
     expect(after.fact('home.owed')).toBe(0);
-    expect(after.cash()).toBe(500_00 + paid.net - RENT);
+    // Short of the rent, but not of June's gas, which was paid (D130).
+    expect(after.cash()).toBe(500_00 + paid.net - RENT - gasBill(climateOf(sim.content), 6));
     expect(after.beats).toContainEqual({ type: 'home/paid-owed', cents: RENT });
     const again = cook.reduce(after.state, { type: 'home/pay-owed' }, sim);
     expect(again.accepted).toBe(false);

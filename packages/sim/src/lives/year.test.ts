@@ -23,21 +23,26 @@ const harsh = sliceSim({
 });
 
 describe('the year in lives (M2.7 step 5, D103)', () => {
-  it('dies at the chance the months roll: within three standard deviations over 80 lives', () => {
-    let died = 0;
-    let expected = 0;
-    let variance = 0;
-    const rolls = Math.floor(365 / MONTH);
-    for (let i = 0; i < 80; i++) {
-      const y = lifeYear(`year-${i}`, 30 + (i % 40), harsh);
-      if (y.died) died++;
-      // The month's chance is the year's over 12, rounded up, rolled every 30 days (lives/module.ts).
-      const month = Math.ceil(y.expected / 12) / 100_000;
-      let alive = 1;
-      for (let k = 0; k < rolls; k++) alive *= 1 - month;
-      expected += 1 - alive;
-      variance += alive * (1 - alive);
-    }
-    expect(Math.abs(died - expected)).toBeLessThan(3 * Math.sqrt(variance));
-  }, 120_000);
+  // About 110 s alone in a cloud container (M2.10): the default 120 s left no room.
+  it(
+    'dies at the chance the months roll: within three standard deviations over 80 lives',
+    () => {
+      let died = 0;
+      let expected = 0;
+      let variance = 0;
+      const rolls = Math.floor(365 / MONTH);
+      for (let i = 0; i < 80; i++) {
+        const y = lifeYear(`year-${i}`, 30 + (i % 40), harsh);
+        if (y.died) died++;
+        // The month's chance is the year's over 12, rounded up, rolled every 30 days (lives/module.ts).
+        const month = Math.ceil(y.expected / 12) / 100_000;
+        let alive = 1;
+        for (let k = 0; k < rolls; k++) alive *= 1 - month;
+        expected += 1 - alive;
+        variance += alive * (1 - alive);
+      }
+      expect(Math.abs(died - expected)).toBeLessThan(3 * Math.sqrt(variance));
+    },
+    300_000,
+  );
 });

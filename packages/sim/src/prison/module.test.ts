@@ -102,7 +102,9 @@ describe('prison (M2.4, D81)', () => {
     const r = admitted('work');
     const working = play(game, sim, r.state, { type: 'prison/work' }).state;
     const month = days(working, 30);
-    expect(cash(month.state)).toBe(cash(working) + 30 * P.wage);
+    // Less the gas bill that came with the rent, if it was paid (D130).
+    const gas = month.of('home/gas').reduce((n, b) => n + (b.paid ? (b.cents as number) : 0), 0);
+    expect(cash(month.state)).toBe(cash(working) + 30 * P.wage - gas);
     expect(prison(month.state).standing).toBe(P.standing.start + P.standing.working);
     const idle = days(r.state, 30);
     expect(prison(idle.state).standing).toBe(P.standing.start - P.standing.idle);

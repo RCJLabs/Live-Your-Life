@@ -5,7 +5,7 @@
  */
 import { NEEDS, type Need } from '@lyl/sim';
 import type { Life } from './session.ts';
-import { clockText, money, NEED_WORD } from './words.ts';
+import { clockText, money, NEED_WORD, seasonText } from './words.ts';
 
 type Attrs = Record<string, string | boolean | undefined>;
 
@@ -68,13 +68,14 @@ export function makeBar(on: { pause(): void; speed(): void; panel(): void; map()
   const play = button('Pause', on.pause, { id: 'play' });
   const speed = button('1×', on.speed, { id: 'speed', 'aria-label': 'Speed 1×' });
   const cash = el('p', { class: 'cash', id: 'cash' });
+  const season = el('p', { class: 'season', id: 'season' });
   const needs = el('div', { class: 'needs', id: 'needs' });
   const badge = button('', on.panel, { id: 'badge' });
   const map = button('Map', on.map, { id: 'map-button' });
   const root = el(
     'header',
     { class: 'bar', id: 'bar' },
-    el('div', { class: 'bar-row' }, time, cash),
+    el('div', { class: 'bar-row' }, time, season, cash),
     el('div', { class: 'bar-row' }, needs, play, speed, badge, map),
   );
   let shownNeeds = '';
@@ -82,6 +83,8 @@ export function makeBar(on: { pause(): void; speed(): void; panel(): void; map()
     root,
     update(life, s) {
       time.textContent = clockText(life, s.minute);
+      const today = seasonText(life);
+      if (season.textContent !== today) season.textContent = today;
       play.textContent = s.paused ? 'Play' : 'Pause';
       speed.textContent = s.speed === 1 ? '1×' : '4×';
       speed.setAttribute('aria-label', `Speed ${speed.textContent}`);
