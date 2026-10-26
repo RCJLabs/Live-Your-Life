@@ -24,7 +24,9 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # The unit tests' sweeps, the seasons' 500 weeks among them (M2.10), and the browser specs
+    # took about 20 minutes on 2026-10-26; the limit leaves room without letting a hang run on.
+    timeout-minutes: 35
     # The site is served from the root of life.rcjlabs.com (decisions.md, D53), so the build's
     # base path is vite.config.ts's default, "/". LYL_BASE still sets another for a local check.
     steps:
