@@ -63,6 +63,9 @@ const RARE = [
   // A coworker covering for you: with the careers of M2.8 step 5 the census's coworker lives no
   // longer meet it; ties/favours.test.ts raises it.
   'ties/covered',
+  // The bus and a ride (M2.9 step 4): the page's actions, which no bot takes; travel/module.test.ts raises them.
+  'travel/rode-bus',
+  'travel/rode',
   // Paying for the college (M2.8 step 4): education/aid.test.ts raises them.
   'education/billed',
   'education/loan-due',
