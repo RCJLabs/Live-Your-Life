@@ -45,6 +45,8 @@ export interface Hiring {
   readonly base: number;
   readonly record: number;
   readonly reputation: number;
+  /** A credential it prefers, and the points it adds to the odds (M2.8, D114). */
+  readonly prefers?: { readonly schooling: 'associate'; readonly points: number };
 }
 
 export interface CareerRecord {
@@ -56,7 +58,11 @@ export interface CareerRecord {
   /** Whether the employer offers health cover (D105). */
   readonly insurance?: boolean;
   readonly employers: Employers;
-  readonly requires?: { readonly record?: 'none' | 'no-theft' | 'no-felony' };
+  readonly requires?: {
+    readonly record?: 'none' | 'no-theft' | 'no-felony';
+    /** The least schooling it hires (M2.8, D114). */
+    readonly schooling?: 'high-school' | 'associate';
+  };
   readonly hiring: Hiring;
   readonly shifts: readonly ShiftKind[];
   readonly open: readonly Weekday[];

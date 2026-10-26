@@ -889,6 +889,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** You, as independent (recommended, chosen). Dependent by background: a parents' income drawn from the start's family means, under 24, with the dependent loan limit.
 
+### D116. Step 5 builds careers across the credentials now. LOCKED, 2026-10-25 (Evan's call)
+
+**Decision.** M2.8's pay by credential comes from the careers each credential opens, read against BLS's earnings by education as a realism bar, not from a premium inside a career. So step 5 adds nine careers to the four there were, as data with their wages, requirements and preferences, from the secondary sources the line cook's wage came from. It finishes part of M2.3 step 1, which stays open for the rest of its 30 and for the primary figures.
+
+**Options considered.** Build the careers now (recommended, chosen). A premium inside each career at BLS's ratio, cheaper but not real and double counting once careers come. Requirements now, the pay gate moved to the 30 careers.
+
 ---
 
 ## Open items

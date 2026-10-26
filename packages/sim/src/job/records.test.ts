@@ -21,7 +21,21 @@ const read =
 
 describe("the slice's job content", () => {
   it('reads every career, shift event and tax, with their checks', () => {
-    expect(records('career')).toEqual(['detective', 'line-cook', 'police-officer', 'police-recruit']);
+    expect(records('career')).toEqual([
+      'bank-teller',
+      'cashier',
+      'computer-support',
+      'customer-service',
+      'detective',
+      'dishwasher',
+      'janitor',
+      'line-cook',
+      'paralegal',
+      'police-officer',
+      'police-recruit',
+      'security-guard',
+      'warehouse-worker',
+    ]);
     for (const id of records('career')) careerOf(store, id);
     expect(records('shift-event').length).toBeGreaterThanOrEqual(12);
     for (const id of records('shift-event')) shiftEventOf(store, id);

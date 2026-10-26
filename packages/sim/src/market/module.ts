@@ -53,6 +53,7 @@ const applicant = (v: View) => ({
   convictions: v.fact('law.convictions') as number,
   felonies: v.fact('law.felonies') as number,
   reputation: sliceOf(v).reputation,
+  schooling: (v.fact('education.finished') as string | undefined) ?? 'diploma',
 });
 
 /** Why you can't apply for an opening today, or null. */
@@ -196,7 +197,8 @@ export const marketModule = (career?: string) =>
       },
       // The roster's place of a tier-1 workplace you work at, where you meet the people on with you (M2.6).
       place: {
-        read: ({ state }) => (state.employer?.startsWith('w') ? Number(state.employer.slice(1)) : -1),
+        // A tier-1 workplace is `w` and its place (employers.ts); a career's own sites are `<career>-<k>`.
+        read: ({ state }) => (/^w\d+$/.test(state.employer ?? '') ? Number(state.employer?.slice(1)) : -1),
         domain: { type: 'int', min: -1 },
         label: 'the tier-1 workplace you work at, or -1',
       },

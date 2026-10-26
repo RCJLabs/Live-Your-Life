@@ -37,8 +37,12 @@ describe('looking for work, headless (M2.3, D74)', () => {
       }
       if (game.fact(state, 'job.employed', undefined, sim) === true) employed++;
     }
-    // Every career with openings of its own; a rank reached by promotion has none (M2.4).
-    const hiring = sim.content.ids('career').filter((id) => careerOf(sim.content, id).employers.staff > 0);
+    // Every career with openings of its own; a rank reached by promotion has none (M2.4). One that
+    // asks for an associate's is out of reach in a week from the start (M2.8).
+    const hiring = sim.content
+      .ids('career')
+      .filter((id) => careerOf(sim.content, id).employers.staff > 0)
+      .filter((id) => careerOf(sim.content, id).requires?.schooling !== 'associate');
     expect([...hired.keys()].sort()).toEqual([...hiring].sort());
     // Most answers are no: the line cook takes 15 in 100 (D76). Some are still waiting when the
     // week ends, or when a yes came first.

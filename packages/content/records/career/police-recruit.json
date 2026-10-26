@@ -11,7 +11,11 @@
   "hiring": {
     "base": 10,
     "record": 5,
-    "reputation": 20
+    "reputation": 20,
+    "prefers": {
+      "schooling": "associate",
+      "points": 10
+    }
   },
   "shifts": [
     {
@@ -57,7 +61,8 @@
     "chance": 40
   },
   "requires": {
-    "record": "no-felony"
+    "record": "no-felony",
+    "schooling": "high-school"
   },
   "ladder": {
     "next": "police-officer",
