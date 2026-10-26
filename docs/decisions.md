@@ -1001,6 +1001,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** An hour of sleep (recommended, chosen). Named only. Left out of the game.
 
+### D134. A life event waits for a quiet moment, then asks. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** A life event drawn for you waits until you are awake and free: not asleep, on a shift, in court, held, in prison, in hospital or on a trip. Then a sheet opens with its choices, each showing its cost and its odds from the preview the roll uses, and the clock drops to 1×, as the shift's events do (D40).
+
+**Options considered.** A sheet at a quiet moment (recommended, chosen). A line on the Waiting list, with a deadline and a default choice. Told in the journal, with a choice for only a few.
+
+### D135. The pool is a mixed 24. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** About 24 life events across family and friends (a call home, a funeral, a wedding, a loan asked of you), the flat (a rent rise at renewal, the heat out, pests, a break-in), money and the state (a tax refund, a jury summons, a lost wallet, a broken phone, an overdraft), the body (a fall on ice, a toothache, food poisoning) and the street (a mugging, money found, a stranger asking for help, a power cut, a heat wave, election day). Each is a record with a rate traced in CALIBRATION.md or marked (tune), one or more choices with costs and odds shown, and a journal line.
+
+**Options considered.** The mixed 24 (recommended, chosen). The same kinds weighted to hardship. About 12 events, each with a follow-up days later.
+
 ---
 
 ## Open items
