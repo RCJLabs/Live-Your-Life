@@ -62,11 +62,17 @@ export const educationModule = defineModule<EducationSlice>({
   id: 'education',
   // 2 (step 2): the GED's subjects passed and studied for. 3 (step 3): the college. 4 (step 4):
   // pay for aid and the loans; a save from before has borrowed nothing, and its pay before is not known.
-  version: 4,
+  // 5 (step 8): each course's last grade, for retakes; a save from before has none, so its courses
+  // passed can't be retaken (their grades weren't kept).
+  version: 5,
   migrate: {
     2: (slice) => ({ ...(slice as object), ged: NO_GED() }),
     3: (slice) => ({ ...(slice as object), college: NO_COLLEGE() }),
     4: (slice) => ({ ...(slice as object), pay: [], loan: NO_LOAN() }),
+    5: (slice) => {
+      const s = slice as EducationSlice;
+      return { ...s, college: { ...s.college, grades: {} } };
+    },
   },
   // Added to a save from before it, the life has a diploma: it was lived as if it had.
   init: (ctx) => FRESH(drawn(ctx)),

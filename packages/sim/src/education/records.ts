@@ -29,6 +29,8 @@ export interface College {
   readonly associate: number;
   /** The least grade point average for the associate's, in hundredths. */
   readonly gpa: number;
+  /** Grade points at or under which a course may be retaken (step 8); absent, none may. */
+  readonly retake?: number;
 }
 
 /** Paying for the college (step 4, D113), in cents unless said. */

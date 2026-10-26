@@ -180,6 +180,15 @@ describe('paying for the college (M2.8 step 4, D113)', () => {
     expect(edu(heir.state).pay).toEqual([]);
   });
 
+  it('bills a retake as any course, for its credits (step 8)', () => {
+    const s = beforeFall('aid-retake', 10_000_00);
+    const all = c.courses.map((x) => x.id);
+    const grades = { ...Object.fromEntries(all.map((id) => [id, 3])), c02: 1 };
+    const again = withMoney(s, 10_000_00, { college: { ...edu(s).college, passed: all, grades } });
+    expect(shown(again, 1, 'none').credits).toBe(3);
+    expect(offered(again, 'education/enroll').map((a) => a.courses)).toEqual([1]);
+  });
+
   it('charges nothing in a pack without aid', () => {
     const s = beforeFall('aid-free', 0);
     const free = { ...sim.content, get: () => undefined };

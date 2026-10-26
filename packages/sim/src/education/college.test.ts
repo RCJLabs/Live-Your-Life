@@ -2,7 +2,7 @@ import type { GameState } from '@eb/core';
 import { describe, expect, it } from 'vitest';
 import { advance, play, sliceGame, sliceSim } from '../../test/slice.ts';
 import { MINUTES_PER_DAY } from '../calendar.ts';
-import { type CollegeSlice, meetings, score, type Term } from './college.ts';
+import { type CollegeSlice, meetings, NO_COLLEGE, nextCourses, score, type Term } from './college.ts';
 import type { EducationSlice } from './module.ts';
 import { type College, type EducationRecord, educationOf } from './records.ts';
 
@@ -115,5 +115,61 @@ describe('the community college (M2.8 step 3, D111)', () => {
       advance(8 * MINUTES_PER_DAY),
     );
     expect(fact(low.state, 'education.finished')).toBe('diploma');
+  });
+
+  it('offers the courses not yet passed first, then those passed at a C or lower, the lowest first (step 8)', () => {
+    const all = c.courses.map((x) => x.id);
+    const grades = Object.fromEntries(all.map((id) => [id, 3]));
+    const done = { ...NO_COLLEGE(), passed: all, grades: { ...grades, c07: 1, c03: 2 } };
+    expect(nextCourses(c, done).map((x) => x.id)).toEqual(['c07', 'c03']);
+    expect(nextCourses({ ...c, retake: undefined }, done)).toEqual([]);
+    const failed = { ...NO_COLLEGE(), passed: all.filter((id) => id !== 'c05'), grades: { ...grades, c05: 0 } };
+    expect(nextCourses(c, failed).map((x) => x.id)).toEqual(['c05']);
+  });
+
+  it('replaces a retaken course’s grade in the average, and gives the associate’s it was short of', () => {
+    const s0 = game.init('retake', sim);
+    const day = fact(s0, 'time.day') as number;
+    const all = c.courses.map((x) => x.id);
+    // 60 credits: 19 courses at a C and one at a D, a 1.95 average, short of the 2.00.
+    const grades = { ...Object.fromEntries(all.map((id) => [id, 2])), c01: 1 };
+    const points = 3 * (19 * 2 + 1);
+    const term: Term = {
+      id: 'fall',
+      start: day,
+      end: day + 7,
+      courses: [{ id: 'c01', slot: 0, attended: 2, study: c.study * 3 * 60 }],
+    };
+    const stuck = withCollege(s0, { credits: 60, points, graded: 60, passed: all, grades });
+    expect(fact(stuck, 'education.gpa')).toBe(195);
+    const s = play(game, sim, withCollege(stuck, { term }), advance(8 * MINUTES_PER_DAY));
+    expect(s.of('education/graded')).toEqual([{ type: 'education/graded', course: 'c01', grade: 'A', score: 100 }]);
+    expect(fact(s.state, 'education.credits')).toBe(60);
+    expect(fact(s.state, 'education.gpa')).toBe(Math.floor(((points - 3 + 12) * 100) / 60));
+    expect(edu(s.state).college.grades.c01).toBe(4);
+    expect(fact(s.state, 'education.finished')).toBe('associate');
+    // An F retaken and passed: the F leaves the average and the credits come.
+    const failed = withCollege(s0, {
+      credits: 0,
+      points: 0,
+      graded: 3,
+      passed: [],
+      grades: { c01: 0 },
+      term,
+    });
+    const after = play(game, sim, failed, advance(8 * MINUTES_PER_DAY)).state;
+    expect(fact(after, 'education.credits')).toBe(3);
+    expect(fact(after, 'education.gpa')).toBe(400);
+    // A retake that goes worse leaves the better grade standing.
+    const worse = { ...term, courses: [{ id: 'c01', slot: 0, attended: 0, study: 0 }] };
+    const kept = play(
+      game,
+      sim,
+      withCollege(s0, { credits: 3, points: 6, graded: 3, passed: ['c01'], grades: { c01: 2 }, term: worse }),
+      advance(8 * MINUTES_PER_DAY),
+    ).state;
+    expect(edu(kept).college.grades.c01).toBe(2);
+    expect(fact(kept, 'education.credits')).toBe(3);
+    expect(fact(kept, 'education.gpa')).toBe(200);
   });
 });

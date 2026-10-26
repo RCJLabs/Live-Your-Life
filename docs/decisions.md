@@ -895,6 +895,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Build the careers now (recommended, chosen). A premium inside each career at BLS's ratio, cheaper but not real and double counting once careers come. Requirements now, the pay gate moved to the 30 careers.
 
+### D117. A course can be retaken, the better grade counting. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** A course passed at a C or lower can be taken again for its credits' price, and the better of the two grades counts in the average, as Macomb Community College's course repeat policy has it. The question was put as the later grade replacing the earlier; Macomb's page, read after, counts the better one, which is what is built. Saves from before kept no grades per course, so what they passed can't be retaken.
+
+**Options considered.** Retakes, as real (recommended, chosen). Leave the dead end for later.
+
+### D118. M2.9 moves you across the city on foot, by bus and by rideshare. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Walking across the city at the real pace, the bus on the arterials with real fares, headways and waits, and rideshare by distance at a real price. A map tap chooses a way and shows its time and cost first. Owned cars stay in Phase 4.
+
+**Options considered.** Walk, bus, rideshare (recommended, chosen). The same with a bicycle. Walk and bus only.
+
+### D119. One walking pace, the real one. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Everywhere walks at about 1.3 m a second, 80 m a game minute, your block as the city, so the two agree at your door. This replaces D49's 1.95 m a game minute on the block.
+
+**Options considered.** One real pace (recommended, chosen). Keep the block's slow pace for play, the city alone at the real one.
+
 ---
 
 ## Open items
