@@ -913,6 +913,8 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** One real pace (recommended, chosen). Keep the block's slow pace for play, the city alone at the real one.
 
+**Amended 2026-10-26 (Evan's call).** At speed 1 the clock runs two game minutes a second, so a walker at the real pace would cross the block in a fraction of a second. The walker keeps D49's pace on screen, a walk a player can follow, and the clock counts only the real walk while you walk: it slows. Options considered: a watchable walk, real minutes (recommended, chosen); the real pace on screen too; D49's slow pace kept on the block.
+
 ---
 
 ## Open items
