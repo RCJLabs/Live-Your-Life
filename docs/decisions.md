@@ -1013,6 +1013,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** The mixed 24 (recommended, chosen). The same kinds weighted to hardship. About 12 events, each with a follow-up days later.
 
+### D136. Editions come next. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** With M2.10's [auto] gates passed and Evan's reading of the strings open, M2.11 Editions is worked next, the last milestone of Phase 2; then Phase 2's year gate.
+
+**Options considered.** M2.11 Editions (recommended, chosen). Phase 2's year gate first. A pause for Evan's reading.
+
+### D137. The free year ends with a last card; the save is kept, and new lives are free. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** A save's free year ends at its first character's 19th birthday, day 365 of the save (D20). The world stops there with a last card: the year from the journal, and the unlock to go on. The save is kept and goes on from where it stopped once the game is unlocked. A new life can start at any time with a free year of its own. An heir inside the year carries on as the life does; a ward's jump past the birthday stops at the card.
+
+**Options considered.** A last card, the save kept, new lives free (recommended, chosen). One free year a device, new lives locked after it. A last card with the save not carried on after the unlock.
+
+### D138. One build, a gate, and the check ready. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Amends D17's two builds. There is one build for both editions. The unlock is an action the page sends when the device is unlocked, so a save replays as it was played; until Phase 3's billing a test switch sends it. Records can be marked full-only; a check fails if a full-only record could be shown in the free year. Nothing is full-only yet, so the check is seen failing on a planted record.
+
+**Options considered.** One build, a gate and the check (recommended, chosen). Two builds with CI diffing them, as D17 had it. The gate only, the split left until full-only content exists.
+
 ---
 
 ## Open items
