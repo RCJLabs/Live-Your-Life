@@ -673,8 +673,6 @@ How to read this file:
   - **Steps 1–3, built 2026-10-26: the year's end, the last card, the full-only check (D137, D138).** `packages/sim/src/edition/`: a free save reaches day 365, its first character's 19th birthday, and the `year-end` mode stops it there; only `edition/unlock` goes on, from where it stopped. The year's end waits behind a death's choice and a ward's years: a ward's jump past the birthday stops at the card once they wake. The page (`src/life/edition.ts`) shows the last card: the year from the journal, and on an unlocked device a way on; otherwise the life is kept and a new one starts with a year of its own. An unlocked device sends the unlock into every life it opens; `?unlock` on the address is the test switch until Phase 3's billing. A record whose id ends in `-full` is full-only: `tools/edition/check.ts`, in `pnpm lint`, fails one that isn't a shift or life event gated on `edition.unlocked`; a planted full-only event is never drawn in a free life and is in an unlocked one. Saves from before load: `life-v20.json` adds the edition as a free save. Planted bugs: 7, 7 caught: the year ended a day late, the unlock not going on, a ward's jump stopped inside its years, an unlock sent from a locked device, the way on offered unlocked, the check passing any condition, and a full-only event drawn free.
   - **Step 4, built 2026-10-26: the free year lived.** `test/free-year.ts` and `year-bench.ts` (Phase 2's year gate): the steady bot lives a free year, the season and life events on, until the year's end or a death, nothing refused. One life takes about 6 seconds. In 500 seeds all 500 reached the year's end on day 365, none died, nothing refused (Readings): Phase 2's first year gate passes. M2.11's [auto] gates pass; the last card on Evan's phone is open.
 
-**Done when:** a bot lives the year in 500 seeds and reaches the birthday or dies in each [auto]; the realism bars in docs/CALIBRATION.md pass [auto]; the voice pass is done [you]; a day plays on Evan's phone within the tap budget [you].
-
 - **M2.12 The bars.** ← **CURRENT MILESTONE** The realism bars in CALIBRATION.md as tests, and the essentials the floor was missing.
   - Started 2026-10-26 (D139). Decisions: B1 and B2 on the studio with the essentials charged (D140); B5 by the tables a year at a time (D141).
   - **Done when:**
@@ -685,6 +683,8 @@ How to read this file:
     1. The essentials: the bills, their figures, the journal's lines, saves.
     2. The bars as tests, B1 to B7.
     3. Readings, docs.
+
+**Done when:** a bot lives the year in 500 seeds and reaches the birthday or dies in each [auto]; the realism bars in docs/CALIBRATION.md pass [auto]; the voice pass is done [you]; a day plays on Evan's phone within the tap budget [you].
 
 ## Phase 3: The unlock and Play
 
