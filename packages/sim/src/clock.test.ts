@@ -5,7 +5,7 @@ import { lifeSim } from './content.ts';
 import { createLifeGame } from './game.ts';
 
 const sim = lifeSim();
-const game = createLifeGame({ events: false, people: 0 });
+const game = createLifeGame({ events: false, unlocked: true, people: 0 });
 const fresh = () => game.init('m0-1', sim);
 const tick = (state: GameState) => (state.time as TimeSlice).tick;
 const fact = (state: GameState, id: string) => game.fact(state, id, undefined, sim);
@@ -56,6 +56,7 @@ describe('the clock', () => {
       'deal/join',
       'deal/pay-back',
       'deal/recruit',
+      'edition/unlock',
       'education/attend',
       'education/enroll',
       'education/pay-loan',

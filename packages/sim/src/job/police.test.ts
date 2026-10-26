@@ -19,8 +19,8 @@ const quiet: RecordPack = {
   ),
 };
 const sim = sliceSim(quiet);
-const recruitGame = createLifeGame({ events: false, people: 0, career: 'police-recruit' });
-const officerGame = createLifeGame({ events: false, people: 0, career: 'police-officer' });
+const recruitGame = createLifeGame({ events: false, unlocked: true, people: 0, career: 'police-recruit' });
+const officerGame = createLifeGame({ events: false, unlocked: true, people: 0, career: 'police-officer' });
 const job = (s: GameState) => s.job as JobSlice;
 const recruit = careerOf(sim.content, 'police-recruit');
 const officer = careerOf(sim.content, 'police-officer');

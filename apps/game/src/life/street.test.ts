@@ -94,7 +94,8 @@ describe('the street trade on the page (M2.4)', () => {
       `up to ${offence.first?.jail.max} days`,
     );
     const repeat = changed(now, (s) => ({ law: { ...(s.law as object), convictions: 1 } }));
-    const sentenced = changed(repeat, () => ({}));
+    // Unlocked (M2.11): a sentence's days can run past the free year.
+    const sentenced = changed(repeat, () => ({ edition: { unlocked: true } }));
     sentenced.act({ type: 'law/plead', plea: 'guilty' });
     // A standing off the start, so its odds are its own.
     const worked = changed(sentenced, (st) => ({ prison: { ...(st.prison as object), standing: 80 } }));

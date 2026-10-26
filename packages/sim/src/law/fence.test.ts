@@ -8,7 +8,7 @@ import { paidFor } from './fence.ts';
 import type { LawState } from './module.ts';
 import { type CrimeRecord, crimeOf, fenceOf, offenceFor, SHOPLIFTING } from './records.ts';
 
-const game = createLifeGame({ events: false, people: 0 });
+const game = createLifeGame({ events: false, unlocked: true, people: 0 });
 const sim = sliceSim();
 const store = sim.content as RecordStore;
 const tick = (state: GameState) => (state.time as { tick: number }).tick;

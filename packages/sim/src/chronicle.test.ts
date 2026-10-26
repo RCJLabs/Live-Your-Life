@@ -94,6 +94,8 @@ const RARE = [
   'season/clocks',
   // Life events (M2.10 step 4): a dozen a year, so the census's short lives may meet none; events/module.test.ts raises them.
   'event/happened',
+  // The free year's end (M2.11): no census life lasts a year; edition/module.test.ts raises it.
+  'edition/year-ended',
   // Prison (M2.4, D81): prison/module.test.ts raises them.
   'prison/admitted',
   'prison/paroled',

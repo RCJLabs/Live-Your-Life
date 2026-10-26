@@ -20,7 +20,7 @@ const quiet: RecordPack = {
   ),
 };
 const sim = sliceSim(quiet);
-const game = createLifeGame({ events: false, people: 0, career: 'line-cook' });
+const game = createLifeGame({ events: false, unlocked: true, people: 0, career: 'line-cook' });
 const job = (s: GameState) => s.job as JobSlice;
 const fact = (s: GameState, id: string) => game.fact(s, id, {}, sim);
 const cook = careerOf(sim.content, 'line-cook');

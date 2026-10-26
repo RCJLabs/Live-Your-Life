@@ -37,7 +37,7 @@ pnpm install
 pnpm dev          # the game at http://localhost:5173
 pnpm check        # typecheck → lint → test → build → e2e (what CI runs)
 pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
-pnpm lint         # Biome, the purity check over this repo's eb.pure packages (tools/purity), the content lint (tools/voice)
+pnpm lint         # Biome, the purity check over this repo's eb.pure packages (tools/purity), the content lint (tools/voice), the full-only check (tools/edition)
 pnpm test         # Vitest
 pnpm build        # apps/game/dist; LYL_BASE sets the base path (`/` by default, as life.rcjlabs.com serves it, D53)
 pnpm e2e          # Playwright against `vite preview` of the build, under LYL_BASE
@@ -65,6 +65,7 @@ node packages/sim/test/couples-bench.ts [lives] [weeks]   # the suitor bot's yea
 node packages/sim/test/lives-bench.ts [lives]          # the year in lives (M2.7): deaths by age band against the life table, illnesses against the record (1,000 lives; about 12 minutes)
 node packages/sim/test/students-bench.ts [lives] [years]   # the student bot (M2.8): terms, credits, grades, the associate's, aid and debt (20 lives, 3 years; about 8 seconds a life-year)
 node packages/sim/test/cooks-bench.ts [lives] [years]   # the cook bot (M2.5): when each steady cook became kitchen lead and chef, and the hours (20 lives, 5 years; about 15 minutes)
+node packages/sim/test/year-bench.ts [lives]   # Phase 2's year gate (M2.11): the steady bot lives a free year to its end or a death (500 lives; about 6 seconds a life)
 node packages/sim/test/seekers-bench.ts [lives] [days]   # the seeker bot (M2.3): the day each jobless life was hired, and into what (500 lives, 60 days)
 ```
 
@@ -100,7 +101,7 @@ packages/sim/       the rules: modules on @eb/core and @eb/kits (pure). So far t
                     the street trade (deal/: the trade's records, buying, the corner, who passes, heat; crew.ts, the supplier's crew, fronts and the recruit, D84–D86);
                     and prison (prison/: the sentence a day at a time, the job, letters, visits, parole, D81);
                     since M2.6 who the tier-1 people are (people/who.ts) and the people you know (circle/: meeting them out and at work, D89; court.ts, courting; together.ts, life together, D95; days.ts, what passes with them, D93–D94; suitor.ts, the bot that looks for a partner); and the family (family/: a pregnancy, its choices and birth, the children, D96–D97; care.ts, a child's care and daycare, D98; support.ts, custody and child support, D100); since M2.7 your life's length (lives/: the life table, the month's roll, a death, D103), odds.ts, small chances rolled as shown, and people/lifespans.ts, who holds each place as people die and newcomers come, D106; and illness and care (health/: colds, flu, injuries, the doctor, Medicaid's line, the hospital, D104–D105); and the heir (lives/heir.ts: the order, the estate; each module's `lives/succeeded` handler, D107–D109; lives/ward.ts, the ward's years, D108; timers.ts, the midnight timer); since M2.8 your schooling (education/: the diploma at the start, D112; ged.ts, the GED; college.ts, the community college's terms, classes and grades; aid.ts and loans.ts, tuition, Pell and Direct loans, D113, D115; student.ts, the student bot); since M2.9 travel (travel/: bus.ts, the buses' routes and timetable; rideshare.ts, a hailed ride; module.ts, taking either, D118); since M2.5 the food ladder (job/posts.ts, a rank's one post and when it comes open, D124; experience in the job's slice, D122);
-                    since M2.10 the season (season/: climate.ts, snow days, holidays, the clocks and the gas bill from the climate record; module.ts, what they do, D130–D133); and life events (events/: records.ts, the pool's records and a day's chance; module.ts, the draw, the quiet moment and the choice, D134–D135);
+                    since M2.10 the season (season/: climate.ts, snow days, holidays, the clocks and the gas bill from the climate record; module.ts, what they do, D130–D133); and life events (events/: records.ts, the pool's records and a day's chance; module.ts, the draw, the quiet moment and the choice, D134–D135); since M2.11 the edition (edition/: the free year's end and the unlock, D137–D138);
                     test/slice.ts is the slice's life for tests and benches; test/case.ts a drug case brought to court; test/couple.ts a couple, for the circle's tests; test/fixtures/saves/ the save fixtures that
                     must keep loading (test/fixture.ts wrote the first, M1.7)
 packages/stage/     the isometric city drawn in code on a 2D canvas: view, camera, depth sort, buildings, people, night;
@@ -117,12 +118,13 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
                     since M2.7 illness, the doctor and the hospital (src/life/care.ts), and a death and the heir (src/life/heir.ts);
                     since M2.8 the School tab: the GED, enrolling, classes and the loans (src/life/school.ts);
                     since M2.9 the ways across the city, on foot, by bus or by a ride (src/life/ways.ts);
-                    since M2.10 a life event's sheet (src/life/events.ts);
+                    since M2.10 a life event's sheet (src/life/events.ts); since M2.11 the free year's last card and the unlock (src/life/edition.ts);
                     dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs, and
                     since M1.8 e2e/bot/, the browser bot that plays by taps
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
 tools/voice/        the content lint (M2.10, D129): every player-facing string from the records and the page, checked against
                     VOICE.md's machine-checkable rules and the blocklist of real names; part of `pnpm lint`
+tools/edition/      the full-only check (M2.11, D138): a record whose id ends in -full must be gated on edition.unlocked; part of `pnpm lint`
 tools/content/      game.ts: the game's modules, which eb validate and eb build check the content's conditions against
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
 tools/city/         the city bench (M2.1): the whole city planned, timed and weighed in Node and Chromium; faces.ts plans and

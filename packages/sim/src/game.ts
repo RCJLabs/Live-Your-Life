@@ -19,6 +19,7 @@ import { DEFAULT_START, type LifeStart, lifeCalendar, minutesToMidnight, minutes
 import { circleModule } from './circle/module.ts';
 import { clockModule } from './clock.ts';
 import { dealModule } from './deal/module.ts';
+import { editionModule } from './edition/module.ts';
 import { educationModule } from './education/module.ts';
 import { eventsModule } from './events/module.ts';
 import { familyModule } from './family/module.ts';
@@ -54,6 +55,8 @@ export interface LifeOptions {
   readonly people?: number;
   /** Whether life events are drawn (M2.10 step 4): yes by default; a scripted test may not want them. */
   readonly events?: boolean;
+  /** Whether the life starts unlocked (M2.11, D138): no by default, as the page starts every life. */
+  readonly unlocked?: boolean;
 }
 
 /** The tier-1 people a life holds (D31), and the shares they are moved on in, one an hour (D30). */
@@ -108,6 +111,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     seasonModule,
     // Life events (M2.10 step 4, D134): added to a save from before it, nothing is rolled for the days gone.
     eventsModule(options.events ?? true),
+    // The free year and the unlock (M2.11, D137): added to a save from before it, the save is free.
+    editionModule(options.unlocked ?? false),
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.
