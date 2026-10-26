@@ -1,0 +1,5 @@
+{
+  "beat": "home/bill",
+  "when": { "field": "paid", "is": "false" },
+  "text": "The bill of {cents} for {bill} came due, and {you} could not pay it."
+}

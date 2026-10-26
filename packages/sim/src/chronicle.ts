@@ -163,6 +163,8 @@ export function lineFor(
         return names[key] ?? fail(`"${line.text}" names the ${key}, and there is none`);
       case 'item':
         return named(store, 'item', v);
+      case 'bill':
+        return named(store, 'bill', v);
       // A life event's line is its record's own (M2.10 step 4), with the name in it.
       case 'line':
         return lifeLine(store, beat).replace(/\{you\}/g, names.you);

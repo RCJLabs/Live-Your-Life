@@ -9,13 +9,17 @@ import { climateOf, gasBill } from './season/climate.ts';
 
 const game = createLifeGame({ events: false, unlocked: true, people: 0 });
 const cook = createLifeGame({ events: false, unlocked: true, people: 0, career: TEST_COOK });
-/** The test cook's records, and cash to start with. */
-const withCash = (cents: number): SimContext => ({
+/** The test cook's records, and cash to start with; `bills` false leaves out the month's other bills (D140). */
+const withCash = (cents: number, bills = true): SimContext => ({
   content: createRecordStore({
     ...withCareer(testCook()),
     resource: { cash: { name: 'Cash', start: cents, min: 0 } },
+    ...(bills ? {} : { bill: {} }),
   }),
 });
+/** The month's other bills, in cents. */
+const billsOf = (sim: SimContext): number =>
+  sim.content.ids('bill').reduce((n, id) => n + (sim.content.get<{ cents: number }>('bill', id)?.cents ?? 0), 0);
 
 function play(sim: SimContext, ...actions: Action[]) {
   return playIn(game, sim, ...actions);
@@ -58,13 +62,25 @@ describe('rent', () => {
   const fired = (beats: Beat[]) => beats.filter((b) => b.type === 'time/fired' && b.timer === 'rent').map((b) => b.at);
 
   it('is paid at midnight on the 1st when the cash is there', () => {
-    const { beats, cash, fact } = play(withCash(1000_00), { type: 'time/advance', days: 29 });
+    const sim = withCash(1000_00);
+    const { beats, cash, fact } = play(sim, { type: 'time/advance', days: 29 });
     expect(beats).toContainEqual({ type: 'home/rent', cents: RENT, paid: true });
-    // June's gas comes with July's rent (D130).
+    // June's gas comes with July's rent (D130), and the month's other bills (D140).
     const june = gasBill(climateOf(withCash(0).content), 6);
     expect(beats).toContainEqual({ type: 'home/gas', cents: june, paid: true });
-    expect(cash()).toBe(1000_00 - RENT - june);
+    expect(beats).toContainEqual({ type: 'home/bill', bill: 'electricity', cents: 76_30, paid: true });
+    expect(beats.filter((b) => b.type === 'home/bill')).toHaveLength(sim.content.ids('bill').length);
+    expect(cash()).toBe(1000_00 - RENT - june - billsOf(sim));
     expect(fact('home.owed')).toBe(0);
+  });
+
+  it('owes the gas and the other bills it can’t pay, as it owes the rent', () => {
+    const sim = withCash(RENT);
+    const { beats, cash, fact } = play(sim, { type: 'time/advance', days: 29 });
+    const june = gasBill(climateOf(sim.content), 6);
+    expect(beats).toContainEqual({ type: 'home/bill', bill: 'phone', cents: 40_00, paid: false });
+    expect(cash()).toBe(0);
+    expect(fact('home.owed')).toBe(june + billsOf(sim));
   });
 
   it('is owed, not refused, when it is not, and the month still turns', () => {
@@ -84,7 +100,8 @@ describe('rent', () => {
 
   it('can be paid off once the cash covers all of it, and only then', () => {
     // Owed on Tuesday 1 July; a shift on Wednesday the 2nd, paid on Friday the 4th, covers it.
-    const sim = withCash(500_00);
+    // Without the other bills, which a week's pay couldn't cover as well.
+    const sim = withCash(500_00, false);
     const owing = [
       { type: 'time/advance', days: 29 },
       signUp(30),
