@@ -126,9 +126,11 @@ describe('custody and child support (M2.6 step 4c, D100)', () => {
     if (toYou > 0) expect(k.of('family/support')[0]).toMatchObject({ by: 'them', cents: toYou });
     expect(toYou).toBeGreaterThan(0);
     const rent = k.of('home/rent')[0];
-    // And the month's gas with it (D130).
-    const gas = k.of('home/gas')[0];
-    const bills = (rent?.paid ? (rent.cents as number) : 0) + (gas?.paid ? (gas.cents as number) : 0);
+    // And the month's gas and other bills with it (D130, D140), those that were paid.
+    const bills = [rent, ...k.of('home/gas'), ...k.of('home/bill')].reduce(
+      (n, b) => n + (b?.paid ? (b.cents as number) : 0),
+      0,
+    );
     expect(cash(k.state)).toBe(before - bills + toYou);
     expect(circle(k.state).ties[0]?.status).toBe('separated');
   });

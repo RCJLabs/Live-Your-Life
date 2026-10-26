@@ -17,9 +17,13 @@ const withCash = (cents: number, bills = true): SimContext => ({
     ...(bills ? {} : { bill: {} }),
   }),
 });
-/** The month's other bills, in cents. */
+/** A bill on 1 July for a life begun on 2 June: 29 of June's 30 days (D140). */
+const firstMonth = (cents: number): number => Math.floor((cents * 29) / 30);
+/** The month's other bills on 1 July, in cents. */
 const billsOf = (sim: SimContext): number =>
-  sim.content.ids('bill').reduce((n, id) => n + (sim.content.get<{ cents: number }>('bill', id)?.cents ?? 0), 0);
+  sim.content
+    .ids('bill')
+    .reduce((n, id) => n + firstMonth(sim.content.get<{ cents: number }>('bill', id)?.cents ?? 0), 0);
 
 function play(sim: SimContext, ...actions: Action[]) {
   return playIn(game, sim, ...actions);
@@ -68,7 +72,7 @@ describe('rent', () => {
     // June's gas comes with July's rent (D130), and the month's other bills (D140).
     const june = gasBill(climateOf(withCash(0).content), 6);
     expect(beats).toContainEqual({ type: 'home/gas', cents: june, paid: true });
-    expect(beats).toContainEqual({ type: 'home/bill', bill: 'electricity', cents: 76_30, paid: true });
+    expect(beats).toContainEqual({ type: 'home/bill', bill: 'electricity', cents: firstMonth(76_30), paid: true });
     expect(beats.filter((b) => b.type === 'home/bill')).toHaveLength(sim.content.ids('bill').length);
     expect(cash()).toBe(1000_00 - RENT - june - billsOf(sim));
     expect(fact('home.owed')).toBe(0);
@@ -78,7 +82,7 @@ describe('rent', () => {
     const sim = withCash(RENT);
     const { beats, cash, fact } = play(sim, { type: 'time/advance', days: 29 });
     const june = gasBill(climateOf(sim.content), 6);
-    expect(beats).toContainEqual({ type: 'home/bill', bill: 'phone', cents: 40_00, paid: false });
+    expect(beats).toContainEqual({ type: 'home/bill', bill: 'phone', cents: firstMonth(40_00), paid: false });
     expect(cash()).toBe(0);
     expect(fact('home.owed')).toBe(june + billsOf(sim));
   });

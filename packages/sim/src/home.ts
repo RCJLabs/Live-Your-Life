@@ -63,8 +63,12 @@ export const homeModule = defineModule<HomeSlice>({
         ctx.emit('gas', { cents: gas, paid: charge(ctx, gas) });
       }
       // The month's other bills (D140): the electricity, the phone, clothes and household things.
+      // They are for the month just past, so a life that began in it pays for the days it lived.
+      const past = (MONTHS[month === 0 ? 11 : month - 1] as { days: number }).days;
+      const lived = Math.min(past, ctx.fact('time.day') as number);
       for (const bill of ctx.content.ids('bill')) {
-        const cents = (ctx.content.get<{ cents: number }>('bill', bill) as { cents: number }).cents;
+        const whole = (ctx.content.get<{ cents: number }>('bill', bill) as { cents: number }).cents;
+        const cents = Math.floor((whole * lived) / past);
         ctx.emit('bill', { bill, cents, paid: charge(ctx, cents) });
       }
       const days = daysToNextMonth(ctx.fact('time.month') as string, ctx.fact('time.day-of-month') as number);

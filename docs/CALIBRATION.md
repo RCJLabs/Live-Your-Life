@@ -414,7 +414,7 @@ Together the pool brings about a dozen events a year, about one a month (events/
 
 ## The bills and the bars (M2.12, D140, D142)
 
-The essentials the floor was missing, charged monthly with the rent (`bill/*.json`, `home.ts`), unpaid ones owed as rent is. Read through search summaries and memory on 2026-10-26; each is to be checked against its source.
+The essentials the floor was missing, charged monthly with the rent (`bill/*.json`, `home.ts`), unpaid ones owed as rent is. Each is for the month just past, so a life's first bills are for the days it lived of that month: a life begun on 30 June pays a thirtieth of each on 1 July. Read through search summaries and memory on 2026-10-26; each is to be checked against its source.
 
 | Figure | Value | Record | Source, as read on 2026-10-26 | Status |
 | --- | --- | --- | --- | --- |
