@@ -179,6 +179,18 @@ Nine careers added with what they ask for (D114, D116). Each wage is the 25th pe
 
 **Pay by credential, a realism bar.** The median starting wage of the careers that ask for each credential, against those that ask for none: a diploma or GED 1.20 times, an associate's 1.60. BLS's median weekly earnings for full-time workers of 25 and over in 2024 give 1.26 ($930 against $738) and 1.49 ($1,099). The test (`market/credentials.test.ts`) holds each within 15%. The game's are starting wages, BLS's are all ages', and one career (the paralegal) stands for the associate's: the bar is thin until more careers come.
 
+## The food ladder (M2.5)
+
+Line cook, kitchen lead, chef (D121), each promoted to at your own kitchen once practice and standing are enough, as patrol to detective (D122). The two new ranks work the diner's shifts. Every figure here is secondary: bls.gov and WageDex can't be reached from the build environment (D77), so they come through search summaries quoting the federal occupational wage survey (OEWS).
+
+| Rank | Wage, an hour | Reached | Asks for | Source | Status |
+| --- | --- | --- | --- | --- | --- |
+| Line cook (`career/line-cook.json`) | $14.73, as since M1.3 | hired | nothing | above | secondary |
+| Kitchen lead (`career/kitchen-lead.json`) | $18.24 ($37,940 a year at 2,080 hours) | after 2,000 hours as a line cook, standing 70 (tune) | nothing more | Michigan's median for first-line supervisors of food preparation and serving workers, SOC 35-1012, May 2025, through an aggregator's page in a search summary (national 25th percentile $35,980, median $44,080). A departure: the median, not the 25th percentile used elsewhere, since the class includes fast-food shift leads paid near a crew member's wage; Michigan's 25th wasn't found | secondary |
+| Chef (`career/chef.json`) | $23.54 ($48,970 a year) | after 4,000 hours as a kitchen lead, standing 70 (tune) | a diploma or GED, BLS's typical entry education for chefs and head cooks | the 25th percentile of Michigan's chefs and head cooks, SOC 35-1011, through NueCareer's page in a search summary (median $60,070; the national median $62,470, May 2025) | secondary |
+
+**The hours to each rank (tune).** BLS's handbook asks of chefs and head cooks "a high school diploma and work experience"; how many years it names wasn't confirmed in what could be read. A year full time as a cook to lead the line, and two more as a lead to run the kitchen, is a proposal, to be read against the cook bot's five years (M2.5 step 5).
+
 ## The buses (M2.9)
 
 Ridgefield's buses run along the arterials, every fourth cell edge: a mile apart, as Michigan's mile roads are. Every figure is from search summaries of the agencies' own pages, and is to be checked against them.
