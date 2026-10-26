@@ -941,6 +941,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** The chef's own shifts (recommended, chosen). The same with the kitchen's books (covers, food cost, staff hours, an inspection grade). Wage and title only.
 
+### D124. A promotion waits for the post to come open. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Each kitchen has one lead and one chef, and someone holds each post. With the hours and the standing, you are promoted only once the post comes open: its holder leaves at food service's turnover, 54 a month in a thousand staff (5.4%; the question put it as 54 in 100 a year, a misreading of the same figure, which gives a holder about 18 months on average rather than 22), drawn from the seed, and the post stays open three weeks. Until then the Jobs tab says you are ready, and you can apply for the rank at the city's other kitchens. The cook bot's five years had every steady cook made lead on about day 357 and chef on about day 1,070, which no real kitchen does.
+
+**Options considered.** Wait for the post (recommended, chosen). Keep promotion on hours and standing alone. A monthly chance at shown odds once eligible (tune), not tied to anyone leaving.
+
 ---
 
 ## Open items

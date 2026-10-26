@@ -8,7 +8,8 @@ import type { Action, FactView } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
 import { nextWeek, post, shiftKind, type Today, todayOf, weekOf } from './days.ts';
 import { hire } from './hire.ts';
-import type { Weekday } from './records.ts';
+import { postOpen } from './posts.ts';
+import { careerOf, type Weekday } from './records.ts';
 import {
   activeWarnings,
   careerFor,
@@ -214,12 +215,21 @@ export function shiftOver(ctx: JobContext, day: number): void {
   }
 }
 
+/** Whether the post of `career` where you work is open today (D124). */
+export function postOpenHere(view: Viewer, career: string): boolean {
+  const employer = view.fact('market.employer') as string | undefined;
+  const seed = view.fact('people.seed') as number | undefined;
+  if (!employer || seed === undefined) return false;
+  return postOpen(seed, employer, career, careerOf(view.content, career).employers.turnover, todayOf(view).day);
+}
+
 /** A rank earned (M2.4): with the career's practice and standing, the next on its ladder, same employer. */
 function promote(ctx: JobContext): void {
   const slice = ctx.read();
   if (!slice.employed || slice.career === null) return;
   const ladder = careerFor(ctx.content, slice).ladder;
   if (!ladder || slice.practice < ladder.practice || slice.standing < ladder.standing) return;
+  if (ladder.post && !postOpenHere(ctx, ladder.next)) return;
   const from = slice.career;
   hire(ctx, ladder.next);
   ctx.emit('promoted', { from, career: ladder.next });
