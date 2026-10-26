@@ -82,9 +82,10 @@ export function jobModule(hire?: Hire) {
     version: 2,
     migrate: {
       // Experience (M2.5, D122): the practice in the job held is what is known of the work done before.
+      // The shifts over this week weren't kept, so the week's limit counts none of them until next week.
       2: (slice) => {
-        const s = slice as Omit<JobSlice, 'experience'>;
-        return { ...s, experience: s.career === null ? {} : { [s.career]: s.practice } };
+        const s = slice as Omit<JobSlice, 'experience' | 'done'>;
+        return { ...s, experience: s.career === null ? {} : { [s.career]: s.practice }, done: [] };
       },
     },
     init: (ctx) => (hire ? hiredAt(ctx, hire) : jobless()),

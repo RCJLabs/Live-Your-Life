@@ -2,7 +2,7 @@ import type { GameState, RecordPack } from '@eb/core';
 import { PACK } from '@lyl/content';
 import { describe, expect, it } from 'vitest';
 import { advance, doing, play, refusal, signUp, sliceGame, sliceSim, tickOf } from '../../test/slice.ts';
-import { DEFAULT_START } from '../calendar.ts';
+import { DEFAULT_START, WEEKDAYS } from '../calendar.ts';
 import { lineFor } from '../chronicle.ts';
 import { createLifeGame } from '../game.ts';
 import type { Listing } from '../market/module.ts';
@@ -123,6 +123,8 @@ describe('hired for experience (M2.5, D122)', () => {
     const e = job(done.state).experience;
     expect(e['line-cook']).toBe(job(done.state).practice);
     expect(e['line-cook']).toBeGreaterThan(0);
+    // And the shift is kept as over, for the week's limit.
+    expect(job(done.state).done).toHaveLength(1);
   });
 });
 
@@ -180,5 +182,23 @@ describe('the lead’s and the chef’s shifts (M2.5, D123)', () => {
       expect(chance).toBe(preview?.chance);
     }
     expect(seen).toBeGreaterThan(0);
+  });
+});
+
+describe('the week’s limit counts the shifts already over (found in M2.5 step 5)', () => {
+  it('refuses a sixth shift in a week once five are signed or worked', () => {
+    const s = game.init('week', sim);
+    const posted = job(s).posted.map((p) => p.day);
+    const today = game.fact(s, 'time.day', {}, sim) as number;
+    const weekday = WEEKDAYS.indexOf(game.fact(s, 'time.weekday', {}, sim) as (typeof WEEKDAYS)[number]);
+    // A posted day, and the week it falls in: the days before it that week count as worked.
+    const day = posted.find((d) => (d - today + weekday) % 7 >= 5) as number;
+    expect(day).toBeDefined();
+    const weekStart = day - ((day - today + weekday) % 7);
+    const five = [0, 1, 2, 3, 4].map((k) => weekStart + k).filter((d) => d !== day);
+    const full = { ...s, job: { ...job(s), signed: [], done: five.slice(0, 5) } } as GameState;
+    expect(refusal(game, sim, full, signUp(day))).toBe('week-full');
+    const four = { ...s, job: { ...job(s), signed: [], done: five.slice(0, 4) } } as GameState;
+    expect(play(game, sim, four, signUp(day)).of('job/signed-up').length).toBe(1);
   });
 });

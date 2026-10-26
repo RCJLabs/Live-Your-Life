@@ -131,8 +131,8 @@ describe('the save fixtures', () => {
       job,
       ...rest
     } = result.state as unknown as Record<string, unknown>;
-    // Experience (M2.5) is the job's since; the cook then was the cook it migrates from.
-    const { experience: _x, ...jobThen } = job as Record<string, unknown>;
+    // Experience and the shifts over (M2.5) are the job's since; the cook then was the cook it migrates from.
+    const { experience: _x, done: _dn, ...jobThen } = job as Record<string, unknown>;
     const { prison: _p, felonies: _f, ...lawThen } = law as Record<string, unknown>;
     const probation = lawThen.probation as Record<string, unknown> | null;
     const { trainee: _t, ...probationThen } = probation ?? {};
