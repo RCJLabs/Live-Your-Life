@@ -84,5 +84,10 @@
   "events": {
     "tags": ["work", "food-service", "kitchen"],
     "chance": 50
+  },
+  "ladder": {
+    "next": "kitchen-lead",
+    "practice": 120000,
+    "standing": 70
   }
 }

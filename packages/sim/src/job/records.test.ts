@@ -24,11 +24,13 @@ describe("the slice's job content", () => {
     expect(records('career')).toEqual([
       'bank-teller',
       'cashier',
+      'chef',
       'computer-support',
       'customer-service',
       'detective',
       'dishwasher',
       'janitor',
+      'kitchen-lead',
       'line-cook',
       'paralegal',
       'police-officer',

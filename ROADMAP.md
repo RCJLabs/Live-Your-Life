@@ -517,6 +517,7 @@ How to read this file:
     3. The lead's and chef's shift events and their odds.
     4. The page: the Jobs tab's rank and the next, the journal's promotion lines, at 360 and 390 px.
     5. The cook bot's five years, the steady sweep, readings, docs.
+  - **Step 1, built 2026-10-26: the kitchen lead and the chef.** `career/kitchen-lead.json`, `career/chef.json`. The line cook's ladder leads to the kitchen lead after 2,000 hours at standing 70, and the lead's to the chef after 4,000 more (tune); both work the diner's shifts at $18.24 and $23.54 an hour (D121, CALIBRATION.md). Promoted at the diner, you stay at your block's diner beside the same cook. Neither rank posts openings yet: until experience can be asked for (step 2), a stranger could be hired as chef. Planted bugs: 1, 1 caught: promotion without the standing.
 - **M2.6 Relationships.** Romance, marriage, children, custody. Its [auto] gates passed 2026-10-25; its phone gate is in the [you] list at the top.
   - Started 2026-10-24, before M2.5 (D88). Decisions: you meet the people where you are (D89); intimacy fades to black (D90); attraction drawn for each person (D91); real-shaped pace (D92); asking in person, then dates by phone (D93); more than one partner, with consequences (D94); life together as proposed (D95, for Evan to confirm); bodies (D96), Michigan's options in a pregnancy (D97), a child's hours and money (D98), couples first (D99); custody to whoever cared more (D100).
   - **Done when:**
