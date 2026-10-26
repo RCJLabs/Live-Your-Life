@@ -1,0 +1,164 @@
+{
+  "title": "Life event",
+  "description": "Something that happens in a life (M2.10 step 4, D134, D135): drawn each day at its yearly rate, held until you are free, then asked as a choice with its costs and odds shown. Rates trace to CALIBRATION.md or are marked (tune) there.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 40
+    },
+    "rate": {
+      "kind": "int",
+      "min": 1,
+      "max": 5000,
+      "description": "Times a year in 1,000 people, rolled a day at a time."
+    },
+    "months": {
+      "kind": "list",
+      "optional": true,
+      "min": 1,
+      "max": 12,
+      "of": {
+        "kind": "int",
+        "min": 1,
+        "max": 12
+      },
+      "description": "The months it can come in; all year without. The rate is a year's, shared over these months."
+    },
+    "when": {
+      "kind": "condition",
+      "optional": true,
+      "description": "It is drawn only while this holds."
+    },
+    "prompt": {
+      "kind": "text",
+      "min": 1,
+      "max": 400,
+      "multiline": true,
+      "description": "What happens, to you, now."
+    },
+    "choices": {
+      "kind": "list",
+      "min": 2,
+      "max": 3,
+      "description": "What you can do. The first costs nothing, so there is always a way through.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "id": {
+            "kind": "text",
+            "min": 1,
+            "max": 24
+          },
+          "text": {
+            "kind": "text",
+            "min": 1,
+            "max": 120
+          },
+          "cost": {
+            "kind": "int",
+            "optional": true,
+            "min": 0,
+            "max": 100000,
+            "description": "In cents, paid when you choose it; offered only if you have it."
+          },
+          "minutes": {
+            "kind": "int",
+            "optional": true,
+            "min": 0,
+            "max": 720,
+            "description": "The time it takes."
+          },
+          "odds": {
+            "kind": "int",
+            "optional": true,
+            "min": 5,
+            "max": 95,
+            "description": "The chance in percent the outcome follows; the failure otherwise. Without odds it is certain."
+          },
+          "outcome": {
+            "kind": "group",
+            "fields": {
+              "told": {
+                "kind": "text",
+                "min": 1,
+                "max": 300,
+                "multiline": true,
+                "description": "What follows, to you, now (VOICE.md, register 1)."
+              },
+              "line": {
+                "kind": "text",
+                "min": 3,
+                "max": 200,
+                "description": "The journal's line: third person, past tense, {you} for the name (register 2)."
+              },
+              "cash": {
+                "kind": "int",
+                "optional": true,
+                "min": -100000,
+                "max": 100000,
+                "description": "In cents: gained, or lost (negative) up to the cash on hand."
+              },
+              "needs": {
+                "kind": "map",
+                "optional": true,
+                "key": {
+                  "kind": "enum",
+                  "values": ["rest", "food", "hygiene", "company", "calm", "health"]
+                },
+                "of": {
+                  "kind": "int",
+                  "min": -50,
+                  "max": 50
+                },
+                "description": "Needs moved, in percent."
+              }
+            }
+          },
+          "failure": {
+            "kind": "group",
+            "fields": {
+              "told": {
+                "kind": "text",
+                "min": 1,
+                "max": 300,
+                "multiline": true,
+                "description": "What follows, to you, now (VOICE.md, register 1)."
+              },
+              "line": {
+                "kind": "text",
+                "min": 3,
+                "max": 200,
+                "description": "The journal's line: third person, past tense, {you} for the name (register 2)."
+              },
+              "cash": {
+                "kind": "int",
+                "optional": true,
+                "min": -100000,
+                "max": 100000,
+                "description": "In cents: gained, or lost (negative) up to the cash on hand."
+              },
+              "needs": {
+                "kind": "map",
+                "optional": true,
+                "key": {
+                  "kind": "enum",
+                  "values": ["rest", "food", "hygiene", "company", "calm", "health"]
+                },
+                "of": {
+                  "kind": "int",
+                  "min": -50,
+                  "max": 50
+                },
+                "description": "Needs moved, in percent."
+              }
+            },
+            "optional": true,
+            "description": "What follows when the odds don't come up."
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,8 @@
  * The ways across the city (M2.9 step 5, D118): on foot, by bus or by a hailed ride, each shown
  * with its minutes and price before you choose. The bus's and the ride's come from the sim's
  * previews (`bus-trip`, `ride-trip`), the same sums `travel/bus` and `travel/ride` take; the walk
- * is the page's own measure along the streets (city/workplace.ts), passed as `time/advance` (D61).
+ * is the page's own measure along the streets (city/workplace.ts), passed as `time/advance` (D61),
+ * and slowed by snow at the sim's `season.pace` (D131).
  */
 import type { Action } from '@eb/core';
 import type { Item } from './menus.ts';
@@ -40,10 +41,15 @@ const labelOf = (way: Way, minutes: number, cents: number) =>
 /** The leg reversed: the way back. */
 export const back = (leg: Leg): Leg => ({ minutes: leg.minutes, from: leg.to, to: leg.from });
 
+/** A walk's minutes today: a clear day's, slowed by snow (D131). */
+export const walkNow = (life: Life, minutes: number): number =>
+  Math.ceil((minutes * ((life.fact('season.pace') as number | undefined) ?? 100)) / 100);
+
 /** Each way you can take now: walking always; the bus while one runs; a ride you can pay for. */
 export function waysFor(life: Life, leg: Leg): WayOption[] {
+  const walk = walkNow(life, leg.minutes);
   const out: WayOption[] = [
-    { way: 'walk', minutes: leg.minutes, cents: 0, label: labelOf('walk', leg.minutes, 0), note: null },
+    { way: 'walk', minutes: walk, cents: 0, label: labelOf('walk', walk, 0), note: snowNote(life) },
   ];
   const cash = life.fact('economy.amount', { resource: 'cash' }) as number;
   for (const [way, effect, price] of [
@@ -72,15 +78,18 @@ function noteOf(way: Way, p: Record<string, number | undefined>): string {
   return `Walk ${mins(p.walkTo)} to the stop, wait ${mins(p.wait)}, ride ${mins(p.ride)}${change}, then walk ${mins(p.walkFrom)}.${fares}`;
 }
 
+/** Why the walk is slower today, if it is. */
+const snowNote = (life: Life): string | null => (life.fact('season.snow') === true ? 'Snow on the ground.' : null);
+
 /** The action that takes a leg by a way. */
-export function wayAction(way: Way, leg: Leg): Action {
-  if (way === 'walk') return { type: 'time/advance', minutes: leg.minutes };
+export function wayAction(life: Life, way: Way, leg: Leg): Action {
+  if (way === 'walk') return { type: 'time/advance', minutes: walkNow(life, leg.minutes) };
   return { type: way === 'bus' ? 'travel/bus' : 'travel/ride', from: leg.from, to: leg.to };
 }
 
 /** The way you chose if it can still be taken, else walking: the last bus may have gone. */
 export function wayOrWalk(life: Life, way: Way, leg: Leg): Action {
-  return waysFor(life, leg).some((w) => w.way === way) ? wayAction(way, leg) : wayAction('walk', leg);
+  return wayAction(life, waysFor(life, leg).some((w) => w.way === way) ? way : 'walk', leg);
 }
 
 /** Whether an action is a trip's leg, which the page shows passing as a fast-forward. */

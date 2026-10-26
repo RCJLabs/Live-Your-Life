@@ -74,6 +74,14 @@ export interface BusTrip {
 
 type Day = (typeof WEEKDAYS)[number];
 
+/** What the weather does to a trip (D131): a walk's minutes in hundredths of a clear day's, and a bus's minutes late. */
+export interface Slow {
+  readonly pace: number;
+  readonly late: number;
+}
+
+export const CLEAR: Slow = { pace: 100, late: 0 };
+
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 const along = (l: Line, p: Point) => (l.row ? p.x : p.y);
 const across = (l: Line, p: Point) => (l.row ? p.y : p.x);
@@ -93,8 +101,8 @@ function linesBy(g: Grid, p: Point): Line[] {
 const stopNear = (t: Transit, g: Grid, l: Line, p: Point) =>
   clamp(Math.round(along(l, p) / t.stops) * t.stops, 0, g.size);
 /** Minutes on foot from a point to a stop on a line. */
-const walkTo = (l: Line, s: number, p: Point) =>
-  (Math.abs(along(l, p) - s) + Math.abs(across(l, p) - l.at)) / WALK_PACE;
+const walkTo = (l: Line, s: number, p: Point, slow: Slow) =>
+  ((Math.abs(along(l, p) - s) + Math.abs(across(l, p) - l.at)) * slow.pace) / (100 * WALK_PACE);
 
 /**
  * The next bus at a stop `offset` minutes from the end it leaves, at or after minute `t` of the
@@ -120,43 +128,55 @@ function ride(
   from: number,
   to: number,
   at: number,
+  late: number,
 ): { board: number; off: number } | null {
   if (from === to) return null;
   // Toward the line's far end the bus left its near end; the other way, its far end.
   const offset = (to > from ? from : g.size - from) / t.speed;
-  const board = nextBus(t, day, offset, at);
-  return board === null ? null : { board, off: board + Math.abs(to - from) / t.speed };
+  // A late bus is the one timetabled `late` minutes earlier, come now.
+  const due = nextBus(t, day, offset, at - late);
+  if (due === null) return null;
+  const board = due + late;
+  return { board, off: board + Math.abs(to - from) / t.speed };
 }
 
 /**
  * The fastest trip by bus from `a` to `b`, leaving at minute `at` of `day`, or null if no bus
  * serves it today (the last has gone, or none runs nearer than walking all the way).
  */
-export function busTrip(t: Transit, g: Grid, a: Point, b: Point, day: Day, at: number): BusTrip | null {
+export function busTrip(
+  t: Transit,
+  g: Grid,
+  a: Point,
+  b: Point,
+  day: Day,
+  at: number,
+  slow: Slow = CLEAR,
+): BusTrip | null {
   let best: BusTrip | null = null;
   const consider = (trip: BusTrip) => {
     if (!best || trip.minutes < best.minutes) best = trip;
   };
   for (const first of linesBy(g, a)) {
     const s0 = stopNear(t, g, first, a);
-    const w0 = walkTo(first, s0, a);
+    const w0 = walkTo(first, s0, a, slow);
     // One bus: the same line runs near both ends.
     for (const last of linesBy(g, b)) {
       if (last.row === first.row && last.at === first.at) {
         const s1 = stopNear(t, g, first, b);
-        const r = ride(t, g, day, s0, s1, at + w0);
+        const r = ride(t, g, day, s0, s1, at + w0, slow.late);
         if (!r) continue;
-        const w1 = walkTo(first, s1, b);
+        const w1 = walkTo(first, s1, b, slow);
         consider(trip(at, w0, r.board, r.off, r.off, r.off, w1, 1, 1));
       } else if (last.row !== first.row) {
         // Two buses, changing where the lines cross.
         const cross = last.at;
-        const r1 = ride(t, g, day, s0, cross, at + w0);
+        const r1 = ride(t, g, day, s0, cross, at + w0, slow.late);
         if (!r1) continue;
         const s1 = stopNear(t, g, last, b);
-        const r2 = ride(t, g, day, first.at, s1, r1.off);
+        const r2 = ride(t, g, day, first.at, s1, r1.off, slow.late);
         if (!r2) continue;
-        const w1 = walkTo(last, s1, b);
+        const w1 = walkTo(last, s1, b, slow);
         const fares = r2.board - r1.board <= t.transfer ? 1 : 2;
         consider(trip(at, w0, r1.board, r1.off, r2.board, r2.off, w1, 2, fares));
       }
@@ -189,6 +209,6 @@ function trip(
   };
 }
 
-/** Minutes on foot along the street grid, from `a` to `b`. */
-export const walkMinutesBetween = (a: Point, b: Point): number =>
-  Math.max(1, Math.ceil((Math.abs(a.x - b.x) + Math.abs(a.y - b.y)) / WALK_PACE));
+/** Minutes on foot along the street grid, from `a` to `b`, at `pace` hundredths of a clear day's minutes. */
+export const walkMinutesBetween = (a: Point, b: Point, pace = 100): number =>
+  Math.max(1, Math.ceil(((Math.abs(a.x - b.x) + Math.abs(a.y - b.y)) * pace) / (100 * WALK_PACE)));

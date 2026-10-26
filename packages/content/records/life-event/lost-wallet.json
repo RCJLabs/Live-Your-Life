@@ -1,0 +1,38 @@
+{
+  "name": "A lost wallet",
+  "rate": 100,
+  "prompt": "Your wallet isn't in your pocket. The cash in it, your ID and your card were all in there.",
+  "choices": [
+    {
+      "id": "retrace",
+      "text": "Retrace your steps",
+      "minutes": 60,
+      "odds": 35,
+      "outcome": {
+        "told": "You walk back the way you came, asking at every counter.",
+        "line": "{you} lost a wallet and found it again."
+      },
+      "failure": {
+        "told": "Nobody has seen it. You cancel the card and pay for a new ID.",
+        "line": "{you} lost a wallet with the cash and the ID in it.",
+        "cash": -4000,
+        "needs": {
+          "calm": -10
+        }
+      }
+    },
+    {
+      "id": "replace",
+      "text": "Replace what was in it",
+      "minutes": 120,
+      "outcome": {
+        "told": "You cancel the card and stand in line for a new ID.",
+        "line": "{you} lost a wallet and replaced the ID.",
+        "cash": -4000,
+        "needs": {
+          "calm": -6
+        }
+      }
+    }
+  ]
+}

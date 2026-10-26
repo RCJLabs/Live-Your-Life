@@ -1,0 +1,27 @@
+{
+  "name": "Money on the pavement",
+  "rate": 300,
+  "prompt": "There's a folded bill on the pavement, and nobody near it.",
+  "choices": [
+    {
+      "id": "leave",
+      "text": "Leave it",
+      "outcome": {
+        "told": "You walk on.",
+        "line": "{you} walked past money on the pavement."
+      }
+    },
+    {
+      "id": "keep",
+      "text": "Pick it up",
+      "outcome": {
+        "told": "You put it in your pocket.",
+        "line": "{you} found money on the pavement.",
+        "cash": 2000,
+        "needs": {
+          "calm": 2
+        }
+      }
+    }
+  ]
+}

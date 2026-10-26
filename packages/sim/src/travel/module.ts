@@ -9,7 +9,7 @@ import { defineModule, type ModuleContext } from '@eb/core';
 import type { WEEKDAYS } from '../calendar.ts';
 import type { CityRecord } from '../city/city.ts';
 import { CITY } from '../city/city.ts';
-import { type BusTrip, busTrip, type Grid, type Point, transitOf } from './bus.ts';
+import { type BusTrip, busTrip, CLEAR, type Grid, type Point, type Slow, transitOf } from './bus.ts';
 import { type Ride, rideTrip } from './rideshare.ts';
 
 export interface TravelSlice {
@@ -33,6 +33,12 @@ const pointOf = (p: unknown): Point | null => {
     : null;
 };
 
+/** What the season does to a trip now: clear in a game without it. */
+export const slowOf = (v: View): Slow => ({
+  pace: (v.fact('season.pace') as number | undefined) ?? CLEAR.pace,
+  late: (v.fact('season.late') as number | undefined) ?? CLEAR.late,
+});
+
 /** The bus trip from `a` to `b` now, and its fare after what the day's cap has left. */
 export function busNow(v: View, s: Readonly<TravelSlice>, a: Point, b: Point): (BusTrip & { cents: number }) | null {
   const t = transitOf(v.content);
@@ -43,8 +49,10 @@ export function busNow(v: View, s: Readonly<TravelSlice>, a: Point, b: Point): (
     g,
     a,
     b,
-    v.fact('time.weekday') as (typeof WEEKDAYS)[number],
+    // A holiday's buses keep Sunday's timetable (D132); snow slows the walk and the bus (D131).
+    (v.fact('season.timetable') ?? v.fact('time.weekday')) as (typeof WEEKDAYS)[number],
     v.fact('time.of-day') as number,
+    slowOf(v),
   );
   if (!trip) return null;
   const today = v.fact('time.day') as number;

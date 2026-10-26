@@ -1,0 +1,41 @@
+{
+  "name": "A break-in",
+  "rate": 14,
+  "prompt": "Your door is splintered at the lock. Drawers are open, and what cash you kept in the flat is gone.",
+  "choices": [
+    {
+      "id": "leave-it",
+      "text": "Fix the lock and move on",
+      "outcome": {
+        "told": "You wedge a chair against the door until the new lock is in.",
+        "line": "{you} came home to a break-in and fixed the lock.",
+        "cash": -8000,
+        "needs": {
+          "calm": -12
+        }
+      }
+    },
+    {
+      "id": "report",
+      "text": "Report it to the police",
+      "minutes": 90,
+      "odds": 10,
+      "outcome": {
+        "told": "An officer takes a statement and gives you a case number.",
+        "line": "{you} reported a break-in to the police.",
+        "cash": -2000,
+        "needs": {
+          "calm": -8
+        }
+      },
+      "failure": {
+        "told": "The officer takes the statement. Nobody calls back.",
+        "line": "{you} reported a break-in that was never solved.",
+        "cash": -8000,
+        "needs": {
+          "calm": -12
+        }
+      }
+    }
+  ]
+}

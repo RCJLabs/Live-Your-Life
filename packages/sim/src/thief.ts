@@ -59,7 +59,7 @@ export const thiefFor = (days: number, name = 'thief'): Policy => {
         today = 0;
       }
       const offered = playable(turn);
-      if (turn.mode.id === 'shift-event') return turn.rng.pick(offered);
+      if (turn.mode.id === 'shift-event' || turn.mode.id === 'life-event') return turn.rng.pick(offered);
       const cash = turn.fact('economy.amount', { resource: 'cash' }) as number;
       const owed = (turn.fact('law.owed') as number) + (turn.fact('home.owed') as number);
       const lowest = turn.fact('life.lowest') as Need;

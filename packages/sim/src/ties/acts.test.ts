@@ -27,7 +27,7 @@ const lean = {
 };
 const cook = testCook({ events: { tags: ['test'], chance: 100 } });
 const sim = sliceSim({ ...withCareer(cook), 'shift-event': { lean } });
-const game = createLifeGame({ people: 0, career: TEST_COOK });
+const game = createLifeGame({ events: false, people: 0, career: TEST_COOK });
 const ties = (state: GameState) => state.ties as TiesSlice;
 
 /** At the event of a shift on a day they work, or one they don't, with their regard set. */

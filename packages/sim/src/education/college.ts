@@ -131,7 +131,8 @@ export function enroll(ctx: Ctx, courses: unknown, how: unknown): void {
 function meetingNow(v: View, c: College): Course | undefined {
   const term = slice(v).college.term;
   const day = v.fact('time.day') as number;
-  if (!term || day < term.start || day >= term.end) return undefined;
+  // The college is closed on a holiday (D132): no class meets.
+  if (!term || day < term.start || day >= term.end || v.fact('season.holiday') === true) return undefined;
   const weekday = v.fact('time.weekday') as (typeof WEEKDAYS)[number];
   const minute = v.fact('time.of-day') as number;
   return term.courses.find((x) => {
@@ -148,7 +149,7 @@ export function classIn(v: View): number | undefined {
   const c = collegeOf(v);
   const term = slice(v).college.term;
   const day = v.fact('time.day') as number;
-  if (!c || !term || day < term.start || day >= term.end) return undefined;
+  if (!c || !term || day < term.start || day >= term.end || v.fact('season.holiday') === true) return undefined;
   const weekday = v.fact('time.weekday') as (typeof WEEKDAYS)[number];
   const minute = v.fact('time.of-day') as number;
   const starts = term.courses

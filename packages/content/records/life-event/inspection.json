@@ -1,0 +1,38 @@
+{
+  "name": "The landlord's notice",
+  "rate": 500,
+  "prompt": "A notice is taped to your door. The landlord will inspect the flat tomorrow morning.",
+  "choices": [
+    {
+      "id": "leave-it",
+      "text": "Leave it as it is",
+      "odds": 70,
+      "outcome": {
+        "told": "You decide the flat is fine the way it is.",
+        "line": "{you} left the flat as it was for the landlord's inspection."
+      },
+      "failure": {
+        "told": "The landlord writes up the kitchen and charges a cleaning fee.",
+        "line": "{you} was charged a cleaning fee after an inspection.",
+        "cash": -5000,
+        "needs": {
+          "calm": -6
+        }
+      }
+    },
+    {
+      "id": "clean",
+      "text": "Clean before they come",
+      "minutes": 120,
+      "outcome": {
+        "told": "You scrub the stove and take out three bags of rubbish.",
+        "line": "{you} cleaned the flat before the landlord's inspection.",
+        "needs": {
+          "hygiene": 8,
+          "rest": -6,
+          "calm": 3
+        }
+      }
+    }
+  ]
+}

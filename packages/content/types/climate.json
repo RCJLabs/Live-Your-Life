@@ -1,0 +1,101 @@
+{
+  "title": "Climate",
+  "description": "The year as the city lives it (M2.10 step 3, D130–D133): snow days and the cold by month, the gas bill, what snow does to a walk and a bus, the holidays, and the clocks changing. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": { "kind": "text", "min": 1, "max": 60 },
+    "snowDays": {
+      "kind": "list",
+      "min": 12,
+      "max": 12,
+      "description": "Days with an inch of snow or more, in hundredths, January to December.",
+      "of": { "kind": "int", "min": 0, "max": 3100 }
+    },
+    "degreeDays": {
+      "kind": "list",
+      "min": 12,
+      "max": 12,
+      "description": "Heating degree days (base 65°F), January to December: how much a month's cold asks of the furnace.",
+      "of": { "kind": "int", "min": 0, "max": 3000 }
+    },
+    "gas": {
+      "kind": "group",
+      "description": "The flat's gas bill (D130), due with the rent for the month just past.",
+      "fields": {
+        "fixed": { "kind": "int", "min": 0, "description": "In cents: the month's customer charge." },
+        "perCcf": {
+          "kind": "int",
+          "min": 1,
+          "description": "In cents: a hundred cubic feet of gas, delivery and supply."
+        },
+        "heating": {
+          "kind": "int",
+          "min": 0,
+          "description": "Hundred cubic feet a year for heat, shared out by the months' degree days."
+        },
+        "base": { "kind": "int", "min": 0, "description": "Hundred cubic feet a month for hot water and the stove." }
+      }
+    },
+    "snow": {
+      "kind": "group",
+      "description": "What a snow day does, that day and the morning after, until noon (D131).",
+      "fields": {
+        "pace": {
+          "kind": "int",
+          "min": 100,
+          "max": 300,
+          "description": "A walk's minutes, in hundredths of a clear day's."
+        },
+        "late": { "kind": "int", "min": 0, "max": 60, "description": "Minutes a bus comes after its time." }
+      }
+    },
+    "holidays": {
+      "kind": "list",
+      "min": 0,
+      "max": 20,
+      "description": "Days the court and the college close and the buses run Sunday's timetable (D132). A fixed date that falls on a Saturday is kept the Friday before, on a Sunday the Monday after.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "name": { "kind": "text", "min": 1, "max": 60 },
+          "month": { "kind": "int", "min": 1, "max": 12 },
+          "day": { "kind": "int", "min": 1, "max": 31, "optional": true, "description": "A fixed date." },
+          "weekday": {
+            "kind": "enum",
+            "optional": true,
+            "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+            "description": "With nth, a weekday of the month."
+          },
+          "nth": {
+            "kind": "int",
+            "min": -1,
+            "max": 5,
+            "optional": true,
+            "description": "Which of the month's weekdays: 1 the first, -1 the last."
+          }
+        }
+      }
+    },
+    "clocks": {
+      "kind": "group",
+      "description": "The clocks changing (D133): forward an hour on one Sunday's night, back on another's.",
+      "fields": {
+        "forward": {
+          "kind": "group",
+          "fields": { "month": { "kind": "int", "min": 1, "max": 12 }, "nth": { "kind": "int", "min": 1, "max": 5 } }
+        },
+        "back": {
+          "kind": "group",
+          "fields": { "month": { "kind": "int", "min": 1, "max": 12 }, "nth": { "kind": "int", "min": 1, "max": 5 } }
+        },
+        "hour": { "kind": "int", "min": 0, "max": 23, "description": "The hour on the clock when it changes." },
+        "rest": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Percent of rest an hour's sleep is worth, lost or gained."
+        }
+      }
+    }
+  }
+}

@@ -8,6 +8,7 @@
  */
 import type { RecordStore } from '@eb/core';
 import { type LifeStart, MONTHS, WEEKDAYS, weekdayOf } from './calendar.ts';
+import { choiceOf } from './events/records.ts';
 
 export interface LineRecord {
   readonly beat: string;
@@ -30,6 +31,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'inventory/lost': 'the bag; selling and eating are told',
   'inventory/full': 'the bag',
   'logic/rolled': 'a roll; its outcome is told',
+  'event/asked': 'the interface: the sheet asks; what followed is told',
   mode: 'the interface',
   'time/fired': 'the clock',
   'time/passed': 'the clock',
@@ -133,6 +135,12 @@ export function lineRecord(store: RecordStore, beat: Readonly<Record<string, unk
  * The chronicle's line for an event, or null for one it leaves out. Throws for a placeholder it
  * can't fill, so a line never reads with a hole in it.
  */
+/** The journal's line for what followed a life event's choice. */
+function lifeLine(store: RecordStore, beat: Readonly<Record<string, unknown>>): string {
+  const c = choiceOf(store, beat.event as string, beat.choice);
+  return (beat.failed === true ? (c.failure ?? c.outcome) : c.outcome).line;
+}
+
 export function lineFor(
   store: RecordStore,
   beat: Readonly<Record<string, unknown>>,
@@ -154,6 +162,9 @@ export function lineFor(
         return names[key] ?? fail(`"${line.text}" names the ${key}, and there is none`);
       case 'item':
         return named(store, 'item', v);
+      // A life event's line is its record's own (M2.10 step 4), with the name in it.
+      case 'line':
+        return lifeLine(store, beat).replace(/\{you\}/g, names.you);
       case 'offence':
         return named(store, 'offence', v);
       case 'event':

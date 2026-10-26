@@ -1,0 +1,5 @@
+{
+  "beat": "home/gas",
+  "when": { "field": "paid", "is": "true" },
+  "text": "{you} paid {cents} for the month's gas."
+}

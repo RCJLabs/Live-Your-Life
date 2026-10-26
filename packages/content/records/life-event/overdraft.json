@@ -1,0 +1,41 @@
+{
+  "name": "An overdraft fee",
+  "rate": 600,
+  "when": "event.cash < 5000",
+  "prompt": "A payment went out before your pay came in. The bank has charged an overdraft fee.",
+  "choices": [
+    {
+      "id": "pay",
+      "text": "Let it stand",
+      "outcome": {
+        "told": "The fee comes out with the next deposit.",
+        "line": "{you} paid an overdraft fee.",
+        "cash": -3500,
+        "needs": {
+          "calm": -4
+        }
+      }
+    },
+    {
+      "id": "call",
+      "text": "Call the bank and ask them to waive it",
+      "minutes": 40,
+      "odds": 40,
+      "outcome": {
+        "told": "You wait on hold, then explain to someone who has heard it before.",
+        "line": "{you} talked a bank out of an overdraft fee.",
+        "needs": {
+          "calm": -2
+        }
+      },
+      "failure": {
+        "told": "They say the fee stands.",
+        "line": "{you} asked a bank to waive an overdraft fee, and it didn't.",
+        "cash": -3500,
+        "needs": {
+          "calm": -6
+        }
+      }
+    }
+  ]
+}

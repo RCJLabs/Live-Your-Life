@@ -1,0 +1,31 @@
+{
+  "name": "A call from home",
+  "rate": 1500,
+  "prompt": "Your phone lights up with your mother's number. It has been a while.",
+  "choices": [
+    {
+      "id": "let-it-ring",
+      "text": "Let it ring",
+      "outcome": {
+        "told": "It stops after six rings. You look at it for a while.",
+        "line": "{you} let a call from home ring out.",
+        "needs": {
+          "calm": -3
+        }
+      }
+    },
+    {
+      "id": "talk",
+      "text": "Pick up and talk",
+      "minutes": 60,
+      "outcome": {
+        "told": "She asks about work and the flat and tells you about the neighbours. You stay on longer than you meant to.",
+        "line": "{you} talked with family on the phone for an hour.",
+        "needs": {
+          "company": 12,
+          "calm": 4
+        }
+      }
+    }
+  ]
+}

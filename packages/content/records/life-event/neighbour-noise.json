@@ -1,0 +1,37 @@
+{
+  "name": "Noise next door",
+  "rate": 800,
+  "prompt": "The flat next door is having a party, and it's past midnight.",
+  "choices": [
+    {
+      "id": "put-up",
+      "text": "Put up with it",
+      "outcome": {
+        "told": "You lie awake until the last door slams.",
+        "line": "{you} lay awake through a neighbour's party.",
+        "needs": {
+          "rest": -15,
+          "calm": -6
+        }
+      }
+    },
+    {
+      "id": "knock",
+      "text": "Knock and ask them to turn it down",
+      "minutes": 10,
+      "odds": 60,
+      "outcome": {
+        "told": "Someone opens the door with a drink in hand.",
+        "line": "{you} asked the neighbours to turn their music down, and they did."
+      },
+      "failure": {
+        "told": "They say sure and turn it up again an hour later.",
+        "line": "{you} asked the neighbours to turn it down, and they didn't.",
+        "needs": {
+          "rest": -15,
+          "calm": -10
+        }
+      }
+    }
+  ]
+}

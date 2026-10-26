@@ -977,6 +977,42 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A lint, then Evan reads (recommended, chosen). Rewritten by hand and skimmed, with no lint. The lint alone, leaving the [you] gate open.
 
+### D130. Heat is a gas bill beside the rent. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** The flat pays its own gas, as most Michigan apartments do. A bill comes due with the rent on the 1st for the month just past: a fixed charge, plus the gas the month's cold burns, by its heating degree days, at the state's residential price. About $85 for January and $20 for July, so roughly $560 a year (tune). A bill that can't be paid is owed, like rent. Shutoffs wait for housing.
+
+**Options considered.** A gas bill beside the rent (recommended, chosen). Heat included in the rent, so winter shows only as snow and slower walks. A rent that rises in the cold months.
+
+### D131. Snow slows walks and buses. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Days with an inch or more of snow are drawn from the seed at a mid-Michigan city's monthly normals, about 13 a year, December to March for the most part. On a snow day and the morning after, a walk takes longer (tune, from a winter-walking study) and a bus's wait is longer. Nothing closes. The fall on ice is a life event (step 4).
+
+**Options considered.** Slower walks and late buses (recommended, chosen). The same, with the college and the court closing and shifts called off on the heaviest days. Snow on screen only.
+
+### D132. Holidays close the court and the college, and the buses run on Sunday's timetable. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** The federal holidays (5 U.S.C. 6103) close the court and the college, and the buses run their Sunday timetable. Jobs work them at the usual pay, as most food and retail jobs do; no law asks more. Each holiday is named on the bar and in the journal.
+
+**Options considered.** Closings, no change in pay (recommended, chosen). Closings and time and a half for a worked holiday. Named only.
+
+### D133. The clocks changing costs or gives an hour of sleep. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** The game's day stays 24 hours of 60 minutes. On the second Sunday of March the night is an hour shorter: if you are asleep at 02:00 you lose an hour's sleep. On the first Sunday of November it is an hour longer: asleep at 02:00, you gain one. Shifts, buses and the alarm keep local time, as they do in life. The journal says the clocks changed.
+
+**Options considered.** An hour of sleep (recommended, chosen). Named only. Left out of the game.
+
+### D134. A life event waits for a quiet moment, then asks. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** A life event drawn for you waits until you are awake and free: not asleep, on a shift, in court, held, in prison, in hospital or on a trip. Then a sheet opens with its choices, each showing its cost and its odds from the preview the roll uses, and the clock drops to 1×, as the shift's events do (D40).
+
+**Options considered.** A sheet at a quiet moment (recommended, chosen). A line on the Waiting list, with a deadline and a default choice. Told in the journal, with a choice for only a few.
+
+### D135. The pool is a mixed 24. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** About 24 life events across family and friends (a call home, a funeral, a wedding, a loan asked of you), the flat (a rent rise at renewal, the heat out, pests, a break-in), money and the state (a tax refund, a jury summons, a lost wallet, a broken phone, an overdraft), the body (a fall on ice, a toothache, food poisoning) and the street (a mugging, money found, a stranger asking for help, a power cut, a heat wave, election day). Each is a record with a rate traced in CALIBRATION.md or marked (tune), one or more choices with costs and odds shown, and a journal line.
+
+**Options considered.** The mixed 24 (recommended, chosen). The same kinds weighted to hardship. About 12 events, each with a follow-up days later.
+
 ---
 
 ## Open items

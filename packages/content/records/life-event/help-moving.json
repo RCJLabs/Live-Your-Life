@@ -1,0 +1,32 @@
+{
+  "name": "A friend moving",
+  "rate": 300,
+  "prompt": "A friend is moving out of a third-floor walk-up today and asks if you can carry boxes.",
+  "choices": [
+    {
+      "id": "decline",
+      "text": "Say you're busy",
+      "outcome": {
+        "told": "They say no problem and ask someone else.",
+        "line": "{you} said no when a friend asked for help moving.",
+        "needs": {
+          "company": -4
+        }
+      }
+    },
+    {
+      "id": "help",
+      "text": "Help them move",
+      "minutes": 240,
+      "outcome": {
+        "told": "The couch takes three of you and two tries on the stairs. They buy everyone pizza.",
+        "line": "{you} helped a friend move flats.",
+        "needs": {
+          "company": 12,
+          "rest": -15,
+          "food": 15
+        }
+      }
+    }
+  ]
+}

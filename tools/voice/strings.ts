@@ -25,6 +25,8 @@ const PAGE = join(ROOT, 'apps/game/src/life');
 
 /** Record keys that hold prose, by register; names are labels. */
 const PROSE: Readonly<Record<string, Register>> = {
+  // A life event's journal line, kept in its own record (M2.10 step 4).
+  line: 'chronicle',
   prompt: 'interface',
   text: 'interface',
   told: 'interface',

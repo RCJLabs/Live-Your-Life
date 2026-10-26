@@ -1,0 +1,39 @@
+{
+  "name": "A jury summons",
+  "rate": 130,
+  "prompt": "A summons from the county court: you are called for jury duty.",
+  "choices": [
+    {
+      "id": "excuse",
+      "text": "Ask to be excused",
+      "odds": 50,
+      "outcome": {
+        "told": "You fill in the form and explain your hours.",
+        "line": "{you} was excused from jury duty."
+      },
+      "failure": {
+        "told": "The court says no. You serve the day after all.",
+        "line": "{you} served a day of jury duty.",
+        "cash": 2500,
+        "needs": {
+          "rest": -6,
+          "calm": -4
+        }
+      }
+    },
+    {
+      "id": "serve",
+      "text": "Serve the day",
+      "minutes": 480,
+      "outcome": {
+        "told": "You sit in a room with forty strangers until noon, then in a jury box until five.",
+        "line": "{you} served a day of jury duty.",
+        "cash": 2500,
+        "needs": {
+          "rest": -6,
+          "calm": 2
+        }
+      }
+    }
+  ]
+}

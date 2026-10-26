@@ -1,0 +1,35 @@
+{
+  "name": "A tax refund",
+  "rate": 700,
+  "months": [2, 3, 4],
+  "when": "job.employed",
+  "prompt": "Your tax refund has come through.",
+  "choices": [
+    {
+      "id": "save",
+      "text": "Keep it",
+      "outcome": {
+        "told": "You leave it where it is.",
+        "line": "{you} received a tax refund.",
+        "cash": 40000,
+        "needs": {
+          "calm": 6
+        }
+      }
+    },
+    {
+      "id": "night-out",
+      "text": "Keep most, and go out on some",
+      "minutes": 180,
+      "outcome": {
+        "told": "You keep most of it and spend an evening out.",
+        "line": "{you} received a tax refund and spent some of it on a night out.",
+        "cash": 34000,
+        "needs": {
+          "company": 10,
+          "calm": 8
+        }
+      }
+    }
+  ]
+}

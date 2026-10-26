@@ -1,0 +1,41 @@
+{
+  "name": "A fall on ice",
+  "rate": 20,
+  "months": [12, 1, 2, 3],
+  "prompt": "Your feet go out from under you on a patch of black ice. Your wrist took the fall.",
+  "choices": [
+    {
+      "id": "walk-it-off",
+      "text": "Walk it off",
+      "odds": 70,
+      "outcome": {
+        "told": "You flex your hand on the way home.",
+        "line": "{you} fell on the ice and walked it off.",
+        "needs": {
+          "calm": -3
+        }
+      },
+      "failure": {
+        "told": "By night the wrist is swollen and you can't close your hand.",
+        "line": "{you} fell on the ice and hurt a wrist.",
+        "needs": {
+          "health": -15,
+          "calm": -6
+        }
+      }
+    },
+    {
+      "id": "urgent-care",
+      "text": "Get it seen at urgent care",
+      "cost": 15000,
+      "minutes": 150,
+      "outcome": {
+        "told": "An X-ray shows a sprain. They wrap it and send you home.",
+        "line": "{you} fell on the ice and had a wrist seen at urgent care.",
+        "needs": {
+          "health": -4
+        }
+      }
+    }
+  ]
+}

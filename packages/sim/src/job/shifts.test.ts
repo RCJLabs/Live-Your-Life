@@ -23,7 +23,7 @@ import type { JobSlice } from './state.ts';
 import { paycheck, payFor } from './withholding.ts';
 
 // Monday 2 June 2025, 07:00, is tick 0. The test cook is offered every day's one shift, 15:00 to 23:00.
-const game = createLifeGame({ people: 0, career: TEST_COOK });
+const game = createLifeGame({ events: false, people: 0, career: TEST_COOK });
 const sim = sliceSim(withCareer(testCook()));
 const fresh = (): GameState => game.init('shifts', sim);
 const job = (state: GameState) => state.job as JobSlice;
@@ -96,6 +96,7 @@ describe('signing up', () => {
   it('counts the five from Monday to Sunday, whatever day the job starts', () => {
     // Thursday 5 June: the rest of this week, Friday to Sunday, and all of next week are up.
     const thursday = createLifeGame({
+      events: false,
       people: 0,
       career: TEST_COOK,
       start: { year: 2025, month: 6, day: 5, hour: 7, minute: 0 },
@@ -107,7 +108,7 @@ describe('signing up', () => {
   });
 
   it('offers nothing to someone with no job', () => {
-    const jobless = createLifeGame({ people: 0 });
+    const jobless = createLifeGame({ events: false, people: 0 });
     const state = jobless.init('jobless', sim);
     expect(jobless.fact(state, 'job.employed', undefined, sim)).toBe(false);
     expect(jobless.options(state, sim).some((a) => a.type.startsWith('job/'))).toBe(false);
@@ -207,7 +208,7 @@ describe('no-shows and warnings (D39)', () => {
   });
 
   it('lets you go when standing reaches 0', () => {
-    const fragile = createLifeGame({ people: 0, career: TEST_COOK });
+    const fragile = createLifeGame({ events: false, people: 0, career: TEST_COOK });
     const fragileSim = sliceSim(withCareer(testCook({ standing: { ...testCook().standing, start: 4 } })));
     const signed = play(fragile, fragileSim, fragile.init('fragile', fragileSim), signUp(1)).state;
     const late = play(fragile, fragileSim, signed, at(signed, 1, 15, 30), doing('work', 30));
@@ -233,7 +234,7 @@ describe('dropping a shift', () => {
   });
 
   it("clears a shift's timers when it is dropped on its own day, where a career allows it", () => {
-    const lenient = createLifeGame({ people: 0, career: TEST_COOK });
+    const lenient = createLifeGame({ events: false, people: 0, career: TEST_COOK });
     const lenientSim = sliceSim(withCareer(testCook({ standing: { ...testCook().standing, dropBefore: 60 } })));
     const signed = play(lenient, lenientSim, lenient.init('lenient', lenientSim), signUp(1)).state;
     const morning = play(lenient, lenientSim, signed, at(signed, 1, 9)).state;
@@ -283,6 +284,7 @@ describe('payday (D38)', () => {
   it("counts Social Security's year from the paycheck's calendar year", () => {
     // Monday 22 December 2025: paid on the 26th, then on Friday 2 January 2026.
     const december = createLifeGame({
+      events: false,
       people: 0,
       career: TEST_COOK,
       start: { year: 2025, month: 12, day: 22, hour: 7, minute: 0 },

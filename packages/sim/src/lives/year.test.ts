@@ -23,6 +23,7 @@ const harsh = sliceSim({
 });
 
 describe('the year in lives (M2.7 step 5, D103)', () => {
+  // About 110 s alone in a cloud container (M2.10): the default 120 s left no room.
   it('dies at the chance the months roll: within three standard deviations over 80 lives', () => {
     let died = 0;
     let expected = 0;
@@ -39,5 +40,5 @@ describe('the year in lives (M2.7 step 5, D103)', () => {
       variance += alive * (1 - alive);
     }
     expect(Math.abs(died - expected)).toBeLessThan(3 * Math.sqrt(variance));
-  }, 120_000);
+  }, 300_000);
 });

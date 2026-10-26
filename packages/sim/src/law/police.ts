@@ -5,8 +5,10 @@
  * told (state.ts's setTimer), and one that comes while you are held or in court comes the next
  * day instead. And midnight's upkeep: heat fading, warrants, probation.
  */
+
 import type { Effect } from '@eb/core';
 import { todayOf } from '../job/days.ts';
+import { courtDay } from '../season/module.ts';
 import { raid, violation } from './drugs.ts';
 import { FENCE, fenceOf, goodOf, offenceFor } from './records.ts';
 import {
@@ -64,7 +66,8 @@ export function ticket(ctx: LawContext, effect: Effect): void {
     offence: offenceFor(ctx.content, charged, value, w.convictions),
     value,
     evidence,
-    court: today.day + between(ctx, c.court.min, c.court.max),
+    // Never on a holiday, when the court is closed (D132).
+    court: courtDay(ctx, today.day + between(ctx, c.court.min, c.court.max)),
     warrant: false,
   };
   w.cases.push(kase);

@@ -20,6 +20,7 @@ import { circleModule } from './circle/module.ts';
 import { clockModule } from './clock.ts';
 import { dealModule } from './deal/module.ts';
 import { educationModule } from './education/module.ts';
+import { eventsModule } from './events/module.ts';
 import { familyModule } from './family/module.ts';
 import { healthModule } from './health/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
@@ -31,6 +32,7 @@ import { marketModule } from './market/module.ts';
 import { peopleModule, shareModule } from './people/module.ts';
 import { workModule } from './people/work.ts';
 import { prisonModule } from './prison/module.ts';
+import { CLOCKS_TIMER, seasonModule } from './season/module.ts';
 import { tiesModule } from './ties/module.ts';
 import { midnightTimer } from './timers.ts';
 import { travelModule } from './travel/module.ts';
@@ -50,17 +52,21 @@ export interface LifeOptions {
   readonly career?: string;
   /** The tier-1 people (D31, M2.2): 1,000 by default; a test may want fewer. */
   readonly people?: number;
+  /** Whether life events are drawn (M2.10 step 4): yes by default; a scripted test may not want them. */
+  readonly events?: boolean;
 }
 
 /** The tier-1 people a life holds (D31), and the shares they are moved on in, one an hour (D30). */
 export const PEOPLE = 1000;
 export const PEOPLE_SHARES = 24;
 
-/** The timers a life starts with: the first rent, and every midnight's upkeep. */
+/** The timers a life starts with: the first rent, every midnight's upkeep, and the season's clocks. */
 export function startingTimers(start: LifeStart): ScheduleSpec[] {
   return [
     { timer: RENT_TIMER, after: { minutes: minutesToNextMonth(start) }, effects: [{ effect: 'rent-due' }] },
     midnightTimer(minutesToMidnight(start)),
+    // A minute in, the season sets the night the clocks next change: the timer needs the climate record.
+    { timer: CLOCKS_TIMER, after: { minutes: 1 }, effects: [{ effect: 'clocks-change' }] },
   ];
 }
 
@@ -98,6 +104,10 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     educationModule,
     // The bus and a hailed ride (M2.9, D118): added to a save from before it, no fares paid today.
     travelModule,
+    // The season (M2.10 step 3): added to a save from before it, its first day is heard, not told.
+    seasonModule,
+    // Life events (M2.10 step 4, D134): added to a save from before it, nothing is rolled for the days gone.
+    eventsModule(options.events ?? true),
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

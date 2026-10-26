@@ -370,6 +370,46 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Borrowing for an associate's | 33 in 100 associate's graduates of public colleges had ever borrowed (2019–20), owing $15,530 on average if they had | the student bot's reading | the Community College Research Center's fact sheet on community colleges and student debt, through search summaries | secondary |
 | Retaking a course | a course taken again counts at the better grade, both staying on the record; a student under 2.00 may also have up to 30 credits of D and E grades set aside once (academic renewal, not built) | `education/michigan.json`, `college.retake` (C or lower, tune) | Macomb Community College's Academic Renewal and Course Repeat Policy (macomb.edu), through a search summary | secondary |
 
+## The year (M2.10, D130–D133)
+
+The calendar's weather and bills, from a mid-Michigan city of Ridgefield's class. Every figure was read through search summaries on 2026-10-26; NOAA's and EIA's own tables were out of reach from here and are to be checked against them.
+
+| Figure | Value | Record or code | Source, as read on 2026-10-26 | Status |
+| --- | --- | --- | --- | --- |
+| Snow days | days with an inch or more: January 4, February 3, March 2, April 0.4, October 0.1, November 0.8, December 3; about 13 a year | `climate/michigan.json`, `snowDays` | Lansing's 1991–2020 normals as climate-zone.com lists them (NOAA's S010 field); currentresults.com gives about 15 a year | secondary |
+| The cold, by month | heating degree days, base 65°F: January 1,367, February 1,179, December 1,197; the other months estimated so the year sums to about 7,040 against the source's 7,101 | `degreeDays` | Lansing's table on climate-zone.com, its period not stated; March to November from memory of the shape, (tune) | secondary; nine months estimated |
+| Gas | $1.09 a hundred cubic feet: $10.92 a thousand, Michigan's residential average for 2025 | `gas.perCcf` | EIA, Michigan natural gas residential price, annual series (released 31 March 2026), through a search summary | secondary |
+| The fixed charge | $15 a month | `gas.fixed` | Consumers Energy's residential customer charge after the 2024 settlement, through a search summary; the November 2025 order may have moved it | secondary, to check |
+| A flat's gas | 300 hundred cubic feet a year for heat, shared by degree days, and 10 a month for hot water and the stove: about $89 for January, $26 for July, $640 a year | `gas.heating`, `gas.base` | RECS 2020: apartments in 2–4 unit buildings burn 34.7 million Btu a year for heat nationally (about 340 ccf); Michigan's homes burn the most in the Midwest. The 5+ unit row wasn't readable. Departure: many older buildings include heat in the rent, which the game doesn't model (D130) | secondary; the split (tune) |
+| A walk on snow | 15 in 100 longer | `snow.pace` | a Norwegian study of winter walking (Transportation Research Part D, 2021): about 1 minute a km longer on the best winter surface and 2 on clean ice, over about 12 minutes a km on bare pavement | secondary, (tune) |
+| A bus on snow | 5 minutes late | `snow.late` | none read | placeholder |
+| The holidays | the eleven federal holidays of 5 U.S.C. 6103, kept on the Friday before or the Monday after when they fall on a weekend; the court and the college close, the buses run Sunday's timetable, jobs work them at the usual pay (D132) | `holidays` | the statute and OPM's 2025 and 2026 tables (general knowledge), checked by the dates in `season/climate.test.ts` | traced |
+| The clocks | forward at 02:00 on the second Sunday of March, back on the first Sunday of November | `clocks` | 15 U.S.C. 260a, as amended in 2005 (general knowledge) | traced |
+| An hour's sleep | 13 in 100 of rest, lost or gained, the rate an hour of sleep restores, rounded | `clocks.rest`; `needs.ts`, sleep's 12.5 an hour | the game's own needs | the game's |
+
+## Life events (M2.10 step 4, D135)
+
+Each rate is times a year in 1,000 people, rolled a day at a time over the months it can come in (`life-event/*.json`, `rate`). Where a survey gives the figure it is traced; the rest are proposals marked (tune). Every figure read from memory or a search summary on 2026-10-26 is to be checked against its source. Prices are the event's own and marked the same way.
+
+| Event | Rate a year in 1,000 | Prices and amounts | Source | Status |
+| --- | --- | --- | --- | --- |
+| A break-in | 14 | $80 taken, $20 if reported and something comes back (tune) | NCVS household burglary, about 13–14 in 1,000 households a year (2022–23), from memory | to check |
+| A mugging | 2 | $60 taken (tune) | NCVS robbery, about 2 in 1,000 people 12 and over a year (2022), from memory | to check |
+| Food poisoning | 146 | none | CDC: about 48 million foodborne illnesses a year in about 330 million people | secondary |
+| A jury summons | 130 | $25 for the day | the National Center for State Courts' estimate of about 32 million summoned a year (2007), from memory; Michigan's juror pay differs by county, about $25 a day common | to check |
+| A tax refund | 700, February to April, with a job | $400 (tune) | IRS: about 7 in 10 individual returns get a refund. Departure: the amount is a flat figure, not worked out from the year's withholding | secondary; the amount a placeholder |
+| A power cut | 1,300 | $15 of food spoiled, or a meal out | EIA: the average customer had about 1.3 to 1.4 interruptions a year (SAIFI, 2022), from memory | to check |
+| The heat out | 50, November to March | a space heater, $35 (tune) | the American Housing Survey's heating breakdowns, a few in 100 renter households a winter, from memory | to check |
+| Mice | 100 | traps, $20 (tune) | the American Housing Survey: signs of rodents in about 1 in 10 homes a year, from memory | to check |
+| A fall on ice | 20, December to March | urgent care, $150 uninsured (tune) | none read | (tune) |
+| A toothache | 120 | painkillers $8; a filling, $200 uninsured (tune) | none read | (tune) |
+| An overdraft fee | 600, when cash is under $50 | $35 | the common US overdraft fee is about $35 (CFPB), from memory; the rate is a proposal | fee secondary; rate (tune) |
+| A broken phone | 250 | a screen repair, $90 (tune) | none read | (tune) |
+| A lost wallet | 100 | $40 lost, with the ID (tune) | none read | (tune) |
+| A call from home, a funeral, a wedding, a loan asked, a friend moving, a birthday, the landlord's inspection, money found, a stranger asking, a heat wave, noise next door | 1,500; 300; 200; 300; 300; 1,000; 500; 300; 1,000; 1,000 (June to August); 800 | flowers $45, a wedding gift $100, a card $6, the loan $200, a birthday round $30, a cleaning fee $50, the bus fare $1.75 (the fare record's), a fan $25 | none read | (tune) |
+
+Together the pool brings about a dozen events a year, about one a month (events/module.test.ts reads it over 20 lives).
+
 ## Open questions
 
 1. Which state the city borrows for law and tax. Answered: Michigan (D37).
