@@ -68,7 +68,7 @@ export function makeBar(on: { pause(): void; speed(): void; panel(): void; map()
   const play = button('Pause', on.pause, { id: 'play' });
   const speed = button('1×', on.speed, { id: 'speed', 'aria-label': 'Speed 1×' });
   const cash = el('p', { class: 'cash', id: 'cash' });
-  const season = el('p', { class: 'season', id: 'season' });
+  const season = el('p', { class: 'season', id: 'season', hidden: true });
   const needs = el('div', { class: 'needs', id: 'needs' });
   const badge = button('', on.panel, { id: 'badge' });
   const map = button('Map', on.map, { id: 'map-button' });
@@ -84,7 +84,10 @@ export function makeBar(on: { pause(): void; speed(): void; panel(): void; map()
     update(life, s) {
       time.textContent = clockText(life, s.minute);
       const today = seasonText(life);
-      if (season.textContent !== today) season.textContent = today;
+      if (season.textContent !== today) {
+        season.textContent = today;
+        season.hidden = today === '';
+      }
       play.textContent = s.paused ? 'Play' : 'Pause';
       speed.textContent = s.speed === 1 ? '1×' : '4×';
       speed.setAttribute('aria-label', `Speed ${speed.textContent}`);

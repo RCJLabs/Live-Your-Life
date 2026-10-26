@@ -194,12 +194,13 @@ body {
 }
 
 .bar-row .when {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* A holiday's name or snow on the ground (D131, D132): gives way first on a narrow screen. */
+/* A holiday's name or snow on the ground (D131, D132): shrinks first on a narrow screen. The clock
+   keeps its own box at full width, or its changing text reflows the bar each minute. */
 .bar-row .season {
   flex: 1 1 0;
   min-width: 0;
