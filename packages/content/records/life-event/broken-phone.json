@@ -1,0 +1,28 @@
+{
+  "name": "A broken phone",
+  "rate": 250,
+  "prompt": "Your phone slips out of your hand and lands face down on the pavement. The screen is cracked across.",
+  "choices": [
+    {
+      "id": "live-with-it",
+      "text": "Live with it",
+      "outcome": {
+        "told": "You learn which corner still works.",
+        "line": "{you} cracked a phone screen and kept using it.",
+        "needs": {
+          "calm": -4
+        }
+      }
+    },
+    {
+      "id": "repair",
+      "text": "Get it repaired",
+      "cost": 9000,
+      "minutes": 60,
+      "outcome": {
+        "told": "The shop has it back to you in an hour.",
+        "line": "{you} had a cracked phone screen repaired."
+      }
+    }
+  ]
+}

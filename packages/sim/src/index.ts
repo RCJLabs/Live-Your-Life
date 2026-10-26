@@ -153,6 +153,16 @@ export type { Loan } from './education/loans.ts';
 // Your schooling (M2.8).
 export { type EducationSlice, educationModule, SCHOOLING, type Schooling } from './education/module.ts';
 export { type College, type EducationRecord, educationOf } from './education/records.ts';
+export { type EventsSlice, eventsModule, LIFE_EVENT, MOST_WAITING } from './events/module.ts';
+export {
+  choiceOf,
+  dayChance,
+  type LifeChoice,
+  type LifeEventRecord,
+  type LifeOutcome,
+  lifeEventOf,
+  lifeEventsOf,
+} from './events/records.ts';
 export { endCost } from './family/module.ts';
 export { pregnancyOf } from './family/records.ts';
 export { type Child, type FamilySlice, type Pregnancy, YOU } from './family/state.ts';

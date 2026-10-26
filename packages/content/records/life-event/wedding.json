@@ -1,0 +1,42 @@
+{
+  "name": "A wedding",
+  "rate": 200,
+  "prompt": "A cousin is getting married this weekend, and the invitation says you should come.",
+  "choices": [
+    {
+      "id": "regrets",
+      "text": "Send your regrets",
+      "outcome": {
+        "told": "You text that you can't make it and wish them well.",
+        "line": "{you} missed a cousin's wedding.",
+        "needs": {
+          "company": -4
+        }
+      }
+    },
+    {
+      "id": "card",
+      "text": "Send a card",
+      "cost": 600,
+      "outcome": {
+        "told": "You write a few lines and put a stamp on it.",
+        "line": "{you} sent a card to a cousin's wedding."
+      }
+    },
+    {
+      "id": "go",
+      "text": "Go, with a gift",
+      "cost": 10000,
+      "minutes": 360,
+      "outcome": {
+        "told": "There is a long dinner and a longer toast. Family you haven't seen in years ask what you're doing now.",
+        "line": "{you} went to a cousin's wedding.",
+        "needs": {
+          "company": 18,
+          "calm": 6,
+          "rest": -10
+        }
+      }
+    }
+  ]
+}

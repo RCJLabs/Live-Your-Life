@@ -1,0 +1,57 @@
+{
+  "name": "A toothache",
+  "rate": 120,
+  "prompt": "A molar has been aching for three days, and now it wakes you up.",
+  "choices": [
+    {
+      "id": "wait",
+      "text": "Wait for it to settle",
+      "odds": 40,
+      "outcome": {
+        "told": "After a week it settles to a dull ache you can live with.",
+        "line": "{you} had a toothache and waited it out."
+      },
+      "failure": {
+        "told": "It doesn't settle. You eat on the other side and sleep badly.",
+        "line": "{you} put up with a toothache for weeks.",
+        "needs": {
+          "health": -8,
+          "rest": -10,
+          "calm": -8
+        }
+      }
+    },
+    {
+      "id": "painkillers",
+      "text": "Take painkillers and wait",
+      "cost": 800,
+      "odds": 50,
+      "outcome": {
+        "told": "The painkillers take the edge off until it settles.",
+        "line": "{you} took painkillers for a toothache until it settled."
+      },
+      "failure": {
+        "told": "The painkillers only dull it. You eat on the other side and sleep badly.",
+        "line": "{you} put up with a toothache for weeks.",
+        "needs": {
+          "health": -8,
+          "rest": -8,
+          "calm": -6
+        }
+      }
+    },
+    {
+      "id": "dentist",
+      "text": "See a dentist",
+      "cost": 20000,
+      "minutes": 120,
+      "outcome": {
+        "told": "The dentist fills it the same afternoon.",
+        "line": "{you} had a tooth filled at the dentist.",
+        "needs": {
+          "calm": 4
+        }
+      }
+    }
+  ]
+}

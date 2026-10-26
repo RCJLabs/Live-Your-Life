@@ -64,7 +64,7 @@ export const steadyFor = (days: number, name = 'steady'): Policy => ({
     const offered = playable(turn);
     // Nothing offered, as after a death (M2.7): the life is over.
     if (offered.length === 0) return null;
-    if (turn.mode.id === 'shift-event') return turn.rng.pick(offered);
+    if (turn.mode.id === 'shift-event' || turn.mode.id === 'life-event') return turn.rng.pick(offered);
     const lowest = turn.fact('life.lowest') as Need;
     const answers = offered.filter((a) => a.type === 'ties/answer');
     const chosen = firstOf(

@@ -1,0 +1,40 @@
+{
+  "name": "Asked for a loan",
+  "rate": 300,
+  "prompt": "A cousin calls. They are short on the rent and ask if you can lend them the difference.",
+  "choices": [
+    {
+      "id": "refuse",
+      "text": "Say you can't",
+      "outcome": {
+        "told": "There's a pause before they say they understand.",
+        "line": "{you} turned down a cousin who asked for a loan.",
+        "needs": {
+          "company": -6,
+          "calm": -3
+        }
+      }
+    },
+    {
+      "id": "lend",
+      "text": "Lend it",
+      "cost": 20000,
+      "odds": 40,
+      "outcome": {
+        "told": "They thank you twice and say they'll pay you back on the first.",
+        "line": "{you} lent a cousin money for their rent.",
+        "needs": {
+          "company": 6
+        }
+      },
+      "failure": {
+        "told": "The first comes and goes. They don't mention it, and you don't either.",
+        "line": "{you} lent a cousin money that never came back.",
+        "needs": {
+          "company": 4,
+          "calm": -6
+        }
+      }
+    }
+  ]
+}

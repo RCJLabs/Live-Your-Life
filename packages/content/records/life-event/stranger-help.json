@@ -1,0 +1,31 @@
+{
+  "name": "A stranger asking",
+  "rate": 1000,
+  "prompt": "A woman at the bus stop says her card was declined and asks if you can spare the fare home.",
+  "choices": [
+    {
+      "id": "walk-on",
+      "text": "Say you can't",
+      "outcome": {
+        "told": "She nods and asks the next person.",
+        "line": "{you} turned down a stranger asking for bus fare.",
+        "needs": {
+          "calm": -2
+        }
+      }
+    },
+    {
+      "id": "give",
+      "text": "Give her the fare",
+      "cost": 175,
+      "outcome": {
+        "told": "She thanks you and gets on the next bus.",
+        "line": "{you} gave a stranger the fare home.",
+        "needs": {
+          "calm": 4,
+          "company": 2
+        }
+      }
+    }
+  ]
+}

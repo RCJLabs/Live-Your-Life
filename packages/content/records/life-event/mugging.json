@@ -1,0 +1,41 @@
+{
+  "name": "A mugging",
+  "rate": 2,
+  "prompt": "On the walk home a man steps out of a doorway and says to give him your money.",
+  "choices": [
+    {
+      "id": "hand-over",
+      "text": "Hand it over",
+      "outcome": {
+        "told": "He takes the cash and is gone round the corner.",
+        "line": "{you} was robbed on the walk home.",
+        "cash": -6000,
+        "needs": {
+          "calm": -15
+        }
+      }
+    },
+    {
+      "id": "run",
+      "text": "Run",
+      "odds": 60,
+      "outcome": {
+        "told": "You run without looking back.",
+        "line": "{you} ran from a mugger and got away.",
+        "needs": {
+          "calm": -10,
+          "rest": -4
+        }
+      },
+      "failure": {
+        "told": "He catches your jacket. You fall hard, and he takes the cash.",
+        "line": "{you} was knocked down and robbed on the walk home.",
+        "cash": -6000,
+        "needs": {
+          "health": -12,
+          "calm": -18
+        }
+      }
+    }
+  ]
+}

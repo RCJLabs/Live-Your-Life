@@ -1,0 +1,33 @@
+{
+  "name": "Food poisoning",
+  "rate": 146,
+  "prompt": "Something you ate last night didn't agree with you. You've been up since four.",
+  "choices": [
+    {
+      "id": "rest",
+      "text": "Stay in and rest",
+      "minutes": 480,
+      "outcome": {
+        "told": "You spend the day between the bed and the bathroom.",
+        "line": "{you} was laid up a day with food poisoning.",
+        "needs": {
+          "health": -4,
+          "rest": 6
+        }
+      }
+    },
+    {
+      "id": "push-through",
+      "text": "Push through the day",
+      "outcome": {
+        "told": "You keep going on water and crackers.",
+        "line": "{you} worked through a bout of food poisoning.",
+        "needs": {
+          "health": -10,
+          "rest": -10,
+          "food": -10
+        }
+      }
+    }
+  ]
+}

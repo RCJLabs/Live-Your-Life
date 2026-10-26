@@ -64,7 +64,7 @@ export const dealerFor = (days: number, name = 'dealer'): Policy => ({
   choose(turn) {
     if ((turn.fact('time.day') as number) >= days) return null;
     const offered = playable(turn);
-    if (turn.mode.id === 'shift-event') return turn.rng.pick(offered);
+    if (turn.mode.id === 'shift-event' || turn.mode.id === 'life-event') return turn.rng.pick(offered);
     if (turn.mode.id !== 'world') return caught(turn, offered) ?? turn.rng.pick(offered);
     const owedLaw = (turn.fact('law.owed') as number) + (turn.fact('home.owed') as number);
     const owedFront = turn.fact('deal.owed') as number;

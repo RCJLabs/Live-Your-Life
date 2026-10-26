@@ -1,0 +1,46 @@
+{
+  "name": "A heat wave",
+  "rate": 1000,
+  "months": [6, 7, 8],
+  "prompt": "It's the third day over ninety degrees. The flat holds the heat all night.",
+  "choices": [
+    {
+      "id": "endure",
+      "text": "Put up with it",
+      "outcome": {
+        "told": "You lie on top of the sheets with the window open.",
+        "line": "{you} sweated through a heat wave.",
+        "needs": {
+          "rest": -12,
+          "health": -4,
+          "calm": -4
+        }
+      }
+    },
+    {
+      "id": "fan",
+      "text": "Buy a fan",
+      "cost": 2500,
+      "outcome": {
+        "told": "The fan pushes the hot air round, and it's enough to sleep.",
+        "line": "{you} bought a fan in a heat wave.",
+        "needs": {
+          "rest": -4
+        }
+      }
+    },
+    {
+      "id": "cooling-centre",
+      "text": "Go to the cooling centre",
+      "minutes": 240,
+      "outcome": {
+        "told": "The library is open late as a cooling centre. You read until it closes.",
+        "line": "{you} spent an evening in a cooling centre.",
+        "needs": {
+          "rest": 2,
+          "calm": 4
+        }
+      }
+    }
+  ]
+}

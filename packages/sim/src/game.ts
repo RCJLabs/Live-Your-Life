@@ -20,6 +20,7 @@ import { circleModule } from './circle/module.ts';
 import { clockModule } from './clock.ts';
 import { dealModule } from './deal/module.ts';
 import { educationModule } from './education/module.ts';
+import { eventsModule } from './events/module.ts';
 import { familyModule } from './family/module.ts';
 import { healthModule } from './health/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
@@ -103,6 +104,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     travelModule,
     // The season (M2.10 step 3): added to a save from before it, its first day is heard, not told.
     seasonModule,
+    // Life events (M2.10 step 4, D134): added to a save from before it, nothing is rolled for the days gone.
+    eventsModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.

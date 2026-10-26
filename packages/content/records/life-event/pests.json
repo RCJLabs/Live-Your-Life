@@ -1,0 +1,38 @@
+{
+  "name": "Mice",
+  "rate": 100,
+  "prompt": "There are droppings under the sink and a gnawed bag in the cupboard.",
+  "choices": [
+    {
+      "id": "landlord",
+      "text": "Tell the landlord",
+      "odds": 50,
+      "outcome": {
+        "told": "You leave a message about the mice.",
+        "line": "{you} told the landlord about mice in the flat."
+      },
+      "failure": {
+        "told": "Nobody comes. You hear them in the walls at night.",
+        "line": "{you} lived with mice that the landlord never dealt with.",
+        "needs": {
+          "hygiene": -8,
+          "calm": -6,
+          "rest": -4
+        }
+      }
+    },
+    {
+      "id": "traps",
+      "text": "Buy traps and seal the gaps",
+      "cost": 2000,
+      "minutes": 60,
+      "outcome": {
+        "told": "You fill the gaps behind the pipes with steel wool and set the traps.",
+        "line": "{you} set traps for mice in the flat.",
+        "needs": {
+          "hygiene": 4
+        }
+      }
+    }
+  ]
+}

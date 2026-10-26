@@ -1,0 +1,33 @@
+{
+  "name": "A friend's birthday",
+  "rate": 1000,
+  "prompt": "A friend's birthday is tonight. A few people are meeting at a bar on the corner.",
+  "choices": [
+    {
+      "id": "message",
+      "text": "Send a message",
+      "outcome": {
+        "told": "They reply with a thumbs up.",
+        "line": "{you} sent a friend a birthday message.",
+        "needs": {
+          "company": 2
+        }
+      }
+    },
+    {
+      "id": "go",
+      "text": "Go out for it",
+      "cost": 3000,
+      "minutes": 180,
+      "outcome": {
+        "told": "You stay for two rounds and a lot of stories you've heard before.",
+        "line": "{you} went out for a friend's birthday.",
+        "needs": {
+          "company": 15,
+          "calm": 5,
+          "rest": -6
+        }
+      }
+    }
+  ]
+}

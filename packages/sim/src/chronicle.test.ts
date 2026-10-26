@@ -4,6 +4,7 @@ import { sliceGame, sliceSim } from '../test/slice.ts';
 import { randomFor, steadyFor } from './bot.ts';
 import { DEFAULT_START } from './calendar.ts';
 import { dateOf, hours, type LineRecord, lineFor, lineRecord, money, QUIET } from './chronicle.ts';
+import { lifeEventsOf } from './events/records.ts';
 import { createLifeGame } from './game.ts';
 import { thiefFor } from './thief.ts';
 import type { YouSlice } from './you.ts';
@@ -91,6 +92,8 @@ const RARE = [
   // season/module.test.ts raises them.
   'season/snow',
   'season/clocks',
+  // Life events (M2.10 step 4): a dozen a year, so the census's short lives may meet none; events/module.test.ts raises them.
+  'event/happened',
   // Prison (M2.4, D81): prison/module.test.ts raises them.
   'prison/admitted',
   'prison/paroled',
@@ -151,7 +154,13 @@ describe('the chronicle (D52)', () => {
   });
 
   it('is third person and past tense: no "you" but the name, a capital, a full stop', () => {
-    for (const l of lines) {
+    // A life event's line is kept in its record, under the one line record that fills it (M2.10 step 4).
+    const eventLines = lifeEventsOf(sim.content).flatMap(([id, e]) =>
+      e.choices.flatMap((c) =>
+        [c.outcome, ...(c.failure ? [c.failure] : [])].map((o) => ({ id: `${id}/${c.id}`, text: o.line })),
+      ),
+    );
+    for (const l of [...lines.filter((x) => x.text !== '{line}'), ...eventLines]) {
       expect(l.text.replace(/\{\w+\}/g, ''), l.id).not.toMatch(/\b(you|your|You|Your)\b/);
       expect(l.text, l.id).toMatch(/^(\{[a-z]+\}|[A-Z])/);
       expect(l.text, l.id).toMatch(/\.$/);

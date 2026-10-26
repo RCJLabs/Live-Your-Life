@@ -1,0 +1,41 @@
+{
+  "name": "The heat out",
+  "rate": 50,
+  "months": [11, 12, 1, 2, 3],
+  "prompt": "The radiators are cold. The furnace in the basement has stopped, and the landlord isn't picking up.",
+  "choices": [
+    {
+      "id": "wait",
+      "text": "Wait for the landlord",
+      "odds": 50,
+      "outcome": {
+        "told": "You sleep in your coat.",
+        "line": "{you} waited out a night without heat.",
+        "needs": {
+          "calm": -3
+        }
+      },
+      "failure": {
+        "told": "Nobody comes until the next afternoon. The cold gets into everything.",
+        "line": "{you} spent a night and a day without heat.",
+        "needs": {
+          "rest": -15,
+          "health": -5,
+          "calm": -8
+        }
+      }
+    },
+    {
+      "id": "heater",
+      "text": "Buy a space heater",
+      "cost": 3500,
+      "outcome": {
+        "told": "The heater clicks and hums, and one room is warm.",
+        "line": "{you} bought a space heater when the furnace stopped.",
+        "needs": {
+          "calm": -2
+        }
+      }
+    }
+  ]
+}

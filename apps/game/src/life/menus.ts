@@ -8,6 +8,7 @@ import type { Action } from '@eb/core';
 import { fill, type LawState, shiftEventOf, type TiesSlice } from '@lyl/sim';
 import { hospitalSheet } from './care.ts';
 import { button, el } from './dom.ts';
+import { lifeEventSheet } from './events.ts';
 import { heirSheet, wardSheet } from './heir.ts';
 import type { Place } from './places.ts';
 import type { Life } from './session.ts';
@@ -146,6 +147,8 @@ export function modeSheet(life: Life): { title: string; lead: string; items: Ite
   // A death (M2.7, D103): the world has stopped; the heir goes on (heirSheet, D107).
   if (mode.id === 'dead') return heirSheet(life);
   if (mode.id === 'ward') return wardSheet(life);
+  const happened = lifeEventSheet(life);
+  if (happened) return happened;
   const options = life.options();
   if (mode.id === 'shift-event') {
     const data = mode.data as { event: string; day: number };

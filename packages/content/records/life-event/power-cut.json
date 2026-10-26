@@ -1,0 +1,34 @@
+{
+  "name": "A power cut",
+  "rate": 1300,
+  "prompt": "The lights go out across the street. The fridge goes quiet.",
+  "choices": [
+    {
+      "id": "wait",
+      "text": "Wait it out",
+      "outcome": {
+        "told": "It comes back after a few hours. Some of the food in the fridge has turned.",
+        "line": "{you} sat through a power cut.",
+        "cash": -1500,
+        "needs": {
+          "calm": -4,
+          "food": -8
+        }
+      }
+    },
+    {
+      "id": "eat-out",
+      "text": "Eat out while it's off",
+      "cost": 1500,
+      "minutes": 120,
+      "outcome": {
+        "told": "You find a diner that still has power and wait there.",
+        "line": "{you} ate out during a power cut.",
+        "needs": {
+          "food": 30,
+          "company": 4
+        }
+      }
+    }
+  ]
+}
