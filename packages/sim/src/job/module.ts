@@ -79,8 +79,23 @@ const dayOf = (effect: Readonly<Record<string, unknown>>): number => {
 export function jobModule(hire?: Hire) {
   return defineModule<JobSlice>({
     id: 'job',
+    version: 2,
+    migrate: {
+      // Experience (M2.5, D122): the practice in the job held is what is known of the work done before.
+      2: (slice) => {
+        const s = slice as Omit<JobSlice, 'experience'>;
+        return { ...s, experience: s.career === null ? {} : { [s.career]: s.practice } };
+      },
+    },
     init: (ctx) => (hire ? hiredAt(ctx, hire) : jobless()),
     facts: {
+      // Heard by the market (M2.5, D122): minutes worked in a career, at any employer.
+      worked: {
+        read: ({ state }, args) => state.experience[String(args.career)] ?? 0,
+        args: { career: { type: 'ref', to: 'career' } },
+        domain: { type: 'int', min: 0 },
+        label: 'minutes worked in a career',
+      },
       employed: { read: ({ state }) => state.employed, domain: { type: 'bool' }, label: 'has a job' },
       // Heard by health (M2.7, D105): a job whose employer offers health cover.
       insured: {

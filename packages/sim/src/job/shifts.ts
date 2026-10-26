@@ -163,6 +163,7 @@ export function paidWork(ctx: JobContext, minutes: number): void {
   const slice = ctx.write();
   slice.unpaid += minutes;
   slice.practice += minutes;
+  if (slice.career !== null) slice.experience[slice.career] = (slice.experience[slice.career] ?? 0) + minutes;
   const today = todayOf(ctx);
   const career = careerFor(ctx.content, slice);
   const s = slice.signed.find((x) => {

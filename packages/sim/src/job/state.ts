@@ -41,6 +41,8 @@ export interface JobSlice {
   earned: number;
   /** The shift events drawn since every one the career can draw last came up. */
   drawn: string[];
+  /** Minutes worked in each career, at any employer, kept across jobs: what hiring asks as experience (M2.5, D122). */
+  experience: Record<string, number>;
 }
 
 export type JobContext = ModuleContext<JobSlice>;
@@ -58,6 +60,7 @@ export const jobless = (): JobSlice => ({
   year: 0,
   earned: 0,
   drawn: [],
+  experience: {},
 });
 
 // Each record is checked once: they are frozen, and a fact reads the career many times a turn.

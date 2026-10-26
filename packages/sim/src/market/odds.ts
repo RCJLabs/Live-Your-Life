@@ -20,20 +20,31 @@ export interface Applicant {
   readonly reputation: number;
   /** The highest schooling finished (M2.8): 'none', 'diploma', 'ged' or 'associate'. */
   readonly schooling: string;
+  /** Minutes worked in each career, at any employer (M2.5, D122). */
+  readonly worked?: Readonly<Record<string, number>>;
 }
 
 /** Whether what you finished meets what a career asks: a GED counts as a diploma. */
 const meets = (finished: string, need: 'high-school' | 'associate'): boolean =>
   need === 'associate' ? finished === 'associate' : finished !== 'none';
 
+/** Minutes worked in any of `careers`. */
+export const experienceIn = (you: Pick<Applicant, 'worked'>, careers: readonly string[]): number =>
+  careers.reduce((n, c) => n + (you.worked?.[c] ?? 0), 0);
+
 /**
  * Why you can't be hired into a career at all, or null. Theft was every offence until M2.4, so
  * none and no-theft both bar any conviction; no-felony bars only a felony (MCOLES's standard).
- * Schooling comes first (M2.8, D114): a diploma or GED, or an associate's.
+ * Schooling comes first (M2.8, D114): a diploma or GED, or an associate's; then experience (M2.5, D122).
  */
-export function barred(career: CareerRecord, you: Applicant): 'record' | 'high-school' | 'associate' | null {
+export function barred(
+  career: CareerRecord,
+  you: Applicant,
+): 'record' | 'high-school' | 'associate' | 'experience' | null {
   const need = career.requires?.schooling;
   if (need && !meets(you.schooling, need)) return need;
+  const exp = career.requires?.experience;
+  if (exp && experienceIn(you, exp.careers) < exp.minutes) return 'experience';
   const rule = career.requires?.record;
   if (rule === undefined) return null;
   const count = rule === 'no-felony' ? you.felonies : you.convictions;
