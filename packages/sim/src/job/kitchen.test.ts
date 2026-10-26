@@ -2,6 +2,8 @@ import type { GameState, RecordPack } from '@eb/core';
 import { PACK } from '@lyl/content';
 import { describe, expect, it } from 'vitest';
 import { advance, doing, play, refusal, signUp, sliceGame, sliceSim, tickOf } from '../../test/slice.ts';
+import { DEFAULT_START } from '../calendar.ts';
+import { lineFor } from '../chronicle.ts';
 import { createLifeGame } from '../game.ts';
 import type { Listing } from '../market/module.ts';
 import { barred, REPUTATION } from '../market/odds.ts';
@@ -55,6 +57,9 @@ describe('the food ladder (M2.5, D121, D122)', () => {
     expect(shift('line-cook', practice, standing - 10).of('job/promoted')).toEqual([]);
     const done = shift('line-cook', practice, standing);
     expect(done.of('job/promoted')).toEqual([{ type: 'job/promoted', from: 'line-cook', career: 'kitchen-lead' }]);
+    expect(lineFor(sim.content, done.of('job/promoted')[0] as never, { you: 'Dana' }, DEFAULT_START)).toBe(
+      'Dana became a kitchen lead.',
+    );
     expect(job(done.state).career).toBe('kitchen-lead');
     // Still at your block's diner, beside the same cook.
     expect(fact(done.state, 'market.at-diner')).toBe(true);

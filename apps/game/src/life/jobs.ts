@@ -47,6 +47,31 @@ function where(life: Life, work: Work, employer: string): string {
   return walk ? `${place}, a ${walk.minutes}-minute walk` : place;
 }
 
+/** A whole number with its thousands marked, "1,240". */
+const whole = (n: number): string => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+/**
+ * The rank your job leads to and what it takes (M2.5, D122), from the career's ladder and your
+ * practice and standing in this job; null for a job that leads nowhere.
+ */
+export function nextRank(life: Life): string | null {
+  const j = life.state.job as { career: string | null; employed: boolean; practice: number; standing: number };
+  if (!j.employed || j.career === null) return null;
+  const ladder = careerOf(life.sim.content, j.career).ladder;
+  if (!ladder) return null;
+  const next = careerName(life, ladder.next);
+  const left = Math.ceil(Math.max(0, ladder.practice - j.practice) / 60);
+  const low = j.standing < ladder.standing;
+  const now = `it is ${j.standing} now`;
+  if (left > 0) {
+    const hours = `${whole(left)} more hour${left === 1 ? '' : 's'} of work`;
+    return `Next here: ${next}, after ${hours}${low ? `, with your standing at ${ladder.standing} or more; ${now}` : ''}.`;
+  }
+  return low
+    ? `Next here: ${next}, once your standing reaches ${ladder.standing}; ${now}.`
+    : `Next here: ${next}, at the end of your next shift.`;
+}
+
 function yourJob(life: Life, work: Work, act: (a: Action) => void): HTMLElement {
   const m = life.state.market as MarketSlice;
   const career = (life.state.job as { career: string | null }).career;
@@ -60,6 +85,7 @@ function yourJob(life: Life, work: Work, act: (a: Action) => void): HTMLElement 
       {},
       `You work as a ${careerName(life, career)} ${where(life, work, m.employer ?? '')}, for ${money(wage)} an hour.`,
     ),
+    ((line) => (line ? el('p', { class: 'note', id: 'next-rank' }, line) : null))(nextRank(life)),
     button('Quit', () => act({ type: 'job/quit' }), { 'data-action': 'job/quit' }),
   );
 }

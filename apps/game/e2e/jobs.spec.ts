@@ -59,6 +59,8 @@ test('quits, applies across the city, takes the offer and goes to work off scree
 
   await jobs(page);
   await expect(page.locator('#your-job')).toContainText('on your block');
+  // The rank the line cook leads to, and the hours it takes (M2.5).
+  await expect(page.locator('#next-rank')).toHaveText(/^Next here: kitchen lead, after 2,000 more hours of work/);
   await page.click('#your-job button[data-action="job/quit"]');
   await expect(page.locator('#your-job')).toHaveText('You have no job.');
 
