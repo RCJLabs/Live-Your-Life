@@ -959,6 +959,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** The list with a telemarketer (recommended). The same with a delivery driver in its place (chosen). Fewer careers with deeper shift events, changing M2.3's gate.
 
+### D127. Words come next. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** With M2.3's 30 careers in, M2.10 Words is worked before M2.11 Editions and Phase 2's year gate: all of Phase 2's content exists, so one voice pass reads it once, and the demo/full split depends on which strings exist.
+
+**Options considered.** M2.10 Words (recommended, chosen). Phase 2's year gate. M2.11 Editions.
+
+### D128. The year's events are the seasons and a pool of life events. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** The calendar: Michigan's winter (snow, the heating bill, cold mornings that slow the walk), the holidays, and the clocks changing. Beside it, a pool of about 24 life events as data, drawn at real-shaped rates: a family call, a friend's funeral, a landlord's notice, a fall on ice, a jury summons, a tax refund and the like. Each has its odds shown and its outcome rolled as shown, and a line in the journal.
+
+**Options considered.** Seasons and life (recommended, chosen). The calendar only. Life events only. No events in M2.10.
+
+### D129. The voice pass is a lint, then Evan's reading. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** A content lint, run by `pnpm lint` and so in CI, fails on what VOICE.md forbids and a machine can see: exclamation marks, game words, numbers typed into text, and real brands and places from a blocklist; it reads the records and the page's strings in code. The lines it finds, and those that miss VOICE.md's patterns, are rewritten. Then a page lists every string by register for Evan to read and mark; that reading is Phase 2's [you] gate for the voice.
+
+**Options considered.** A lint, then Evan reads (recommended, chosen). Rewritten by hand and skimmed, with no lint. The lint alone, leaving the [you] gate open.
+
 ---
 
 ## Open items
