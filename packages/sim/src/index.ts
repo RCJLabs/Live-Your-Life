@@ -288,4 +288,5 @@ export {
   WALK_PACE,
   walkMinutesBetween,
 } from './travel/bus.ts';
+export { type Ride, rideTrip } from './travel/rideshare.ts';
 export { ALARM_MARGIN, LONGEST_WALK, NAMES, type YouSlice, youModule } from './you.ts';

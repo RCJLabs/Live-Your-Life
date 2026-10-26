@@ -189,6 +189,8 @@ Ridgefield's buses run along the arterials, every fourth cell edge: a mile apart
 | How often a bus comes | every 15 minutes in the weekday rushes (6–9 and 15–18), 30 otherwise until 23:00; Saturday every 30 from 7 to 22; Sunday every 60 from 8 to 20 (tune) | `service` | one Grand Rapids line runs every 15 minutes by day and 30 in the evening; older pages give 30 minutes on neighbourhood routes. No network-wide figure found | placeholder |
 | The speed | 360 m a minute, about 13.5 mph, stops and lights included | `speed` | a Transportation Research Board survey of 11 transit systems, as Streetsblog reported it (2014); large cities run nearer 8 mph | secondary, dated |
 | Stops | every 400 m, a quarter mile | `stops` | the common spacing on US local routes (general knowledge) | placeholder |
+| A ride hailed from a phone | $1.19 base, a $2.60 booking fee, $0.97 a mile (60¢ a km) and $0.19 a minute, at least $6.60 | `transit/ridgefield.json`, `rideshare` | third-party fare estimators for UberX in Grand Rapids (uphail.com; taxihowmuch.com and taxifarefinder.com give $0.81 to $0.85 a mile and $0.15 to $0.16 a minute); prices move with demand, which the game doesn't | secondary, to check in the app |
+| The car's wait and speed | 7 minutes for a car; 600 m a minute through the streets, about 22 mph with lights (tune) | `rideshare.wait`, `speed` | none read | placeholder |
 
 ## Street dealing (M2.4)
 

@@ -27,6 +27,16 @@ export interface Transit {
     readonly to: number;
     readonly every: number;
   }[];
+  /** A ride hailed from a phone (rideshare.ts); absent in a pack from before it. */
+  readonly rideshare?: {
+    readonly base: number;
+    readonly booking: number;
+    readonly perKm: number;
+    readonly perMinute: number;
+    readonly minimum: number;
+    readonly wait: number;
+    readonly speed: number;
+  };
 }
 
 export const transitOf = (store: RecordStore): Transit | null => store.get<Transit>('transit', TRANSIT) ?? null;
