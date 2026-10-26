@@ -257,7 +257,7 @@ test.describe('on a phone', () => {
     expect(await still(), 'playing again').toBeGreaterThan(0);
   });
 
-  test('walks at a brisk pace with the clock running: about 20 game minutes from the flat to the diner', async ({
+  test('walks on screen at a pace you can follow, the clock counting the real walk: a minute or so to the diner', async ({
     page,
   }) => {
     await page.goto('./?seed=life-1');
@@ -265,11 +265,13 @@ test.describe('on a phone', () => {
     const before = await L<number>(page, 'tick');
     await page.click('#map-button');
     await page.locator('#map-places button', { hasText: 'Diner' }).first().click();
+    const started = Date.now();
     await arrive(page);
     const took = (await L<number>(page, 'tick')) - before;
-    // D49: three times a walking pace; the bed to the diner's door is 30 to 50 m on the slice's blocks.
-    expect(took).toBeGreaterThanOrEqual(12);
-    expect(took).toBeLessThanOrEqual(30);
+    // D119: the bed to the diner's door is 30 to 50 m on the slice's blocks, under a minute at 80 m a
+    // game minute; the walk on screen still takes seconds a player can follow (D49's pace).
+    expect(took).toBeLessThanOrEqual(2);
+    expect(Date.now() - started).toBeGreaterThan(3000);
   });
 
   test('the map names every building, and a tap on one walks you to its door', async ({ page }) => {
