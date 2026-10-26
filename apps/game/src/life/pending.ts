@@ -7,12 +7,12 @@
  * actions the game offers now.
  */
 import type { Action, TimeSlice } from '@eb/core';
-import { careerOf, type DealSlice, type LawState, type TiesSlice } from '@lyl/sim';
+import { careerOf, crimeOf, type DealSlice, type LawState, SHOPLIFTING, type TiesSlice } from '@lyl/sim';
 import { careWaiting } from './care.ts';
 import { schoolWaiting } from './school.ts';
 import type { Life } from './session.ts';
 import { canGo, GO_TO_WORK } from './trip.ts';
-import { dayText, money, whenText } from './words.ts';
+import { clockText, dayText, money, whenText } from './words.ts';
 
 export interface Waiting {
   readonly id: string;
@@ -67,11 +67,14 @@ function law(life: Life): Waiting[] {
             : `The police will come to see you ${whenText(life, due)}.`;
     out.push({ id: `police/${v.id}`, kind: 'police', day, text, actions: [] });
   }
+  // The court's hours, from the crime's record: the hours it sees people on its date.
+  const h = crimeOf(life.sim.content, SHOPLIFTING).hearing;
+  const hours = `between ${clockText(life, h.from * 60)} and ${clockText(life, h.to * 60)}`;
   for (const k of s.cases) {
     const attend = offered(life, 'law/attend').map((action) => ({ label: 'Go to court', action }));
     const text = k.warrant
       ? 'You missed your court date. There is a warrant out for you.'
-      : `Your court date is ${dayText(life, k.court)}, between 08:00 and 12:00.`;
+      : `Your court date is ${dayText(life, k.court)}, ${hours}.`;
     out.push({ id: `court/${k.id}`, kind: 'court', day: k.court, text, actions: k.warrant ? [] : attend });
   }
   if (s.probation) {

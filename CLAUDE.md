@@ -37,7 +37,7 @@ pnpm install
 pnpm dev          # the game at http://localhost:5173
 pnpm check        # typecheck → lint → test → build → e2e (what CI runs)
 pnpm typecheck    # this repo's packages, then the tests through tsconfig.tests.json
-pnpm lint         # Biome, then the purity check over this repo's eb.pure packages (tools/purity)
+pnpm lint         # Biome, the purity check over this repo's eb.pure packages (tools/purity), the content lint (tools/voice)
 pnpm test         # Vitest
 pnpm build        # apps/game/dist; LYL_BASE sets the base path (`/` by default, as life.rcjlabs.com serves it, D53)
 pnpm e2e          # Playwright against `vite preview` of the build, under LYL_BASE
@@ -118,6 +118,8 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
                     dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs, and
                     since M1.8 e2e/bot/, the browser bot that plays by taps
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages
+tools/voice/        the content lint (M2.10, D129): every player-facing string from the records and the page, checked against
+                    VOICE.md's machine-checkable rules and the blocklist of real names; part of `pnpm lint`
 tools/content/      game.ts: the game's modules, which eb validate and eb build check the content's conditions against
 tools/population/   the population harness (M0.4): the runs, the cost split, the Node bench, a page and the Chromium script
 tools/city/         the city bench (M2.1): the whole city planned, timed and weighed in Node and Chromium; faces.ts plans and
