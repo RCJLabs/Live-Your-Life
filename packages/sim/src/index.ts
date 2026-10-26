@@ -147,9 +147,12 @@ export { buyerOdds, MOST_HELD, seenOdds } from './deal/trade.ts';
 export { outNow, passingNow } from './deal/witnesses.ts';
 export { dealerFor } from './dealer.ts';
 export * from './dials.ts';
+export { type Bill, BORROWING, type Borrow } from './education/aid.ts';
+export { type CollegeSlice, meetings, type Term as CollegeTerm } from './education/college.ts';
+export type { Loan } from './education/loans.ts';
 // Your schooling (M2.8).
 export { type EducationSlice, educationModule, SCHOOLING, type Schooling } from './education/module.ts';
-export { type EducationRecord, educationOf } from './education/records.ts';
+export { type College, type EducationRecord, educationOf } from './education/records.ts';
 export { endCost } from './family/module.ts';
 export { pregnancyOf } from './family/records.ts';
 export { type Child, type FamilySlice, type Pregnancy, YOU } from './family/state.ts';
