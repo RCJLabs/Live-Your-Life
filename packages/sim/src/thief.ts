@@ -22,8 +22,11 @@ const doing = (offered: readonly Action[], activity: string): Action | undefined
 const of = (offered: readonly Action[], type: string): Action | undefined => offered.find((a) => a.type === type);
 const firstOf = (...choices: (Action | undefined)[]): Action | undefined => choices.find((c) => c !== undefined);
 
-/** The take with the lowest odds of being held, the dearest among those; ties by the bot's draw. */
-function bestTake(turn: Turn, offered: readonly Action[]): Action | undefined {
+/**
+ * The take with the lowest odds of being held, the dearest among those; ties by the bot's draw.
+ * None if even the safest is held more often than `most` in a hundred.
+ */
+function bestTake(turn: Turn, offered: readonly Action[], most: number): Action | undefined {
   const takes = offered.filter((a) => a.type === 'law/take');
   if (takes.length === 0) return undefined;
   const scored = takes.map((a) => {
@@ -34,6 +37,7 @@ function bestTake(turn: Turn, offered: readonly Action[]): Action | undefined {
     return { a, held: p.held, value: p.value };
   });
   const least = Math.min(...scored.map((s) => s.held));
+  if (least > most) return undefined;
   const safest = scored.filter((s) => s.held === least);
   const dearest = Math.max(...safest.map((s) => s.value));
   return turn.rng.pick(safest.filter((s) => s.value === dearest)).a;
@@ -45,7 +49,11 @@ function inCourt(turn: Turn, offered: readonly Action[]): Action | undefined {
   return pleas.find((a) => a.plea === 'hyta') ?? turn.rng.pick(pleas);
 }
 
-export const thiefFor = (days: number, name = 'thief'): Policy => {
+/**
+ * `most` is the highest odds of being held, in percent, it will steal at: 100 takes whatever is
+ * safest however hot it is; lower waits for the heat to cool, as a careful thief would (B7).
+ */
+export const thiefFor = (days: number, name = 'thief', most = 100): Policy => {
   // Thefts so far on each day: the bot's own memory, as a player's would be.
   let day = -1;
   let today = 0;
@@ -63,7 +71,7 @@ export const thiefFor = (days: number, name = 'thief'): Policy => {
       const cash = turn.fact('economy.amount', { resource: 'cash' }) as number;
       const owed = (turn.fact('law.owed') as number) + (turn.fact('home.owed') as number);
       const lowest = turn.fact('life.lowest') as Need;
-      const take = today < PER_DAY ? bestTake(turn, offered) : undefined;
+      const take = today < PER_DAY ? bestTake(turn, offered, most) : undefined;
       const chosen = firstOf(
         inCourt(turn, offered),
         of(offered, 'law/wait'),

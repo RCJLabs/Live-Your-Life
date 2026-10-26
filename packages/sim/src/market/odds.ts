@@ -10,7 +10,11 @@ export const REPUTATION = { start: 50, letGo: -20, quit: -5, worked: 1 } as cons
 export const PENDING = 5;
 /** Days an offer stands before it lapses (tune). */
 export const OFFER_DAYS = 2;
-const FLOOR = 5;
+/**
+ * The least odds an application has (tune). Was 5, which most careers' base odds already sat on, so
+ * a record took nothing from them; at 1, a record halves 5 to 2 as it halves the cook's 15 (B4, M2.12).
+ */
+const FLOOR = 1;
 const CEILING = 95;
 
 export interface Applicant {

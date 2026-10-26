@@ -1031,6 +1031,34 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** One build, a gate and the check (recommended, chosen). Two builds with CI diffing them, as D17 had it. The gate only, the split left until full-only content exists.
 
+### D139. The realism bars, then Phase 3. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** With M2.11's [auto] gates passed and Phase 2's year lived in 500 seeds, the realism bars in CALIBRATION.md are written as tests next (M2.12), then Phase 3 opens.
+
+**Options considered.** The bars, then Phase 3 (recommended, chosen). Phase 3 now. A pause for Evan's reading and phone checks.
+
+### D140. B1 and B2 are stated on the studio, with the essentials charged. LOCKED, 2026-10-26 (Evan's calls)
+
+**Decision.** The game has one $550 studio, no cars and no roommates, so B1 and B2 can't be tested as first written. They are restated on the studio and a year of essentials: rent, gas, electricity, a phone, household goods and clothing, and meals. B1: full time at the median of the careers' wages, the essentials leave over two-fifths of net pay. B2: full time at the minimum wage, they leave under a third. The bills the game didn't charge (electricity, a phone, household goods and clothing) come due monthly with the rent, traced in CALIBRATION.md. The bars as first written, a one-bedroom, a used car and a roommate, wait for housing and cars in Phase 4, and the departure is written beside them.
+
+**Why.** Read on 2026-10-26: with only rent, gas and meals charged, full time at the minimum wage kept about 47% of net pay and at the median about 61%, so the floor wasn't hard. Rent alone was 25% of the minimum wage's gross, affordable by the usual measure.
+
+**Options considered.** For the statement: restated on the studio (recommended, chosen); left open until Phase 4; a rent choice built now. For the floor: the missing essentials charged (recommended, chosen); B2 as rent's share of gross pay; B2 left failing as a known gap.
+
+### D141. B5 is checked by the tables a year at a time. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** Whole lives are decades of play. B5 is checked a year at a time: a year's chance of dying matches the life table at each age (M2.7's gate), and a bot that neglects sleep and food has a higher chance than one that doesn't, over the same year.
+
+**Options considered.** By the tables, a year at a time (recommended, chosen). Whole lives through the steady bot, as a bench.
+
+### D142. The shop notices half as often, and B7 is a careful thief's. LOCKED, 2026-10-26 (Evan's call; the careful thief and the floor are this milestone's readings)
+
+**Decision.** The clerk's odds of noticing a take drop from 45 to 22 in 100 and the camera's from 35 to 17; nobody's stays at 4, and heat still adds a point for every 2. B7 is measured on a careful thief: the thief bot, told to steal only while the odds shown are one in ten or better, is held at the moment in under 14 takes in 100. The reckless thief bot, which steals three times a day however hot it is, is left as it was for the law's sweeps; its heat reaches 100 and it is held about one take in five, which is the heat doing its work. The odds of being taken on keep a floor of 1 in 100, not 5: at 5, a record changed nothing for the 28 careers whose odds were already at the floor, and B4 failed.
+
+**Why.** Read on 2026-10-26: with the old odds the thief bot was held in 60 of 311 takes, 19%. Halving the clerk and camera moved that by nothing, because the bot already took from the shelves nobody sees; what held it was heat. A real shoplifter is mostly occasional, so the bar is a careful thief's.
+
+**Options considered.** Lowering the shop's notice odds (recommended, chosen). Leaving B7 at the reckless bot's rate and restating the bar. Slower heat.
+
 ---
 
 ## Open items

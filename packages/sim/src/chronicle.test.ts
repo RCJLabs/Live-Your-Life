@@ -61,6 +61,9 @@ const RARE = [
   'lives/came-of-age',
   'education/enrolled',
   'education/graded',
+  // With the month's bills (D140) the random bot no longer has the GED's fee in its 56 days;
+  // education/college.test.ts raises it.
+  'education/earned',
   // A coworker covering for you: with the careers of M2.8 step 5 the census's coworker lives no
   // longer meet it; ties/favours.test.ts raises it.
   'ties/covered',

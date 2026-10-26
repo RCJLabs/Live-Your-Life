@@ -3,8 +3,8 @@
   "offences": ["retail-fraud-3", "retail-fraud-2"],
   "bars": true,
   "noticed": {
-    "clerk": 45,
-    "camera": 35,
+    "clerk": 22,
+    "camera": 17,
     "unseen": 4
   },
   "heat": {

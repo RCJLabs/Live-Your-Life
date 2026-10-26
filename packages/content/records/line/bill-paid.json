@@ -1,0 +1,5 @@
+{
+  "beat": "home/bill",
+  "when": { "field": "paid", "is": "true" },
+  "text": "{you} paid {cents} for {bill}."
+}

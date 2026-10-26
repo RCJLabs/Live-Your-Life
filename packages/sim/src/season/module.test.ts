@@ -117,8 +117,10 @@ describe('the season (M2.10 step 3)', () => {
     const broke = { ...g.state, economy: { ...(g.state.economy as object), amounts: { cash: 0 } } } as GameState;
     const owed = play(g.game, sim, broke, waitUntil(7));
     expect(owed.of('home/gas')).toEqual([{ type: 'home/gas', cents: gasBill(c, 1), paid: false }]);
+    // With the rent, and the month's other bills (D140).
+    const others = owed.of('home/bill').reduce((n, b) => n + (b.cents as number), 0);
     expect(owed.fact('home.owed')).toBe(
-      gasBill(c, 1) + (owed.of('home/rent')[0] as unknown as { cents: number }).cents,
+      gasBill(c, 1) + (owed.of('home/rent')[0] as unknown as { cents: number }).cents + others,
     );
   });
 });

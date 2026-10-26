@@ -61,15 +61,17 @@ Figures the sim runs on now, with where each lives and where it comes from. Ever
 
 Tests the first year must pass, in the shape Landnám's balance bars take. Each is a proposal (tune) until its ledger rows are filled, and each names what it would mean if it failed.
 
+Since M2.12 each is a test in `packages/sim/src/bars.test.ts`, except B6, which is `deal/week.test.ts`'s. The statement in use comes first; where it departs from the first draft, the draft and the reason follow.
+
 | Bar | Statement | Why it matters |
 | --- | --- | --- |
-| B1 | A bot working full time at the median wage affords the median one-bedroom, a used car and groceries with at least 10% of net pay left over the year | the middle is livable, so choices are real |
-| B2 | A bot at the minimum wage, full time, cannot afford the median one-bedroom alone; with a roommate, it can | the floor is hard, not fatal |
+| B1 | Full time at the median of the careers' wages, a year of essentials (the studio's rent, gas, electricity, a phone, household goods and clothing, three meals a day) leaves over two-fifths of net pay. Departure (D140): first drafted on a one-bedroom and a used car, which wait for Phase 4's housing and cars | the middle is livable, so choices are real |
+| B2 | Full time at Michigan's minimum wage, the same year leaves under a third of net pay, and more than nothing. Departure (D140): first drafted as a one-bedroom unaffordable alone and affordable with a roommate; there are no roommates yet | the floor is hard, not fatal |
 | B3 | One uninsured emergency visit costs more than a month of median rent | the body is a financial risk |
-| B4 | A felony record cuts callbacks from template employers by about half for two years, then fades | the record is a consequence that lasts |
-| B5 | A bot who sleeps, eats and avoids crime dies at an age inside the life tables' middle range; a bot who does not, dies earlier | the body model is calibrated |
+| B4 | A felony record cuts the odds of being taken on by between three-tenths and seven-tenths, for every career. Departure: the record never fades yet; the draft's "for two years, then fades" waits for expungement (ROADMAP open question) | the record is a consequence that lasts |
+| B5 | A body let run down (health at zero) carries a higher month's chance of dying than one looked after; a year's chance at each age matches the life table (M2.7's gate, `lives/year.test.ts`). Departure (D141): first drafted on whole lives, which are decades of play | the body model is calibrated |
 | B6 | A dealer at the street tier, over a year, earns less per hour than the median wage once arrests and lost time are counted | cruelty is never optimal, measured |
-| B7 | Nine in ten shoplifting events go undetected at the moment; most that are detected end in a fine or a misdemeanour, not prison | the odds shown match the real shape |
+| B7 | A careful thief, one who steals only while the odds shown are one in ten or better, is held at the moment in under 14 takes in 100; every offence shoplifting can bring carries a year or less, a misdemeanour's, not prison | the odds shown match the real shape |
 
 ## Placeholders
 
@@ -409,6 +411,19 @@ Each rate is times a year in 1,000 people, rolled a day at a time over the month
 | A call from home, a funeral, a wedding, a loan asked, a friend moving, a birthday, the landlord's inspection, money found, a stranger asking, a heat wave, noise next door | 1,500; 300; 200; 300; 300; 1,000; 500; 300; 1,000; 1,000 (June to August); 800 | flowers $45, a wedding gift $100, a card $6, the loan $200, a birthday round $30, a cleaning fee $50, the bus fare $1.75 (the fare record's), a fan $25 | none read | (tune) |
 
 Together the pool brings about a dozen events a year, about one a month (events/module.test.ts reads it over 20 lives).
+
+## The bills and the bars (M2.12, D140, D142)
+
+The essentials the floor was missing, charged monthly with the rent (`bill/*.json`, `home.ts`), unpaid ones owed as rent is. Each is for the month just past, so a life's first bills are for the days it lived of that month: a life begun on 30 June pays a thirtieth of each on 1 July. Read through search summaries and memory on 2026-10-26; each is to be checked against its source.
+
+| Figure | Value | Record | Source, as read on 2026-10-26 | Status |
+| --- | --- | --- | --- | --- |
+| Electricity | $76.30 a month: about 330 kWh at 20.85¢, Michigan's residential average for June 2025, and about $7.50 of customer charge | `bill/electricity.json` | EIA's Electric Power Monthly, Michigan's residential price; RECS 2020's use in small apartments, about 330 kWh a month in the Midwest, from a summary | secondary |
+| A phone | $40 a month: one line, prepaid or a low plan | `bill/phone.json` | none read; prepaid single lines ran $25 to $50 in 2025 | (tune) |
+| Household goods and clothing | $140 a month | `bill/goods.json` | BLS Consumer Expenditure Survey: one-person households spent about $1,276 a year on apparel and services, through FRED; household supplies added from memory | secondary; the supplies (tune) |
+| The shop's notice | the clerk sees 22 takes in 100, the camera 17, nobody 4; a point more for every 2 of heat (was 45 and 35, D142) | `crime/shoplifting.json`, `noticed` | the National Association for Shoplifting Prevention's often-quoted "caught about once in every 48 times", from memory; the game's 1 in 10 for a careful thief is sharper, on purpose | departure, on purpose |
+
+What the bars read on 2026-10-26 (Readings): B1 at the median wage of $17.38 an hour leaves 50.1% of net pay; B2 at the minimum wage leaves 32.5%, close to its bound; B5's month at 18 is 4 in 100,000 looked after against 12 run down; B7's careful thief was held in 7 of 118 takes in 60 seeded weeks, 5.9%; the reckless thief bot, in 60 of 311, 19%.
 
 ## Open questions
 

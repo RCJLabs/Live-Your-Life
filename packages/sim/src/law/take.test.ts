@@ -56,8 +56,8 @@ describe('taking from a shelf (D45)', () => {
       for (let i = 0; i < 40; i++) {
         const { state, spot, take } = lifeWith(kind, i * 7);
         const [preview] = game.preview(state, [{ effect: 'theft', spot: spot.id, item: take.item }], sim);
-        expect(preview?.held).toBe(kind === 'clerk' ? 45 : 4);
-        expect(preview?.filmed).toBe(kind === 'none' ? 0 : 35);
+        expect(preview?.held).toBe(kind === 'clerk' ? 22 : 4);
+        expect(preview?.filmed).toBe(kind === 'none' ? 0 : 17);
         const step = play(game, sim, state, take);
         const rolls = step.of('logic/rolled');
         expect(chance(rolls[0])).toBe(preview?.held);
@@ -74,7 +74,7 @@ describe('taking from a shelf (D45)', () => {
     const { state, spot, take } = lifeWith('clerk');
     const hot = { ...state, law: { ...law(state), heat: 40 } };
     const [preview] = game.preview(hot, [{ effect: 'theft', spot: spot.id, item: take.item }], sim);
-    expect(preview?.held).toBe(45 + 20);
+    expect(preview?.held).toBe(22 + 20);
     // A theft adds 15 and being held 40, either way past 100 from 90.
     let checked = 0;
     for (let i = 0; i < 40; i++) {
