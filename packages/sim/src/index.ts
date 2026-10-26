@@ -260,6 +260,7 @@ export { type Placed, placeRoster } from './people/placed.ts';
 export { LINKED, mix, type Person, type Roster, rosterOf } from './people/roster.ts';
 export { HOUSEHOLD, SHARED, SHIFTS, type ShiftTemplate, SLEEP, TIES } from './people/templates.ts';
 export { meet, TIE_ROW } from './people/ties.ts';
+export { ADULT } from './people/who.ts';
 export { type WorkSlice, workModule } from './people/work.ts';
 export { type PrisonSlice, paroleOdds, prisonModule, type Term } from './prison/module.ts';
 export { PRISON, type PrisonRecord, prisonOf } from './prison/records.ts';

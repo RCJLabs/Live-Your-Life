@@ -4,6 +4,7 @@
  * with (CLAUDE.md: no hand-typed numbers). A child too young to carry on waits for the ward's
  * jump to 18 (D108).
  */
+import { ADULT } from '@lyl/sim';
 import { type Item, LIVES } from './menus.ts';
 import type { Life } from './session.ts';
 import { money } from './words.ts';
@@ -87,11 +88,11 @@ export function heirSheet(life: Life): { title: string; lead: string; items: Ite
     const years = Math.floor(((life.fact('time.day') as number) - heir.born) / 365);
     const who =
       heir.kind === 'ward'
-        ? `${heir.first}, ${RELATION.ward}, is ${years}, and will carry on at 18; the years until then pass at once.`
+        ? `${heir.first}, ${RELATION.ward}, is ${years}, and will carry on at ${ADULT}; the years until then pass at once.`
         : `${heir.first} ${heir.last}, ${RELATION[heir.kind]}, carries on.`;
     lead += ` ${who} ${estateLine(e, heir)}`;
     const go = life.options().find((a) => a.type === 'lives/succeed');
-    const label = heir.kind === 'ward' ? `Go on as ${heir.first}, at 18` : `Go on as ${heir.first}`;
+    const label = heir.kind === 'ward' ? `Go on as ${heir.first}, at ${ADULT}` : `Go on as ${heir.first}`;
     if (go) items.push({ label, action: go });
   }
   items.push({ label: 'Your lives', action: { type: LIVES } });
@@ -109,7 +110,7 @@ export function wardSheet(life: Life): { title: string; lead: string; items: Ite
       ? `${life.fact('circle.name', { person: guardian }) as string} raised ${first}`
       : `Relatives raised ${first}`;
   const cash = life.fact('economy.amount', { resource: 'cash' }) as number;
-  const lead = `${years} years have passed. ${raised}. You are ${first} now, 18 today, with ${money(cash)} left to you.`;
+  const lead = `${years} years have passed. ${raised}. You are ${first} now, ${ADULT} today, with ${money(cash)} left to you.`;
   const begin = life.options().find((a) => a.type === 'lives/begin');
   return { title: `${first} came of age`, lead, items: begin ? [{ label: 'Begin', action: begin }] : [] };
 }

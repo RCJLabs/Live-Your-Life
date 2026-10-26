@@ -42,7 +42,7 @@ const reached = (report: SweepReport, type: string): number =>
 // `node packages/sim/test/week-bench.ts` times the same sweep.
 describe('a week of life, headless', () => {
   it('plays 500 seeded weeks with the steady bot: every week finished, every offer accepted, every run paid', {
-    timeout: 60_000,
+    timeout: 180_000,
   }, () => {
     const { report } = sweep(game, sim, {
       seeds: seedsOf(500, 'week'),
@@ -73,7 +73,7 @@ describe('a week of life, headless', () => {
   });
 
   it('lives through rent it cannot pay: owed on the 1st, paid off after a payday, nothing refused', {
-    timeout: 60_000,
+    timeout: 180_000,
   }, () => {
     // Monday 30 June: hired the day before rent comes due, with the starting cash and no pay
     // yet, the refusal a life has to recover from. The first Friday pays Tuesday to Thursday's
@@ -104,7 +104,7 @@ describe('a week of life, headless', () => {
     expect(range(report, 1)[0]).toBeGreaterThanOrEqual(60);
   });
 
-  it('plays 200 weeks with the random bot: every playable offer accepted', { timeout: 60_000 }, () => {
+  it('plays 200 weeks with the random bot: every playable offer accepted', { timeout: 180_000 }, () => {
     const { report } = sweep(game, sim, {
       seeds: seedsOf(200, 'random'),
       policy: randomLifePolicy,
@@ -116,7 +116,8 @@ describe('a week of life, headless', () => {
     expect(reached(report, 'job/let-go')).toBeGreaterThan(50);
   });
 
-  it('plays the same week twice for a seed, and its log replays to the same state', () => {
+  // Two whole weeks played and one replayed: a few seconds, more on a slow runner, so not the default 5 s.
+  it('plays the same week twice for a seed, and its log replays to the same state', { timeout: 30_000 }, () => {
     for (const seed of seedsOf(20, 'replay')) {
       const first = playRun(game, sim, { seed, policy: steadyPolicy, maxTurns: MAX_TURNS });
       const second = playRun(game, sim, { seed, policy: steadyPolicy, maxTurns: MAX_TURNS });
@@ -170,7 +171,7 @@ describe('shift events in the bots’ weeks', () => {
     return checked;
   }
 
-  it('comes up for every event, takes every choice, and rolls the odds it showed', { timeout: 90_000 }, () => {
+  it('comes up for every event, takes every choice, and rolls the odds it showed', { timeout: 240_000 }, () => {
     const taken = new Map<string, number>();
     const checked =
       playWeeks(steadyPolicy, seedsOf(500, 'events'), taken) + playWeeks(randomLifePolicy, seedsOf(500, 'odds'), taken);

@@ -1,0 +1,219 @@
+<title>Live Your Life Strings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* A proofreader's galley: one column of strings, a red pencil for what needs another look. */
+:root {
+  --paper: #f3f5f7; --sheet: #ffffff; --ink: #1d2329; --quiet: #5d6a76; --rule: #d5dce3;
+  --pencil: #c0392b; --pencil-wash: #fbeceb; --done: #2f7d4f;
+  --read: "Source Serif 4", Georgia, serif;
+  --label: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #14181c; --sheet: #1c2126; --ink: #e4e8ec; --quiet: #93a0ac; --rule: #2e353c;
+  --pencil: #ff7a6b; --pencil-wash: #3a2220; --done: #6cc28f; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #14181c; --sheet: #1c2126; --ink: #e4e8ec; --quiet: #93a0ac; --rule: #2e353c;
+  --pencil: #ff7a6b; --pencil-wash: #3a2220; --done: #6cc28f; color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font: 16px/1.5 var(--read); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.wrap { max-width: 44rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 64px; }
+h1 { font: 600 1.6rem/1.2 var(--read); margin: 0 0 4px; text-wrap: balance; }
+.lede { color: var(--quiet); margin: 0 0 16px; max-width: 62ch; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); padding-block: 8px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--rule); }
+.tabs, .tools { display: flex; flex-wrap: wrap; gap: 6px; }
+button, select, input { font: 500 0.9rem var(--label); letter-spacing: 0.02em; }
+.tab, .chip { min-height: 44px; padding: 0 14px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); border-radius: 4px; cursor: pointer; }
+.tab[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.chip[aria-pressed="true"] { border-color: var(--pencil); color: var(--pencil); }
+.tools input, .tools select { min-height: 44px; padding: 0 10px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); border-radius: 4px; flex: 1 1 10rem; min-width: 0; }
+.count { font: 500 0.85rem var(--label); color: var(--quiet); font-variant-numeric: tabular-nums; }
+.status { font: 500 0.85rem var(--label); color: var(--quiet); }
+section { margin-top: 24px; }
+.file { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.file h2 { font: 400 0.8rem var(--mono); color: var(--quiet); margin: 0; overflow-wrap: anywhere; min-width: 0; }
+.file .chip { font-size: 0.8rem; }
+.file .chip[aria-pressed="true"] { border-color: var(--done); color: var(--done); }
+ol { list-style: none; margin: 8px 0 0; padding: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; }
+li { padding: 12px 14px; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
+li:first-child { border-top: 0; }
+li.flagged { background: var(--pencil-wash); }
+.text { min-width: 0; overflow-wrap: anywhere; }
+.text .ph { font-family: var(--mono); font-size: 0.85em; color: var(--quiet); }
+.at { font: 400 0.75rem var(--mono); color: var(--quiet); grid-column: 1; }
+.flag { grid-row: 1 / span 2; grid-column: 2; align-self: start; width: 44px; height: 44px; border: 1px solid var(--rule); border-radius: 4px; background: var(--sheet); color: var(--quiet); cursor: pointer; font: 600 1.1rem var(--label); }
+li.flagged .flag { border-color: var(--pencil); color: var(--pencil); }
+.note { grid-column: 1 / -1; width: 100%; box-sizing: border-box; min-height: 64px; font: 15px/1.4 var(--read); padding: 8px; border: 1px solid var(--pencil); border-radius: 4px; background: var(--sheet); color: var(--ink); }
+button:focus-visible, textarea:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--pencil); outline-offset: 2px; }
+.empty { color: var(--quiet); padding: 24px 0; }
+</style>
+
+<div class="wrap">
+  <h1>Every string, for reading</h1>
+  <p class="lede">Each line the game shows a player, from the records and the page's code, in VOICE.md's three kinds. Mark a string with the pencil and say what's wrong; mark a file read when you've been through it. Your marks are saved here and read back into the next change.</p>
+  <div class="bar">
+    <div class="tabs" id="tabs"></div>
+    <div class="tools">
+      <input id="search" type="search" placeholder="Find a word" aria-label="Find a word">
+      <select id="file" aria-label="File"></select>
+      <button type="button" class="chip" id="only" aria-pressed="false">Marked only</button>
+    </div>
+    <div class="count" id="count"></div>
+    <div class="status" id="status">Marks are kept on this page once it's open in Claude.</div>
+  </div>
+  <div id="list"></div>
+</div>
+
+<script>
+const STRINGS = /*STRINGS*/[];
+const KINDS = [
+  ['interface', 'Interface', 'Second person, present: what you are shown and asked.'],
+  ['chronicle', 'Chronicle', 'Third person, past: the journal’s lines.'],
+  ['label', 'Labels', 'Names of things: careers, places, goods.'],
+];
+const marks = new Map();   // string id -> {flag, note}
+const read = new Set();    // file ids read
+let db = null, kind = 'interface', onlyMarked = false;
+const $ = (id) => document.getElementById(id);
+const hash = (s) => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return (h >>> 0).toString(16); };
+
+function textNode(t) {
+  const span = document.createElement('span');
+  span.className = 'text';
+  for (const part of t.split(/(\{[^}]*\})/)) {
+    if (!part) continue;
+    const el = document.createElement('span');
+    if (/^\{/.test(part)) el.className = 'ph';
+    el.textContent = part;
+    span.append(el);
+  }
+  return span;
+}
+
+function row(s) {
+  const li = document.createElement('li');
+  const m = marks.get(s.id);
+  if (m?.flag) li.className = 'flagged';
+  const at = document.createElement('span');
+  at.className = 'at';
+  at.textContent = /^\d+$/.test(s.at) ? `line ${s.at}` : s.at;
+  const flag = document.createElement('button');
+  flag.className = 'flag';
+  flag.textContent = '✎';
+  flag.setAttribute('aria-label', m?.flag ? 'Unmark this string' : 'Mark this string');
+  flag.setAttribute('aria-pressed', m?.flag ? 'true' : 'false');
+  flag.onclick = () => save(s, { flag: !m?.flag, note: m?.note ?? '' }, true);
+  li.append(textNode(s.text), flag, at);
+  if (m?.flag) {
+    const note = document.createElement('textarea');
+    note.className = 'note';
+    note.id = `note-${s.id}`;
+    note.placeholder = 'What should it say, or what is wrong with it?';
+    note.value = m.note ?? '';
+    note.onchange = () => save(s, { flag: true, note: note.value }, false);
+    li.append(note);
+  }
+  return li;
+}
+
+function render() {
+  const q = $('search').value.trim().toLowerCase();
+  const file = $('file').value;
+  const shown = STRINGS.filter((s) => s.register === kind && (!file || s.file === file)
+    && (!q || s.text.toLowerCase().includes(q)) && (!onlyMarked || marks.get(s.id)?.flag));
+  const byFile = new Map();
+  for (const s of shown) byFile.set(s.file, [...(byFile.get(s.file) ?? []), s]);
+  const list = $('list');
+  list.replaceChildren();
+  for (const [f, items] of byFile) {
+    const sec = document.createElement('section');
+    const head = document.createElement('div');
+    head.className = 'file';
+    const h2 = document.createElement('h2');
+    h2.textContent = f;
+    const done = document.createElement('button');
+    const fid = hash(f);
+    done.className = 'chip';
+    done.setAttribute('aria-pressed', read.has(fid) ? 'true' : 'false');
+    done.textContent = read.has(fid) ? 'Read' : 'Mark read';
+    done.onclick = () => markRead(f, fid);
+    head.append(h2, done);
+    const ol = document.createElement('ol');
+    for (const s of items) ol.append(row(s));
+    sec.append(head, ol);
+    list.append(sec);
+  }
+  if (!shown.length) list.innerHTML = '<p class="empty">Nothing here matches.</p>';
+  const all = STRINGS.filter((s) => s.register === kind);
+  const files = new Set(all.map((s) => s.file));
+  const readN = [...files].filter((f) => read.has(hash(f))).length;
+  const marked = all.filter((s) => marks.get(s.id)?.flag).length;
+  $('count').textContent = `${shown.length} of ${all.length} strings shown · ${readN} of ${files.size} files read · ${marked} marked`;
+}
+
+function tabs() {
+  const el = $('tabs');
+  el.replaceChildren();
+  for (const [k, name, about] of KINDS) {
+    const b = document.createElement('button');
+    b.className = 'tab';
+    b.title = about;
+    b.setAttribute('aria-pressed', k === kind ? 'true' : 'false');
+    b.textContent = `${name} ${STRINGS.filter((s) => s.register === k).length}`;
+    b.onclick = () => { kind = k; files(); tabs(); render(); };
+    el.append(b);
+  }
+}
+
+function files() {
+  const sel = $('file');
+  const list = [...new Set(STRINGS.filter((s) => s.register === kind).map((s) => s.file))].sort();
+  sel.replaceChildren(new Option('Every file', ''), ...list.map((f) => new Option(f.split('/').slice(-2).join('/'), f)));
+}
+
+async function save(s, m, rerender) {
+  marks.set(s.id, m);
+  if (rerender) render();
+  if (!db) { $('status').textContent = 'This mark lasts only until the page closes: open it in Claude to keep marks.'; return; }
+  try {
+    const ref = db.collection('marks').doc(s.id);
+    if (m.flag) await ref.set({ ...m, text: s.text, file: s.file, at: s.at, register: s.register });
+    else await ref.delete();
+    $('status').textContent = 'Saved.';
+  } catch (e) { $('status').textContent = `Not saved: ${e?.message ?? e}`; }
+}
+
+async function markRead(f, fid) {
+  const was = read.has(fid);
+  was ? read.delete(fid) : read.add(fid);
+  render();
+  if (!db) return;
+  try {
+    const ref = db.collection('read').doc(fid);
+    was ? await ref.delete() : await ref.set({ file: f });
+  } catch (e) { $('status').textContent = `Not saved: ${e?.message ?? e}`; }
+}
+
+$('search').oninput = render;
+$('file').onchange = render;
+$('only').onclick = () => { onlyMarked = !onlyMarked; $('only').setAttribute('aria-pressed', String(onlyMarked)); render(); };
+files(); tabs(); render();
+
+(async () => {
+  db = (await window.claude?.use?.('db')) ?? null;
+  if (!db) { $('status').textContent = 'Marks can’t be kept in this view; open the page in Claude, signed in.'; return; }
+  $('status').textContent = 'Marks are saved as you make them.';
+  db.collection('marks').onSnapshot((snap) => {
+    marks.clear();
+    for (const d of snap.docs) marks.set(d.id, d.data());
+    render();
+  }, () => {});
+  db.collection('read').onSnapshot((snap) => {
+    read.clear();
+    for (const d of snap.docs) read.add(d.id);
+    render();
+  }, () => {});
+})();
+</script>
