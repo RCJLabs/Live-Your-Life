@@ -149,7 +149,7 @@ How often jobs come up, how hiring goes, and how far away work is (D73, D74). Th
 | The odds an application is taken | the line cook: 15 in 100, 8 fewer with a conviction (D76, tune) | `career/line-cook.json`, `hiring` | Pager (2003), "The Mark of a Criminal Record", American Journal of Sociology 108(5): white applicants called back 34% of the time without a record and 17% with one. A callback is not a hire, so the base is a proposal; the halving with a record is Pager's | an audit study of hires, not callbacks |
 | Reputation's steps | 50 to start; 20 off for being let go, 5 for quitting, a point back for each whole shift on time (tune) | `market/odds.ts`, `REPUTATION` | none: tuned for play | — |
 | An answer to an application | one to three days (tune) | `market/module.ts` | none | — |
-| A walking pace across the city | 80 m a minute, about 1.3 m a second (tune). On your block you walk 1.95 m a game minute, tuned for play (D49) | `apps/game/src/city/workplace.ts`, `WALK_PACE` | none read yet: the commonly cited adult pace of 1.2 to 1.4 m a second | a pedestrian-speed study |
+| A walking pace | 80 m a game minute, about 1.3 m a second (tune), on your block as across the city (D119). The walk on screen keeps D49's pace, and the clock slows while you walk to count the real minutes; the passers-by are drawn at the screen's pace | `apps/game/src/city/workplace.ts`, `WALK_PACE`; `apps/game/src/life/player.ts`, `WALK_CLOCK` | none read yet: the commonly cited adult pace of 1.2 to 1.4 m a second | a pedestrian-speed study |
 | How long looking for work takes | the household survey's median spell of unemployment: 9.6 weeks in 2024 | — (a check, not a figure in use) | BLS CPS annual averages, table 31 (bls.gov/cps/data/aa2024/cpsaat31.htm), via search results | the same table. A spell still under way is not the time to find a job |
 
 **A departure, measured.** The seeker bot, starting with no job, was hired in a median of 3.3 game days at one in two, and is in 9.8 at 15 in 100 (D76; Readings). Still quicker than a 9.6-week spell, though the two don't measure the same thing.
@@ -178,6 +178,19 @@ Nine careers added with what they ask for (D114, D116). Each wage is the 25th pe
 **Employer cover.** Banks, call centres, warehouses, offices and law firms are marked as offering health cover; dishwashing, cashiering, janitorial and guard work are not (tune: by the common pattern of large employers in those industries, not a reading). The real share of workers offered cover by industry is in the Employer Costs for Employee Compensation and the National Compensation Survey, to be read.
 
 **Pay by credential, a realism bar.** The median starting wage of the careers that ask for each credential, against those that ask for none: a diploma or GED 1.20 times, an associate's 1.60. BLS's median weekly earnings for full-time workers of 25 and over in 2024 give 1.26 ($930 against $738) and 1.49 ($1,099). The test (`market/credentials.test.ts`) holds each within 15%. The game's are starting wages, BLS's are all ages', and one career (the paralegal) stands for the associate's: the bar is thin until more careers come.
+
+## The buses (M2.9)
+
+Ridgefield's buses run along the arterials, every fourth cell edge: a mile apart, as Michigan's mile roads are. Every figure is from search summaries of the agencies' own pages, and is to be checked against them.
+
+| Figure | Value | Record or code | Source, as read on 2026-10-26 | Status |
+| --- | --- | --- | --- | --- |
+| The fare | $1.75 a ride, at most $5.25 a day; a second bus free within 105 minutes of boarding (with a fare card) | `transit/ridgefield.json`, `fare`, `dayCap`, `transfer` | Grand Rapids' The Rapid, through the city's Paid Transit page and Experience Grand Rapids. Lansing's CATA charges $1.25 | secondary |
+| How often a bus comes | every 15 minutes in the weekday rushes (6–9 and 15–18), 30 otherwise until 23:00; Saturday every 30 from 7 to 22; Sunday every 60 from 8 to 20 (tune) | `service` | one Grand Rapids line runs every 15 minutes by day and 30 in the evening; older pages give 30 minutes on neighbourhood routes. No network-wide figure found | placeholder |
+| The speed | 360 m a minute, about 13.5 mph, stops and lights included | `speed` | a Transportation Research Board survey of 11 transit systems, as Streetsblog reported it (2014); large cities run nearer 8 mph | secondary, dated |
+| Stops | every 400 m, a quarter mile | `stops` | the common spacing on US local routes (general knowledge) | placeholder |
+| A ride hailed from a phone | $1.19 base, a $2.60 booking fee, $0.97 a mile (60¢ a km) and $0.19 a minute, at least $6.60 | `transit/ridgefield.json`, `rideshare` | third-party fare estimators for UberX in Grand Rapids (uphail.com; taxihowmuch.com and taxifarefinder.com give $0.81 to $0.85 a mile and $0.15 to $0.16 a minute); prices move with demand, which the game doesn't | secondary, to check in the app |
+| The car's wait and speed | 7 minutes for a car; 600 m a minute through the streets, about 22 mph with lights (tune) | `rideshare.wait`, `speed` | none read | placeholder |
 
 ## Street dealing (M2.4)
 
@@ -315,6 +328,7 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Pay by credential | median weekly earnings, full-time, 25 and over, 2024: $930 with a diploma, $1,020 with some college and no degree, $1,099 with an associate's, $738 without a diploma | careers (step 5) | BLS, Employment Projections' education-pays table and CPS table 37b, through search summaries | secondary |
 | Finishing an associate's part time | of students starting part time at a public two-year college (fall 2012), 4.0 in 100 had graduated by the end of year 2, 15.1 by year 4 and 20.9 by year 6; full-time starters 32 by year 6 | the student bot's reading (ROADMAP Readings) | the National Student Clearinghouse's Yearly Success and Progress report, through search summaries | secondary |
 | Borrowing for an associate's | 33 in 100 associate's graduates of public colleges had ever borrowed (2019–20), owing $15,530 on average if they had | the student bot's reading | the Community College Research Center's fact sheet on community colleges and student debt, through search summaries | secondary |
+| Retaking a course | a course taken again counts at the better grade, both staying on the record; a student under 2.00 may also have up to 30 credits of D and E grades set aside once (academic renewal, not built) | `education/michigan.json`, `college.retake` (C or lower, tune) | Macomb Community College's Academic Renewal and Course Repeat Policy (macomb.edu), through a search summary | secondary |
 
 ## Open questions
 

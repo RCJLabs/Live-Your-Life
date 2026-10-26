@@ -1,0 +1,55 @@
+{
+  "name": "Ridgefield's buses",
+  "fare": 175,
+  "dayCap": 525,
+  "transfer": 105,
+  "stops": 400,
+  "speed": 360,
+  "service": [
+    {
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "from": 6,
+      "to": 9,
+      "every": 15
+    },
+    {
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "from": 9,
+      "to": 15,
+      "every": 30
+    },
+    {
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "from": 15,
+      "to": 18,
+      "every": 15
+    },
+    {
+      "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "from": 18,
+      "to": 23,
+      "every": 30
+    },
+    {
+      "days": ["saturday"],
+      "from": 7,
+      "to": 22,
+      "every": 30
+    },
+    {
+      "days": ["sunday"],
+      "from": 8,
+      "to": 20,
+      "every": 60
+    }
+  ],
+  "rideshare": {
+    "base": 119,
+    "booking": 260,
+    "perKm": 60,
+    "perMinute": 19,
+    "minimum": 660,
+    "wait": 7,
+    "speed": 600
+  }
+}

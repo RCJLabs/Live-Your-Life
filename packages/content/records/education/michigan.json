@@ -209,7 +209,8 @@
       }
     ],
     "associate": 60,
-    "gpa": 200
+    "gpa": 200,
+    "retake": 2
   },
   "aid": {
     "tuition": 11300,

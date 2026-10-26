@@ -39,7 +39,7 @@ import { makePanel } from './panel.ts';
 import { type Waiting, waiting } from './pending.ts';
 import { TRIP_HOME, TRIP_OUT } from './people.ts';
 import { type Place, placeAt, placesOf } from './places.ts';
-import { Player, walkMinutes } from './player.ts';
+import { Player, WALK_CLOCK, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
 import { cornerLead, PASS_DAYS, passOneDay } from './street.ts';
 import { canGo, GO_TO_WORK, startTrip, type Trip, tripAction } from './trip.ts';
@@ -375,7 +375,8 @@ export function play(
     if (s.passing) passDay();
     else if (!blocked() && !s.paused) {
       const factor = FACTOR[s.speed];
-      life.elapse(dt, factor);
+      // While you walk the clock counts the real walk, not the screen's (D119).
+      life.elapse(dt, player.walking ? factor * WALK_CLOCK : factor);
       s.t += (dt / 1000) * factor;
       const reached = player.step(dt / 1000, factor);
       if (reached) arrive(reached);

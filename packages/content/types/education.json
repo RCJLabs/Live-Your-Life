@@ -225,6 +225,13 @@
           "min": 0,
           "max": 400,
           "description": "The least grade point average for the associate's, in hundredths."
+        },
+        "retake": {
+          "kind": "int",
+          "optional": true,
+          "min": 0,
+          "max": 4,
+          "description": "A course graded at these grade points or fewer may be taken again, the later grade replacing the earlier in the average (M2.8 step 8): 2 is a C."
         }
       }
     },

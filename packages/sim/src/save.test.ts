@@ -266,12 +266,12 @@ describe('the save fixtures', () => {
     expect((result.state.circle as { self: number }).self).toBe(-1);
   });
 
-  it('loads the twelfth, saved before the GED, migrating the education from 1 to 4 (M2.8)', () => {
+  it('loads the twelfth, saved before the GED, migrating the education from 1 to 5 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v12.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'education', from: 1, to: 4 }]);
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 1, to: 5 }]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -279,29 +279,42 @@ describe('the save fixtures', () => {
     expect((result.state.education as { ged: unknown }).ged).toEqual({ passed: [], prep: {} });
   });
 
-  it('loads the thirteenth, saved before the college, migrating the education from 2 to 4 (M2.8)', () => {
+  it('loads the thirteenth, saved before the college, migrating the education from 2 to 5 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v13.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'education', from: 2, to: 4 }]);
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 2, to: 5 }]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v13-shape', sim).education));
     expect((result.state.education as { college: { term: unknown } }).college.term).toBeNull();
   });
 
-  it('loads the fourteenth, saved before paying for college, migrating the education from 3 to 4 (M2.8)', () => {
+  it('loads the fourteenth, saved before paying for college, migrating the education from 3 to 5 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v14.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'education', from: 3, to: 4 }]);
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 3, to: 5 }]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v14-shape', sim).education));
     // Nothing was borrowed before; the pay before is not known, and pay since the snapshot is kept.
     expect((result.state.education as { loan: { owed: number } }).loan.owed).toBe(0);
+  });
+
+  it('loads the fifteenth, saved before retakes, migrating the education from 4 to 5 (M2.8)', () => {
+    const people = sliceGame({ people: 1000 });
+    const result = load('life-v15.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 4, to: 5 }]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v15-shape', sim).education));
+    // Grades weren't kept before: none is known, so nothing passed before can be retaken.
+    expect((result.state.education as { college: { grades: object } }).college.grades).toEqual({});
   });
 
   it('migrates a version-4 circle’s ties as never asked to stay', () => {

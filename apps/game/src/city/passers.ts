@@ -16,7 +16,11 @@ import type { Walkway } from './town.ts';
  */
 export const BY_HOUR = [1, 0, 0, 0, 0, 1, 3, 8, 12, 8, 6, 6, 8, 7, 6, 6, 8, 12, 10, 7, 5, 4, 3, 2] as const;
 const DENSITY = 45;
-/** Metres a game minute on foot, as you walk (life/player.ts: 3.9 m a stage second, 2 game minutes to one). */
+/**
+ * Metres a game minute the passers-by move on screen: the pace a walk is drawn at with the clock
+ * at rest (life/player.ts: 3.9 m a stage second, 2 game minutes to one). Drawn only; the sim's
+ * walking is at the real pace (D119), and they are scenery to it.
+ */
 const PACE = 1.95;
 const STRIDE = 1.6;
 /** How many hours back a walk can have started and still be under way: the longest sidewalk's (tune). */

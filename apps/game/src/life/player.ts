@@ -1,23 +1,30 @@
 /**
- * You on the block (M1.6): tap-to-go along the walk grid's routes, at a brisk walk with the clock
- * running (D49), and posed at a fixture while you use it. The stage moves you; the sim hears only
+ * You on the block (M1.6): tap-to-go along the walk grid's routes, and posed at a fixture while
+ * you use it. The walk moves on screen at a pace a player can follow; the clock counts only the
+ * real walk, at the city's one pace (D119), so it slows while you walk (`WALK_CLOCK`). The stage moves you; the sim hears only
  * what you do once you are there. Where you are is the page's, not the save's, until saves
  * (M1.7) keep it.
  */
 import { type BlockPlan, cellAt, centreOf, route, type WalkGrid } from '@lyl/sim';
 import type { Actor, Look, PoseKind } from '@lyl/stage';
 import { along, length, type Pt, throughMiddle } from '../city/walker.ts';
+import { WALK_PACE } from '../city/workplace.ts';
 import type { Place } from './places.ts';
 
-/** Metres a stage second at speed 1: three times a walking pace, so the commute is about 20 game minutes (D49). */
+/** Metres a stage second at speed 1: a walk a player can follow on screen (D49's look, kept by D119). */
 export const WALK = 3.9;
+/**
+ * The clock's rate while you walk, against its rate at rest: the game minutes the walk covers at
+ * the real pace (WALK_PACE metres a game minute), over the two game minutes a second of speed 1.
+ */
+export const WALK_CLOCK = WALK / WALK_PACE / 2;
 /** Metres a full stride covers: two steps, a little longer at a brisk walk. */
 const STRIDE = 1.6;
 
 /**
- * Game minutes to walk from one place to another at D49's pace: the route the walker would take,
- * through doors' middles, at WALK metres a stage second and two game minutes a stage second at
- * speed 1. Null if no route reaches it. The sim hears it as your walk to work (D61).
+ * Game minutes to walk from one place to another at the city's one pace (D119): the route the
+ * walker would take, through doors' middles, at WALK_PACE metres a game minute. Null if no route
+ * reaches it. The sim hears it as your walk to work (D61).
  */
 export function walkMinutes(plan: BlockPlan, grid: WalkGrid, from: Place, to: Place): number | null {
   const r = route(grid, from.cell, to.cell);
@@ -25,7 +32,7 @@ export function walkMinutes(plan: BlockPlan, grid: WalkGrid, from: Place, to: Pl
   const doors = plan.buildings.flatMap((b) => b.interior?.doors ?? []);
   const cells = r.cells.slice(1).map((c) => throughMiddle(centreOf(grid, c), doors));
   const metres = length([from.stand, ...cells.slice(0, -1), to.stand]);
-  return Math.max(1, Math.ceil(metres / (WALK / 2)));
+  return Math.max(1, Math.ceil(metres / WALK_PACE));
 }
 
 export interface Using {

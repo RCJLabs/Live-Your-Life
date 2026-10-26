@@ -85,13 +85,13 @@ describe('what a place offers (M1.6)', () => {
     expect(itemsAt(off.life, off.find('Bed'))[0]?.note).toBeUndefined();
   });
 
-  it('measures your walk to work from your bed to the griddle, at D49’s pace (D61)', () => {
+  it('measures your walk to work from your bed to the griddle, at the city’s one pace (D61, D119)', () => {
     for (const seed of ['walk-1', 'walk-2', 'walk-3', 'life-1']) {
       const { places, find, block } = setUp(seed);
       const minutes = walkMinutes(block.plan, block.grid, places.bed, find('Griddle')) as number;
-      // The e2e walk from the flat to the diner's door takes 12 to 30 game minutes; the griddle is a little further.
-      expect(minutes, seed).toBeGreaterThanOrEqual(12);
-      expect(minutes, seed).toBeLessThanOrEqual(45);
+      // About 25 to 90 m on the block, at 80 m a game minute: a minute or two (D49's slow pace made it 12 to 45).
+      expect(minutes, seed).toBeGreaterThanOrEqual(1);
+      expect(minutes, seed).toBeLessThanOrEqual(2);
       expect(walkMinutes(block.plan, block.grid, places.bed, places.bed), seed).toBe(1);
     }
   });

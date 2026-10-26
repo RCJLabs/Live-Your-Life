@@ -9,6 +9,7 @@
  * and what aid pays past the bill is paid out to you, as a college's refund is.
  */
 import type { FactView, ModuleContext } from '@eb/core';
+import { nextCourses } from './college.ts';
 import type { EducationSlice } from './module.ts';
 import { type Aid, type College, educationOf } from './records.ts';
 
@@ -47,11 +48,9 @@ export function termLimit(a: Aid, earned: number): number {
   return Math.floor(year / 2);
 }
 
-/** The credits of the next `courses` courses, in the catalog's order. */
+/** The credits of the next `courses` courses a term would take (college.ts). */
 export function creditsOf(v: View, c: College, courses: number): number {
-  const passed = slice(v).college.passed;
-  return c.courses
-    .filter((x) => !passed.includes(x.id))
+  return nextCourses(c, slice(v).college)
     .slice(0, courses)
     .reduce((n, x) => n + x.credits, 0);
 }

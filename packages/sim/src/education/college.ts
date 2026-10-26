@@ -42,9 +42,30 @@ export interface CollegeSlice {
   graded: number;
   /** Courses passed, by id. */
   passed: string[];
+  /** The grade points each course was last graded at (step 8): what a retake replaces. */
+  grades: Record<string, number>;
 }
 
-export const NO_COLLEGE = (): CollegeSlice => ({ term: null, credits: 0, points: 0, graded: 0, passed: [] });
+export const NO_COLLEGE = (): CollegeSlice => ({
+  term: null,
+  credits: 0,
+  points: 0,
+  graded: 0,
+  passed: [],
+  grades: {},
+});
+
+/**
+ * The courses a term would take, in order: those not yet passed, in the catalog's order, then
+ * those passed at a grade the record lets be retaken, the lowest first (step 8).
+ */
+export function nextCourses(c: College, s: DeepReadonly<CollegeSlice>): College['courses'][number][] {
+  const fresh = c.courses.filter((x) => !s.passed.includes(x.id));
+  const again = c.courses
+    .filter((x) => s.passed.includes(x.id) && (s.grades[x.id] ?? 4) <= (c.retake ?? -1))
+    .sort((a, b) => (s.grades[a.id] ?? 0) - (s.grades[b.id] ?? 0));
+  return [...fresh, ...again];
+}
 
 export const collegeOf = (v: { readonly content: View['content'] }): College | null =>
   educationOf(v.content)?.college ?? null;
@@ -76,7 +97,7 @@ export function enrollOptions(v: View): { courses: number; borrow: Borrow }[] {
   if (!c || s.college.term || s.finished === 'none' || s.finished === 'associate') return [];
   const t = nextTerm(v, c);
   if (!t || t.start - (v.fact('time.day') as number) > c.enroll) return [];
-  const left = c.courses.filter((x) => !s.college.passed.includes(x.id)).length;
+  const left = nextCourses(c, s.college).length;
   return Array.from({ length: Math.min(c.slots.length, left) }, (_, i) => i + 1).flatMap((courses) =>
     payOptions(v, c, courses).map((borrow) => ({ courses, borrow })),
   );
@@ -88,7 +109,7 @@ export function enroll(ctx: Ctx, courses: unknown, how: unknown): void {
   const college = c as College;
   const t = nextTerm(ctx, college) as { id: string; start: number; weeks: number };
   const s = ctx.read().college;
-  const picked = college.courses.filter((x) => !s.passed.includes(x.id)).slice(0, courses as number);
+  const picked = nextCourses(college, s).slice(0, courses as number);
   const bill = billFor(ctx, college, courses as number, how as Borrow);
   if (bill.cash > 0) ctx.apply({ effect: 'pay-cost', cost: { cash: bill.cash } });
   if (bill.refund > 0) ctx.apply({ effect: 'add-resource', resource: 'cash', by: bill.refund });
@@ -190,9 +211,20 @@ export function endTerm(ctx: Ctx): void {
     const credits = c.courses.find((y) => y.id === x.id)?.credits ?? 0;
     const sc = score(c, x, term);
     const grade = c.grades.find((g) => sc >= g.least) ?? (c.grades[c.grades.length - 1] as College['grades'][number]);
+    // A retake (step 8): the better of the two grades counts, as at Macomb; the other leaves the
+    // average, and its credits with it.
+    const before = w.college.grades[x.id];
+    if (before !== undefined) {
+      w.college.graded -= credits;
+      w.college.points -= before * credits;
+      if (before > 0) w.college.credits -= credits;
+    }
+    const kept = Math.max(before ?? 0, grade.points);
+    w.college.passed = w.college.passed.filter((id) => id !== x.id);
     w.college.graded += credits;
-    w.college.points += grade.points * credits;
-    if (grade.points > 0) {
+    w.college.points += kept * credits;
+    w.college.grades = { ...w.college.grades, [x.id]: kept };
+    if (kept > 0) {
       w.college.credits += credits;
       w.college.passed = [...w.college.passed, x.id];
     }

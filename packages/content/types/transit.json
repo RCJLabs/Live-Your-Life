@@ -1,0 +1,116 @@
+{
+  "title": "Transit",
+  "description": "The city's buses (M2.9 step 2, D118): a route along every arterial, its stops, how often a bus comes and how fast it goes, and the fare. The figures trace to CALIBRATION.md.",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "fare": {
+      "kind": "int",
+      "min": 0,
+      "description": "In cents: one ride, transfers included within the transfer window."
+    },
+    "dayCap": {
+      "kind": "int",
+      "min": 0,
+      "description": "In cents: the most fares cost in a day; rides past it are free."
+    },
+    "transfer": {
+      "kind": "int",
+      "min": 0,
+      "max": 300,
+      "description": "Minutes after boarding in which a second bus is free."
+    },
+    "stops": {
+      "kind": "int",
+      "min": 50,
+      "max": 2000,
+      "description": "Metres between stops along a route."
+    },
+    "speed": {
+      "kind": "int",
+      "min": 50,
+      "max": 2000,
+      "description": "Metres a minute, stops and lights included."
+    },
+    "service": {
+      "kind": "list",
+      "min": 1,
+      "max": 12,
+      "description": "When buses run, and every how many minutes: hours on the clock, the last not included.",
+      "of": {
+        "kind": "group",
+        "fields": {
+          "days": {
+            "kind": "list",
+            "min": 1,
+            "max": 7,
+            "of": {
+              "kind": "enum",
+              "values": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+            }
+          },
+          "from": {
+            "kind": "int",
+            "min": 0,
+            "max": 23
+          },
+          "to": {
+            "kind": "int",
+            "min": 1,
+            "max": 24
+          },
+          "every": {
+            "kind": "int",
+            "min": 5,
+            "max": 120
+          }
+        }
+      }
+    },
+    "rideshare": {
+      "kind": "group",
+      "optional": true,
+      "description": "A ride hailed from a phone (M2.9 step 3, D118): its price by distance and time, the wait for a car, and its speed. Cents unless said. Traced in CALIBRATION.md.",
+      "fields": {
+        "base": {
+          "kind": "int",
+          "min": 0
+        },
+        "booking": {
+          "kind": "int",
+          "min": 0,
+          "description": "A fee on every ride."
+        },
+        "perKm": {
+          "kind": "int",
+          "min": 0
+        },
+        "perMinute": {
+          "kind": "int",
+          "min": 0
+        },
+        "minimum": {
+          "kind": "int",
+          "min": 0,
+          "description": "The least a ride costs, fees included."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 120,
+          "description": "Minutes until the car comes (tune)."
+        },
+        "speed": {
+          "kind": "int",
+          "min": 50,
+          "max": 3000,
+          "description": "Metres a minute through the city's streets, lights included (tune)."
+        }
+      }
+    }
+  }
+}
