@@ -118,6 +118,12 @@ test('quits, applies across the city, takes the offer and goes to work off scree
   const worksBefore = await works();
   await page.locator('#waiting button', { hasText: 'Go to work' }).click();
   await expect(page.locator('#panel')).toBeHidden();
+  // The ways there (M2.9): the bus while one runs, its minutes and fare as the sim previews them.
+  await expect(page.locator('#choice button[data-way="walk"]')).toHaveText(`Walk, ${commute} minutes`);
+  const bus = page.locator('#choice button[data-way="bus"]');
+  const busShown = /^Bus, (\d+) minutes?, (\$[\d.,]+)$/.exec((await bus.textContent()) ?? '');
+  expect(busShown, 'a bus to work is offered with its minutes and fare').not.toBeNull();
+  await bus.click();
 
   // Off screen until it's over, answering whatever stops the shift.
   for (let i = 0; i < 40 && (await L<string | null>(page, 'trip')) !== null; i++) {
@@ -134,12 +140,14 @@ test('quits, applies across the city, takes the offer and goes to work off scree
     journal.some((l) => l.includes('started a new job')),
     journal.join('\n'),
   ).toBe(true);
-  // The shift was worked, and the walk home passed on the clock after it.
+  expect(
+    journal.some((l) => l.includes(`took the bus, ${busShown?.[1]} minutes for ${busShown?.[2]}`)),
+    journal.join('\n'),
+  ).toBe(true);
+  // The shift was worked, and the way home passed on the clock after it.
   expect(await works()).toBeGreaterThan(worksBefore);
   expect(commute).toBeGreaterThan(0);
-  expect((await L<number>(page, 'fact', 'time.tick')) - endsAt, 'home a walk after the shift').toBeGreaterThanOrEqual(
-    commute,
-  );
+  expect((await L<number>(page, 'fact', 'time.tick')) - endsAt, 'home some minutes after the shift').toBeGreaterThan(0);
   expect(await L(page, 'refused')).toEqual([]);
   expect(errors).toEqual([]);
 });

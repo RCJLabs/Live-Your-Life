@@ -43,6 +43,7 @@ import { Player, WALK_CLOCK, walkMinutes } from './player.ts';
 import type { Life } from './session.ts';
 import { cornerLead, PASS_DAYS, passOneDay } from './street.ts';
 import { canGo, GO_TO_WORK, startTrip, type Trip, tripAction } from './trip.ts';
+import { back, isLeg, type Leg, type Way, wayItems, wayOrWalk } from './ways.ts';
 
 const MAX_DPR = 2;
 /** Speed 2 runs four times as fast as speed 1 (DESIGN.md, Time). */
@@ -187,8 +188,13 @@ export function play(
     }
     if (a.type === GO_TO_WORK) {
       const walk = (life.state.you as { commute: number | null }).commute;
-      if (trip === null && canGo(life, walk)) {
-        trip = startTrip(walk as number);
+      const leg = workLeg(walk);
+      if (trip === null && canGo(life, walk) && leg) {
+        if (a.way === undefined) {
+          chooseWay('Going to work', leg, a);
+          return;
+        }
+        trip = startTrip(leg, a.way as Way);
         player.stop();
         panel.hide();
       }
@@ -209,31 +215,48 @@ export function play(
     // Saved at once, so what a choice brought can't be undone by reloading (D54).
     if (ok) save();
     // A walk across the city passes as a fast-forward too, with you off the screen.
-    if (!ok || (a.type !== 'life/do' && !(trip && a.type === 'time/advance'))) return;
+    if (!ok || (a.type !== 'life/do' && !(trip && isLeg(a)))) return;
     const after = life.fact('time.tick') as number;
     const f = at?.fixture?.use;
     if (at && f) player.use(at, f.pose === 'lie' ? 'lie' : f.pose, a.activity === 'sleep' ? 'sleep' : null);
     s.ff = { from: before, to: after, start: performance.now(), ms: ffMs(after - before) };
   }
 
-  /** Out to a haunt or home from one (M2.6): the walk passes, then the circle hears where you are. */
+  /** From your door to work's, the walk as the commute the sim was told (D61); null on your block. */
+  function workLeg(walk: number | null): Leg | null {
+    const employer = (life.state.market as MarketSlice).employer;
+    const there = employer === null || walk === null ? null : work.walkTo(employer);
+    return there ? { minutes: walk as number, from: there.from, to: there.to } : null;
+  }
+
+  /** The ways a trip can go, each with its minutes and price (M2.9 step 5, D118). */
+  function chooseWay(title: string, leg: Leg, a: Action): void {
+    player.stop();
+    panel.hide();
+    choice.show(title, null, wayItems(life, leg, a), 'Not now');
+  }
+
+  /** Out to a haunt or home from one (M2.6): the way there passes, then the circle hears where you are. */
   function goOut(a: Action): void {
     const out = life.fact('circle.out') as number;
     const place = a.type === TRIP_OUT ? (a.place as number) : out;
     if (place < 0) return;
-    const walk = work.walkToPlace(place)?.minutes ?? 0;
+    const there = work.walkToPlace(place);
+    const leg: Leg = there ?? { minutes: 0, from: { x: 0, y: 0 }, to: { x: 0, y: 0 } };
+    if (a.way === undefined && there) {
+      chooseWay(a.type === TRIP_OUT ? 'Going out' : 'Going home', a.type === TRIP_OUT ? leg : back(leg), a);
+      return;
+    }
+    const way = (a.way ?? 'walk') as Way;
     const before = life.fact('time.tick') as number;
-    const steps: Action[] =
+    const steps: (() => Action)[] =
       a.type === TRIP_OUT
-        ? [
-            { type: 'time/advance', minutes: walk },
-            { type: 'circle/go-out', place },
-          ]
-        : [{ type: 'circle/home' }, { type: 'time/advance', minutes: walk }];
-    for (const step of steps) if (!life.act(step)) break;
+        ? [() => wayOrWalk(life, way, leg), () => ({ type: 'circle/go-out', place })]
+        : [() => ({ type: 'circle/home' }), () => wayOrWalk(life, way, back(leg))];
+    for (const step of steps) if (!life.act(step())) break;
     save();
     player.stop();
-    panel.refresh();
+    panel.show('people');
     const after = life.fact('time.tick') as number;
     if (after > before) s.ff = { from: before, to: after, start: performance.now(), ms: ffMs(after - before) };
   }

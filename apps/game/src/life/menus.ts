@@ -108,7 +108,11 @@ export function makeSheet(id: string, act: (a: Action) => void, closed: () => vo
                 hide();
                 act(i.action);
               },
-              { 'data-action': i.action.type, 'data-activity': i.action.activity as string | undefined },
+              {
+                'data-action': i.action.type,
+                'data-activity': i.action.activity as string | undefined,
+                'data-way': i.action.way as string | undefined,
+              },
             ),
             i.note ? el('p', { class: 'note' }, i.note) : null,
           ),

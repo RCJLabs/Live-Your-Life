@@ -4,7 +4,8 @@ import { expectNothingOffscreen, smallTargets, watchErrors } from './checks.ts';
 /**
  * M2.6's People tab on the page, by taps: go out to a haunt, the walk passing on the clock, spend
  * the evening there until you meet someone, see them listed with what you can do and its odds,
- * and walk home. At both phone widths, nothing past the edge and every target 44 px.
+ * and come home by a ride (M2.9), its minutes and price the ones shown. At both phone widths,
+ * nothing past the edge and every target 44 px.
  */
 
 type Life = Record<string, (...args: unknown[]) => unknown>;
@@ -24,7 +25,7 @@ for (const width of [360, 390]) {
   test.describe(`at ${width} px`, () => {
     test.use({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
 
-    test('goes out, meets someone, and walks home', async ({ page }) => {
+    test('goes out, meets someone, and rides home', async ({ page }) => {
       test.setTimeout(180_000);
       const errors = watchErrors(page);
       await page.goto('./?seed=life-1');
@@ -38,6 +39,11 @@ for (const width of [360, 390]) {
 
       const before = await L<number>(page, 'fact', 'time.tick');
       await page.locator('#out button[data-action="trip/out"]').first().click();
+      // The ways there (M2.9): walking always, each with its minutes.
+      await expect(page.locator('#choice button[data-way="walk"]')).toHaveText(/^Walk, \d+ minutes?$/);
+      await expectNothingOffscreen(page);
+      expect(await smallTargets(page, '#choice')).toEqual([]);
+      await page.locator('#choice button[data-way="walk"]').click();
       await idle(page);
       expect(await L<number>(page, 'fact', 'circle.out')).toBeGreaterThanOrEqual(0);
       expect(await L<number>(page, 'fact', 'time.tick'), 'the walk passed').toBeGreaterThan(before);
@@ -63,8 +69,18 @@ for (const width of [360, 390]) {
       expect(await smallTargets(page, '#panel')).toEqual([]);
 
       await page.locator('#out button[data-action="trip/home"]').click();
+      const ride = page.locator('#choice button[data-way="ride"]');
+      const shown = /^Ride, (\d+) minutes?, (\$[\d.,]+)$/.exec((await ride.textContent()) ?? '');
+      expect(shown, 'a ride home is offered with its minutes and price').not.toBeNull();
+      const cashBefore = await L<number>(page, 'fact', 'economy.amount', { resource: 'cash' });
+      await ride.click();
       await idle(page);
       expect(await L<number>(page, 'fact', 'circle.out')).toBe(-1);
+      const journal = await L<string[]>(page, 'journal');
+      expect(
+        journal.some((l) => l.includes(`took a ride across the city, ${shown?.[1]} minutes for ${shown?.[2]}`)),
+      ).toBe(true);
+      expect(await L<number>(page, 'fact', 'economy.amount', { resource: 'cash' })).toBeLessThan(cashBefore);
       expect(errors).toEqual([]);
     });
   });
