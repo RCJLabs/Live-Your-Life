@@ -149,6 +149,21 @@ describe('the heir (M2.7 step 3, D20, D107, D109)', () => {
     expect(circle(s).self).toBe(-1);
   });
 
+  it('stops a free save at its year’s end once a ward’s jump has passed it (M2.11, D137)', () => {
+    const s0 = died('heir-ward-free');
+    const day = fact(s0, 'time.day') as number;
+    const ward = {
+      ...withFamily(withCircle(s0, { ties: [] }), { children: [kid(day - 5 * 365, PARTNER, 'Mae')] }),
+      edition: { unlocked: false },
+    } as GameState;
+    const r = play(game, sim, ward, { type: 'lives/succeed' }, { type: 'lives/begin' });
+    // Not inside the years: the ward wakes as you first.
+    expect(r.of('edition/year-ended')).toEqual([]);
+    const next = play(game, sim, r.state, advance(1));
+    expect(next.of('edition/year-ended')).toHaveLength(1);
+    expect(next.state.kernel.modes.at(-1)?.id).toBe('year-end');
+  });
+
   it('passes a ward’s years to 8:00 on their 18th birthday, and they wake as you, the city’s timers set again', () => {
     const s0 = died('heir-ward');
     const day = fact(s0, 'time.day') as number;

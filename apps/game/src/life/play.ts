@@ -32,6 +32,7 @@ import { listen } from '../spike/input.ts';
 import { describe, Measure } from '../spike/measure.ts';
 import { type Rung, ring } from './alarm.ts';
 import { makeBar, makeToast } from './dom.ts';
+import { unlockIfDevice } from './edition.ts';
 import type { Keeper, Slot } from './keeper.ts';
 import { makeMap } from './map.ts';
 import { itemsAt, LIVES, makeSheet, modeSheet } from './menus.ts';
@@ -132,6 +133,8 @@ export function play(
       life.act({ type: 'you/commute', minutes: Math.min(walk, LONGEST_WALK) });
   }
   measureCommute();
+  // D138: on an unlocked device every life is unlocked as it opens, a stopped one going on.
+  unlockIfDevice(life);
   /** The place you last reached, kept with the save. */
   let reachedAt: string | null = start.id;
 

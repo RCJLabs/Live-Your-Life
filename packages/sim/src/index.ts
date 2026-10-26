@@ -147,6 +147,7 @@ export { buyerOdds, MOST_HELD, seenOdds } from './deal/trade.ts';
 export { outNow, passingNow } from './deal/witnesses.ts';
 export { dealerFor } from './dealer.ts';
 export * from './dials.ts';
+export { type EditionSlice, editionModule, FREE_DAYS, YEAR_END } from './edition/module.ts';
 export { type Bill, BORROWING, type Borrow } from './education/aid.ts';
 export { type CollegeSlice, meetings, type Term as CollegeTerm } from './education/college.ts';
 export type { Loan } from './education/loans.ts';

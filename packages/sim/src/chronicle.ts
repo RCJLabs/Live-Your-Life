@@ -32,6 +32,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'inventory/full': 'the bag',
   'logic/rolled': 'a roll; its outcome is told',
   'event/asked': 'the interface: the sheet asks; what followed is told',
+  'edition/unlocked': 'the interface: the game, not the life',
   mode: 'the interface',
   'time/fired': 'the clock',
   'time/passed': 'the clock',

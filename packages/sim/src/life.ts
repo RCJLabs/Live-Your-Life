@@ -226,6 +226,7 @@ export const lifeModule = defineModule<LifeSlice>({
         'health/*',
         'education/*',
         'travel/*',
+        'edition/*',
         'ties/*',
         'you/*',
         'law/take',

@@ -15,10 +15,11 @@ export const TEST_COOK = 'test-cook';
  * The slice's life. Without the tier-1 people unless a test asks (M2.2): the 500-week sweeps are
  * the player's life, and 1,000 people in each would make them ten times slower. The people have
  * their own tests (src/people/) and readings. Nor life events (M2.10 step 4), which would break into a
- * test's scripted days; their tests and the sweeps ask for them.
+ * test's scripted days; their tests and the sweeps ask for them. And unlocked (M2.11), so a life
+ * can be lived past its free year; the edition's tests start free.
  */
 export const sliceGame = (options: LifeOptions = {}): Game =>
-  createLifeGame({ career: LINE_COOK, people: 0, events: false, ...options });
+  createLifeGame({ career: LINE_COOK, people: 0, events: false, unlocked: true, ...options });
 export const sliceSim = (records: RecordPack = PACK.records): SimContext => lifeSim(records);
 
 export const lineCook = (): CareerRecord => PACK.records.career?.[LINE_COOK] as CareerRecord;
