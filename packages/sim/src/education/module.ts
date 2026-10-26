@@ -11,6 +11,7 @@ import {
   attend,
   attendOptions,
   type CollegeSlice,
+  classIn,
   collegeOf,
   endTerm,
   enroll,
@@ -152,6 +153,11 @@ export const educationModule = defineModule<EducationSlice>({
         state.college.graded > 0 ? Math.floor((state.college.points * 100) / state.college.graded) : 0,
       domain: { type: 'int', min: 0, max: 400 },
       label: 'your college grade point average, in hundredths',
+    },
+    'class-in': {
+      read: (v) => classIn(v),
+      domain: { type: 'int', min: 1 },
+      label: 'minutes until a class of yours starts today',
     },
     'aid-income': {
       read: (v) => aidIncome(v),

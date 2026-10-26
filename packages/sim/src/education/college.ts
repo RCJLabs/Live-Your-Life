@@ -119,6 +119,25 @@ function meetingNow(v: View, c: College): Course | undefined {
   });
 }
 
+/**
+ * Minutes until a class of yours starts later today, or undefined: what you do ends then, as it
+ * does for a shift (life.ts), so the class isn't slept or idled through.
+ */
+export function classIn(v: View): number | undefined {
+  const c = collegeOf(v);
+  const term = slice(v).college.term;
+  const day = v.fact('time.day') as number;
+  if (!c || !term || day < term.start || day >= term.end) return undefined;
+  const weekday = v.fact('time.weekday') as (typeof WEEKDAYS)[number];
+  const minute = v.fact('time.of-day') as number;
+  const starts = term.courses
+    .map((x) => c.slots[x.slot])
+    .filter((slot) => slot?.days.includes(weekday))
+    .map((slot) => (slot?.hour ?? 0) * 60 - minute)
+    .filter((m) => m > 0);
+  return starts.length > 0 ? Math.min(...starts) : undefined;
+}
+
 export function attendOptions(v: View): { course: string }[] {
   const c = collegeOf(v);
   const x = c ? meetingNow(v, c) : undefined;

@@ -146,7 +146,7 @@ export const lifeModule = defineModule<LifeSlice>({
       run: (ctx, action) => doActivity(ctx, action.activity, action.minutes),
       // What a menu offers now: each activity for its usual time, or until it's time to walk to
       // the next shift if that comes first (D57's alarm), or until the shift under way ends (D58),
-      // or until the court opens on a court day (D62), or a date begins (M2.6);
+      // or until the court opens on a court day (D62), a date begins (M2.6) or a class starts (M2.8);
       // the meal only if it can be paid for; and work only during a shift, for the rest of it or
       // until something on it needs you.
       options: (view) => {
@@ -158,7 +158,10 @@ export const lifeModule = defineModule<LifeSlice>({
         const courtUntil = court !== undefined && court > 0 ? Math.min(shift ?? court, court) : shift;
         // M2.6: and when a date planned for today begins.
         const date = view.fact('circle.date-in') as number | undefined;
-        const until = date !== undefined ? Math.min(courtUntil ?? date, date) : courtUntil;
+        const dated = date !== undefined ? Math.min(courtUntil ?? date, date) : courtUntil;
+        // M2.8: and when a class of yours starts.
+        const lesson = view.fact('education.class-in') as number | undefined;
+        const until = lesson !== undefined ? Math.min(dated ?? lesson, lesson) : dated;
         const offered: { activity: Activity; minutes: unknown }[] = [];
         for (const activity of ACTIVITIES) {
           if (activity === 'work') {

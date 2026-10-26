@@ -1,6 +1,6 @@
 /**
  * What waits on you (D50): a favour asked, the police's visits, court dates, probation's
- * check-ins, money owed, an illness and its doctor (M2.7), your shifts ahead, and going to a job away from your block (M2.3), each
+ * check-ins, money owed, an illness and its doctor (M2.7), a class starting and student loans behind (M2.8), your shifts ahead, and going to a job away from your block (M2.3), each
  * with its day and what you can do about it now.
  * The badge counts this list and the panel shows it, so one function says what the player is told.
  * It reads the sim's facts, its state's own lists and the timers set for you, and offers only the
@@ -9,13 +9,14 @@
 import type { Action, TimeSlice } from '@eb/core';
 import { careerOf, type DealSlice, type LawState, type TiesSlice } from '@lyl/sim';
 import { careWaiting } from './care.ts';
+import { schoolWaiting } from './school.ts';
 import type { Life } from './session.ts';
 import { canGo, GO_TO_WORK } from './trip.ts';
 import { dayText, money, whenText } from './words.ts';
 
 export interface Waiting {
   readonly id: string;
-  readonly kind: 'favour' | 'police' | 'court' | 'probation' | 'owed' | 'shift' | 'health';
+  readonly kind: 'favour' | 'police' | 'court' | 'probation' | 'owed' | 'shift' | 'health' | 'school';
   /** The day it comes, or null for money owed. */
   readonly day: number | null;
   readonly text: string;
@@ -134,7 +135,15 @@ function front(life: Life): Waiting[] {
 
 /** Everything waiting on you, the soonest first; money owed last. */
 export function waiting(life: Life): Waiting[] {
-  const all = [...goToWork(life), ...favour(life), ...law(life), ...front(life), ...careWaiting(life), ...shifts(life)];
+  const all = [
+    ...goToWork(life),
+    ...favour(life),
+    ...law(life),
+    ...front(life),
+    ...careWaiting(life),
+    ...schoolWaiting(life),
+    ...shifts(life),
+  ];
   return all.sort((a, b) => (a.day ?? Number.POSITIVE_INFINITY) - (b.day ?? Number.POSITIVE_INFINITY));
 }
 
