@@ -313,6 +313,8 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | A borrower's death | federal Direct loans are discharged; the estate owes nothing (D113, amended) | `education/loans.ts`, the heir | consumer guides (Credible, MoneyLion, Harvard Law School's financial aid office), through search summaries; 34 CFR 685.212 not read | secondary |
 | The police's requirement | a high school diploma or GED for an employed recruit; an associate's for a pre-service recruit by the academy's end | careers (step 5) | MCOLES's licensing standards (updated July 2025), through search summaries | secondary |
 | Pay by credential | median weekly earnings, full-time, 25 and over, 2024: $930 with a diploma, $1,020 with some college and no degree, $1,099 with an associate's, $738 without a diploma | careers (step 5) | BLS, Employment Projections' education-pays table and CPS table 37b, through search summaries | secondary |
+| Finishing an associate's part time | of students starting part time at a public two-year college (fall 2012), 4.0 in 100 had graduated by the end of year 2, 15.1 by year 4 and 20.9 by year 6; full-time starters 32 by year 6 | the student bot's reading (ROADMAP Readings) | the National Student Clearinghouse's Yearly Success and Progress report, through search summaries | secondary |
+| Borrowing for an associate's | 33 in 100 associate's graduates of public colleges had ever borrowed (2019–20), owing $15,530 on average if they had | the student bot's reading | the Community College Research Center's fact sheet on community colleges and student debt, through search summaries | secondary |
 
 ## Open questions
 
