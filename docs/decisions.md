@@ -1051,13 +1051,19 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** By the tables, a year at a time (recommended, chosen). Whole lives through the steady bot, as a bench.
 
-### D142. The shop notices half as often, and B7 is a careful thief's. LOCKED, 2026-10-26 (Evan's call; the careful thief and the floor are this milestone's readings)
+### D142. The shop notices half as often, and B7 is a careful thief's. LOCKED, 2026-10-26 (Evan's calls)
 
 **Decision.** The clerk's odds of noticing a take drop from 45 to 22 in 100 and the camera's from 35 to 17; nobody's stays at 4, and heat still adds a point for every 2. B7 is measured on a careful thief: the thief bot, told to steal only while the odds shown are one in ten or better, is held at the moment in under 14 takes in 100. The reckless thief bot, which steals three times a day however hot it is, is left as it was for the law's sweeps; its heat reaches 100 and it is held about one take in five, which is the heat doing its work. The odds of being taken on keep a floor of 1 in 100, not 5: at 5, a record changed nothing for the 28 careers whose odds were already at the floor, and B4 failed.
 
 **Why.** Read on 2026-10-26: with the old odds the thief bot was held in 60 of 311 takes, 19%. Halving the clerk and camera moved that by nothing, because the bot already took from the shelves nobody sees; what held it was heat. A real shoplifter is mostly occasional, so the bar is a careful thief's.
 
-**Options considered.** Lowering the shop's notice odds (recommended, chosen). Leaving B7 at the reckless bot's rate and restating the bar. Slower heat.
+**Options considered.** For the odds: lowering the shop's notice odds (recommended, chosen); leaving B7 at the reckless bot's rate and restating the bar; slower heat. For the measure, asked once the odds alone hadn't moved it: the careful thief (recommended, chosen); the reckless bot with heat counting half as much (read 14.8%, so not enough alone); the bar restated as the odds shown at no heat.
+
+### D143. Phase 3 waits. LOCKED, 2026-10-26 (Evan's call)
+
+**Decision.** With M2.12's [auto] gates passed, Phase 3 (the unlock and Play) doesn't open yet. Its open questions wait with it: what a web player gets after the free year, the Play package id, and the order of its work.
+
+**Options considered.** Opening Phase 3 now, billing first (recommended); waiting (chosen).
 
 ---
 
