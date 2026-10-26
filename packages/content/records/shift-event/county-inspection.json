@@ -1,0 +1,37 @@
+{
+  "name": "The county inspection",
+  "tags": ["running-the-line"],
+  "weight": 3,
+  "prompt": "The county inspector comes in for the routine inspection and asks for whoever is in charge of the kitchen.",
+  "choices": [
+    {
+      "id": "owner",
+      "text": "Let the owner take her round while you keep the line going",
+      "outcome": {
+        "told": "The owner walks her through. You keep cooking. The report comes later, and nobody tells you what it says.",
+        "standing": -1
+      }
+    },
+    {
+      "id": "walk",
+      "text": "Walk her through it yourself, and answer for what she finds",
+      "odds": {
+        "base": 55,
+        "skill": 35,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "She finds two small things, and you fix both while she watches. The kitchen passes.",
+        "standing": 4,
+        "practice": 30
+      },
+      "failure": {
+        "told": "She finds the walk-in cooler running warm. It goes in the report as a priority violation, and she'll be back to check it.",
+        "standing": -4,
+        "needs": {
+          "calm": -15
+        }
+      }
+    }
+  ]
+}

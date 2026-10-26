@@ -1,0 +1,44 @@
+{
+  "name": "A cook doesn't show",
+  "tags": ["running-the-line"],
+  "weight": 5,
+  "prompt": "A cook on tonight's schedule hasn't come in and isn't answering their phone. The tickets are already coming.",
+  "choices": [
+    {
+      "id": "call",
+      "text": "Call around until someone can come in",
+      "outcome": {
+        "told": "The third person you call says yes and comes in an hour later. The first hour is slow, but nobody walks out.",
+        "standing": 1,
+        "needs": {
+          "calm": -5
+        }
+      }
+    },
+    {
+      "id": "cover",
+      "text": "Work their station as well as running the line",
+      "odds": {
+        "base": 35,
+        "skill": 45,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "You run the line and the empty station until close. The owner counts the night's tickets and nods.",
+        "standing": 4,
+        "practice": 45,
+        "needs": {
+          "rest": -5
+        }
+      },
+      "failure": {
+        "told": "You fall behind on both. Two tables send food back, and one leaves before it comes.",
+        "standing": -2,
+        "needs": {
+          "calm": -15,
+          "rest": -5
+        }
+      }
+    }
+  ]
+}

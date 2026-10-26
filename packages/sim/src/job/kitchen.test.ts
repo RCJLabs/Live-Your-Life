@@ -5,7 +5,7 @@ import { advance, doing, play, refusal, signUp, sliceGame, sliceSim, tickOf } fr
 import { createLifeGame } from '../game.ts';
 import type { Listing } from '../market/module.ts';
 import { barred, REPUTATION } from '../market/odds.ts';
-import { type CareerRecord, careerOf } from './records.ts';
+import { type CareerRecord, careerOf, eventsFor, shiftEventOf } from './records.ts';
 import type { JobSlice } from './state.ts';
 
 // The kitchen's careers with no shift events, so a shift runs straight through.
@@ -118,5 +118,62 @@ describe('hired for experience (M2.5, D122)', () => {
     const e = job(done.state).experience;
     expect(e['line-cook']).toBe(job(done.state).practice);
     expect(e['line-cook']).toBeGreaterThan(0);
+  });
+});
+
+// The two ranks with an event every shift, so a shift stops for one.
+const eventful = sliceSim({
+  ...PACK.records,
+  career: {
+    ...careers,
+    'kitchen-lead': { ...lead, events: { ...lead.events, chance: 100 } },
+    chef: { ...careers.chef, events: { ...(careers.chef as CareerRecord).events, chance: 100 } },
+  } as RecordPack['career'],
+});
+
+/** A shift as `career` worked until its event stops it: the state, and the event drawn. */
+function stopped(career: string, seed: string) {
+  const s = game.init(seed, eventful);
+  const start = { ...s, job: { ...job(s), career, standing: 50 } } as GameState;
+  const first = job(start).posted[0] as { day: number; shift: string };
+  const kind = careerOf(eventful.content, career).shifts.find((k) => k.id === first.shift) as { hour: number };
+  const signed = play(game, eventful, start, signUp(first.day)).state;
+  const at = tickOf(first.day, kind.hour) - (signed.time as { tick: number }).tick;
+  const there = play(game, eventful, signed, advance(at)).state;
+  // Work runs until the event comes due, as the page asks it to (job.shift-left).
+  const left = game.fact(there, 'job.shift-left', {}, eventful) as number;
+  const state = play(game, eventful, there, doing('work', left)).state;
+  return { state, data: state.kernel.modes.at(-1)?.data as { event: string; day: number } | undefined };
+}
+
+describe('the lead’s and the chef’s shifts (M2.5, D123)', () => {
+  const ids = (career: string) => eventsFor(sim.content, careerOf(sim.content, career)).map(([id]) => id);
+  const lines = ['county-inspection', 'no-show', 'short-delivery'];
+  const menu = ['keep-or-let-go', 'off-the-menu'];
+
+  it('draws the line’s events for a lead and a chef, the menu’s for a chef alone, and neither for a cook', () => {
+    for (const id of [...lines, ...menu]) expect(ids('line-cook')).not.toContain(id);
+    for (const id of lines) expect(ids('kitchen-lead')).toContain(id);
+    for (const id of menu) expect(ids('kitchen-lead')).not.toContain(id);
+    for (const id of [...lines, ...menu]) expect(ids('chef')).toContain(id);
+    // A lead and a chef still cook: the line cook's events come up for them too.
+    for (const id of ids('line-cook')) expect(ids('chef')).toContain(id);
+  });
+
+  it('rolls a chef’s chancy choice at the odds its preview shows', () => {
+    let seen = 0;
+    for (let i = 0; i < 30 && seen < 5; i++) {
+      const { state, data } = stopped('chef', `chef-${i}`);
+      if (!data || ![...lines, ...menu].includes(data.event)) continue;
+      seen++;
+      const chancy = shiftEventOf(sim.content, data.event).choices.find((c) => c.odds) as { id: string };
+      const [preview] = game.preview(state, [{ effect: 'shift-choice', ...data, choice: chancy.id }], eventful);
+      const chose = play(game, eventful, state, { type: 'job/choose', choice: chancy.id });
+      const rolled = chose.of('logic/rolled')[0];
+      expect(rolled).toBeDefined();
+      const chance = rolled?.outcome === 0 ? rolled.chance : 100 - (rolled?.chance as number);
+      expect(chance).toBe(preview?.chance);
+    }
+    expect(seen).toBeGreaterThan(0);
   });
 });
