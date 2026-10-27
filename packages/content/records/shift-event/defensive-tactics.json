@@ -1,0 +1,43 @@
+{
+  "name": "Defensive tactics",
+  "tags": ["bureau-academy"],
+  "weight": 3,
+  "prompt": "Mat work: a classmate twice your weight, two minutes, and you have to get to your feet and away.",
+  "choices": [
+    {
+      "id": "tap",
+      "text": "Work the move slowly and take the instructor's corrections",
+      "outcome": {
+        "told": "You don't win the round, but the instructor marks your technique as passing.",
+        "practice": 45,
+        "needs": {
+          "rest": -5
+        }
+      }
+    },
+    {
+      "id": "fight",
+      "text": "Go all out",
+      "odds": {
+        "base": 45,
+        "skill": 30,
+        "tired": 35
+      },
+      "outcome": {
+        "told": "You break the hold and get to the wall. The class claps once, as it does.",
+        "standing": 2,
+        "needs": {
+          "rest": -8
+        }
+      },
+      "failure": {
+        "told": "Your shoulder goes the wrong way. You sit the rest of the session out with ice on it.",
+        "standing": -2,
+        "needs": {
+          "rest": -10,
+          "calm": -5
+        }
+      }
+    }
+  ]
+}

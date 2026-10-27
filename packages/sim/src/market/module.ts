@@ -284,6 +284,10 @@ export const marketModule = (career?: string) =>
         for (const o of s.offers) ctx.apply({ effect: 'cancel-timer', timer: `offer-${o.opening}` });
         Object.assign(ctx.write(), { employer: null, reputation: REPUTATION.start, applications: [], offers: [] });
       },
+      // The federal bureau takes you on at its field office (M4.3 step 2): a site of its trainee's career.
+      'federal/reported': (ctx: ModuleContext<MarketSlice>, event: Beat) => {
+        ctx.write().employer = `${String(event.career)}-0`;
+      },
       'job/let-go': (ctx) => {
         ctx.write().employer = null;
         moveReputation(ctx, REPUTATION.letGo);

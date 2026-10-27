@@ -29,6 +29,8 @@ export interface Agency {
   readonly interview: { readonly minutes: number; readonly pass: number; readonly wait: number };
   readonly background: { readonly pass: number; readonly conviction: number; readonly wait: number };
   readonly again: number;
+  /** The Academy's career, whose ladder leads to the agent's (D157). */
+  readonly trainee: string;
 }
 
 /** The record, or null in a pack from before it. */

@@ -1,0 +1,38 @@
+{
+  "name": "A practical problem",
+  "tags": ["bureau-academy"],
+  "weight": 4,
+  "prompt": "The academy's mock street, with actors for suspects. Your team has a warrant for a man in the pharmacy, and a crowd of actors in the way.",
+  "choices": [
+    {
+      "id": "plan",
+      "text": "Wait for the whole team and go by the plan",
+      "outcome": {
+        "told": "It takes longer than the instructors like. Nobody is hurt, and the arrest is by the book.",
+        "practice": 60,
+        "standing": 1
+      }
+    },
+    {
+      "id": "move",
+      "text": "Move in while he is at the counter",
+      "odds": {
+        "base": 50,
+        "skill": 35,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "You have him cuffed before he turns round. The debrief calls it a clean arrest.",
+        "standing": 3,
+        "practice": 45
+      },
+      "failure": {
+        "told": "He goes out the back with the warrant still in your pocket. The debrief is an hour long.",
+        "standing": -3,
+        "needs": {
+          "calm": -5
+        }
+      }
+    }
+  ]
+}

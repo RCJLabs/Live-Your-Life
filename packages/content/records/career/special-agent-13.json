@@ -1,0 +1,63 @@
+{
+  "name": "Special agent (grade 13)",
+  "insurance": true,
+  "wage": 5588,
+  "employers": {
+    "districts": ["downtown"],
+    "staff": 0,
+    "turnover": 15,
+    "share": 0
+  },
+  "hiring": {
+    "base": 10,
+    "record": 5,
+    "reputation": 20
+  },
+  "shifts": [
+    {
+      "id": "days",
+      "hour": 8,
+      "minute": 0,
+      "minutes": 600
+    }
+  ],
+  "open": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+  "posting": {
+    "weekday": "thursday",
+    "fewest": 5,
+    "most": 5
+  },
+  "perWeek": 5,
+  "pay": {
+    "weekday": "friday",
+    "hour": 6,
+    "minute": 0
+  },
+  "withholding": ["federal-single", "social-security", "medicare", "michigan", "city-resident"],
+  "standing": {
+    "start": 50,
+    "shift": 2,
+    "lateAfter": 5,
+    "late": 4,
+    "missedAfter": 30,
+    "leftEarly": 6,
+    "noShow": 15,
+    "dropBefore": 1440,
+    "drop": 1
+  },
+  "warnings": {
+    "letGoAt": 2,
+    "lapse": 28
+  },
+  "skill": {
+    "half": 24000
+  },
+  "events": {
+    "tags": ["investigation"],
+    "chance": 60
+  },
+  "requires": {
+    "record": "no-felony",
+    "schooling": "bachelor"
+  }
+}

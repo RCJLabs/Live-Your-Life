@@ -42,5 +42,6 @@
     "conviction": 40,
     "wait": 120
   },
-  "again": 365
+  "again": 365,
+  "trainee": "agent-trainee"
 }

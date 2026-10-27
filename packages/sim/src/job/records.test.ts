@@ -23,6 +23,7 @@ describe("the slice's job content", () => {
   it('reads every career, shift event and tax, with their checks', () => {
     expect(records('career')).toEqual([
       'accountant',
+      'agent-trainee',
       'bank-teller',
       'carpenters-helper',
       'cashier',
@@ -57,6 +58,10 @@ describe("the slice's job content", () => {
       'server',
       'social-worker',
       'software-developer',
+      'special-agent',
+      'special-agent-11',
+      'special-agent-12',
+      'special-agent-13',
       'stocker',
       'team-assembler',
       'warehouse-worker',

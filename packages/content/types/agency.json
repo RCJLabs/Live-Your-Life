@@ -173,6 +173,11 @@
       "min": 0,
       "max": 1825,
       "description": "Days after a refusal before applying again."
+    },
+    "trainee": {
+      "kind": "ref",
+      "to": "career",
+      "description": "The career one cleared reports to: the Academy's, whose ladder leads to the agent's (M4.3 step 2, D157)."
     }
   }
 }
