@@ -38,8 +38,21 @@ const jobs = async (page: Page) => {
   await page.click('button[data-tab="jobs"]');
 };
 
+/**
+ * Eats at the flat's kitchenette when hungry, as a player waiting on answers would; a seed whose
+ * offers come late would otherwise starve into hospital in its sleeps.
+ */
+async function eatIfHungry(page: Page, kitchen: PlaceInfo): Promise<void> {
+  if ((await L<number>(page, 'fact', 'life.need', { need: 'food' })) >= 40) return;
+  await tap(page, kitchen.id);
+  await arrive(page);
+  await page.locator('#menu button[data-activity="eat"]').first().click();
+  await expect.poll(() => L<boolean>(page, 'busy'), { timeout: 10_000 }).toBe(false);
+}
+
 /** Sleeps, or rests, in your bed once, and waits for its time to pass on screen. */
-async function sleepOnce(page: Page, bed: PlaceInfo): Promise<void> {
+async function sleepOnce(page: Page, bed: PlaceInfo, kitchen: PlaceInfo): Promise<void> {
+  await eatIfHungry(page, kitchen);
   await tap(page, bed.id);
   await arrive(page);
   await page.locator('#menu button[data-action="life/do"]').first().click();
@@ -53,9 +66,9 @@ test('quits, applies across the city, takes the offer and goes to work off scree
   const errors = watchErrors(page);
   await page.goto('./?seed=life-1');
   await expect(page.locator('#when')).toContainText('07:0');
-  const bed = (await L<PlaceInfo[]>(page, 'places')).find(
-    (p) => p.label === 'Bed' && p.building === 'apartment',
-  ) as PlaceInfo;
+  const all = await L<PlaceInfo[]>(page, 'places');
+  const bed = all.find((p) => p.label === 'Bed' && p.building === 'apartment') as PlaceInfo;
+  const kitchen = all.find((p) => p.label === 'Kitchenette' && p.building === 'apartment') as PlaceInfo;
 
   await jobs(page);
   await expect(page.locator('#your-job')).toContainText('on your block');
@@ -73,8 +86,9 @@ test('quits, applies across the city, takes the offer and goes to work off scree
     if ((await away.count()) > 0) {
       await expect(page.locator('#openings li', { hasText: 'who apply are taken' }).first()).toBeVisible();
     }
-    // Up to three at once, as the seeker bot does, the best odds listed first: the line cook takes
-    // 15 in 100 (D76), most of M2.8's careers 5, too few for the rounds here.
+    // Up to five at once, the most the market waits on, the best odds listed first: the line cook
+    // takes 15 in 100 (D76), most of M2.8's careers 5. Three a round was enough only on the seeds
+    // where the city's draw put a line cook's opening near; each career added redraws it.
     const listed = await L<{ opening: string; odds: number; problem: string | null }[]>(
       page,
       'fact',
@@ -83,7 +97,7 @@ test('quits, applies across the city, takes the offer and goes to work off scree
     const best = listed.filter((l) => l.problem === null).sort((a, b) => b.odds - a.odds);
     let sent = 0;
     for (const l of best) {
-      if (sent >= 3) break;
+      if (sent >= 5) break;
       const go = page
         .locator(`#openings li[data-opening="${l.opening}"]`, { hasNotText: 'on your block' })
         .locator('button[data-action="market/apply"]');
@@ -92,7 +106,8 @@ test('quits, applies across the city, takes the offer and goes to work off scree
       sent++;
     }
     await page.click('#panel-close');
-    for (let n = 0; n < 6 && (await L<number>(page, 'fact', 'market.waiting')) > 0; n++) await sleepOnce(page, bed);
+    for (let n = 0; n < 6 && (await L<number>(page, 'fact', 'market.waiting')) > 0; n++)
+      await sleepOnce(page, bed, kitchen);
   }
   expect(await L<number>(page, 'fact', 'market.offers'), 'an offer, after twelve rounds').toBeGreaterThan(0);
   await jobs(page);
@@ -107,7 +122,7 @@ test('quits, applies across the city, takes the offer and goes to work off scree
   for (let i = 0; i < 8; i++) {
     const go = (await L<{ kind: string; text: string }[]>(page, 'waiting')).some((w) => w.text.includes('walk away'));
     if (go) break;
-    await sleepOnce(page, bed);
+    await sleepOnce(page, bed, kitchen);
   }
   await page.click('#badge');
   await page.click('button[data-tab="waiting"]');
