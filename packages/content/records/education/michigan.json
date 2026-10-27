@@ -541,7 +541,29 @@
       "conviction": 10,
       "felony": 20,
       "wait": 120
-    }
+    },
+    "evening": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 18,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 18,
+        "minutes": 75
+      },
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 20,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 20,
+        "minutes": 75
+      }
+    ]
   },
   "law": {
     "name": "the law school",
@@ -815,6 +837,28 @@
       "repeat": 32,
       "hours": 400,
       "least": 20
-    }
+    },
+    "evening": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 18,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 18,
+        "minutes": 75
+      },
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 20,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 20,
+        "minutes": 75
+      }
+    ]
   }
 }

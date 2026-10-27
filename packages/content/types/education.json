@@ -599,6 +599,38 @@
               "description": "Days before you can apply again after a no."
             }
           }
+        },
+        "evening": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "Evening sections (M4.2, D152): when a term's courses meet if taken by evening, the first course at the first slot. Absent, there are none.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          },
+          "optional": true
         }
       }
     },
@@ -994,6 +1026,38 @@
               "description": "The chance with no study, in 100."
             }
           }
+        },
+        "evening": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "Evening sections (M4.2, D152): when a term's courses meet if taken by evening, the first course at the first slot. Absent, there are none.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          },
+          "optional": true
         }
       }
     }

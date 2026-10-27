@@ -1113,6 +1113,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** A handful with real wages (recommended, chosen). Lawyer alone, a bachelor's raising odds and pay in the careers there are.
 
+### D152. Evening sections at the university and law school. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** The university and law school offer evening sections as the college does: at enrolling you take the term's courses by day or by evening, so someone with a day job can study part time. Answers open question 106's first half, found by the degree bot (half its bachelor's lives were let go for the shifts their day classes cost them).
+
+**Options considered.** Evening sections (recommended, chosen). Letting a worker pick the shift kind they work, a change to every career. Leaving it, the hardship as the reading, to come back to with Phase 5's money.
+
+### D153. M4.3 is federal law. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** After M4.2, the police ladder past detective: a federal agent's application, its academy and its cases, built on the degrees M4.2 added and the detective rank there is. Medicine and Phase 5 wait.
+
+**Options considered.** Federal law (recommended, chosen). Medicine (EMT to physician), likely two milestones. Phase 5, money that matters, leaving Phase 4 for now.
+
 ---
 
 ## Open items
