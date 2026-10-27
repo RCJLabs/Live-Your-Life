@@ -1,0 +1,46 @@
+{
+  "name": "the federal bureau",
+  "requires": {
+    "least": 23,
+    "most": 36,
+    "careers": [
+      "elementary-teacher",
+      "accountant",
+      "social-worker",
+      "software-developer",
+      "civil-engineer",
+      "lawyer",
+      "paralegal",
+      "computer-support",
+      "police-officer",
+      "detective"
+    ],
+    "minutes": 249600,
+    "advanced": 124800
+  },
+  "written": {
+    "minutes": 180,
+    "pass": 35,
+    "perHour": 1,
+    "most": 85,
+    "wait": 21
+  },
+  "fitness": {
+    "minutes": 90,
+    "least": 15,
+    "full": 85,
+    "hours": 60,
+    "wait": 45
+  },
+  "interview": {
+    "minutes": 120,
+    "pass": 50,
+    "wait": 30
+  },
+  "background": {
+    "pass": 75,
+    "conviction": 40,
+    "wait": 120
+  },
+  "again": 365
+}

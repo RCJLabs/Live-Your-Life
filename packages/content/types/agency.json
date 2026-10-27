@@ -1,0 +1,178 @@
+{
+  "title": "Agency",
+  "description": "A federal law enforcement agency's application (M4.3, D154): what it asks, and each stage's chance and wait, traced to CALIBRATION.md (tune where marked there).",
+  "nameField": "name",
+  "fields": {
+    "name": {
+      "kind": "text",
+      "min": 1,
+      "max": 60
+    },
+    "requires": {
+      "kind": "group",
+      "description": "What an application asks: a bachelor's, an age, and years of professional work, fewer with an advanced degree.",
+      "fields": {
+        "least": {
+          "kind": "int",
+          "min": 18,
+          "max": 60,
+          "description": "The youngest age that may apply."
+        },
+        "most": {
+          "kind": "int",
+          "min": 18,
+          "max": 60,
+          "description": "The oldest age that may apply."
+        },
+        "careers": {
+          "kind": "list",
+          "min": 1,
+          "max": 40,
+          "of": {
+            "kind": "ref",
+            "to": "career"
+          },
+          "description": "Careers whose work counts as professional experience."
+        },
+        "minutes": {
+          "kind": "int",
+          "min": 0,
+          "max": 2000000,
+          "description": "Minutes worked in them that an application asks."
+        },
+        "advanced": {
+          "kind": "int",
+          "min": 0,
+          "max": 2000000,
+          "description": "Minutes asked of one with an advanced degree (a JD)."
+        }
+      }
+    },
+    "written": {
+      "kind": "group",
+      "description": "The written test: minutes it takes, its pass rate with no study, the points an hour of study adds, the most, and the days from applying until it can be sat.",
+      "fields": {
+        "minutes": {
+          "kind": "int",
+          "min": 30,
+          "max": 600,
+          "description": "Minutes it takes."
+        },
+        "pass": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Passing, in 100, with no study."
+        },
+        "perHour": {
+          "kind": "int",
+          "min": 0,
+          "max": 20,
+          "description": "Points an hour of study adds."
+        },
+        "most": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "The highest chance."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 365,
+          "description": "Days from applying."
+        }
+      }
+    },
+    "fitness": {
+      "kind": "group",
+      "description": "The fitness test: passing with no training and with the hours of training it asks, in proportion between, and the days from the written test.",
+      "fields": {
+        "minutes": {
+          "kind": "int",
+          "min": 30,
+          "max": 600,
+          "description": "Minutes it takes."
+        },
+        "least": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Passing, in 100, untrained."
+        },
+        "full": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Passing, in 100, with the hours it asks."
+        },
+        "hours": {
+          "kind": "int",
+          "min": 1,
+          "max": 500,
+          "description": "Hours of training it asks."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 365,
+          "description": "Days from the written test."
+        }
+      }
+    },
+    "interview": {
+      "kind": "group",
+      "description": "The interview: its pass rate, minutes and the days from the fitness test.",
+      "fields": {
+        "minutes": {
+          "kind": "int",
+          "min": 30,
+          "max": 600,
+          "description": "Minutes it takes."
+        },
+        "pass": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Passing, in 100."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 365,
+          "description": "Days from the fitness test."
+        }
+      }
+    },
+    "background": {
+      "kind": "group",
+      "description": "The polygraph and background investigation: its pass rate, less for any conviction, and the days it takes.",
+      "fields": {
+        "pass": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Passing, in 100."
+        },
+        "conviction": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Taken for any conviction."
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 730,
+          "description": "Days it takes."
+        }
+      }
+    },
+    "again": {
+      "kind": "int",
+      "min": 0,
+      "max": 1825,
+      "description": "Days after a refusal before applying again."
+    }
+  }
+}

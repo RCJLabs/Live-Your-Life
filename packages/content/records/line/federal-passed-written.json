@@ -1,0 +1,8 @@
+{
+  "beat": "federal/passed",
+  "when": {
+    "field": "stage",
+    "is": "written"
+  },
+  "text": "{you} passed the federal bureau's written test."
+}

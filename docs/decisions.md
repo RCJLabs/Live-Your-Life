@@ -1125,6 +1125,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Federal law (recommended, chosen). Medicine (EMT to physician), likely two milestones. Phase 5, money that matters, leaving Phase 4 for now.
 
+### D154. Getting into the FBI in stages, each rolled. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** A special agent's application goes in stages, each one's odds shown first and rolled as shown: the application against the requirements (a bachelor's, two years of professional work, 23 to 36), a written test, a fitness test you train for, an interview, and the polygraph and background investigation, where your record weighs; then the Academy. The real figure, about 2 in 100 applicants hired, is to come out of the stages and how you prepare, not be rolled once.
+
+**Options considered.** Stages, each rolled (recommended, chosen). One application at odds from the degree, work, fitness and record, then the Academy.
+
+### D155. A federal agent works cases against the city's crime. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** An agent's work is assignments, their outcomes abstracted and their consequences real (D13), drawn from the crime the sim has: the supplier's organization, the street crews, fraud. Pay on the General Schedule with law enforcement availability pay. The intelligence rung D13 put at the top waits.
+
+**Options considered.** Cases against the city's crime (recommended, chosen). Generic assignments as shift events, not tied to the sim's crime. Cases and the CIA rung in this milestone.
+
+### D156. A new agent stays in the city. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** The city's field office takes a new agent, where the FBI would post one to any of its 56 offices. Written beside the figure as a departure: the life, family and people known stay where they are.
+
+**Options considered.** Stay in the city (recommended, chosen). A posting elsewhere ending the city chapter.
+
 ---
 
 ## Open items

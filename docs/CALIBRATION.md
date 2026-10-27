@@ -432,6 +432,19 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 
 **For the degree bot's readings (M4.2 step 5).** Public bachelor's graduates who borrowed owed about $29,000 on average (class of 2020, TICAS, from general knowledge; to check), against the bot's $26,737 to $34,188. Law graduates who borrowed owed about $130,000 on average for law school (AccessLex and ABA summaries, from general knowledge; to check), against the bot's median $171,911: the bot borrows the most each term and some took more than six terms. Neither is a bar the bot is tuned to.
 
+## The federal bureau (M4.3, D153–D156)
+
+The game calls it the federal bureau: a real agency's name stays out of player-facing text (VOICE.md's blocklist). The figures are the FBI's.
+
+| What | Figure | Where it's used | Source | Status |
+| --- | --- | --- | --- | --- |
+| Who may apply | a bachelor's; 23 to 36 (applying before the 37th birthday); two years of full-time professional work, one with an advanced degree; a felony conviction bars | `agency/bureau.json`, `requires`; `federal/apply.ts` | fbijobs.gov's special agent requirements and FAQ, and USAJOBS postings, through search summaries | secondary |
+| Professional work | the minutes worked in the careers that ask for a degree, and police officer and detective: 2,080 hours a year | `requires.careers`, `minutes`, `advanced` | the FBI's "full-time professional work experience", taken as these careers (a game's) | (tune) |
+| The stages | a written test (180 minutes), a physical fitness test (four events, 10 points to pass on fbijobs.gov, 12 in older guides), an interview, then the polygraph and background investigation | `written`, `fitness`, `interview`, `background` | fbijobs.gov and the FBI's How to Apply guide, through search summaries; the events' points aren't modelled, only a chance | secondary |
+| Each stage's chance | written 35 in 100 with no study, a point an hour, at most 85; fitness 15 untrained to 85 with 60 hours' training; interview 50; background 75, 40 fewer with any conviction | `written`, `fitness`, `interview`, `background` | none read: about 2 in 100 of all applicants are hired (a field office's figure; 25,000 applying for about 400 places in a recruiter's), and the FBI told the press it needs about 16,000 applicants for 900 places a year (WSJ, 2018). The stages' rates are proposals for that to come out of | (tune) |
+| The waits | 21 days to the written test, 45 to the fitness test, 30 to the interview, 120 for the background; a year before applying again | `wait`, `again` | none read: the FBI says the process takes a year or more | (tune) |
+| A posting | the city's field office | D156 | the FBI posts a new agent to any of its 56 field offices: a departure, on purpose | departure |
+
 ## The year (M2.10, D130–D133)
 
 The calendar's weather and bills, from a mid-Michigan city of Ridgefield's class. Every figure was read through search summaries on 2026-10-26; NOAA's and EIA's own tables were out of reach from here and are to be checked against them.

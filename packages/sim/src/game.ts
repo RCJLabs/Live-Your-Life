@@ -23,6 +23,7 @@ import { editionModule } from './edition/module.ts';
 import { educationModule } from './education/module.ts';
 import { eventsModule } from './events/module.ts';
 import { familyModule } from './family/module.ts';
+import { federalModule } from './federal/module.ts';
 import { healthModule } from './health/module.ts';
 import { homeModule, RENT_TIMER } from './home.ts';
 import { jobModule } from './job/module.ts';
@@ -113,6 +114,8 @@ export function lifeModules(options: LifeOptions = {}): Module[] {
     eventsModule(options.events ?? true),
     // The free year and the unlock (M2.11, D137): added to a save from before it, the save is free.
     editionModule(options.unlocked ?? false),
+    // The federal bureau (M4.3): added to a save from before it, the life has never applied.
+    federalModule,
     // The people (M2.2): each share hears time pass its hour, so a save from before them needs no timer.
     peopleModule(options.people ?? PEOPLE, true),
     // Who has left or changed jobs (M2.3): heard before the shares settle their hours.
