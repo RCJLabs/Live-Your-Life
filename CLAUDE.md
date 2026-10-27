@@ -121,7 +121,7 @@ apps/game/          the PWA: Vite, vite-plugin-pwa, version.json. Since M1.6 the
                     since M2.7 illness, the doctor and the hospital (src/life/care.ts), and a death and the heir (src/life/heir.ts);
                     since M2.8 the School tab: the GED, enrolling, classes and the loans (src/life/school.ts);
                     since M2.9 the ways across the city, on foot, by bus or by a ride (src/life/ways.ts);
-                    since M2.10 a life event's sheet (src/life/events.ts); since M2.11 the free year's last card and the unlock (src/life/edition.ts);
+                    since M2.10 a life event's sheet (src/life/events.ts); since M2.11 the free year's last card and the unlock (src/life/edition.ts); since M4.3 the federal bureau on the Jobs tab (src/life/bureau.ts);
                     dev/ holds the character sheet and the bench (pnpm dev, then /dev/figures.html); e2e/ the Playwright specs, and
                     since M1.8 e2e/bot/, the browser bot that plays by taps
 tools/purity/       the engine's purity rules, applied to this repo's eb.pure packages

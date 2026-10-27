@@ -8,6 +8,7 @@ import { hired, left, report, reportOptions } from './academy.ts';
 import {
   apply,
   applyOptions,
+  applyProblem,
   decide,
   type FederalSlice,
   NO_APPLICATION,
@@ -102,6 +103,15 @@ export const federalModule = defineModule<FederalSlice>({
       read: ({ state }) => state.due,
       domain: { type: 'int', min: -1 },
       label: 'the day the application’s next stage can be sat or is decided',
+    },
+    // For the page: why an application can't be made now, or '' when it can.
+    problem: {
+      read: (view) => {
+        const a = agencyOf(view.content);
+        return a ? (applyProblem(view as never, a) ?? '') : 'no-agency';
+      },
+      domain: { type: 'text' },
+      label: 'why you can’t apply to the bureau now',
     },
     // Heard by the shift events' conditions: the case work comes only with a case.
     working: { read: ({ state }) => state.case !== null, domain: { type: 'bool' }, label: 'working a case' },
