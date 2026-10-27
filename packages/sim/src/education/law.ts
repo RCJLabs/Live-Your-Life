@@ -183,14 +183,30 @@ export function barChance(v: View, l: LawSchool): number {
   return asked > 0 ? l.bar.least + Math.floor(((rate - l.bar.least) * done) / asked) : rate;
 }
 
-/** The bar, offered on its days from 07:00 to 09:00, with the JD and the fee in hand. */
-export function barOptions(v: View): Record<string, never>[] {
+/** The hours a bar day's sitting can begin: from when the doors open to when the exam starts (tune). */
+const BAR_OPENS = 7 * 60;
+const BAR_CLOSES = 9 * 60;
+
+/** The JD, not yet admitted, the fee in hand, and today a bar day. */
+function barToday(v: View): boolean {
   const l = lawOf(v);
   const s = slice(v);
-  if (!l || s.finished !== 'jd' || s.law.licensed || !barDay(v, l)) return [];
+  return l !== null && s.finished === 'jd' && !s.law.licensed && barDay(v, l) && cash(v) >= barFee(l, s.law);
+}
+
+/** The bar, offered on its days from 07:00 to 09:00, with the JD and the fee in hand. */
+export function barOptions(v: View): Record<string, never>[] {
   const minute = v.fact('time.of-day') as number;
-  if (minute < 7 * 60 || minute >= 9 * 60 || cash(v) < barFee(l, s.law)) return [];
-  return [{}];
+  return barToday(v) && minute >= BAR_OPENS && minute < BAR_CLOSES ? [{}] : [];
+}
+
+/**
+ * Minutes until the bar's doors open on its day, or undefined: what you do ends then, as it does
+ * for a class (life.ts), so the exam isn't slept through.
+ */
+export function barIn(v: View): number | undefined {
+  const minute = v.fact('time.of-day') as number;
+  return barToday(v) && minute < BAR_OPENS ? BAR_OPENS - minute : undefined;
 }
 
 export function sitBar(ctx: Ctx): void {

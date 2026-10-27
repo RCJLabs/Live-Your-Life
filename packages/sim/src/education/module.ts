@@ -26,6 +26,7 @@ import {
   apply as applyLaw,
   applyOptions as applyLawOptions,
   barChance,
+  barIn,
   barOptions,
   barResult,
   expectedLsat,
@@ -279,15 +280,24 @@ export const educationModule = defineModule<EducationSlice>({
       domain: { type: 'int', min: -1, max: 180 },
       label: 'your best LSAT score, or -1',
     },
+    'law-admitted': {
+      read: ({ state }) => state.law.admitted,
+      domain: { type: 'bool' },
+      label: 'admitted to law school',
+    },
     licensed: {
       read: ({ state }) => state.law.licensed,
       domain: { type: 'bool' },
       label: 'admitted to the bar',
     },
+    // And the bar's doors on its day (step 5): what you do ends then too.
     'class-in': {
-      read: (v) => classIn(v),
+      read: (v) => {
+        const times = [classIn(v), barIn(v)].filter((m): m is number => m !== undefined);
+        return times.length > 0 ? Math.min(...times) : undefined;
+      },
       domain: { type: 'int', min: 1 },
-      label: 'minutes until a class of yours starts today',
+      label: 'minutes until a class of yours, or the bar exam, starts today',
     },
     'aid-income': {
       read: (v) => aidIncome(v),

@@ -192,6 +192,24 @@ describe('the bar exam (M4.2 step 2)', () => {
     expect(refusal(game, sim, noon, { type: 'education/sit-bar' })).toBe('no-bar');
   });
 
+  it('ends what you do when the doors open on its day, as a class does, so it isn’t slept through', () => {
+    // 05:00 on 28 July: two hours before the doors.
+    const early = play(game, sim, lifeWith('bar', jd), advance(56 * MINUTES_PER_DAY - 120)).state;
+    expect(fact(early, 'education.class-in')).toBe(120);
+    const sleep = offered(early, 'life/do').find((o) => o.activity === 'sleep');
+    expect(sleep?.minutes).toBe(120);
+    // Not for one without the JD, nor the day before.
+    const bachelor = play(
+      game,
+      sim,
+      lifeWith('bar', { ...jd, finished: 'bachelor' }),
+      advance(56 * MINUTES_PER_DAY - 120),
+    ).state;
+    expect(fact(bachelor, 'education.class-in')).toBeUndefined();
+    const before = play(game, sim, lifeWith('bar', jd), advance(55 * MINUTES_PER_DAY - 120)).state;
+    expect(fact(before, 'education.class-in')).toBeUndefined();
+  });
+
   it('passes at the real rate with the study it asks, less in proportion short of it, as rolled', () => {
     const odds = (o: Parameters<typeof lifeWith>[1]) => peek(lifeWith('o', o), { effect: 'bar-odds' }).chance;
     const asked = l.bar.hours * 60;
