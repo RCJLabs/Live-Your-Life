@@ -22,20 +22,20 @@ export interface Applicant {
   /** Of them, felonies (M2.4). */
   readonly felonies: number;
   readonly reputation: number;
-  /** The highest schooling finished (M2.8): 'none', 'diploma', 'ged', 'associate' or 'bachelor' (M4.2). */
+  /** The highest schooling finished (M2.8): 'none', 'diploma', 'ged', 'associate', 'bachelor' or 'jd' (M4.2). */
   readonly schooling: string;
+  /** Admitted to the bar (M4.2 step 2). */
+  readonly licensed?: boolean;
   /** Minutes worked in each career, at any employer (M2.5, D122). */
   readonly worked?: Readonly<Record<string, number>>;
 }
 
+/** The degrees in order: each meets what those before it do (M4.2). */
+const DEGREES = ['associate', 'bachelor', 'jd'];
+
 /** Whether what you finished meets what a career asks: a GED counts as a diploma. */
-/** A bachelor's meets what an associate's does (M4.2); a GED, what a diploma does. */
 const meets = (finished: string, need: 'high-school' | 'associate' | 'bachelor'): boolean =>
-  need === 'bachelor'
-    ? finished === 'bachelor'
-    : need === 'associate'
-      ? finished === 'associate' || finished === 'bachelor'
-      : finished !== 'none';
+  need === 'high-school' ? finished !== 'none' : DEGREES.indexOf(finished) >= DEGREES.indexOf(need);
 
 /** Minutes worked in any of `careers`. */
 export const experienceIn = (you: Pick<Applicant, 'worked'>, careers: readonly string[]): number =>
@@ -44,14 +44,17 @@ export const experienceIn = (you: Pick<Applicant, 'worked'>, careers: readonly s
 /**
  * Why you can't be hired into a career at all, or null. Theft was every offence until M2.4, so
  * none and no-theft both bar any conviction; no-felony bars only a felony (MCOLES's standard).
- * Schooling comes first (M2.8, D114): a diploma or GED, or an associate's; then experience (M2.5, D122).
+ * Schooling comes first (M2.8, D114): a diploma or GED, an associate's or a bachelor's; then a licence
+ * (M4.2), then experience (M2.5, D122).
  */
 export function barred(
   career: CareerRecord,
   you: Applicant,
-): 'record' | 'high-school' | 'associate' | 'bachelor' | 'experience' | null {
+): 'record' | 'high-school' | 'associate' | 'bachelor' | 'licence' | 'experience' | null {
   const need = career.requires?.schooling;
   if (need && !meets(you.schooling, need)) return need;
+  // A lawyer is one admitted to the bar (M4.2): the JD alone doesn't make one.
+  if (career.requires?.licence === 'bar' && you.licensed !== true) return 'licence';
   const exp = career.requires?.experience;
   if (exp && experienceIn(you, exp.careers) < exp.minutes) return 'experience';
   const rule = career.requires?.record;

@@ -48,6 +48,19 @@ describe('credentials and careers (M2.8 step 5, D114)', () => {
     expect(barred(recruit, { ...you('ged'), convictions: 1, felonies: 1 })).toBe('record');
   });
 
+  it('bars the bachelor’s careers without one, and a lawyer’s without the bar; a higher degree meets a lower (M4.2)', () => {
+    const teacher = careerOf(PACK_STORE, 'elementary-teacher');
+    expect(barred(teacher, you('associate'))).toBe('bachelor');
+    expect(barred(teacher, you('bachelor'))).toBeNull();
+    expect(barred(teacher, you('jd'))).toBeNull();
+    expect(barred(teacher, { ...you('bachelor'), convictions: 1, felonies: 1 })).toBe('record');
+    expect(barred(careerOf(PACK_STORE, 'paralegal'), you('bachelor'))).toBeNull();
+    const lawyer = careerOf(PACK_STORE, 'lawyer');
+    expect(barred(lawyer, you('bachelor'))).toBe('licence');
+    expect(barred(lawyer, you('jd'))).toBe('licence');
+    expect(barred(lawyer, { ...you('jd'), licensed: true })).toBeNull();
+  });
+
   it('adds the points a preferred credential is worth to the odds, and only for those who hold it', () => {
     const support = careerOf(PACK_STORE, 'computer-support');
     const points = support.hiring.prefers?.points as number;
@@ -78,10 +91,21 @@ describe('credentials and careers (M2.8 step 5, D114)', () => {
     expect((odds('associate') as number) - (odds('diploma') as number)).toBe(20);
   });
 
+  it('lists a lawyer’s opening as closed until you are admitted to the bar, from the education module’s fact', () => {
+    const bar = sliceSim(records(clerk({ requires: { schooling: 'bachelor', licence: 'bar' } })));
+    const s = schooled(game.init('credentials', bar), 'jd');
+    const edu = s.education as { law: object };
+    const problem = (state: GameState) =>
+      (game.fact(state, 'market.openings', undefined, bar) as Listing[]).find((l) => l.career === CLERK)?.problem;
+    expect(problem(s)).toBe('licence');
+    const admitted = { ...s, education: { ...edu, law: { ...edu.law, licensed: true } } } as GameState;
+    expect(problem(admitted)).toBeNull();
+  });
+
   it('pays by credential as BLS reads it: the jobs each one opens, within 15% of the step up', () => {
     // BLS's median weekly earnings, full time, 25 and over, 2024: what each credential's jobs pay
     // against those without a diploma (CALIBRATION.md). The game's are the careers' starting wages.
-    const BLS = { none: 738, 'high-school': 930, associate: 1099 } as const;
+    const BLS = { none: 738, 'high-school': 930, associate: 1099, bachelor: 1543 } as const;
     const median = (xs: number[]) => {
       const s = [...xs].sort((a, b) => a - b);
       return s.length % 2
@@ -96,7 +120,7 @@ describe('credentials and careers (M2.8 step 5, D114)', () => {
       .filter((c) => c.employers.staff > 0 && c.requires?.experience === undefined);
     const at = (need: keyof typeof BLS) =>
       median(hiring.filter((c) => (c.requires?.schooling ?? 'none') === need).map((c) => c.wage));
-    for (const need of ['high-school', 'associate'] as const) {
+    for (const need of ['high-school', 'associate', 'bachelor'] as const) {
       const game = at(need) / at('none');
       const real = BLS[need] / BLS.none;
       expect(Math.abs(game / real - 1), need).toBeLessThan(0.15);

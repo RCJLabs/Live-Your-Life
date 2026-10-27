@@ -27,7 +27,9 @@ describe('where the employers stand, and the walk to them (M2.3, D73)', () => {
       const w = work.walkTo(e.id);
       expect(w, e.id).not.toBeNull();
       if (!w) continue;
-      expect(w.minutes).toBe(Math.max(1, Math.ceil(w.metres / WALK_PACE)));
+      // The minutes come from the metres before they are rounded to whole ones: within half a metre.
+      expect(w.minutes).toBeGreaterThanOrEqual(Math.max(1, Math.ceil((w.metres - 0.5) / WALK_PACE)));
+      expect(w.minutes).toBeLessThanOrEqual(Math.max(1, Math.ceil((w.metres + 0.5) / WALK_PACE)));
       // Ridgefield is 14 km across: no walk is longer than its two sides.
       expect(w.metres).toBeLessThan(28_000);
     }

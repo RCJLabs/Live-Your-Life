@@ -76,6 +76,12 @@
           "values": ["high-school", "associate", "bachelor"],
           "description": "The least schooling it hires (M2.8 step 5, D114): high-school takes a diploma or a GED; associate an associate's degree or more; bachelor a bachelor's (M4.2). Traced in CALIBRATION.md."
         },
+        "licence": {
+          "kind": "enum",
+          "optional": true,
+          "values": ["bar"],
+          "description": "A licence it hires only with (M4.2): bar, admitted to the bar."
+        },
         "experience": {
           "kind": "group",
           "optional": true,
