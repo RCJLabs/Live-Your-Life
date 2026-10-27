@@ -21,6 +21,7 @@ interface Shown {
   readonly seen: number;
   readonly passing: number;
   readonly price: number;
+  readonly robbed: number;
 }
 const shown = (s: GameState, at = game): Shown =>
   turnFor(at, sim, s, Rng.create('shown'), 0).preview([{ effect: 'corner-hour' }])[0] as unknown as Shown;
@@ -52,13 +53,13 @@ describe('the street trade (M2.4, D78, D82)', () => {
     const odds = shown(s);
     expect(odds.buyer).toBe(trade.corner.buyers[22]);
     const r = play(game, sim, s, CORNER);
-    // A roll for each ten minutes, and one for each sale: each at the odds shown.
+    // A roll for a robbery first (M4.1 step 3), one for each ten minutes, and one for each sale: each at the odds shown.
     const sold = r.of('deal/sold').length;
     const rolls = r.of('logic/rolled');
-    expect(rolls.length).toBe(6 + sold);
+    expect(rolls.length).toBe(1 + 6 + sold);
     // A beat carries the chance of the outcome that came up (law/week.test.ts).
     const first = (b: Record<string, unknown>) => (b.outcome === 0 ? b.chance : 100 - (b.chance as number));
-    for (const b of rolls) expect([odds.buyer, odds.seen]).toContain(first(b));
+    for (const b of rolls) expect([odds.robbed, odds.buyer, odds.seen]).toContain(first(b));
     expect(deal(r.state).held).toBe(35 - sold * trade.sale.grams);
     expect(cash(r.state)).toBe(cash(s) + sold * trade.sale.price);
     expect(r.fact('clock.hour')).toBe(23);

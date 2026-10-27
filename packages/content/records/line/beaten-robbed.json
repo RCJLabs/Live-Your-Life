@@ -1,0 +1,8 @@
+{
+  "beat": "deal/beaten",
+  "when": {
+    "field": "by",
+    "is": "robbed"
+  },
+  "text": "Whoever robbed {you} hurt them as well."
+}

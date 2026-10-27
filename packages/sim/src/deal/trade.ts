@@ -7,7 +7,17 @@
 import type { Action, Effect, PreviewContext } from '@eb/core';
 import { type Lot, TRADE, tradeOf } from './records.ts';
 import { noticed, runOff, YOURS, yourCorner } from './rivals.ts';
-import { type DealContext, type DealSlice, type DealView, heatOf, raiseHeat, sliceOf } from './state.ts';
+import {
+  type DealContext,
+  type DealSlice,
+  type DealView,
+  dirtyOf,
+  earned,
+  heatOf,
+  raiseHeat,
+  sliceOf,
+} from './state.ts';
+import { robbedOdds } from './violence.ts';
 import { passingNow } from './witnesses.ts';
 
 /** Trust with the supplier holds at most this much. */
@@ -98,7 +108,17 @@ export const cornerHour = {
     const buyer = buyerOdds(ctx);
     const seen = seenOdds(ctx);
     const passing = passingNow(ctx);
+    const robbed = robbedOdds(ctx);
     ctx.emit('on-corner', { buyer, seen, passing });
+    // Robbed first, at the hour's odds (D146): what is taken is not there for the buyers after.
+    if (robbed > 0)
+      ctx.apply({
+        effect: 'roll',
+        outcomes: [
+          { chance: robbed, effects: [{ effect: 'robbed' }] },
+          { chance: 100 - robbed, effects: [] },
+        ],
+      });
     for (let k = 0; k < SLOTS && buyer > 0; k++) {
       const outcomes = [{ chance: buyer, effects: [{ effect: 'buyer', seen, passing }] }];
       ctx.apply({
@@ -119,6 +139,8 @@ export const cornerHour = {
       price: t.sale.price,
       held: held.holder !== -1,
       left: held.left,
+      robbed: robbedOdds(ctx),
+      trouble: held.holder !== -1 && held.left === 0 ? tradeOf(ctx.content).violence.trouble : 0,
     };
   },
 };
@@ -134,7 +156,7 @@ export function buyerCame(ctx: DealContext, effect: Effect): void {
   w.held -= t.sale.grams;
   w.sales += 1;
   w.takings += t.sale.price;
-  ctx.apply({ effect: 'add-resource', resource: 'cash', by: t.sale.price });
+  earned(ctx, t.sale.price);
   raiseHeat(ctx, t.heat.sale);
   ctx.emit('sold', { grams: t.sale.grams, price: t.sale.price });
   const seen = effect.seen as number;
@@ -161,7 +183,14 @@ export function sighted(ctx: DealContext, effect: Effect): void {
 
 /** `seize`: taken in a search, with what was seen kept on the case the law opens. */
 export function seize(ctx: DealContext): void {
+  // The trade's money found with it is taken too (D147): what your pay explains is left.
+  const cash = dirtyOf(ctx);
+  if (cash > 0) {
+    ctx.apply({ effect: 'add-resource', resource: 'cash', by: -cash });
+    ctx.emit('cash-seized', { cash });
+  }
   const w = ctx.write();
   w.held = 0;
   w.seen = [];
+  w.dirty = 0;
 }

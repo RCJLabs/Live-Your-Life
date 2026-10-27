@@ -8,8 +8,8 @@ import { MINUTES_PER_DAY } from '../calendar.ts';
 import { type Today, tickAt, todayOf } from '../job/days.ts';
 import { crimeOf, offenceOf, SHOPLIFTING } from './records.ts';
 
-/** How the case was made: held at the till, on camera, the fence's sale; sales seen, or drugs found on you (M2.4). */
-export type Evidence = 'held' | 'camera' | 'sale' | 'seen' | 'found';
+/** How the case was made: held at the till, on camera, the fence's sale; sales seen, or drugs found on you (M2.4); an assault or robbery reported (M4.1). */
+export type Evidence = 'held' | 'camera' | 'sale' | 'seen' | 'found' | 'reported';
 
 export interface Case {
   readonly id: number;
@@ -28,8 +28,8 @@ export interface Case {
 /** The police coming at a time the player has been told (D46). */
 export interface Visit {
   readonly id: number;
-  /** A raid on what was seen of your dealing, or a probation violation (M2.4). */
-  readonly why: 'camera' | 'sale' | 'warrant' | 'raid' | 'violation';
+  /** A raid on what was seen of your dealing, or a probation violation (M2.4); a reported assault or robbery, its offence as the item (M4.1). */
+  readonly why: 'camera' | 'sale' | 'warrant' | 'raid' | 'violation' | 'report';
   readonly item: string;
   /** The case a warrant is for; 0 otherwise. */
   readonly case: number;

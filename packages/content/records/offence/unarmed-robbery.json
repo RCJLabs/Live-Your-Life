@@ -1,0 +1,25 @@
+{
+  "name": "Unarmed robbery",
+  "law": "MCL 750.530",
+  "felony": true,
+  "priors": 5,
+  "days": 5479,
+  "fineMax": 0,
+  "timesValue": 0,
+  "fine": 0,
+  "costs": 12500,
+  "deferral": false,
+  "first": {
+    "jail": {
+      "min": 90,
+      "max": 365
+    },
+    "probation": 730
+  },
+  "repeat": {
+    "prison": {
+      "min": 24,
+      "max": 60
+    }
+  }
+}

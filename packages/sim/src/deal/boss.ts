@@ -8,7 +8,7 @@
 import type { Action, OptionsView } from '@eb/core';
 import { TRADE, tradeOf } from './records.ts';
 import { noStanding, noticed, runOff } from './rivals.ts';
-import { type DealContext, type DealSlice, type DealView, heatOf, type Member, sliceOf } from './state.ts';
+import { type DealContext, type DealSlice, type DealView, earned, heatOf, type Member, sliceOf } from './state.ts';
 import { cash, mostHeld, supplierHere } from './trade.ts';
 
 const bossOf = (v: DealView) => tradeOf(v.content).boss;
@@ -196,7 +196,7 @@ function memberNight(ctx: DealContext, person: number): void {
 function settleFront(ctx: DealContext, person: number): void {
   const m = ctx.read().members.find((x) => x.person === person);
   if (!m || m.owed === 0 || m.taken < m.owed) return;
-  ctx.apply({ effect: 'add-resource', resource: 'cash', by: m.owed });
+  earned(ctx, m.owed);
   const w = ctx.write();
   w.takings += m.owed;
   const x = w.members.find((y) => y.person === person) as Member;

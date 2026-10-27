@@ -1,8 +1,26 @@
 {
   "name": "Michigan, 2025",
   "kinds": [
-    { "id": "cold", "name": "a cold", "perYear": 250, "work": false, "days": 7, "off": 0, "health": 2, "visit": 0 },
-    { "id": "flu", "name": "the flu", "perYear": 12, "work": false, "days": 7, "off": 4, "health": 6, "visit": 1 },
+    {
+      "id": "cold",
+      "name": "a cold",
+      "perYear": 250,
+      "work": false,
+      "days": 7,
+      "off": 0,
+      "health": 2,
+      "visit": 0
+    },
+    {
+      "id": "flu",
+      "name": "the flu",
+      "perYear": 12,
+      "work": false,
+      "days": 7,
+      "off": 4,
+      "health": 6,
+      "visit": 1
+    },
     {
       "id": "injury",
       "name": "an injury at work",
@@ -12,9 +30,36 @@
       "off": 8,
       "health": 4,
       "visit": 2
+    },
+    {
+      "id": "beaten",
+      "name": "a beating",
+      "perYear": 0,
+      "work": false,
+      "days": 14,
+      "off": 10,
+      "health": 5,
+      "visit": 2
     }
   ],
-  "visit": { "none": 17100, "medicaid": 200, "employer": 2600, "minutes": 90, "opens": 8, "closes": 17 },
-  "hospital": { "days": 4, "none": 300000, "medicaid": 0, "employer": 50000, "health": 20 },
-  "medicaid": { "one": 173200, "each": 63200, "hours": 130 }
+  "visit": {
+    "none": 17100,
+    "medicaid": 200,
+    "employer": 2600,
+    "minutes": 90,
+    "opens": 8,
+    "closes": 17
+  },
+  "hospital": {
+    "days": 4,
+    "none": 300000,
+    "medicaid": 0,
+    "employer": 50000,
+    "health": 20
+  },
+  "medicaid": {
+    "one": 173200,
+    "each": 63200,
+    "hours": 130
+  }
 }

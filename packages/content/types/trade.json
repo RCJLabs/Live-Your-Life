@@ -489,6 +489,183 @@
           "description": "Days run off a corner after trouble."
         }
       }
+    },
+    "violence": {
+      "kind": "group",
+      "description": "Violence in the trade (M4.1 step 3, D146): rare and costly. Odds in percent, money in cents (tune).",
+      "fields": {
+        "hurt": {
+          "kind": "text",
+          "min": 1,
+          "max": 24,
+          "description": "The illness kind a beating is (illness record)."
+        },
+        "robbed": {
+          "kind": "group",
+          "description": "Robbed on the corner: odds an hour, more for what you hold and on a held corner; what is taken; the odds you are hurt.",
+          "fields": {
+            "base": {
+              "kind": "int",
+              "min": 0,
+              "max": 50,
+              "description": "Odds an hour on an open corner."
+            },
+            "per": {
+              "kind": "int",
+              "min": 1,
+              "max": 100000,
+              "description": "A point more for every this many tenths of a gram held."
+            },
+            "held": {
+              "kind": "int",
+              "min": 0,
+              "max": 50,
+              "description": "Points more on a held corner."
+            },
+            "most": {
+              "kind": "int",
+              "min": 1,
+              "max": 95,
+              "description": "The most the odds can be."
+            },
+            "cash": {
+              "kind": "int",
+              "min": 0,
+              "max": 10000000,
+              "description": "The most cash taken."
+            },
+            "hurt": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "The odds you are hurt."
+            }
+          }
+        },
+        "trouble": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "The odds being run off a held corner comes with a beating."
+        },
+        "cutOff": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "The odds the supplier's people beat you when a front goes unpaid."
+        },
+        "collect": {
+          "kind": "group",
+          "description": "Collecting an unpaid front from your crew by force.",
+          "fields": {
+            "win": {
+              "kind": "int",
+              "min": 1,
+              "max": 99,
+              "description": "The odds you get the money."
+            },
+            "hurt": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Winning, the odds they are hurt."
+            },
+            "yours": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Losing, the odds you are hurt."
+            },
+            "reported": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "The odds they report it."
+            },
+            "assault": {
+              "kind": "ref",
+              "to": "offence",
+              "description": "Charged when they are not hurt."
+            },
+            "aggravated": {
+              "kind": "ref",
+              "to": "offence",
+              "description": "Charged when they are."
+            }
+          }
+        },
+        "rob": {
+          "kind": "group",
+          "description": "Robbing a rival crew's seller on a held corner.",
+          "fields": {
+            "win": {
+              "kind": "int",
+              "min": 1,
+              "max": 99,
+              "description": "The odds you get away with it."
+            },
+            "min": {
+              "kind": "int",
+              "min": 0,
+              "max": 10000000,
+              "description": "Cash taken, at least."
+            },
+            "max": {
+              "kind": "int",
+              "min": 0,
+              "max": 10000000,
+              "description": "Cash taken, at most."
+            },
+            "yours": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Losing, the odds you are hurt."
+            },
+            "seen": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "The odds it is reported, either way."
+            },
+            "heat": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Heat it draws."
+            },
+            "robbery": {
+              "kind": "ref",
+              "to": "offence",
+              "description": "What it is charged as."
+            }
+          }
+        },
+        "contest": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "The odds of winning at trial on a reported assault or robbery."
+        }
+      }
+    },
+    "cash": {
+      "kind": "group",
+      "description": "Cash the trade made (M4.1 step 4, D147): what draws attention, and how much.",
+      "fields": {
+        "notice": {
+          "kind": "int",
+          "min": 0,
+          "max": 100000000,
+          "description": "Cents of the trade's money in hand before it draws attention."
+        },
+        "heat": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Heat a day while it is over that."
+        }
+      }
     }
   }
 }

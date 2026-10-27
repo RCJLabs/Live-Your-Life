@@ -67,7 +67,12 @@ describe('a drug case (M2.4, D78, D82)', () => {
     const pleaded = play(game, sim, there.state, { type: 'law/plead', plea: 'guilty' });
     expect(cash(pleaded.state)).toBe(cash(there.state) + posted);
     // Without the money, only jail until then.
-    const { bail: poor } = arraigned('poor', 200, 0);
+    // Arraigned with nothing: whatever the night on the corner made is spent (set here, so the rolls don't decide it).
+    const { bail: arraignedPoor } = arraigned('poor', 200, 0);
+    const poor = {
+      ...arraignedPoor,
+      economy: { ...(arraignedPoor.economy as object), amounts: { cash: 0 } },
+    } as GameState;
     expect(refusal(game, sim, poor, { type: 'law/post-bail' })).toBe('not-enough');
     const held = play(game, sim, poor, { type: 'law/remand' }, { type: 'law/wait' });
     expect(held.of('law/hearing').length).toBe(1);

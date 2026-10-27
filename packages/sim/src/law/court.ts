@@ -7,6 +7,7 @@ import type { Action, Effect, OptionsView, PreviewContext } from '@eb/core';
 import { todayOf } from '../job/days.ts';
 import { drugContest, drugDeferral, isDrugCase, refund, sentence } from './drugs.ts';
 import { ageOn, type Case, convict, crime, type LawContext, type LawSlice, type LawView, sliceOf } from './state.ts';
+import { reportedContest } from './violence.ts';
 
 /** The case whose hearing is open now: today's, within the court's hours, not yet a warrant. */
 function today(view: LawView | LawContext): Case | undefined {
@@ -59,8 +60,11 @@ function hytaOffered(view: LawContext | LawView, k: Case): boolean {
   return s.convictions === 0 && s.hyta === 'none' && ageOn(view.fact('time.day') as number) < crime(view).hyta.age;
 }
 
-const contestOdds = (view: LawContext | PreviewContext<LawSlice>, k: Case): number =>
-  isDrugCase(k) ? drugContest(view, k) : crime(view).contest[k.evidence === 'held' ? 'held' : 'camera'];
+const contestOdds = (view: LawContext | PreviewContext<LawSlice>, k: Case): number => {
+  if (isDrugCase(k)) return drugContest(view, k);
+  if (k.evidence === 'reported') return reportedContest(view);
+  return crime(view).contest[k.evidence === 'held' ? 'held' : 'camera'];
+};
 
 export const plead = {
   run(ctx: LawContext, action: Action) {

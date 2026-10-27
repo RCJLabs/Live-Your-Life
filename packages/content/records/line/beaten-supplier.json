@@ -1,0 +1,8 @@
+{
+  "beat": "deal/beaten",
+  "when": {
+    "field": "by",
+    "is": "supplier"
+  },
+  "text": "{supplier}'s people found {you} over the unpaid front, and beat them."
+}
