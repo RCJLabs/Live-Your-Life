@@ -174,8 +174,10 @@ export function lineFor(
       case 'event':
         return named(store, 'shift-event', v);
       case 'course': {
-        const r = store.get<{ college?: { courses: { id: string; name: string }[] } }>('education', 'michigan');
-        return r?.college?.courses.find((c) => c.id === v)?.name ?? fail(`no course "${String(v)}"`);
+        type Courses = { courses: { id: string; name: string }[] };
+        const r = store.get<{ college?: Courses; university?: Courses }>('education', 'michigan');
+        const all = [...(r?.college?.courses ?? []), ...(r?.university?.courses ?? [])];
+        return all.find((c) => c.id === v)?.name ?? fail(`no course "${String(v)}"`);
       }
       case 'subject': {
         const r = store.get<{ ged: { subjects: { id: string; name: string }[] } }>('education', 'michigan');

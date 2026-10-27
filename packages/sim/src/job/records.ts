@@ -61,7 +61,7 @@ export interface CareerRecord {
   readonly requires?: {
     readonly record?: 'none' | 'no-theft' | 'no-felony';
     /** The least schooling it hires (M2.8, D114). */
-    readonly schooling?: 'high-school' | 'associate';
+    readonly schooling?: 'high-school' | 'associate' | 'bachelor';
     /** Minutes worked in any of these careers, anywhere (M2.5, D122). */
     readonly experience?: { readonly careers: readonly string[]; readonly minutes: number };
   };

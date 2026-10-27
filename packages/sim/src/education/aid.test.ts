@@ -192,6 +192,8 @@ describe('paying for the college (M2.8 step 4, D113)', () => {
   it('charges nothing in a pack without aid', () => {
     const s = beforeFall('aid-free', 0);
     const free = { ...sim.content, get: () => undefined };
-    expect(billFor({ ...game, fact: () => 0, state: edu(s), content: free } as never, c, 4, 'none').charge).toBe(0);
+    expect(
+      billFor({ ...game, fact: () => 0, state: edu(s), content: free } as never, 'college', 4, 'none').charge,
+    ).toBe(0);
   });
 });

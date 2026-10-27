@@ -73,8 +73,8 @@
         "schooling": {
           "kind": "enum",
           "optional": true,
-          "values": ["high-school", "associate"],
-          "description": "The least schooling it hires (M2.8 step 5, D114): high-school takes a diploma or a GED; associate an associate's degree. Traced in CALIBRATION.md."
+          "values": ["high-school", "associate", "bachelor"],
+          "description": "The least schooling it hires (M2.8 step 5, D114): high-school takes a diploma or a GED; associate an associate's degree or more; bachelor a bachelor's (M4.2). Traced in CALIBRATION.md."
         },
         "experience": {
           "kind": "group",

@@ -33,6 +33,36 @@ export interface College {
   readonly retake?: number;
 }
 
+/**
+ * The public university (M4.2 step 1, D149): its terms, courses and grades as the college's, with
+ * the bachelor's at `degree` credits, its own price, and admission at odds.
+ */
+export interface University extends Omit<College, 'associate'> {
+  readonly degree: number;
+  /** The most college credits it takes in transfer. */
+  readonly transfer: number;
+  /** In cents: a credit, a credit once `after` credits are earned, and the term's fee. */
+  readonly price: {
+    readonly perCredit: number;
+    readonly upper: { readonly after: number; readonly perCredit: number };
+    readonly termFee: number;
+  };
+  /**
+   * In 100 who apply, those admitted: from high school, from a GED, and in transfer at the least
+   * college average (hundredths); less for a conviction and a felony on the record; and the days
+   * before you can apply again.
+   */
+  readonly admit: {
+    readonly diploma: number;
+    readonly ged: number;
+    readonly transfer: number;
+    readonly gpa: number;
+    readonly conviction: number;
+    readonly felony: number;
+    readonly wait: number;
+  };
+}
+
 /** Paying for the college (step 4, D113), in cents unless said. */
 export interface Aid {
   readonly tuition: number;
@@ -73,6 +103,8 @@ export interface EducationRecord {
   };
   /** The community college (step 3); absent in a pack from before it. */
   readonly college?: College;
+  /** The university (M4.2); absent in a pack from before it. */
+  readonly university?: University;
   /** Paying for it (step 4); absent in a pack from before it, when a term is free. */
   readonly aid?: Aid;
 }

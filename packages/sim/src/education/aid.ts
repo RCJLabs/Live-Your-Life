@@ -6,12 +6,14 @@
  * award runs on the Student Aid Index). You count as an independent student whatever your age
  * (D115): the game has no parents' income. At half time or more a federal
  * Direct loan can pay the rest, or the year's limit, less its fee; what is left you pay in cash,
- * and what aid pays past the bill is paid out to you, as a college's refund is.
+ * and what aid pays past the bill is paid out to you, as a college's refund is. The university
+ * (M4.2, D149) charges its own price a credit, higher once you are past its lower-division credits.
  */
 import type { FactView, ModuleContext } from '@eb/core';
-import { nextCourses } from './college.ts';
+import { nextCourses, schoolOf, type Which } from './college.ts';
 import type { EducationSlice } from './module.ts';
-import { type Aid, type College, educationOf } from './records.ts';
+import { type Aid, educationOf } from './records.ts';
+import { universityOf } from './university.ts';
 
 type View = FactView<EducationSlice> | ModuleContext<EducationSlice>;
 const slice = (v: View) => ('state' in v ? v.state : v.read());
@@ -48,9 +50,11 @@ export function termLimit(a: Aid, earned: number): number {
   return Math.floor(year / 2);
 }
 
-/** The credits of the next `courses` courses a term would take (college.ts). */
-export function creditsOf(v: View, c: College, courses: number): number {
-  return nextCourses(c, slice(v).college)
+/** The credits of the next `courses` courses a term would take at a school (college.ts). */
+export function creditsOf(v: View, which: Which, courses: number): number {
+  const c = schoolOf(v, which);
+  if (!c) return 0;
+  return nextCourses(c, slice(v)[which])
     .slice(0, courses)
     .reduce((n, x) => n + x.credits, 0);
 }
@@ -70,15 +74,23 @@ export interface Bill {
 
 const FREE = (credits: number): Bill => ({ credits, charge: 0, pell: 0, borrowed: 0, fee: 0, cash: 0, refund: 0 });
 
+/** Tuition and fees for a term of `credits` at a school. */
+function chargeFor(v: View, a: Aid, which: Which, credits: number): number {
+  const u = which === 'university' ? universityOf(v) : null;
+  if (!u) return credits * (a.tuition + a.hourFee) + a.termFee;
+  const upper = slice(v).university.credits >= u.price.upper.after;
+  return credits * (upper ? u.price.upper.perCredit : u.price.perCredit) + u.price.termFee;
+}
+
 /** A term's bill for `courses` courses, borrowing as asked. A pack without aid charges nothing. */
-export function billFor(v: View, c: College, courses: number, borrow: Borrow): Bill {
-  const credits = creditsOf(v, c, courses);
+export function billFor(v: View, which: Which, courses: number, borrow: Borrow): Bill {
+  const credits = creditsOf(v, which, courses);
   const a = aidOf(v);
   if (!a) return FREE(credits);
-  const charge = credits * (a.tuition + a.hourFee) + a.termFee;
+  const charge = chargeFor(v, a, which, credits);
   const share = Math.min(credits, a.pell.fullTime);
   const pell = Math.floor((pellYear(a, aidIncome(v)) * share) / a.pell.fullTime / 2);
-  const limit = credits >= a.loans.half ? termLimit(a, slice(v).college.credits) : 0;
+  const limit = credits >= a.loans.half ? termLimit(a, slice(v)[which].credits) : 0;
   const need = Math.max(0, charge - pell);
   const kept = 100000 - a.loans.fee;
   const borrowed =
@@ -97,9 +109,9 @@ export function billFor(v: View, c: College, courses: number, borrow: Borrow): B
 }
 
 /** The ways to pay for `courses` courses that differ, and that the cash you have covers. */
-export function payOptions(v: View, c: College, courses: number): Borrow[] {
+export function payOptions(v: View, which: Which, courses: number): Borrow[] {
   const cash = v.fact('economy.amount', { resource: 'cash' }) as number;
-  const bills = BORROWING.map((b) => [b, billFor(v, c, courses, b)] as const);
+  const bills = BORROWING.map((b) => [b, billFor(v, which, courses, b)] as const);
   const seen = new Set<number>();
   const out: Borrow[] = [];
   for (const [b, bill] of bills) {

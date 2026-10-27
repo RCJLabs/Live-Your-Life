@@ -355,6 +355,252 @@
           }
         }
       }
+    },
+    "university": {
+      "kind": "group",
+      "optional": true,
+      "description": "The public university (M4.2 step 1, D149): its terms and the courses toward a bachelor's, as the college's are, with its own tuition, admission at odds and the credits it takes in transfer (tune).",
+      "fields": {
+        "name": {
+          "kind": "text",
+          "min": 1,
+          "max": 60
+        },
+        "terms": {
+          "kind": "list",
+          "min": 1,
+          "max": 4,
+          "description": "When each term starts in the year, and its weeks of classes.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 16
+              },
+              "month": {
+                "kind": "int",
+                "min": 1,
+                "max": 12
+              },
+              "day": {
+                "kind": "int",
+                "min": 1,
+                "max": 31
+              },
+              "weeks": {
+                "kind": "int",
+                "min": 1,
+                "max": 20
+              }
+            }
+          }
+        },
+        "enroll": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Days before a term starts that enrolling opens."
+        },
+        "courses": {
+          "kind": "list",
+          "min": 1,
+          "max": 60,
+          "description": "The courses toward the bachelor's, taken in order.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "name": {
+                "kind": "text",
+                "min": 1,
+                "max": 60
+              },
+              "credits": {
+                "kind": "int",
+                "min": 1,
+                "max": 6
+              }
+            }
+          }
+        },
+        "slots": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "When a term's courses meet, the first course at the first slot: two days a week, an hour of the day, minutes a meeting.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          }
+        },
+        "study": {
+          "kind": "int",
+          "min": 0,
+          "max": 10,
+          "description": "Hours of study a week for each credit that a full grade asks (the rule of thumb's two)."
+        },
+        "grades": {
+          "kind": "list",
+          "min": 1,
+          "max": 6,
+          "description": "The least score, in 100, for each grade, highest first, with its points: the score is half attendance and half study done (tune).",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "letter": {
+                "kind": "text",
+                "min": 1,
+                "max": 2
+              },
+              "least": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "points": {
+                "kind": "int",
+                "min": 0,
+                "max": 4
+              }
+            }
+          }
+        },
+        "gpa": {
+          "kind": "int",
+          "min": 0,
+          "max": 400,
+          "description": "The least grade point average for the associate's, in hundredths."
+        },
+        "retake": {
+          "kind": "int",
+          "optional": true,
+          "min": 0,
+          "max": 4,
+          "description": "A course graded at these grade points or fewer may be taken again, the later grade replacing the earlier in the average (M2.8 step 8): 2 is a C."
+        },
+        "degree": {
+          "kind": "int",
+          "min": 1,
+          "max": 200,
+          "description": "Credits for the bachelor's."
+        },
+        "transfer": {
+          "kind": "int",
+          "min": 0,
+          "max": 120,
+          "description": "The most credits an associate's brings in transfer, as the first of the courses passed."
+        },
+        "price": {
+          "kind": "group",
+          "description": "Tuition in cents a credit, and the upper level's from a number of credits earned; the term's fees.",
+          "fields": {
+            "perCredit": {
+              "kind": "int",
+              "min": 0,
+              "max": 1000000,
+              "description": "Tuition a credit."
+            },
+            "upper": {
+              "kind": "group",
+              "fields": {
+                "after": {
+                  "kind": "int",
+                  "min": 0,
+                  "max": 200,
+                  "description": "Credits earned from which the upper level's tuition applies."
+                },
+                "perCredit": {
+                  "kind": "int",
+                  "min": 0,
+                  "max": 1000000,
+                  "description": "Its tuition a credit."
+                }
+              }
+            },
+            "termFee": {
+              "kind": "int",
+              "min": 0,
+              "max": 10000000,
+              "description": "Fees a term."
+            }
+          }
+        },
+        "admit": {
+          "kind": "group",
+          "description": "Admission's odds in 100 (D150): for a first-year applicant with a diploma or a GED, and for a transfer with the associate's at the least GPA or above; less for a record.",
+          "fields": {
+            "diploma": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "A first-year applicant with a diploma."
+            },
+            "ged": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "A first-year applicant with a GED."
+            },
+            "transfer": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "A transfer with the associate's at the GPA below or above."
+            },
+            "gpa": {
+              "kind": "int",
+              "min": 0,
+              "max": 400,
+              "description": "The least college GPA a transfer is considered with, in hundredths."
+            },
+            "conviction": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Points off for a conviction."
+            },
+            "felony": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Points off for a felony, beside the conviction's."
+            },
+            "wait": {
+              "kind": "int",
+              "min": 1,
+              "max": 365,
+              "description": "Days before you can apply again after a no."
+            }
+          }
+        }
+      }
     }
   }
 }

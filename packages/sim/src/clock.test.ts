@@ -64,6 +64,7 @@ describe('the clock', () => {
       'deal/take-on',
       'deal/wholesale',
       'edition/unlock',
+      'education/apply',
       'education/attend',
       'education/enroll',
       'education/pay-loan',
