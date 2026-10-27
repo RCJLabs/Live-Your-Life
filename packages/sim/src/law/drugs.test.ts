@@ -1,7 +1,7 @@
 import type { Beat, GameState, TimeSlice } from '@eb/core';
 import { describe, expect, it } from 'vitest';
 import { arraigned, untilCase } from '../../test/case.ts';
-import { advance, play, refusal, sliceGame, sliceSim } from '../../test/slice.ts';
+import { advance, play, refusal, sliceGame, sliceSim, withoutRivals } from '../../test/slice.ts';
 import { DEFAULT_START, MINUTES_PER_DAY } from '../calendar.ts';
 import { lineFor, lineRecord, QUIET } from '../chronicle.ts';
 import { tradeOf } from '../deal/records.ts';
@@ -10,7 +10,7 @@ import { VIOLATION_DAYS } from './drugs.ts';
 import { offenceOf } from './records.ts';
 import type { LawSlice } from './state.ts';
 
-const sim = sliceSim();
+const sim = sliceSim(withoutRivals());
 const game = sliceGame();
 const trade = tradeOf(sim.content);
 const law = (s: GameState) => s.law as LawSlice;

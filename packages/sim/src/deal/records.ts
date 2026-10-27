@@ -34,6 +34,8 @@ export interface TradeRecord {
   readonly contest: { readonly seen: number; readonly found: number };
   readonly crew: Crew;
   readonly boss: Boss;
+  /** Rival crews on corners (M4.1 step 2, D148). */
+  readonly rivals: { readonly held: number; readonly warnings: number; readonly off: number };
 }
 
 /** A crew of your own (M4.1, D145): the wholesale connect, and the terms you set your recruits. */

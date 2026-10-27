@@ -127,5 +127,10 @@
       "seen": 4,
       "named": 70
     }
+  },
+  "rivals": {
+    "held": 40,
+    "warnings": 2,
+    "off": 7
   }
 }

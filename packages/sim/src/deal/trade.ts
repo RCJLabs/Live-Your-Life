@@ -6,6 +6,7 @@
  */
 import type { Action, Effect, PreviewContext } from '@eb/core';
 import { type Lot, TRADE, tradeOf } from './records.ts';
+import { noticed, runOff, YOURS, yourCorner } from './rivals.ts';
 import { type DealContext, type DealSlice, type DealView, heatOf, raiseHeat, sliceOf } from './state.ts';
 import { passingNow } from './witnesses.ts';
 
@@ -80,9 +81,15 @@ export const corner = {
   run(ctx: DealContext) {
     if (!traded(ctx)) return ctx.refuse('no-trade');
     if (!canSell(ctx)) return ctx.refuse('nothing-to-sell');
+    if (runOff(ctx, ctx.read().rival)) return ctx.refuse('run-off');
+    // A held corner's crew sees you before any buyer does (D148): warned, or run off for days.
+    if (noticed(ctx, ctx.write().rival, -1, YOURS)) {
+      ctx.apply({ effect: 'wait', minutes: 10 });
+      return;
+    }
     ctx.apply({ effect: 'corner-hour' });
   },
-  options: (v: DealView) => (canSell(v) ? [{}] : []),
+  options: (v: DealView) => (canSell(v) && !runOff(v, sliceOf(v).rival) ? [{}] : []),
 };
 
 /** `corner-hour`: the odds read before anything changes, so they are the ones the preview showed. */
@@ -104,7 +111,15 @@ export const cornerHour = {
   preview(ctx: PreviewContext<DealSlice>) {
     if (!traded(ctx)) return { refused: 'no-trade' };
     const t = tradeOf(ctx.content);
-    return { buyer: buyerOdds(ctx), seen: seenOdds(ctx), passing: passingNow(ctx), price: t.sale.price };
+    const held = yourCorner(ctx);
+    return {
+      buyer: buyerOdds(ctx),
+      seen: seenOdds(ctx),
+      passing: passingNow(ctx),
+      price: t.sale.price,
+      held: held.holder !== -1,
+      left: held.left,
+    };
   },
 };
 

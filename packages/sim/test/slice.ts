@@ -22,6 +22,16 @@ export const sliceGame = (options: LifeOptions = {}): Game =>
   createLifeGame({ career: LINE_COOK, people: 0, events: false, unlocked: true, ...options });
 export const sliceSim = (records: RecordPack = PACK.records): SimContext => lifeSim(records);
 
+/**
+ * The records with every corner open (M4.1 step 2): for tests of the trade, the crew and a drug
+ * case on a corner nobody else holds; rival crews are deal/rivals.test.ts's.
+ */
+export function withoutRivals(records: RecordPack = PACK.records): RecordPack {
+  const trade = records.trade as Record<string, { rivals: object }>;
+  const cocaine = trade.cocaine as { rivals: object };
+  return { ...records, trade: { ...trade, cocaine: { ...cocaine, rivals: { ...cocaine.rivals, held: 0 } } } };
+}
+
 export const lineCook = (): CareerRecord => PACK.records.career?.[LINE_COOK] as CareerRecord;
 
 /** A cook offered every day's one shift, 15:00 to 23:00, and no shift events unless changed. */

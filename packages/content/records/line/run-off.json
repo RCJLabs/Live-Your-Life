@@ -1,0 +1,8 @@
+{
+  "beat": "deal/run-off",
+  "when": {
+    "field": "yours",
+    "is": "true"
+  },
+  "text": "{rival} ran {you} off the corner for {days}."
+}
