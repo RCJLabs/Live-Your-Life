@@ -18,6 +18,10 @@ const SLOTS = 6;
 
 const traded = (v: DealView): boolean => v.content.has('trade', TRADE);
 
+/** Held at most now: the connect's most once you have them (M4.1, D145), or MOST_HELD. */
+export const mostHeld = (v: DealView): number =>
+  sliceOf(v).connect && traded(v) ? tradeOf(v.content).boss.connect.most : MOST_HELD;
+
 export const supplierHere = (v: DealView): boolean => {
   if (!traded(v) || !sliceOf(v).supplier) return false;
   const hour = v.fact('clock.hour') as number;
@@ -34,7 +38,7 @@ const lotNamed = (v: DealView, id: unknown): Lot | undefined =>
 function buyProblem(v: DealView, lot: Lot | undefined): string | null {
   if (!supplierHere(v)) return 'no-supplier-now';
   if (!lot) return 'no-such-lot';
-  if (sliceOf(v).held + lot.grams > MOST_HELD) return 'holding-too-much';
+  if (sliceOf(v).held + lot.grams > mostHeld(v)) return 'holding-too-much';
   if (cash(v) < lot.price) return 'short';
   return null;
 }

@@ -673,7 +673,7 @@ How to read this file:
   - **Steps 1–3, built 2026-10-26: the year's end, the last card, the full-only check (D137, D138).** `packages/sim/src/edition/`: a free save reaches day 365, its first character's 19th birthday, and the `year-end` mode stops it there; only `edition/unlock` goes on, from where it stopped. The year's end waits behind a death's choice and a ward's years: a ward's jump past the birthday stops at the card once they wake. The page (`src/life/edition.ts`) shows the last card: the year from the journal, and on an unlocked device a way on; otherwise the life is kept and a new one starts with a year of its own. An unlocked device sends the unlock into every life it opens; `?unlock` on the address is the test switch until Phase 3's billing. A record whose id ends in `-full` is full-only: `tools/edition/check.ts`, in `pnpm lint`, fails one that isn't a shift or life event gated on `edition.unlocked`; a planted full-only event is never drawn in a free life and is in an unlocked one. Saves from before load: `life-v20.json` adds the edition as a free save. Planted bugs: 7, 7 caught: the year ended a day late, the unlock not going on, a ward's jump stopped inside its years, an unlock sent from a locked device, the way on offered unlocked, the check passing any condition, and a full-only event drawn free.
   - **Step 4, built 2026-10-26: the free year lived.** `test/free-year.ts` and `year-bench.ts` (Phase 2's year gate): the steady bot lives a free year, the season and life events on, until the year's end or a death, nothing refused. One life takes about 6 seconds. In 500 seeds all 500 reached the year's end on day 365, none died, nothing refused (Readings): Phase 2's first year gate passes. M2.11's [auto] gates pass; the last card on Evan's phone is open.
 
-- **M2.12 The bars.** ← **CURRENT MILESTONE** The realism bars in CALIBRATION.md as tests, and the essentials the floor was missing.
+- **M2.12 The bars.** Done 2026-10-26. The realism bars in CALIBRATION.md as tests, and the essentials the floor was missing.
   - Started 2026-10-26 (D139). Decisions: B1 and B2 on the studio with the essentials charged (D140); B5 by the tables a year at a time (D141).
   - **Done when:**
     - electricity, a phone, and household goods and clothing come due monthly with the rent, traced in CALIBRATION.md, owed like rent when unpaid [auto];
@@ -695,7 +695,70 @@ The gate; Play Billing with the acknowledger; the TWA with the SDK floor check; 
 
 ## Phase 4: Release-one depth
 
-In the order of the cut ladder, reversed: crime above the crew tier; university and professional school; districts three to five; owned cars and driving; interiors beyond home, restaurant and precinct; federal law; medicine (EMT to physician, the hospital). Each becomes a milestone with its own gates when it opens.
+In the order of the cut ladder, reversed: crime above the crew tier; university and professional school; districts three to five; federal law; medicine (EMT to physician, the hospital). Each becomes a milestone with its own gates when it opens. Owned cars and driving moved to Phase 11, and interiors beyond home, restaurant and precinct to Phase 7 (D144).
+
+Opened 2026-10-27 (D144) ahead of Phase 3, which waits (D143).
+
+- **M4.1 Crime above the crew.** ← **CURRENT MILESTONE** A crew of your own, rivals on corners, violence, and the cash it makes.
+  - Started 2026-10-27. Decisions: your own crew (D145); violence in, rare and costly (D146, amending D86); cash with a risk (D147); rival crews hold corners (D148).
+  - **Done when:**
+    - you can buy from a wholesale connect at prices traced in CALIBRATION.md, front weight to recruits among the people you know, and set them on corners; their sales, debts, arrests and naming you follow from records, odds shown first [auto];
+    - corners are held by rival crews among the tier-1 people; selling on one brings a warning, then trouble [auto];
+    - robbery and retaliation happen at odds shown first, injuries go through health and the hospital, and assault and robbery are charged by Michigan's law, traced in CALIBRATION.md [auto];
+    - cash beyond what your pay explains goes on the case file, and a raid can seize what it finds [auto];
+    - a boss bot plays 500 seeded weeks with nothing refused, and B6 holds at this tier over a year: running a crew leaves a life worse off than the line cook's once arrests, prison, injuries and seizures are counted [auto];
+    - saves from before load [auto];
+    - a boss's week on Evan's phone, at 360 and 390 px [you].
+  - **Steps:**
+    1. The connect and your crew: wholesale lots, recruits from the circle, fronting them, their nights on corners, their debts and loyalty, arrests that may name you.
+    2. Corners and rivals: who holds each corner, warnings, trouble.
+    3. Violence: being robbed, robbing, retaliation for a front either way, injuries, the charges.
+    4. The cash: what your pay explains, attention on the rest, seizure in a raid.
+    5. The page: your crew, its corners and its debts at 360 and 390 px.
+    6. The boss bot, 500 seeded weeks, B6 at this tier, saves from before, readings, docs.
+  - **Step 1, built 2026-10-27: the connect and your crew.** `packages/sim/src/deal/boss.ts`: in the supplier's crew, trusted (6) and cool enough (heat 25 or less), you meet their connect, who sells a quarter-kilo for $8,500 and a half for $16,000 between 14:00 and 18:00, and you can hold up to a kilo. You take on up to four people you know well (familiarity 40) who think well of you (regard 60), front each an ounce for $1,400 due in 21 days, and they sell it five nights a week. Their takings meet the front and come to you; a front come due unpaid cuts them off until it is paid; you can let them go, the debt with them. Taken in, one names you at 70 in 100 less their regard, as good as two sales seen. The heavier weights are charged by Michigan's brackets (50 to 450 g, 450 to 1,000 g, a kilo or more), and a first offence over 450 g goes to prison, as the guidelines start it. Figures in CALIBRATION.md, all to check. Saves from before load: `life-v21.json`, written by M2.12's build, migrates the deal from 2 to 3. Planted bugs: 9, 9 caught (the connect without trust, its hold ignored, anyone taken on, a front paid back as nothing, named whatever the regard, an unpaid front never cut off, a first offence never to prison, and no migration, which fails the module's load).
+
+## Phase 5: Money that matters
+
+The year's end found the steady bot holding a median $14,429.38 with nothing to spend it on (Readings, M2.11): money stops mattering, as it did in Dirtbag v0.956 by day 12 to 15. Groceries and cooking against eating out; clothes, furniture and a phone plan chosen, not charged flat; a bank account, savings and their interest; credit as a score, cards and loans at real rates; debt that goes to collection; a ledger the player can read.
+
+**Done when** (draft): the steady bot's cash at the year's end sits in a band traced to a real saving rate for its wage, not piling up [auto]; every new price traces to CALIBRATION.md [auto]; saves from before load [auto].
+
+## Phase 6: Places to live
+
+A housing market in every district, from a room or a studio to a one-bedroom, a rowhouse and a house, at HUD's fair market rents by size; roommates, leases, deposits, notice and eviction as processes; later, buying with a mortgage. Moving changes the commute, the neighbours and a child's school. B1 and B2 come back as first written: the median one-bedroom alone, and a roommate at the minimum wage.
+
+**Done when** (draft): B1 and B2 pass as first written [auto]; an eviction runs from notice to a move with nothing refused [auto]; saves from before load [auto].
+
+## Phase 7: A city you walk into
+
+Interiors as a grammar, so a new kind of building is records alone. Then the kinds: grocery, laundromat, bar, gym, church, library, pawn shop, bank, clinic, hospital, school, bus station, park, warehouse. Work moves on screen where it can, with the tier-1 people at their jobs. Includes Phase 4's former "interiors beyond home, restaurant and precinct".
+
+**Done when** (draft): every kind of building has a walkable interior checked over 1,000 seeds [auto]; the frame rate walking downtown at 4× CPU holds the M2.1 reading [auto]; walking downtown on Evan's phone [you].
+
+## Phase 8: Being somewhere with people
+
+Bars, clubs, church, the gym and friends' homes as places you meet and spend time with people on screen, not only "go out" from a panel. Uses Phase 7's interiors and M2.6's circle.
+
+**Done when** (draft): every way of meeting someone happens at a place you can walk to [auto]; a night out on Evan's phone [you].
+
+## Phase 9: The city changes
+
+The district trend (from the ideas below): openings and closures as events, a plant closing, rents drifting, crime that differs by district and shows on the map. The city you leave an heir is not the one you started in.
+
+**Done when** (draft): over 20 seeded years each district's trend moves rents, openings and crime in its direction [auto]; saves from before load [auto].
+
+## Phase 10: Owning the place
+
+The food ladder's last rung, owner (D14), then any small business: the lease, staff from the tier-1 people, suppliers, inspections, payroll and taxes. Dirtbag's `business.ts` is the seed.
+
+**Done when** (draft): a restaurant can be opened, staffed, run and closed, its books traced to CALIBRATION.md [auto]; an owner bot's year with nothing refused [auto].
+
+## Phase 11: Cars
+
+Moved from Phase 4 (D144). Buying a car new or used, insurance, fuel, repairs and breakdowns; the licence, tickets, points, a DUI. Travel time and costs first; driving on screen in the stage after, reaching the sim as facts (arrived, collided, stopped).
+
+**Done when** (draft): a car's year costs what CALIBRATION.md says [auto]; a drive across the city on Evan's phone [you].
 
 ## Later
 
@@ -862,6 +925,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-26: M2.12 opened (D139–D141): the realism bars as tests, and the essentials the floor was missing.
 - 2026-10-26: M2.12 built (D142): the electricity, a phone, and clothes and household things charged with the rent; the bars B1–B7 as tests, each seen failing; the shop's notice odds halved and the hiring odds' floor brought down to 1. Planted bugs: 10, 10 caught.
 - 2026-10-26: M2.12 done: PR #61 merged. Phase 3 waits (D143).
+- 2026-10-27: Phases 5 to 11 added (D144): money that matters, places to live, a city you walk into, being somewhere with people, the city changes, owning the place, cars. Phase 4 opens ahead of Phase 3. M4.1 opened (D145–D148): crime above the crew.
 - 2026-10-26: M2.11 steps 1–4: the free year's end and its last card, the unlock, the full-only check, and the year lived in 500 seeds; M2.11's [auto] gates pass.
 - 2026-10-26: M2.11 opened (D136–D138): the free year's last card, the save kept and new lives free, one build with a gate. The marker moved from M2.10, whose [auto] gates pass.
 - 2026-10-26: M2.10 step 5: the steady bot's 500 weeks across the seasons and every life event played through; M2.10's [auto] gates pass, Evan's reading of the strings is open.

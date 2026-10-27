@@ -33,6 +33,29 @@ export interface TradeRecord {
   readonly court: Span;
   readonly contest: { readonly seen: number; readonly found: number };
   readonly crew: Crew;
+  readonly boss: Boss;
+}
+
+/** A crew of your own (M4.1, D145): the wholesale connect, and the terms you set your recruits. */
+export interface Boss {
+  readonly connect: {
+    readonly trust: number;
+    readonly heat: number;
+    readonly hours: Hours;
+    readonly sells: readonly Lot[];
+    /** The most you can hold with the connect, in tenths of a gram. */
+    readonly most: number;
+  };
+  readonly crew: {
+    readonly most: number;
+    readonly regard: number;
+    readonly familiarity: number;
+    readonly front: { readonly grams: number; readonly price: number; readonly days: number };
+    readonly nights: number;
+    readonly buyers: number;
+    readonly seen: number;
+    readonly named: number;
+  };
 }
 
 /** The supplier's crew (D79, D84–D86). */
@@ -88,6 +111,12 @@ export function tradeOf(store: RecordStore, id: string = TRADE): TradeRecord {
     ['court', t.court],
   ] as const)
     if (span.min > span.max) fail(what, `${name} runs from ${span.min} down to ${span.max}`);
+  const c = t.boss.connect;
+  if (c.hours.from >= c.hours.to) fail(what, `the connect's hours end at ${c.hours.to}, not after ${c.hours.from}`);
+  if (new Set(c.sells.map((l) => l.id)).size !== c.sells.length)
+    fail(what, 'two of what the connect sells share an id');
+  for (const l of c.sells) if (l.grams > c.most) fail(what, `the connect's "${l.id}" is more than you can hold`);
+  if (t.boss.crew.front.grams > c.most) fail(what, 'your crew’s front is more than you can hold');
   inWeight(store, what, t.possession);
   inWeight(store, what, t.delivery);
   checked.add(t);

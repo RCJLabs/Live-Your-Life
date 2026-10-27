@@ -6,9 +6,10 @@
  * their own nights from what you hold. You keep a share, and arrested, they may name you.
  */
 import type { Action, Beat, OptionsView } from '@eb/core';
+import { bossDay } from './boss.ts';
 import { TRADE, tradeOf } from './records.ts';
 import { type DealContext, type DealSlice, type DealView, heatOf, sliceOf } from './state.ts';
-import { cash, MOST_HELD, supplierHere, TRUST_MOST } from './trade.ts';
+import { cash, mostHeld, supplierHere, TRUST_MOST } from './trade.ts';
 
 const crewOf = (v: DealView) => tradeOf(v.content, TRADE).crew;
 const day = (v: DealView): number => v.fact('time.day') as number;
@@ -47,7 +48,7 @@ function frontProblem(v: DealView): string | null {
   if (s.cutOff) return 'cut-off';
   if (!supplierHere(v)) return 'no-supplier-now';
   if (s.owed > 0) return 'still-owed';
-  if (s.held + (frontLot(v)?.grams ?? 0) > MOST_HELD) return 'holding-too-much';
+  if (s.held + (frontLot(v)?.grams ?? 0) > mostHeld(v)) return 'holding-too-much';
   return null;
 }
 
@@ -172,6 +173,7 @@ export function crewDays(ctx: DealContext, _event: Beat): void {
       ctx.emit('cut-off', { owed: now.owed });
     }
     if (ctx.read().recruit >= 0 && ctx.read().recruit < d && sellsOn(d, c.recruit.nights)) recruitNight(ctx);
+    bossDay(ctx, d);
   }
   ctx.write().settled = today;
 }

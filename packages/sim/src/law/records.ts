@@ -34,7 +34,7 @@ export interface OffenceRecord {
   /** A first offence can be deferred, under HYTA (D47). */
   readonly deferral?: boolean;
   /** A felony's sentence with no conviction before: days in jail, then on probation. */
-  readonly first?: { readonly jail: Span; readonly probation: number };
+  readonly first?: { readonly jail: Span; readonly probation: number; readonly prison?: Span };
   /** With a conviction before: months in prison. */
   readonly repeat?: { readonly prison: Span };
 }

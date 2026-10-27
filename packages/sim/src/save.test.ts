@@ -31,8 +31,17 @@ const keysOf = (value: unknown): string[] =>
 
 type Migrated = { readonly module: string; readonly from: number; readonly to: number };
 const byModule = (list: readonly Migrated[]) => [...list].sort((a, b) => a.module.localeCompare(b.module));
+/** Every save from before M4.1 step 1 migrates the deal to version 3, a crew of your own, as well. */
+const withDeal = (list: readonly Migrated[]) =>
+  byModule(
+    list.some((m) => m.module === 'deal')
+      ? list.map((m) => (m.module === 'deal' ? { ...m, to: 3 } : m))
+      : [...list, { module: 'deal', from: 2, to: 3 }],
+  );
 /** Every save from before M2.5 step 2 migrates the job to its experience as well. */
-const withJob = (list: readonly Migrated[]) => byModule([...list, { module: 'job', from: 1, to: 2 }]);
+const jobToo = (list: readonly Migrated[]) => byModule([...list, { module: 'job', from: 1, to: 2 }]);
+/** And, if it had the trade, the deal. */
+const withJob = (list: readonly Migrated[]) => withDeal(jobToo(list));
 
 describe('the save fixtures', () => {
   const game = sliceGame();
@@ -74,7 +83,7 @@ describe('the save fixtures', () => {
     expect(result.report.kept).toEqual([]);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(byModule(result.report.migrated)).toEqual(
-      withJob([
+      jobToo([
         { module: 'law', from: 1, to: 3 },
         { module: 'you', from: 1, to: 2 },
       ]),
@@ -97,7 +106,7 @@ describe('the save fixtures', () => {
     const result = load('life-v2.json');
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(byModule(result.report.migrated)).toEqual(withJob([{ module: 'law', from: 1, to: 3 }]));
+    expect(byModule(result.report.migrated)).toEqual(jobToo([{ module: 'law', from: 1, to: 3 }]));
     expect(result.report.added).toEqual(people);
     expect(result.report.skipped).toBe(0);
     expect((result.state.you as { commute: number }).commute).toBe(36);
@@ -170,7 +179,7 @@ describe('the save fixtures', () => {
     expect(stateHash(saved)).toBe(result.file.hash);
   });
 
-  it('loads the third, saved before the crew, migrating the trade from version 1 to 2 (M2.4)', () => {
+  it('loads the third, saved before the crew, migrating the trade from version 1 to 3 (M2.4, M4.1)', () => {
     const result = load('life-v3.json');
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
@@ -394,7 +403,7 @@ describe('the save fixtures', () => {
     const result = load('life-v17.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'job', from: 1, to: 2 }]);
+    expect(byModule(result.report.migrated)).toEqual(withDeal([{ module: 'job', from: 1, to: 2 }]));
     expect(result.report.added).toEqual(['season', 'event', 'edition']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -410,7 +419,7 @@ describe('the save fixtures', () => {
     const result = load('life-v18.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([]);
+    expect(result.report.migrated).toEqual(withDeal([]));
     expect(result.report.added).toEqual(['season', 'event', 'edition']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -424,7 +433,7 @@ describe('the save fixtures', () => {
     const result = load('life-v19.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([]);
+    expect(result.report.migrated).toEqual(withDeal([]));
     expect(result.report.added).toEqual(['event', 'edition']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -439,11 +448,23 @@ describe('the save fixtures', () => {
     const result = load('life-v20.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([]);
+    expect(result.report.migrated).toEqual(withDeal([]));
     expect(result.report.added).toEqual(['edition']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(result.state.edition).toEqual({ unlocked: false });
+  });
+
+  it('loads the twenty-first, saved before a crew of your own, migrating the deal to version 3 (M4.1)', () => {
+    const people = sliceGame({ people: 1000, unlocked: false });
+    const result = load('life-v21.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'deal', from: 2, to: 3 }]);
+    expect(result.report.added).toEqual([]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect(result.state.deal).toMatchObject({ connect: false, members: [] });
   });
 
   it('migrates a version-1 job’s practice into its experience, and nothing for someone never hired', () => {

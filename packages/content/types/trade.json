@@ -330,6 +330,141 @@
           }
         }
       }
+    },
+    "boss": {
+      "kind": "group",
+      "description": "A crew of your own (M4.1, D145): the wholesale connect the supplier can introduce you to, and the terms you set your own recruits, from the people you know (tune).",
+      "fields": {
+        "connect": {
+          "kind": "group",
+          "fields": {
+            "trust": {
+              "kind": "int",
+              "min": 1,
+              "max": 50,
+              "description": "The supplier's trust before they introduce you."
+            },
+            "heat": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "The most heat on you the connect will meet."
+            },
+            "hours": {
+              "kind": "group",
+              "fields": {
+                "from": {
+                  "kind": "int",
+                  "min": 0,
+                  "max": 23
+                },
+                "to": {
+                  "kind": "int",
+                  "min": 1,
+                  "max": 24
+                }
+              }
+            },
+            "sells": {
+              "kind": "list",
+              "min": 1,
+              "of": {
+                "kind": "group",
+                "fields": {
+                  "id": {
+                    "kind": "text",
+                    "min": 1,
+                    "max": 24
+                  },
+                  "grams": {
+                    "kind": "int",
+                    "min": 1,
+                    "max": 100000
+                  },
+                  "price": {
+                    "kind": "int",
+                    "min": 1,
+                    "max": 100000000
+                  }
+                }
+              }
+            },
+            "most": {
+              "kind": "int",
+              "min": 1,
+              "max": 100000,
+              "description": "The most you can hold once you have the connect, in tenths of a gram."
+            }
+          }
+        },
+        "crew": {
+          "kind": "group",
+          "fields": {
+            "most": {
+              "kind": "int",
+              "min": 1,
+              "max": 12,
+              "description": "Recruits at once."
+            },
+            "regard": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Their regard for you needed for a yes."
+            },
+            "familiarity": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "How well you must know them."
+            },
+            "front": {
+              "kind": "group",
+              "fields": {
+                "grams": {
+                  "kind": "int",
+                  "min": 1,
+                  "max": 10000
+                },
+                "price": {
+                  "kind": "int",
+                  "min": 1,
+                  "max": 10000000
+                },
+                "days": {
+                  "kind": "int",
+                  "min": 1,
+                  "max": 60
+                }
+              }
+            },
+            "nights": {
+              "kind": "int",
+              "min": 1,
+              "max": 7,
+              "description": "Nights a week each sells."
+            },
+            "buyers": {
+              "kind": "int",
+              "min": 1,
+              "max": 95,
+              "description": "The odds in percent of a buyer in each of their ten minutes, through a night's four hours."
+            },
+            "seen": {
+              "kind": "int",
+              "min": 1,
+              "max": 95,
+              "description": "The odds in percent one of their sales is seen."
+            },
+            "named": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "Taken in, the odds in percent they name you, less their regard for you."
+            }
+          }
+        }
+      }
     }
   }
 }

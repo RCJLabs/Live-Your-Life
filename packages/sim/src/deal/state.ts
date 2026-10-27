@@ -42,10 +42,33 @@ export interface DealSlice {
   recruit: number;
   /** The last day the crew's days were settled to. */
   settled: number;
+  /** Introduced to the wholesale connect (M4.1, D145). */
+  connect: boolean;
+  /** Your own crew: people you know, selling what you front them (D145). */
+  members: Member[];
+}
+
+/** One of your crew: a tier-1 person you know, and what is between you and them. */
+export interface Member {
+  /** Their number in the roster, as the circle knows them. */
+  readonly person: number;
+  readonly since: number;
+  /** What they hold of yours, in tenths of a gram. */
+  held: number;
+  /** What their front leaves them owing you, in cents, and the day it is due; -1 with none. */
+  owed: number;
+  due: number;
+  /** Cents from their sales toward what they owe. */
+  taken: number;
+  /** A front gone unpaid: no more until it is settled or you let them go. */
+  cutOff: boolean;
 }
 
 /** What a save from before the crew (deal version 1) gains (M2.4 step 4). */
 export const NO_CREW = { trust: 0, crew: false, cutOff: false, owed: 0, due: -1, recruit: -1, settled: 0 } as const;
+
+/** What a save from before your own crew (deal version 2) gains (M4.1 step 1). */
+export const noBoss = (): Pick<DealSlice, 'connect' | 'members'> => ({ connect: false, members: [] });
 
 export type DealContext = ModuleContext<DealSlice>;
 export type DealView = FactView<DealSlice> | DealContext | PreviewContext<DealSlice>;

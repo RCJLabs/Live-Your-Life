@@ -93,6 +93,19 @@ describe('a drug case (M2.4, D78, D82)', () => {
     expect(months).toBeLessThanOrEqual(o.repeat?.prison.max as number);
   });
 
+  it('sends a first delivery of 450 grams or more to prison, as the guidelines start it (M4.1)', () => {
+    const { bail } = arraigned('heavy', 6000, 0);
+    const inCourt = play(game, sim, bail, { type: 'law/remand' }, { type: 'law/wait' }).state;
+    const first = play(game, sim, inCourt, { type: 'law/plead', plea: 'guilty' });
+    const s = first.of('law/sentenced')[0] as Record<string, unknown>;
+    const o = offenceOf(sim.content, 'delivery-cocaine-1000');
+    expect(s.offence).toBe('delivery-cocaine-1000');
+    expect(s.kind).toBe('prison');
+    const months = law(first.state).prison?.months as number;
+    expect(months).toBeGreaterThanOrEqual(o.first?.prison?.min as number);
+    expect(months).toBeLessThanOrEqual(o.first?.prison?.max as number);
+  });
+
   it('offers a deferral on a first possession, never on delivery, and contests at the evidence’s odds', () => {
     const { bail } = arraigned('contest', 200, 0);
     const inCourt = play(game, sim, bail, { type: 'law/remand' }, { type: 'law/wait' }).state;

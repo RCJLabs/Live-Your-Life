@@ -139,13 +139,15 @@ function serve(ctx: LawContext, days: number): void {
 
 /**
  * A felony's sentence, by the offence's record and the convictions before this one: jail, then
- * probation, for a first; prison for a repeat. An offence without one (shoplifting's) has none.
+ * probation, for a first; prison for a repeat. A first goes to prison too where the guidelines'
+ * range starts above jail (M4.1: the heavier weights). An offence without one (shoplifting's) has none.
  */
 export function sentence(ctx: LawContext, offence: string, priors: number): void {
   const o = offenceOf(ctx.content, offence);
   if (!o.first) return;
-  if (priors > 0 && o.repeat) {
-    const months = between(ctx, o.repeat.prison.min, o.repeat.prison.max);
+  const term = priors > 0 && o.repeat ? o.repeat.prison : o.first.prison;
+  if (term) {
+    const months = between(ctx, term.min, term.max);
     ctx.write().prison = { months, offence };
     ctx.emit('sentenced', { offence, kind: 'prison', jail: 0, probation: 0, prison: months });
     return;
