@@ -2,7 +2,8 @@
  * Your schooling (M2.8, D111, D112). A first life starts with a high school diploma at Michigan's
  * graduation rate, drawn from the seed; without one, the GED is the way (step 2), and the
  * community college's associate's past either (step 3), paid for by tuition, a Pell grant and
- * loans (step 4). An heir's schooling is drawn the same way
+ * loans (step 4); then the state university's bachelor's, admitted at odds (M4.2, D149, D150).
+ * An heir's schooling is drawn the same way
  * when they carry on: what they finished is their own, not yours (open question 98).
  */
 import { defineModule, type ModuleContext } from '@eb/core';
@@ -16,15 +17,25 @@ import {
   endTerm,
   enroll,
   enrollOptions,
+  gpaOf,
   NO_COLLEGE,
 } from './college.ts';
 import { gedChance, result, sit, study, studyOptions, subjectOf, testOptions } from './ged.ts';
 import { type Loan, month, NO_LOAN, owedNow, payBehind } from './loans.ts';
 import { educationOf } from './records.ts';
+import {
+  admitChance,
+  result as admitResult,
+  apply,
+  applyOptions,
+  NO_UNIVERSITY,
+  type UniversitySlice,
+  universityOf,
+} from './university.ts';
 
 /** The highest you have finished. */
-export type Schooling = 'none' | 'diploma' | 'ged' | 'associate';
-export const SCHOOLING: readonly Schooling[] = ['none', 'diploma', 'ged', 'associate'];
+export type Schooling = 'none' | 'diploma' | 'ged' | 'associate' | 'bachelor';
+export const SCHOOLING: readonly Schooling[] = ['none', 'diploma', 'ged', 'associate', 'bachelor'];
 
 export interface EducationSlice {
   finished: Schooling;
@@ -32,6 +43,8 @@ export interface EducationSlice {
   ged: { passed: string[]; prep: Record<string, number> };
   /** The community college: a term enrolled for, and what has been earned (step 3). */
   college: CollegeSlice;
+  /** The state university: admitted or not, a term, and what has been earned there (M4.2). */
+  university: UniversitySlice;
   /** Gross pay over the past year, for aid, and the federal loans (step 4). */
   pay: Paycheck[];
   loan: Loan;
@@ -42,6 +55,7 @@ const FRESH = (finished: Schooling): EducationSlice => ({
   finished,
   ged: NO_GED(),
   college: NO_COLLEGE(),
+  university: NO_UNIVERSITY(),
   pay: [],
   loan: NO_LOAN(),
 });
@@ -63,8 +77,9 @@ export const educationModule = defineModule<EducationSlice>({
   // 2 (step 2): the GED's subjects passed and studied for. 3 (step 3): the college. 4 (step 4):
   // pay for aid and the loans; a save from before has borrowed nothing, and its pay before is not known.
   // 5 (step 8): each course's last grade, for retakes; a save from before has none, so its courses
-  // passed can't be retaken (their grades weren't kept).
-  version: 5,
+  // passed can't be retaken (their grades weren't kept). 6 (M4.2 step 1): the university; a save
+  // from before has not applied.
+  version: 6,
   migrate: {
     2: (slice) => ({ ...(slice as object), ged: NO_GED() }),
     3: (slice) => ({ ...(slice as object), college: NO_COLLEGE() }),
@@ -73,6 +88,7 @@ export const educationModule = defineModule<EducationSlice>({
       const s = slice as EducationSlice;
       return { ...s, college: { ...s.college, grades: {} } };
     },
+    6: (slice) => ({ ...(slice as object), university: NO_UNIVERSITY() }),
   },
   // Added to a save from before it, the life has a diploma: it was lived as if it had.
   init: (ctx) => FRESH(drawn(ctx)),
@@ -84,10 +100,23 @@ export const educationModule = defineModule<EducationSlice>({
     },
     earned: { args: { credential: { type: 'enum', values: SCHOOLING } }, label: 'Earned a credential' },
     enrolled: {
-      args: { term: { type: 'text' }, courses: { type: 'int', min: 1 }, start: { type: 'int', min: 0 } },
+      args: {
+        term: { type: 'text' },
+        courses: { type: 'int', min: 1 },
+        start: { type: 'int', min: 0 },
+        school: { type: 'enum', values: ['college', 'university'] },
+      },
       label: 'Enrolled for a term',
     },
     attended: { args: { course: { type: 'text' } }, label: 'Went to class' },
+    admitted: {
+      args: {
+        admitted: { type: 'bool' },
+        chance: { type: 'int', min: 0, max: 100 },
+        transfer: { type: 'int', min: 0 },
+      },
+      label: 'Heard from the university',
+    },
     billed: {
       args: {
         charge: { type: 'int', min: 0 },
@@ -109,7 +138,8 @@ export const educationModule = defineModule<EducationSlice>({
   actions: {
     study: { run: (ctx, a) => study(ctx, a.subject, a.minutes), options: studyOptions },
     'take-test': { run: (ctx, a) => sit(ctx, a.subject), options: testOptions },
-    enroll: { run: (ctx, a) => enroll(ctx, a.courses, a.borrow), options: enrollOptions },
+    enroll: { run: (ctx, a) => enroll(ctx, a.courses, a.borrow, a.school), options: enrollOptions },
+    apply: { run: (ctx) => apply(ctx), options: applyOptions },
     'pay-loan': {
       run: (ctx) => payBehind(ctx),
       // Offered only when all of it can be paid, as rent owed is.
@@ -125,9 +155,19 @@ export const educationModule = defineModule<EducationSlice>({
     'college-bill': {
       run: () => {},
       preview: (ctx, e) => {
-        const c = collegeOf(ctx);
+        const which = e.school === 'university' ? 'university' : 'college';
         const how = (BORROWING as readonly string[]).includes(String(e.borrow)) ? (e.borrow as Borrow) : 'none';
-        return c ? { ...billFor(ctx as never, c, Number(e.courses), how) } : {};
+        const open = which === 'college' ? collegeOf(ctx) : universityOf(ctx);
+        return open ? { ...billFor(ctx as never, which, Number(e.courses), how) } : {};
+      },
+    },
+    'admit-result': (ctx, e) => admitResult(ctx, e.admitted === true, e.chance as number),
+    // The chance of being admitted now, for the page to show before you apply: the one rolled.
+    'admit-odds': {
+      run: () => {},
+      preview: (ctx) => {
+        const u = universityOf(ctx);
+        return { chance: u ? admitChance(ctx as never, u) : 0 };
       },
     },
     'ged-result': (ctx, e) => result(ctx, e.subject as string, e.passed === true, e.chance as number),
@@ -155,10 +195,25 @@ export const educationModule = defineModule<EducationSlice>({
     },
     // Hundredths: 250 is a 2.50.
     gpa: {
-      read: ({ state }) =>
-        state.college.graded > 0 ? Math.floor((state.college.points * 100) / state.college.graded) : 0,
+      read: ({ state }) => gpaOf(state.college),
       domain: { type: 'int', min: 0, max: 400 },
       label: 'your college grade point average, in hundredths',
+    },
+    admitted: {
+      read: ({ state }) => state.university.admitted,
+      domain: { type: 'bool' },
+      label: 'admitted to the state university',
+    },
+    // The university's credits, transfer included, and its average, in hundredths, without them.
+    'degree-credits': {
+      read: ({ state }) => state.university.credits,
+      domain: { type: 'int', min: 0 },
+      label: 'university credits earned',
+    },
+    'degree-gpa': {
+      read: ({ state }) => gpaOf(state.university),
+      domain: { type: 'int', min: 0, max: 400 },
+      label: 'your university grade point average, in hundredths',
     },
     'class-in': {
       read: (v) => classIn(v),

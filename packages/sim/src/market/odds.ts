@@ -22,15 +22,20 @@ export interface Applicant {
   /** Of them, felonies (M2.4). */
   readonly felonies: number;
   readonly reputation: number;
-  /** The highest schooling finished (M2.8): 'none', 'diploma', 'ged' or 'associate'. */
+  /** The highest schooling finished (M2.8): 'none', 'diploma', 'ged', 'associate' or 'bachelor' (M4.2). */
   readonly schooling: string;
   /** Minutes worked in each career, at any employer (M2.5, D122). */
   readonly worked?: Readonly<Record<string, number>>;
 }
 
 /** Whether what you finished meets what a career asks: a GED counts as a diploma. */
-const meets = (finished: string, need: 'high-school' | 'associate'): boolean =>
-  need === 'associate' ? finished === 'associate' : finished !== 'none';
+/** A bachelor's meets what an associate's does (M4.2); a GED, what a diploma does. */
+const meets = (finished: string, need: 'high-school' | 'associate' | 'bachelor'): boolean =>
+  need === 'bachelor'
+    ? finished === 'bachelor'
+    : need === 'associate'
+      ? finished === 'associate' || finished === 'bachelor'
+      : finished !== 'none';
 
 /** Minutes worked in any of `careers`. */
 export const experienceIn = (you: Pick<Applicant, 'worked'>, careers: readonly string[]): number =>
@@ -44,7 +49,7 @@ export const experienceIn = (you: Pick<Applicant, 'worked'>, careers: readonly s
 export function barred(
   career: CareerRecord,
   you: Applicant,
-): 'record' | 'high-school' | 'associate' | 'experience' | null {
+): 'record' | 'high-school' | 'associate' | 'bachelor' | 'experience' | null {
   const need = career.requires?.schooling;
   if (need && !meets(you.schooling, need)) return need;
   const exp = career.requires?.experience;

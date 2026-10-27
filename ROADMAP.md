@@ -699,7 +699,7 @@ In the order of the cut ladder, reversed: crime above the crew tier; university 
 
 Opened 2026-10-27 (D144) ahead of Phase 3, which waits (D143).
 
-- **M4.1 Crime above the crew.** ← **CURRENT MILESTONE** Its [auto] gates pass; the [you] gate is open. A crew of your own, rivals on corners, violence, and the cash it makes.
+- **M4.1 Crime above the crew.** Its [auto] gates pass; the [you] gate is open. A crew of your own, rivals on corners, violence, and the cash it makes.
   - Started 2026-10-27. Decisions: your own crew (D145); violence in, rare and costly (D146, amending D86); cash with a risk (D147); rival crews hold corners (D148).
   - **Done when:**
     - you can buy from a wholesale connect at prices traced in CALIBRATION.md, front weight to recruits among the people you know, and set them on corners; their sales, debts, arrests and naming you follow from records, odds shown first [auto];
@@ -722,6 +722,22 @@ Opened 2026-10-27 (D144) ahead of Phase 3, which waits (D143).
   - **Step 4, built 2026-10-27: the cash (D147).** The deal module counts the trade's money in your cash (`dirty`, `deal.unexplained`): sales, a recruit's and your crew's payments, a collected debt, a robbery's take; pay and anything else are not. Spending comes out of what pay explains first, so the trade's share is the last to go. Over $10,000 of it in hand draws 2 of heat a day (tune); a raid takes it with what you hold, and leaves the rest. Departure: there is no bank yet (Phase 5), so the attention is the police's alone, and "explained" means only that the trade didn't pay it. Saves from before load: `life-v23.json`, written by step 3's build, migrates the deal from 4 to 5. Planted bugs: 5, 5 caught. `pnpm -s typecheck` was found to hide the compiler's errors behind a pipe; the checks now read its exit code.
   - **Step 5, built 2026-10-27: the page.** `apps/game/src/life/crew.ts`, at the corner's menu: meeting the connect and their lots at their hours; the people you can bring in by name, with the front you would give them; fronting each member; taking a debt by force and robbing the other crew's seller, each with the odds the sim's preview gives; letting someone go, with what they owe. The corner's first line says what each member holds and owes, by when, and whether they are cut off or run off, and how much of your cash is the trade's; the hour on the corner says how likely a robbery is and how many warnings a held corner has left. Unit tests on the page's `Life` (`crew.test.ts`); the corner's layout at 360 and 390 px stays `street.spec.ts`'s, and a boss's week on the phone is the [you] gate. Planted bugs: 4, 4 caught.
   - **Step 6, built 2026-10-27: the boss bot and B6 at this tier.** `packages/sim/src/boss-bot.ts`: the dealer bot meeting the connect, buying at wholesale when low with a week of meals kept back, bringing in whoever it may, fronting each member when clear, settling an unpaid front by force or by letting them go on a coin's toss, and going out in the evenings to know people; it never robs. `test/boss.ts` starts a life already a boss: in the crew, the connect met, $20,000, four people known well. In 500 seeded weeks with the 1,000 people (`deal/boss-week.test.ts`), nothing refused, and every part of the crew's business reached. That sweep showed members taken in most weeks (1,849 arrests for 3,505 fronts), so a member's sale is now seen 1 in 1,000, not 4 in 100 (CALIBRATION.md). B6 at this tier: over 8 weeks in 12 seeds (in CI) the median boss gains less than the median cook; over a year in 40 seeds (`bosses-bench.ts`, Readings) every boss ends worse off than the median cook, by about $42,000. Planted bugs: 2, 2 caught (the connect's weight given away, and the bot never bringing anyone in). M4.1's [auto] gates pass; a boss's week on Evan's phone is open.
+
+- **M4.2 University and law school.** ← **CURRENT MILESTONE** A bachelor's at a public university, then law school and the bar.
+  - Started 2026-10-27. Decisions: a bachelor's, then law school (D149); admission by odds from your record (D150); a handful of careers with real wages (D151).
+  - **Done when:**
+    - a public university admits freshmen and transfers at odds from grades and record, shown first and rolled as shown; 120 credits over terms make a bachelor's, an associate's counting for 60; tuition, Pell and Direct loans at Michigan's real rates, traced in CALIBRATION.md [auto];
+    - with a bachelor's, the LSAT can be taken and law school applied to at odds from the GPA, the LSAT and the record; three years make a JD; the bar exam at its real pass rate makes a lawyer [auto];
+    - five careers that ask for a bachelor's and lawyer, on the career template with BLS wages, offered on the market to those who hold the credential [auto];
+    - a student bot goes from the associate's to the bachelor's, and one to the bar, with nothing refused [auto];
+    - saves from before load [auto];
+    - a term at the university on Evan's phone, at 360 and 390 px [you].
+  - **Steps:**
+    1. The university: the record, terms, admission at odds, credits, transfer, the bachelor's, tuition and aid. Done 2026-10-27: `education/university.ts`, the college's terms and grades shared by both schools (`college.ts`), the university's price (`aid.ts`), education v6, life-v24.
+    2. Law school: the LSAT, admission, three years, the JD, the bar exam.
+    3. The careers: five that ask for a bachelor's, and lawyer.
+    4. The page: the School tab's university and law school at 360 and 390 px.
+    5. The bots, saves from before, readings, docs.
 
 ## Phase 5: Money that matters
 
@@ -933,6 +949,8 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-26: M2.12 done: PR #61 merged. Phase 3 waits (D143).
 - 2026-10-27: Phases 5 to 11 added (D144): money that matters, places to live, a city you walk into, being somewhere with people, the city changes, owning the place, cars. Phase 4 opens ahead of Phase 3. M4.1 opened (D145–D148): crime above the crew.
 - 2026-10-27: M4.1 built: a crew of your own, rival corners, violence, the trade's cash, the page, the boss bot. Its [auto] gates pass (B6 at this tier: every boss worse off than the median cook over a year); a boss's week on the phone is open.
+- 2026-10-27: M4.2 opened (D149–D151): a bachelor's, then law school.
+- 2026-10-27: M4.2 step 1, the state university: admission at the odds shown, transfer credits, its terms and price, the bachelor's; education v6, life-v24. Planted bugs: 6, 6 caught.
 - 2026-10-26: M2.11 steps 1–4: the free year's end and its last card, the unlock, the full-only check, and the year lived in 500 seeds; M2.11's [auto] gates pass.
 - 2026-10-26: M2.11 opened (D136–D138): the free year's last card, the save kept and new lives free, one build with a gate. The marker moved from M2.10, whose [auto] gates pass.
 - 2026-10-26: M2.10 step 5: the steady bot's 500 weeks across the seasons and every life event played through; M2.10's [auto] gates pass, Evan's reading of the strings is open.

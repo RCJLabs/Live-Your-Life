@@ -236,11 +236,311 @@
         {
           "credits": 30,
           "year": 1050000
+        },
+        {
+          "credits": 60,
+          "year": 1250000
         }
       ],
       "grace": 183,
       "months": 120,
       "leastMonth": 5000
+    }
+  },
+  "university": {
+    "name": "the state university",
+    "terms": [
+      {
+        "id": "fall",
+        "month": 9,
+        "day": 2,
+        "weeks": 15
+      },
+      {
+        "id": "spring",
+        "month": 1,
+        "day": 12,
+        "weeks": 15
+      }
+    ],
+    "enroll": 60,
+    "courses": [
+      {
+        "id": "u-01",
+        "name": "General education 1",
+        "credits": 3
+      },
+      {
+        "id": "u-02",
+        "name": "General education 2",
+        "credits": 3
+      },
+      {
+        "id": "u-03",
+        "name": "General education 3",
+        "credits": 3
+      },
+      {
+        "id": "u-04",
+        "name": "General education 4",
+        "credits": 3
+      },
+      {
+        "id": "u-05",
+        "name": "General education 5",
+        "credits": 3
+      },
+      {
+        "id": "u-06",
+        "name": "General education 6",
+        "credits": 3
+      },
+      {
+        "id": "u-07",
+        "name": "General education 7",
+        "credits": 3
+      },
+      {
+        "id": "u-08",
+        "name": "General education 8",
+        "credits": 3
+      },
+      {
+        "id": "u-09",
+        "name": "General education 9",
+        "credits": 3
+      },
+      {
+        "id": "u-10",
+        "name": "General education 10",
+        "credits": 3
+      },
+      {
+        "id": "u-11",
+        "name": "General education 11",
+        "credits": 3
+      },
+      {
+        "id": "u-12",
+        "name": "General education 12",
+        "credits": 3
+      },
+      {
+        "id": "u-13",
+        "name": "General education 13",
+        "credits": 3
+      },
+      {
+        "id": "u-14",
+        "name": "General education 14",
+        "credits": 3
+      },
+      {
+        "id": "u-15",
+        "name": "General education 15",
+        "credits": 3
+      },
+      {
+        "id": "u-16",
+        "name": "General education 16",
+        "credits": 3
+      },
+      {
+        "id": "u-17",
+        "name": "General education 17",
+        "credits": 3
+      },
+      {
+        "id": "u-18",
+        "name": "General education 18",
+        "credits": 3
+      },
+      {
+        "id": "u-19",
+        "name": "General education 19",
+        "credits": 3
+      },
+      {
+        "id": "u-20",
+        "name": "General education 20",
+        "credits": 3
+      },
+      {
+        "id": "u-21",
+        "name": "Major course 1",
+        "credits": 3
+      },
+      {
+        "id": "u-22",
+        "name": "Major course 2",
+        "credits": 3
+      },
+      {
+        "id": "u-23",
+        "name": "Major course 3",
+        "credits": 3
+      },
+      {
+        "id": "u-24",
+        "name": "Major course 4",
+        "credits": 3
+      },
+      {
+        "id": "u-25",
+        "name": "Major course 5",
+        "credits": 3
+      },
+      {
+        "id": "u-26",
+        "name": "Major course 6",
+        "credits": 3
+      },
+      {
+        "id": "u-27",
+        "name": "Major course 7",
+        "credits": 3
+      },
+      {
+        "id": "u-28",
+        "name": "Major course 8",
+        "credits": 3
+      },
+      {
+        "id": "u-29",
+        "name": "Major course 9",
+        "credits": 3
+      },
+      {
+        "id": "u-30",
+        "name": "Major course 10",
+        "credits": 3
+      },
+      {
+        "id": "u-31",
+        "name": "Major course 11",
+        "credits": 3
+      },
+      {
+        "id": "u-32",
+        "name": "Major course 12",
+        "credits": 3
+      },
+      {
+        "id": "u-33",
+        "name": "Major course 13",
+        "credits": 3
+      },
+      {
+        "id": "u-34",
+        "name": "Major course 14",
+        "credits": 3
+      },
+      {
+        "id": "u-35",
+        "name": "Major course 15",
+        "credits": 3
+      },
+      {
+        "id": "u-36",
+        "name": "Major course 16",
+        "credits": 3
+      },
+      {
+        "id": "u-37",
+        "name": "Major course 17",
+        "credits": 3
+      },
+      {
+        "id": "u-38",
+        "name": "Major course 18",
+        "credits": 3
+      },
+      {
+        "id": "u-39",
+        "name": "Major course 19",
+        "credits": 3
+      },
+      {
+        "id": "u-40",
+        "name": "Major course 20",
+        "credits": 3
+      }
+    ],
+    "slots": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 9,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 9,
+        "minutes": 75
+      },
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 13,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 13,
+        "minutes": 75
+      },
+      {
+        "days": ["friday"],
+        "hour": 10,
+        "minutes": 150
+      }
+    ],
+    "study": 2,
+    "grades": [
+      {
+        "letter": "A",
+        "least": 90,
+        "points": 4
+      },
+      {
+        "letter": "B",
+        "least": 80,
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "least": 70,
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "least": 60,
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "least": 0,
+        "points": 0
+      }
+    ],
+    "gpa": 200,
+    "retake": 2,
+    "degree": 120,
+    "transfer": 60,
+    "price": {
+      "perCredit": 65892,
+      "upper": {
+        "after": 56,
+        "perCredit": 72292
+      },
+      "termFee": 7000
+    },
+    "admit": {
+      "diploma": 85,
+      "ged": 70,
+      "transfer": 78,
+      "gpa": 200,
+      "conviction": 10,
+      "felony": 20,
+      "wait": 120
     }
   }
 }

@@ -27,7 +27,7 @@ Rows to fill before the system that uses them is built. "Source family" names wh
 | Used-car prices, insurance, fuel, maintenance | market price indices; insurer averages for the state | driving | no |
 | Health insurance premiums, deductibles; costs of an ER visit, a clinic visit, a prescription, with and without insurance | national health expenditure and hospital price data | health, money | no |
 | Childcare by age | state market-rate surveys | family, money | no |
-| Tuition: community college, in-state university, professional school | published tuition tables | education | no |
+| Tuition: community college, in-state university, professional school | published tuition tables | education | the college (M2.8), the university (M4.2) |
 | Federal and state income tax, FICA | the tax tables for the base year | money | withholding (M1.3); the return is the money milestone's |
 | Loan and credit-card rates by credit band | federal consumer credit data | money | no |
 | Fines: shoplifting, traffic, DUI | the chosen state's schedules | law | no |
@@ -391,6 +391,18 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Finishing an associate's part time | of students starting part time at a public two-year college (fall 2012), 4.0 in 100 had graduated by the end of year 2, 15.1 by year 4 and 20.9 by year 6; full-time starters 32 by year 6 | the student bot's reading (ROADMAP Readings) | the National Student Clearinghouse's Yearly Success and Progress report, through search summaries | secondary |
 | Borrowing for an associate's | 33 in 100 associate's graduates of public colleges had ever borrowed (2019–20), owing $15,530 on average if they had | the student bot's reading | the Community College Research Center's fact sheet on community colleges and student debt, through search summaries | secondary |
 | Retaking a course | a course taken again counts at the better grade, both staying on the record; a student under 2.00 may also have up to 30 credits of D and E grades set aside once (academic renewal, not built) | `education/michigan.json`, `college.retake` (C or lower, tune) | Macomb Community College's Academic Renewal and Course Repeat Policy (macomb.edu), through a search summary | secondary |
+
+## The university (M4.2, D149, D150)
+
+| What | Figure | Where it's used | Source | Status |
+| --- | --- | --- | --- | --- |
+| Tuition | $658.92 a credit in-state for the first 55 credits, $722.92 from 56 on (2025–26); a $70 fee a term | `education/michigan.json`, `university.price` | Western Michigan University's 2025–26 tuition and fee rates, through search summaries; the fee a term is a placeholder for the university's several flat fees | secondary; the fee a placeholder |
+| Admission | 85 in 100 from high school with a diploma (84.6% of all applicants admitted, fall 2024); 78 in 100 in transfer (77.6%), at a college average of 2.00 or more, the least most Michigan publics ask | `university.admit.diploma`, `transfer`, `gpa` | Western Michigan University's admission figures as reported by Clastify, through a search summary; the 2.00 from its transfer admission page | secondary |
+| Admission from a GED, and with a record | 70 in 100 from a GED; 10 fewer with any conviction, 20 more with a felony | `university.admit.ged`, `conviction`, `felony` | none: most publics admit GED holders on the same terms with a test score, and the Common App dropped its criminal history question in 2019; the cut stands for the questions some universities still ask | (tune) |
+| Applying again | 120 days after a refusal | `university.admit.wait` | none: a term's admission cycle, roughly | (tune) |
+| Credits | a bachelor's at 120 credits and a 2.00 average; up to 60 college credits taken in transfer, as whole courses, counting toward the degree and not the average | `university.degree`, `transfer`, `gpa` | 120 is the common minimum for a bachelor's; the Michigan Transfer Agreement and associate's-to-bachelor's agreements take 60 or more; transfer grades leaving the average is Western's rule, through search summaries | secondary |
+| Terms | fall from 2 September and spring from 12 January, 15 weeks each; enrolling 60 days before; classes at 09:00, 13:00 and Friday 10:00 | `university.terms`, `enroll`, `slots` | the common pattern of a Michigan public's calendar, from general knowledge | placeholder |
+| Direct loans in the third year | an independent student's limit $12,500 a year from 60 credits | `aid.loans.limits` | the same aid pages as the college's loans | secondary |
 
 ## The year (M2.10, D130–D133)
 

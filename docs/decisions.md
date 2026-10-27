@@ -1095,6 +1095,24 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Rivals on corners (recommended, chosen). No rivals yet.
 
+### D149. Past the college: a bachelor's, then law school. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** M4.2 adds a four-year public university, entered as a freshman or by transfer with the associate's, and after a bachelor's, law school, the LSAT and the bar exam. Medical school waits for the medicine milestone, which needs the hospital.
+
+**Options considered.** A bachelor's, then law school (recommended, chosen). A bachelor's only. A bachelor's, law and medicine, with residency standing in for the hospital.
+
+### D150. Admission by odds from your record. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Getting into the university and law school is an application, its odds shown first: grades (high school's, or the college's GPA), a test where the real one has one (the LSAT), and a criminal record against you, as admissions weigh them.
+
+**Options considered.** Odds from your record (recommended, chosen). Open entry, the work and the cost the only filter.
+
+### D151. A handful of careers with real wages. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** About five careers that ask for a bachelor's (an elementary school teacher, an accountant, a social worker, a software developer, a civil engineer) and lawyer after the bar, each on the career template with BLS wages for the metro class.
+
+**Options considered.** A handful with real wages (recommended, chosen). Lawyer alone, a bachelor's raising odds and pay in the careers there are.
+
 ---
 
 ## Open items

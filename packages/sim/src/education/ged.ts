@@ -5,7 +5,7 @@
  * Passing all four is the GED, a diploma's equal to most employers.
  */
 import type { FactView, ModuleContext } from '@eb/core';
-import { studyCourse } from './college.ts';
+import { enrolledAt, studyCourse } from './college.ts';
 import type { EducationSlice } from './module.ts';
 import { type EducationRecord, educationOf, type GedSubject } from './records.ts';
 
@@ -37,7 +37,7 @@ export function studyOptions(v: View): { subject: string; minutes: number }[] {
   const r = educationOf(v.content);
   if (!r) return [];
   // A term's courses, enrolled for (college.ts), and the GED's subjects without a diploma.
-  const courses = (slice(v).college.term?.courses ?? []).map((x) => ({ subject: x.id, minutes: 60 }));
+  const courses = (enrolledAt(v)?.term.courses ?? []).map((x) => ({ subject: x.id, minutes: 60 }));
   return [...courses, ...r.ged.subjects.filter((s) => open(v, s.id)).map((s) => ({ subject: s.id, minutes: 60 }))];
 }
 
