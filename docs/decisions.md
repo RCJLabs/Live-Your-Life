@@ -1065,6 +1065,12 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Opening Phase 3 now, billing first (recommended); waiting (chosen).
 
+### D144. Seven phases after Phase 4, and Phase 4 next. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** The city is large on the plan (10,106 blocks) but small in what can be done: three walkable interiors, one studio, little to buy, and a median $14,429 left at the year's end. Seven phases follow Phase 4: money that matters (5), places to live (6), a city you walk into (7), being somewhere with people (8), the city changes (9), owning the place (10), cars (11). Phase 4's owned cars move to Phase 11 and its interiors to Phase 7, so nothing is planned twice. Phase 4 opens now, ahead of Phase 3, which waits (D143).
+
+**Options considered.** All seven as phases after the existing ones (chosen). A subset. Putting them before Phase 3 and release one (proposed order: money, housing, interiors, people, change, owning, cars).
+
 ---
 
 ## Open items
