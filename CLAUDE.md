@@ -64,6 +64,7 @@ node packages/sim/test/pays-bench.ts [lives] [weeks]    # dealers against line c
 node packages/sim/test/couples-bench.ts [lives] [weeks]   # the suitor bot's year: dating, moving in, marrying, nights and pregnancies (40 lives, 52 weeks; about 10 minutes)
 node packages/sim/test/lives-bench.ts [lives]          # the year in lives (M2.7): deaths by age band against the life table, illnesses against the record (1,000 lives; about 12 minutes)
 node packages/sim/test/students-bench.ts [lives] [years]   # the student bot (M2.8): terms, credits, grades, the associate's, aid and debt (20 lives, 3 years; about 8 seconds a life-year)
+node packages/sim/test/degrees-bench.ts [lives] [bachelor|law]   # the student bot past the associate's (M4.2): to the bachelor's, and through law school to the bar (10 lives each; about 40 seconds a life)
 node packages/sim/test/cooks-bench.ts [lives] [years]   # the cook bot (M2.5): when each steady cook became kitchen lead and chef, and the hours (20 lives, 5 years; about 15 minutes)
 node packages/sim/test/year-bench.ts [lives]   # Phase 2's year gate (M2.11): the steady bot lives a free year to its end or a death (500 lives; about 6 seconds a life)
 node packages/sim/test/seekers-bench.ts [lives] [days]   # the seeker bot (M2.3): the day each jobless life was hired, and into what (500 lives, 60 days)
