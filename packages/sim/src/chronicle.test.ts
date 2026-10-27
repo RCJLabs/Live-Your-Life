@@ -129,6 +129,10 @@ const RARE = [
   'prison/visited',
   'prison/wrote',
   'prison/working',
+  // Law school (M4.2 step 2): no census life holds a bachelor's; education/law.test.ts raises them.
+  'education/lsat',
+  'education/law-admitted',
+  'education/bar',
 ];
 
 /** Every event the bots raise in a few lives of each kind, by type. */

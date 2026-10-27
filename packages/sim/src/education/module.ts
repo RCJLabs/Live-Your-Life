@@ -2,7 +2,8 @@
  * Your schooling (M2.8, D111, D112). A first life starts with a high school diploma at Michigan's
  * graduation rate, drawn from the seed; without one, the GED is the way (step 2), and the
  * community college's associate's past either (step 3), paid for by tuition, a Pell grant and
- * loans (step 4); then the state university's bachelor's, admitted at odds (M4.2, D149, D150).
+ * loans (step 4); then the state university's bachelor's, admitted at odds (M4.2, D149, D150),
+ * and law school, the JD and the bar (step 2).
  * An heir's schooling is drawn the same way
  * when they carry on: what they finished is their own, not yours (open question 98).
  */
@@ -21,7 +22,23 @@ import {
   NO_COLLEGE,
 } from './college.ts';
 import { gedChance, result, sit, study, studyOptions, subjectOf, testOptions } from './ged.ts';
-import { type Loan, month, NO_LOAN, owedNow, payBehind } from './loans.ts';
+import {
+  apply as applyLaw,
+  applyOptions as applyLawOptions,
+  barChance,
+  barOptions,
+  barResult,
+  expectedLsat,
+  type LawSlice,
+  lawChance,
+  lawOf,
+  result as lawResult,
+  lsatOptions,
+  NO_LAW,
+  sitBar,
+  sitLsat,
+} from './law.ts';
+import { behindOf, LOANS, type Loan, month, NO_LOAN, owedNow, payBehind, termsOf } from './loans.ts';
 import { educationOf } from './records.ts';
 import {
   admitChance,
@@ -34,8 +51,8 @@ import {
 } from './university.ts';
 
 /** The highest you have finished. */
-export type Schooling = 'none' | 'diploma' | 'ged' | 'associate' | 'bachelor';
-export const SCHOOLING: readonly Schooling[] = ['none', 'diploma', 'ged', 'associate', 'bachelor'];
+export type Schooling = 'none' | 'diploma' | 'ged' | 'associate' | 'bachelor' | 'jd';
+export const SCHOOLING: readonly Schooling[] = ['none', 'diploma', 'ged', 'associate', 'bachelor', 'jd'];
 
 export interface EducationSlice {
   finished: Schooling;
@@ -45,9 +62,13 @@ export interface EducationSlice {
   college: CollegeSlice;
   /** The state university: admitted or not, a term, and what has been earned there (M4.2). */
   university: UniversitySlice;
+  /** Law school: the LSAT, admitted or not, a term, the JD's credits and the bar (M4.2 step 2). */
+  law: LawSlice;
   /** Gross pay over the past year, for aid, and the federal loans (step 4). */
   pay: Paycheck[];
   loan: Loan;
+  /** Law school's loans, apart from the others: their own rate. */
+  grad: Loan;
 }
 
 const NO_GED = (): EducationSlice['ged'] => ({ passed: [], prep: {} });
@@ -56,8 +77,10 @@ const FRESH = (finished: Schooling): EducationSlice => ({
   ged: NO_GED(),
   college: NO_COLLEGE(),
   university: NO_UNIVERSITY(),
+  law: NO_LAW(),
   pay: [],
   loan: NO_LOAN(),
+  grad: NO_LOAN(),
 });
 
 type Ctx = ModuleContext<EducationSlice>;
@@ -78,8 +101,9 @@ export const educationModule = defineModule<EducationSlice>({
   // pay for aid and the loans; a save from before has borrowed nothing, and its pay before is not known.
   // 5 (step 8): each course's last grade, for retakes; a save from before has none, so its courses
   // passed can't be retaken (their grades weren't kept). 6 (M4.2 step 1): the university; a save
-  // from before has not applied.
-  version: 6,
+  // from before has not applied. 7 (step 2): law school and its loans; a save from before has
+  // neither.
+  version: 7,
   migrate: {
     2: (slice) => ({ ...(slice as object), ged: NO_GED() }),
     3: (slice) => ({ ...(slice as object), college: NO_COLLEGE() }),
@@ -89,6 +113,7 @@ export const educationModule = defineModule<EducationSlice>({
       return { ...s, college: { ...s.college, grades: {} } };
     },
     6: (slice) => ({ ...(slice as object), university: NO_UNIVERSITY() }),
+    7: (slice) => ({ ...(slice as object), law: NO_LAW(), grad: NO_LOAN() }),
   },
   // Added to a save from before it, the life has a diploma: it was lived as if it had.
   init: (ctx) => FRESH(drawn(ctx)),
@@ -104,7 +129,7 @@ export const educationModule = defineModule<EducationSlice>({
         term: { type: 'text' },
         courses: { type: 'int', min: 1 },
         start: { type: 'int', min: 0 },
-        school: { type: 'enum', values: ['college', 'university'] },
+        school: { type: 'enum', values: ['college', 'university', 'law'] },
       },
       label: 'Enrolled for a term',
     },
@@ -117,6 +142,12 @@ export const educationModule = defineModule<EducationSlice>({
       },
       label: 'Heard from the university',
     },
+    lsat: { args: { score: { type: 'int', min: 120, max: 180 } }, label: 'Sat the LSAT' },
+    'law-admitted': {
+      args: { admitted: { type: 'bool' }, chance: { type: 'int', min: 0, max: 100 } },
+      label: 'Heard from the law school',
+    },
+    bar: { args: { passed: { type: 'bool' }, chance: { type: 'int', min: 0, max: 100 } }, label: 'Sat the bar exam' },
     billed: {
       args: {
         charge: { type: 'int', min: 0 },
@@ -140,11 +171,14 @@ export const educationModule = defineModule<EducationSlice>({
     'take-test': { run: (ctx, a) => sit(ctx, a.subject), options: testOptions },
     enroll: { run: (ctx, a) => enroll(ctx, a.courses, a.borrow, a.school), options: enrollOptions },
     apply: { run: (ctx) => apply(ctx), options: applyOptions },
+    'take-lsat': { run: (ctx) => sitLsat(ctx), options: lsatOptions },
+    'apply-law': { run: (ctx) => applyLaw(ctx), options: applyLawOptions },
+    'sit-bar': { run: (ctx) => sitBar(ctx), options: barOptions },
     'pay-loan': {
       run: (ctx) => payBehind(ctx),
       // Offered only when all of it can be paid, as rent owed is.
       options: (v) =>
-        v.state.loan.behind > 0 && (v.fact('economy.amount', { resource: 'cash' }) as number) >= v.state.loan.behind
+        behindOf(v.state) > 0 && (v.fact('economy.amount', { resource: 'cash' }) as number) >= behindOf(v.state)
           ? [{}]
           : [],
     },
@@ -155,13 +189,38 @@ export const educationModule = defineModule<EducationSlice>({
     'college-bill': {
       run: () => {},
       preview: (ctx, e) => {
-        const which = e.school === 'university' ? 'university' : 'college';
+        const which = e.school === 'university' || e.school === 'law' ? e.school : 'college';
         const how = (BORROWING as readonly string[]).includes(String(e.borrow)) ? (e.borrow as Borrow) : 'none';
-        const open = which === 'college' ? collegeOf(ctx) : universityOf(ctx);
+        const open = which === 'college' ? collegeOf(ctx) : which === 'university' ? universityOf(ctx) : lawOf(ctx);
         return open ? { ...billFor(ctx as never, which, Number(e.courses), how) } : {};
       },
     },
     'admit-result': (ctx, e) => admitResult(ctx, e.admitted === true, e.chance as number),
+    'law-result': (ctx, e) => lawResult(ctx, e.admitted === true, e.chance as number),
+    'bar-result': (ctx, e) => barResult(ctx, e.passed === true, e.chance as number),
+    // For the page, before you act: the law school's chance, the bar's, and the LSAT score study
+    // has earned, about which a sitting falls (its spread in tenths of a point).
+    'law-odds': {
+      run: () => {},
+      preview: (ctx) => {
+        const l = lawOf(ctx);
+        return { chance: l ? lawChance(ctx as never, l) : 0 };
+      },
+    },
+    'bar-odds': {
+      run: () => {},
+      preview: (ctx) => {
+        const l = lawOf(ctx);
+        return { chance: l ? barChance(ctx as never, l) : 0 };
+      },
+    },
+    'lsat-odds': {
+      run: () => {},
+      preview: (ctx) => {
+        const l = lawOf(ctx);
+        return l ? { expected: expectedLsat(ctx as never, l), spread: l.lsat.spread } : {};
+      },
+    },
     // The chance of being admitted now, for the page to show before you apply: the one rolled.
     'admit-odds': {
       run: () => {},
@@ -215,6 +274,16 @@ export const educationModule = defineModule<EducationSlice>({
       domain: { type: 'int', min: 0, max: 400 },
       label: 'your university grade point average, in hundredths',
     },
+    lsat: {
+      read: ({ state }) => state.law.lsat,
+      domain: { type: 'int', min: -1, max: 180 },
+      label: 'your best LSAT score, or -1',
+    },
+    licensed: {
+      read: ({ state }) => state.law.licensed,
+      domain: { type: 'bool' },
+      label: 'admitted to the bar',
+    },
     'class-in': {
       read: (v) => classIn(v),
       domain: { type: 'int', min: 1 },
@@ -227,12 +296,13 @@ export const educationModule = defineModule<EducationSlice>({
     },
     // The federal loans: all owed with interest to date, and payments behind. Discharged at death.
     owed: {
-      read: (v) => owedNow(v.state.loan, educationOf(v.content)?.aid ?? null, v.fact('time.day') as number),
+      read: (v) =>
+        LOANS.reduce((n, key) => n + owedNow(v.state[key], termsOf(v, key), v.fact('time.day') as number), 0),
       domain: { type: 'int', min: 0 },
       label: 'owed on student loans',
     },
     behind: {
-      read: ({ state }) => state.loan.behind,
+      read: ({ state }) => behindOf(state),
       domain: { type: 'int', min: 0 },
       label: 'student loan payments behind',
     },

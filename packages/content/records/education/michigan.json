@@ -542,5 +542,279 @@
       "felony": 20,
       "wait": 120
     }
+  },
+  "law": {
+    "name": "the law school",
+    "terms": [
+      {
+        "id": "fall",
+        "month": 9,
+        "day": 2,
+        "weeks": 15
+      },
+      {
+        "id": "spring",
+        "month": 1,
+        "day": 12,
+        "weeks": 15
+      }
+    ],
+    "enroll": 60,
+    "courses": [
+      {
+        "id": "l-01",
+        "name": "Contracts I",
+        "credits": 3
+      },
+      {
+        "id": "l-02",
+        "name": "Torts I",
+        "credits": 3
+      },
+      {
+        "id": "l-03",
+        "name": "Civil procedure I",
+        "credits": 3
+      },
+      {
+        "id": "l-04",
+        "name": "Criminal law",
+        "credits": 3
+      },
+      {
+        "id": "l-05",
+        "name": "Legal research and writing I",
+        "credits": 3
+      },
+      {
+        "id": "l-06",
+        "name": "Contracts II",
+        "credits": 3
+      },
+      {
+        "id": "l-07",
+        "name": "Torts II",
+        "credits": 3
+      },
+      {
+        "id": "l-08",
+        "name": "Civil procedure II",
+        "credits": 3
+      },
+      {
+        "id": "l-09",
+        "name": "Property",
+        "credits": 3
+      },
+      {
+        "id": "l-10",
+        "name": "Legal research and writing II",
+        "credits": 3
+      },
+      {
+        "id": "l-11",
+        "name": "Constitutional law I",
+        "credits": 3
+      },
+      {
+        "id": "l-12",
+        "name": "Evidence",
+        "credits": 3
+      },
+      {
+        "id": "l-13",
+        "name": "Criminal procedure",
+        "credits": 3
+      },
+      {
+        "id": "l-14",
+        "name": "Professional responsibility",
+        "credits": 3
+      },
+      {
+        "id": "l-15",
+        "name": "Business associations",
+        "credits": 3
+      },
+      {
+        "id": "l-16",
+        "name": "Constitutional law II",
+        "credits": 3
+      },
+      {
+        "id": "l-17",
+        "name": "Wills and trusts",
+        "credits": 3
+      },
+      {
+        "id": "l-18",
+        "name": "Family law",
+        "credits": 3
+      },
+      {
+        "id": "l-19",
+        "name": "Administrative law",
+        "credits": 3
+      },
+      {
+        "id": "l-20",
+        "name": "Trial advocacy",
+        "credits": 3
+      },
+      {
+        "id": "l-21",
+        "name": "Elective 1",
+        "credits": 3
+      },
+      {
+        "id": "l-22",
+        "name": "Elective 2",
+        "credits": 3
+      },
+      {
+        "id": "l-23",
+        "name": "Elective 3",
+        "credits": 3
+      },
+      {
+        "id": "l-24",
+        "name": "Elective 4",
+        "credits": 3
+      },
+      {
+        "id": "l-25",
+        "name": "Elective 5",
+        "credits": 3
+      },
+      {
+        "id": "l-26",
+        "name": "Elective 6",
+        "credits": 3
+      },
+      {
+        "id": "l-27",
+        "name": "Elective 7",
+        "credits": 3
+      },
+      {
+        "id": "l-28",
+        "name": "Elective 8",
+        "credits": 3
+      },
+      {
+        "id": "l-29",
+        "name": "A clinic",
+        "credits": 3
+      }
+    ],
+    "slots": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 9,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 9,
+        "minutes": 75
+      },
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 13,
+        "minutes": 75
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 13,
+        "minutes": 75
+      },
+      {
+        "days": ["friday"],
+        "hour": 10,
+        "minutes": 150
+      }
+    ],
+    "study": 2,
+    "grades": [
+      {
+        "letter": "A",
+        "least": 90,
+        "points": 4
+      },
+      {
+        "letter": "B",
+        "least": 80,
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "least": 70,
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "least": 60,
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "least": 0,
+        "points": 0
+      }
+    ],
+    "gpa": 200,
+    "degree": 86,
+    "price": {
+      "perCredit": 136820,
+      "upper": {
+        "after": 200,
+        "perCredit": 136820
+      },
+      "termFee": 0
+    },
+    "admit": {
+      "at": 65,
+      "lsat": 155,
+      "perPoint": 3,
+      "gpa": 340,
+      "perTenth": 5,
+      "most": 95,
+      "conviction": 10,
+      "felony": 30,
+      "wait": 180
+    },
+    "lsat": {
+      "price": 24800,
+      "minutes": 210,
+      "mean": 151,
+      "spread": 100,
+      "perHour": 5,
+      "most": 10,
+      "wait": 30
+    },
+    "loans": {
+      "rate": 794,
+      "fee": 1057,
+      "year": 5000000
+    },
+    "bar": {
+      "days": [
+        {
+          "month": 2,
+          "day": 24
+        },
+        {
+          "month": 7,
+          "day": 28
+        }
+      ],
+      "price": 77500,
+      "again": 30000,
+      "minutes": 720,
+      "first": 76,
+      "repeat": 32,
+      "hours": 400,
+      "least": 20
+    }
   }
 }

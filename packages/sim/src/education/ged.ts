@@ -6,6 +6,7 @@
  */
 import type { FactView, ModuleContext } from '@eb/core';
 import { enrolledAt, studyCourse } from './college.ts';
+import { prep, prepOptions } from './law.ts';
 import type { EducationSlice } from './module.ts';
 import { type EducationRecord, educationOf, type GedSubject } from './records.ts';
 
@@ -36,9 +37,11 @@ function centreOpen(v: View, r: EducationRecord): boolean {
 export function studyOptions(v: View): { subject: string; minutes: number }[] {
   const r = educationOf(v.content);
   if (!r) return [];
-  // A term's courses, enrolled for (college.ts), and the GED's subjects without a diploma.
+  // A term's courses, enrolled for (college.ts), the LSAT or the bar ahead (law.ts), and the GED's
+  // subjects without a diploma.
   const courses = (enrolledAt(v)?.term.courses ?? []).map((x) => ({ subject: x.id, minutes: 60 }));
-  return [...courses, ...r.ged.subjects.filter((s) => open(v, s.id)).map((s) => ({ subject: s.id, minutes: 60 }))];
+  const ged = r.ged.subjects.filter((s) => open(v, s.id)).map((s) => ({ subject: s.id, minutes: 60 }));
+  return [...courses, ...prepOptions(v), ...ged];
 }
 
 /** The tests you could sit now: the centre open, the price in hand. */
@@ -58,7 +61,7 @@ export function study(ctx: Ctx, subject: unknown, minutes: unknown): void {
   const id = subject as string;
   const m = minutes as number;
   // A course of this term's first; otherwise a GED subject still to pass.
-  if (!studyCourse(ctx, id, m)) {
+  if (!studyCourse(ctx, id, m) && !prep(ctx, id, m)) {
     if (!r || !subjectOf(r, id) || !open(ctx, id)) ctx.refuse('no-subject');
     const w = ctx.write();
     w.ged.prep = { ...w.ged.prep, [id]: (w.ged.prep[id] ?? 0) + m };

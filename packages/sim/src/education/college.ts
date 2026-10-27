@@ -11,9 +11,10 @@
 import type { DeepReadonly, FactView, ModuleContext } from '@eb/core';
 import { MONTHS, type WEEKDAYS } from '../calendar.ts';
 import { aidOf, type Borrow, billFor, payOptions } from './aid.ts';
+import { lawOf } from './law.ts';
 import { borrow, defer, leftSchool } from './loans.ts';
 import type { EducationSlice } from './module.ts';
-import { type College, educationOf, type University } from './records.ts';
+import { type College, educationOf, type LawSchool, type University } from './records.ts';
 import { transferIn, universityOf } from './university.ts';
 
 type Ctx = ModuleContext<EducationSlice>;
@@ -48,9 +49,10 @@ export interface CollegeSlice {
   grades: Record<string, number>;
 }
 
-/** The two schools, by their slice's key. */
-export type Which = 'college' | 'university';
-export type Catalog = College | University;
+/** The schools, by their slice's key. */
+export type Which = 'college' | 'university' | 'law';
+export const SCHOOLS: readonly Which[] = ['college', 'university', 'law'];
+export type Catalog = College | University | LawSchool;
 
 export const NO_COLLEGE = (): CollegeSlice => ({
   term: null,
@@ -77,11 +79,11 @@ export const collegeOf = (v: { readonly content: View['content'] }): College | n
   educationOf(v.content)?.college ?? null;
 
 export const schoolOf = (v: { readonly content: View['content'] }, which: Which): Catalog | null =>
-  which === 'college' ? collegeOf(v) : universityOf(v);
+  which === 'college' ? collegeOf(v) : which === 'university' ? universityOf(v) : lawOf(v);
 
 /** The school you are enrolled at and its term, if either. */
 export function enrolledAt(v: View): { which: Which; c: Catalog; term: DeepReadonly<Term> } | null {
-  for (const which of ['college', 'university'] as const) {
+  for (const which of SCHOOLS) {
     const term = slice(v)[which].term;
     const c = schoolOf(v, which);
     if (term && c) return { which, c, term };
@@ -109,15 +111,16 @@ export function nextTerm(v: View, c: Catalog): { id: string; start: number; week
 export type Enrolling = {
   readonly courses: number;
   readonly borrow: Borrow;
-  /** Only the university's: a college option keeps the shape it had before (D149). */
-  readonly school?: 'university';
+  /** Only the university's and law school's: a college option keeps the shape it had before (D149). */
+  readonly school?: 'university' | 'law';
 };
 
-/** Whether you could enroll at a school at all: a diploma or GED, and for the university, admitted. */
+/** Whether you could enroll at a school at all: a diploma or GED for the college; admitted, and not through it, for the others. */
 function open(v: View, which: Which): boolean {
   const s = slice(v);
   if (which === 'college') return s.finished === 'diploma' || s.finished === 'ged';
-  return s.university.admitted && s.finished !== 'bachelor';
+  if (which === 'university') return s.university.admitted && s.finished !== 'bachelor' && s.finished !== 'jd';
+  return s.law.admitted && s.finished !== 'jd';
 }
 
 /**
@@ -126,14 +129,14 @@ function open(v: View, which: Which): boolean {
  */
 export function enrollOptions(v: View): Enrolling[] {
   const s = slice(v);
-  if (s.college.term || s.university.term) return [];
-  return (['college', 'university'] as const).flatMap((which) => {
+  if (SCHOOLS.some((which) => s[which].term)) return [];
+  return SCHOOLS.flatMap((which) => {
     const c = schoolOf(v, which);
     if (!c || !open(v, which)) return [];
     const t = nextTerm(v, c);
     if (!t || t.start - (v.fact('time.day') as number) > c.enroll) return [];
     const left = nextCourses(c, s[which]).length;
-    const school = which === 'university' ? { school: which } : {};
+    const school = which === 'college' ? {} : { school: which };
     return Array.from({ length: Math.min(c.slots.length, left) }, (_, i) => i + 1).flatMap((courses) =>
       payOptions(v, which, courses).map((borrow) => ({ courses, borrow, ...school })),
     );
@@ -141,7 +144,7 @@ export function enrollOptions(v: View): Enrolling[] {
 }
 
 export function enroll(ctx: Ctx, courses: unknown, how: unknown, school: unknown): void {
-  const which: Which = school === 'university' ? 'university' : 'college';
+  const which: Which = school === 'university' || school === 'law' ? school : 'college';
   const offered = enrollOptions(ctx).some(
     (o) => o.courses === courses && o.borrow === how && o.school === (school as string | undefined),
   );
@@ -154,7 +157,7 @@ export function enroll(ctx: Ctx, courses: unknown, how: unknown, school: unknown
   const bill = billFor(ctx, which, courses as number, how as Borrow);
   if (bill.cash > 0) ctx.apply({ effect: 'pay-cost', cost: { cash: bill.cash } });
   if (bill.refund > 0) ctx.apply({ effect: 'add-resource', resource: 'cash', by: bill.refund });
-  borrow(ctx, bill.borrowed);
+  borrow(ctx, bill.borrowed, which === 'law' ? 'grad' : 'loan');
   // At half time or more, in school: nothing is due on the loans.
   if (bill.credits >= (aidOf(ctx)?.loans.half ?? Number.POSITIVE_INFINITY)) defer(ctx);
   ctx.write()[which].term = {
@@ -275,7 +278,14 @@ function grade(ctx: Ctx, which: Which, c: Catalog, term: DeepReadonly<Term>): vo
   w.term = null;
 }
 
-/** The term's end: graded, and the associate's or the bachelor's at the record's mark. */
+/** The credential each school's last credit gives, and the ones it does not replace. */
+const EARNS: Record<Which, { credential: 'associate' | 'bachelor' | 'jd'; above: readonly string[] }> = {
+  college: { credential: 'associate', above: ['associate', 'bachelor', 'jd'] },
+  university: { credential: 'bachelor', above: ['bachelor', 'jd'] },
+  law: { credential: 'jd', above: ['jd'] },
+};
+
+/** The term's end: graded, and the associate's, the bachelor's or the JD at the record's mark. */
 export function endTerm(ctx: Ctx): void {
   const at = enrolledAt(ctx);
   if (!at || (ctx.fact('time.day') as number) < at.term.end) return;
@@ -283,19 +293,10 @@ export function endTerm(ctx: Ctx): void {
   grade(ctx, which, c, term);
   leftSchool(ctx, term.end);
   const done = ctx.read()[which];
-  const s = ctx.read();
-  if ('associate' in c) {
-    if (
-      s.finished !== 'bachelor' &&
-      s.finished !== 'associate' &&
-      done.credits >= c.associate &&
-      gpaOf(done) >= c.gpa
-    ) {
-      ctx.write().finished = 'associate';
-      ctx.emit('earned', { credential: 'associate' });
-    }
-  } else if (s.finished !== 'bachelor' && done.credits >= c.degree && gpaOf(done) >= c.gpa) {
-    ctx.write().finished = 'bachelor';
-    ctx.emit('earned', { credential: 'bachelor' });
+  const needs = 'associate' in c ? c.associate : c.degree;
+  const { credential, above } = EARNS[which];
+  if (!above.includes(ctx.read().finished) && done.credits >= needs && gpaOf(done) >= c.gpa) {
+    ctx.write().finished = credential;
+    ctx.emit('earned', { credential });
   }
 }
