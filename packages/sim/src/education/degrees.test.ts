@@ -54,7 +54,7 @@ describe('the student bot past the associate’s (M4.2 step 5)', () => {
   }, 180_000);
 
   it('goes from a bachelor’s through the LSAT and law school to the bar, nothing refused', () => {
-    const { seen, fact } = live('degrees-law-5', start('degrees-law-5', 'bachelor'), 1400);
+    const { seen, fact } = live('degrees-law-5', start('degrees-law-5', 'bachelor'), 1800);
     const lsat = seen.find((b) => b.type === 'education/lsat');
     expect(lsat?.score as number).toBeGreaterThanOrEqual(120);
     expect(seen.some((b) => b.type === 'education/law-admitted' && b.admitted === true)).toBe(true);

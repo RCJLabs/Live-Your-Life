@@ -44,7 +44,9 @@ describe('looking for work, headless (M2.3, D74)', () => {
       .ids('career')
       .filter((id) => careerOf(sim.content, id).employers.staff > 0)
       .filter((id) => [undefined, 'high-school'].includes(careerOf(sim.content, id).requires?.schooling))
-      .filter((id) => careerOf(sim.content, id).requires?.experience === undefined);
+      .filter((id) => careerOf(sim.content, id).requires?.experience === undefined)
+      // A licence (the bar, M4.2; the EMT's, M4.4) is the seeker's never to hold.
+      .filter((id) => careerOf(sim.content, id).requires?.licence === undefined);
     expect([...hired.keys()].sort()).toEqual([...hiring].sort());
     // Most answers are no: the line cook takes 15 in 100 (D76). Some are still waiting when the
     // week ends, or when a yes came first.

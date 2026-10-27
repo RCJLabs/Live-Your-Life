@@ -212,6 +212,85 @@
     "gpa": 200,
     "retake": 2
   },
+  "emt": {
+    "name": "the EMT course",
+    "terms": [
+      {
+        "id": "fall",
+        "month": 9,
+        "day": 1,
+        "weeks": 16
+      },
+      {
+        "id": "spring",
+        "month": 1,
+        "day": 13,
+        "weeks": 16
+      }
+    ],
+    "enroll": 28,
+    "courses": [
+      {
+        "id": "emt-1",
+        "name": "Emergency Medical Technician I",
+        "credits": 6
+      },
+      {
+        "id": "emt-2",
+        "name": "Emergency Medical Technician II",
+        "credits": 6
+      }
+    ],
+    "slots": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 18,
+        "minutes": 180
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 18,
+        "minutes": 180
+      }
+    ],
+    "study": 1,
+    "grades": [
+      {
+        "letter": "A",
+        "least": 90,
+        "points": 4
+      },
+      {
+        "letter": "B",
+        "least": 80,
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "least": 70,
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "least": 60,
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "least": 0,
+        "points": 0
+      }
+    ],
+    "certificate": 12,
+    "gpa": 200,
+    "exam": {
+      "price": 10400,
+      "minutes": 120,
+      "first": 70,
+      "repeat": 50,
+      "wait": 15
+    }
+  },
   "aid": {
     "tuition": 11300,
     "hourFee": 750,

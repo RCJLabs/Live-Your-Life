@@ -202,7 +202,8 @@ describe('the university’s terms (M4.2 step 1, D149)', () => {
     const ask = { type: 'education/enroll', courses: 1, borrow: 'none', school: 'university' };
     expect(refusal(game, sim, s, ask)).toBe('no-enrolling');
     const done = beforeFall(lifeWith('closed', { finished: 'bachelor', university: { admitted: true } }), 10);
-    expect(offered(done, 'education/enroll')).toEqual([]);
+    // Only the EMT course (M4.4), which takes a bachelor's holder as anyone.
+    expect(offered(done, 'education/enroll').every((o) => o.school === 'emt')).toBe(true);
   });
 
   it('meets at the university’s slots, and earns the bachelor’s at its credits and average', () => {

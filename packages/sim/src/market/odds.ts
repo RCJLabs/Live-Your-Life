@@ -26,6 +26,8 @@ export interface Applicant {
   readonly schooling: string;
   /** Admitted to the bar (M4.2 step 2). */
   readonly licensed?: boolean;
+  /** Licensed as an EMT (M4.4). */
+  readonly emt?: boolean;
   /** Minutes worked in each career, at any employer (M2.5, D122). */
   readonly worked?: Readonly<Record<string, number>>;
 }
@@ -55,6 +57,8 @@ export function barred(
   if (need && !meets(you.schooling, need)) return need;
   // A lawyer is one admitted to the bar (M4.2): the JD alone doesn't make one.
   if (career.requires?.licence === 'bar' && you.licensed !== true) return 'licence';
+  // An EMT is one who passed the national exam (M4.4): the college's certificate alone doesn't make one.
+  if (career.requires?.licence === 'emt' && you.emt !== true) return 'licence';
   const exp = career.requires?.experience;
   if (exp && experienceIn(you, exp.careers) < exp.minutes) return 'experience';
   const rule = career.requires?.record;

@@ -1,0 +1,44 @@
+{
+  "name": "The stairs",
+  "tags": ["ambulance"],
+  "weight": 3,
+  "prompt": "A patient of three hundred pounds, a third-floor walk-up, and a stair chair with a sticking wheel.",
+  "choices": [
+    {
+      "id": "lift-assist",
+      "text": "Call for a lift assist and wait",
+      "outcome": {
+        "told": "The fire crew comes in ten minutes and the four of you carry him down. The call runs long.",
+        "practice": 30,
+        "standing": 0,
+        "needs": {
+          "rest": -4
+        }
+      }
+    },
+    {
+      "id": "carry",
+      "text": "Carry him down with your partner",
+      "odds": {
+        "base": 55,
+        "skill": 25,
+        "tired": 35
+      },
+      "outcome": {
+        "told": "You make the street with nothing worse than burning arms.",
+        "standing": 1,
+        "needs": {
+          "rest": -8
+        }
+      },
+      "failure": {
+        "told": "Something in your lower back gives on the second landing. You finish the shift on ice.",
+        "standing": -1,
+        "needs": {
+          "rest": -12,
+          "calm": -6
+        }
+      }
+    }
+  ]
+}

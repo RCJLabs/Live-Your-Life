@@ -1,0 +1,45 @@
+{
+  "name": "A cardiac arrest",
+  "tags": ["ambulance"],
+  "weight": 4,
+  "prompt": "A man of sixty is down on his kitchen floor, not breathing. His wife started compressions before you came through the door.",
+  "choices": [
+    {
+      "id": "protocol",
+      "text": "Take over compressions and run the protocol as trained",
+      "outcome": {
+        "told": "You work him for twenty minutes and bring him in with a pulse. Nobody knows yet if he'll wake.",
+        "practice": 60,
+        "standing": 2,
+        "needs": {
+          "rest": -6
+        }
+      }
+    },
+    {
+      "id": "scoop",
+      "text": "Load him and work him in the back on the way",
+      "odds": {
+        "base": 40,
+        "skill": 35,
+        "tired": 25
+      },
+      "outcome": {
+        "told": "You get him to the doors four minutes sooner, with a rhythm on the monitor.",
+        "practice": 45,
+        "standing": 3,
+        "needs": {
+          "rest": -6
+        }
+      },
+      "failure": {
+        "told": "Compressions in a moving rig are shallow. He arrives without a pulse, and the doctor calls it at the doors.",
+        "standing": -2,
+        "needs": {
+          "calm": -12,
+          "rest": -6
+        }
+      }
+    }
+  ]
+}

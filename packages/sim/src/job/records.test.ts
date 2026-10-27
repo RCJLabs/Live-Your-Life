@@ -37,6 +37,7 @@ describe("the slice's job content", () => {
       'detective',
       'dishwasher',
       'elementary-teacher',
+      'emt',
       'fast-food-crew',
       'forklift-operator',
       'hand-packer',

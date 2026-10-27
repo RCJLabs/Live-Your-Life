@@ -235,6 +235,191 @@
         }
       }
     },
+    "emt": {
+      "kind": "group",
+      "optional": true,
+      "description": "The emergency medical technician course at the community college (M4.4 step 1, D163): one term of evening classes, its own catalog and study, the certificate at its credits and average, then the national exam.",
+      "fields": {
+        "name": {
+          "kind": "text",
+          "min": 1,
+          "max": 60
+        },
+        "terms": {
+          "kind": "list",
+          "min": 1,
+          "max": 4,
+          "description": "When each term starts in the year, and its weeks of classes.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 16
+              },
+              "month": {
+                "kind": "int",
+                "min": 1,
+                "max": 12
+              },
+              "day": {
+                "kind": "int",
+                "min": 1,
+                "max": 31
+              },
+              "weeks": {
+                "kind": "int",
+                "min": 1,
+                "max": 20
+              }
+            }
+          }
+        },
+        "enroll": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Days before a term starts that enrolling opens."
+        },
+        "courses": {
+          "kind": "list",
+          "min": 1,
+          "max": 40,
+          "description": "The certificate's courses, taken together in one term.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "name": {
+                "kind": "text",
+                "min": 1,
+                "max": 60
+              },
+              "credits": {
+                "kind": "int",
+                "min": 1,
+                "max": 6
+              }
+            }
+          }
+        },
+        "slots": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "When a term's courses meet, the first course at the first slot: two days a week, an hour of the day, minutes a meeting.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          }
+        },
+        "study": {
+          "kind": "int",
+          "min": 0,
+          "max": 10,
+          "description": "Hours of study a week for each credit that a full grade asks (the rule of thumb's two)."
+        },
+        "grades": {
+          "kind": "list",
+          "min": 1,
+          "max": 6,
+          "description": "The least score, in 100, for each grade, highest first, with its points: the score is half attendance and half study done (tune).",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "letter": {
+                "kind": "text",
+                "min": 1,
+                "max": 2
+              },
+              "least": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "points": {
+                "kind": "int",
+                "min": 0,
+                "max": 4
+              }
+            }
+          }
+        },
+        "gpa": {
+          "kind": "int",
+          "min": 0,
+          "max": 400,
+          "description": "The least grade point average for the certificate, in hundredths."
+        },
+        "certificate": {
+          "kind": "int",
+          "min": 1,
+          "max": 60,
+          "description": "Credits for the certificate."
+        },
+        "exam": {
+          "kind": "group",
+          "description": "The national certification exam, sat once the certificate is earned: its fee, its length, the chance of passing at a first sitting and again, and the days between sittings.",
+          "fields": {
+            "price": {
+              "kind": "int",
+              "min": 0,
+              "max": 100000,
+              "description": "Cents a sitting."
+            },
+            "minutes": {
+              "kind": "int",
+              "min": 30,
+              "max": 480
+            },
+            "first": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "In 100 sitting it the first time, those who pass."
+            },
+            "repeat": {
+              "kind": "int",
+              "min": 0,
+              "max": 100,
+              "description": "In 100 sitting it again, those who pass."
+            },
+            "wait": {
+              "kind": "int",
+              "min": 0,
+              "max": 365,
+              "description": "Days after a failed sitting before the next."
+            }
+          }
+        }
+      }
+    },
     "aid": {
       "kind": "group",
       "optional": true,

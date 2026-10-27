@@ -1,0 +1,8 @@
+{
+  "beat": "education/nremt",
+  "when": {
+    "field": "passed",
+    "is": "true"
+  },
+  "text": "{you} passed the national EMT exam."
+}

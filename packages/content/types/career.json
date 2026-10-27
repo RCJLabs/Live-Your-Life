@@ -79,8 +79,8 @@
         "licence": {
           "kind": "enum",
           "optional": true,
-          "values": ["bar"],
-          "description": "A licence it hires only with (M4.2): bar, admitted to the bar."
+          "values": ["bar", "emt"],
+          "description": "A licence it hires only with: bar, admitted to the bar (M4.2); emt, licensed after the national EMT exam (M4.4)."
         },
         "experience": {
           "kind": "group",

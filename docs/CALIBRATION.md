@@ -214,6 +214,7 @@ Each wage is the 25th percentile of the federal occupational wage survey for a h
 | Landscaper (`career/landscaper.json`) | $16.98 ($35,320) | Michigan, SOC 37-3011, May 2024 | 62 (to check) | 40, construction (tune) | All year: the work is seasonal in Michigan, which isn't modelled |
 | Home health aide (`career/home-health-aide.json`) | $14.14 ($29,420) | Michigan, SOC 31-1120, May 2024 (another summary gave $28,080 for 31-1122, year unclear) | 287 | 30, health care and social assistance |  |
 | Nursing assistant (`career/nursing-assistant.json`) | $17.88 ($37,180) | Michigan, SOC 31-1131, May 2024; the gap to the median ($38,900) is narrow and wasn't confirmed | 91 (to check) | 30, health care and social assistance | Assumes Michigan's 75-hour course is done (R 400.335: 16 hours in class before any resident, 16 clinical, 43 more) |
+| EMT (`career/emt.json`) | $19.20 ($39,936) | the Lansing-East Lansing median, SOC 29-2042, May 2025, through wagedex.com's table of BLS metro data; the Michigan figure for May 2024 wasn't found. Nationally the median was $18.72 in May 2023 (BLS) | 11 (to check: about 167,000 EMTs in 150 million jobs) | 25, health care, high for ambulance services (to check) | A licence after the national exam (D163); no felony, Michigan's EMS licensure bars some convictions (to check which) |
 | Childcare worker (`career/childcare-worker.json`) | $14.23 ($29,590) | Lansing-East Lansing, SOC 39-9011, May 2025 | 31 (to check) | 30, health care and social assistance | Asks a diploma or GED (tune) |
 | Construction laborer (`career/construction-laborer.json`) | $19.39 ($40,330) | Michigan, SOC 47-2061, May 2024 | 69 (to check) | 40, construction |  |
 | Carpenter's helper (`career/carpenters-helper.json`) | $17.66 ($36,730) | national, SOC 47-3012, May 2025, through O*NET: no Michigan figure found | 1 | 40, construction | secondary, national |
@@ -431,6 +432,15 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | The bar exam | given 24 February and 28 July (Michigan's are the last Tuesday and Wednesday of those months; here one day of 12 hours); $775 the first time ($400 and $375 for character and fitness), $300 again; 76 in 100 first-time takers pass (July 2025), 32 in 100 repeaters, with 400 hours of study; 20 in 100 with none, in proportion between | `law.bar` | NCBE's jurisdiction table via UWorld and a search summary for the rates; NCBE's Michigan profile for the fees, and Studicata for the character and fitness fee (2026), through search summaries; the 400 hours is the common advice for a review course; the 20 with none is a game's | secondary; the study (tune) |
 
 **For the degree bot's readings (M4.2 step 5).** Public bachelor's graduates who borrowed owed about $29,000 on average (class of 2020, TICAS, from general knowledge; to check), against the bot's $26,737 to $34,188. Law graduates who borrowed owed about $130,000 on average for law school (AccessLex and ABA summaries, from general knowledge; to check), against the bot's median $171,911: the bot borrows the most each term and some took more than six terms. Neither is a bar the bot is tuned to.
+
+## The EMT course and exam (M4.4, D163)
+
+| What | Figure | Where it's used | Source | Status |
+| --- | --- | --- | --- | --- |
+| The course | 12 credits in one term, taken as two 6-credit courses meeting four evenings a week, 18:00 to 21:00; an hour's study a week a credit for a full grade | `education/michigan.json`, `emt` | Macomb's catalog (2025–26): the Basic EMT certificate is 15 credits, the EMT course 12 of them and a 3-credit emergency management course, through a search summary. Departure: the 3-credit course is left out, and the clinical hours on an ambulance are taken as the classes | secondary; the split (tune) |
+| Its price | the college's tuition and fees a credit and its term fee, $1,511 for the term in district | `aid` (shared) | the college's own rates (D113). Lansing's estimate for its EMT program is $5,794 in district with fees and supplies, so the course fees aren't all here (to check) | secondary |
+| No Pell, no loans | the certificate is under federal aid's least program, 600 clock hours or 16 credits | `education/aid.ts` | 34 CFR 668.8, from memory: to check that 15 credits over one term falls short | to check |
+| The exam | $104 a sitting; 70 in 100 pass at a first sitting, 50 at a later one, 15 days apart | `emt.exam` | the national registry's fee and its 15-day wait, from memory; no national first-attempt rate was found (programs report 80 to 95 for their own, and one source a national 79 of unclear kind) | to check; the rates (tune) |
 
 ## The federal bureau (M4.3, D153–D156)
 
