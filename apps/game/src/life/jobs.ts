@@ -19,6 +19,8 @@ const PROBLEM: Readonly<Record<string, string>> = {
   record: 'They won’t take anyone with a conviction.',
   'high-school': 'They hire only with a high school diploma or a GED.',
   associate: 'They hire only with an associate’s degree.',
+  bachelor: 'They hire only with a bachelor’s degree.',
+  licence: 'They hire only lawyers admitted to the bar.',
   experience: 'They hire only someone who has done the work before.',
   'too-many': 'You’re waiting on five answers already.',
   applied: 'You’ve applied.',

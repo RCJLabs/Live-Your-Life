@@ -220,13 +220,15 @@ export function makeCrowd(
         if (hourOf(p, seed, i, day, weekday, hour) !== HOURS.commute) return;
         const way = wayOf(i, roster);
         if (!way) return;
-        // An hour's walk spread over the way: those with a long one start sooner (tune).
+        // At the walking pace: a short way is done early in the hour; a long one (work across the
+        // city) is walked for its last hour's stretch, as if ridden to there. Spreading a long way
+        // over the hour drew its walker several times the pace (M4.2's employers put one in view).
         const length = way.reduce(
           (sum, q, k) =>
             k === 0 ? 0 : sum + Math.abs(q.x - (way[k - 1] as Pt).x) + Math.abs(q.y - (way[k - 1] as Pt).y),
           0,
         );
-        const walked = Math.min(length, ((minute % 60) / 60) * Math.max(length, PACE * 60));
+        const walked = Math.min(length, Math.max(0, length - PACE * 60) + ((minute % 60) / 60) * PACE * 60);
         const { at, yaw } = along(way, walked);
         if (inTown(at)) add(i, at, yaw, walked < length, walked);
       });

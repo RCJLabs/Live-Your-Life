@@ -735,7 +735,7 @@ Opened 2026-10-27 (D144) ahead of Phase 3, which waits (D143).
   - **Steps:**
     1. The university: the record, terms, admission at odds, credits, transfer, the bachelor's, tuition and aid. Done 2026-10-27: `education/university.ts`, the college's terms and grades shared by both schools (`college.ts`), the university's price (`aid.ts`), education v6, life-v24.
     2. Law school: the LSAT, admission, three years, the JD, the bar exam. Done 2026-10-27: `education/law.ts`, law school as a third school in `college.ts`, its loans kept apart in `loans.ts`, education v7, life-v25.
-    3. The careers: five that ask for a bachelor's, and lawyer.
+    3. The careers: five that ask for a bachelor's, and lawyer. Done 2026-10-27: six records with OEWS May 2025 wages, a career's `requires.licence` (the bar), and a degree meeting what those below it do.
     4. The page: the School tab's university and law school at 360 and 390 px.
     5. The bots, saves from before, readings, docs.
 
@@ -952,6 +952,7 @@ Rows marked "borrowed" come from the earlier games and say where from. Each is r
 - 2026-10-27: M4.2 opened (D149–D151): a bachelor's, then law school.
 - 2026-10-27: M4.2 step 1, the state university: admission at the odds shown, transfer credits, its terms and price, the bachelor's; education v6, life-v24. Planted bugs: 6, 6 caught.
 - 2026-10-27: M4.2 step 2, law school: the LSAT with study, admission at the odds shown from it, the university's average and the record; the terms to the JD at its own price with a professional student's loans; the bar on its days at Michigan's pass rates. Education v7, life-v25. Planted bugs: 7, 7 caught.
+- 2026-10-27: M4.2 step 3, the careers: elementary school teacher, accountant, social worker, software developer and civil engineer ask for a bachelor's, a lawyer for admission to the bar; wages are OEWS May 2025's 25th percentile for Lansing, Flint or Michigan. The bachelor's careers start at 2.12 times the pay of those asking nothing, against BLS's 2.09. Planted bugs: 4, 4 caught.
 - 2026-10-26: M2.11 steps 1–4: the free year's end and its last card, the unlock, the full-only check, and the year lived in 500 seeds; M2.11's [auto] gates pass.
 - 2026-10-26: M2.11 opened (D136–D138): the free year's last card, the save kept and new lives free, one build with a gate. The marker moved from M2.10, whose [auto] gates pass.
 - 2026-10-26: M2.10 step 5: the steady bot's 500 weeks across the seasons and every life event played through; M2.10's [auto] gates pass, Evan's reading of the strings is open.

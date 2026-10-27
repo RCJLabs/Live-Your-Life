@@ -54,6 +54,7 @@ const applicant = (v: View) => ({
   felonies: v.fact('law.felonies') as number,
   reputation: sliceOf(v).reputation,
   schooling: (v.fact('education.finished') as string | undefined) ?? 'diploma',
+  licensed: (v.fact('education.licensed') as boolean | undefined) ?? false,
   // Only the careers some career asks experience in: one fact each, not one for every career.
   worked: Object.fromEntries(
     countedOf(v.content).map((id) => [id, (v.fact('job.worked', { career: id }) as number | undefined) ?? 0]),
