@@ -43,8 +43,14 @@
     "seen": 10,
     "keep": 9500
   },
-  "possession": ["possession-cocaine-25", "possession-cocaine-50"],
-  "delivery": ["delivery-cocaine-50"],
+  "possession": [
+    "possession-cocaine-25",
+    "possession-cocaine-50",
+    "possession-cocaine-450",
+    "possession-cocaine-1000",
+    "possession-cocaine-kilo"
+  ],
+  "delivery": ["delivery-cocaine-50", "delivery-cocaine-450", "delivery-cocaine-1000", "delivery-cocaine-kilo"],
   "police": {
     "enough": 3,
     "raid": {
@@ -83,6 +89,43 @@
       "seen": 4,
       "named": 70,
       "act": "brought-them-in"
+    }
+  },
+  "boss": {
+    "connect": {
+      "trust": 6,
+      "heat": 25,
+      "hours": {
+        "from": 14,
+        "to": 18
+      },
+      "sells": [
+        {
+          "id": "quarter-kilo",
+          "grams": 2500,
+          "price": 850000
+        },
+        {
+          "id": "half-kilo",
+          "grams": 5000,
+          "price": 1600000
+        }
+      ],
+      "most": 10000
+    },
+    "crew": {
+      "most": 4,
+      "regard": 60,
+      "familiarity": 40,
+      "front": {
+        "grams": 283,
+        "price": 140000,
+        "days": 21
+      },
+      "nights": 5,
+      "buyers": 25,
+      "seen": 4,
+      "named": 70
     }
   }
 }

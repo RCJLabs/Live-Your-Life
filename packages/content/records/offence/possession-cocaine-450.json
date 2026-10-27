@@ -1,0 +1,26 @@
+{
+  "name": "Possession of cocaine, 50 to 450 grams",
+  "law": "MCL 333.7403(2)(a)(iii)",
+  "grams": 4500,
+  "felony": true,
+  "priors": 5,
+  "days": 7305,
+  "fineMax": 25000000,
+  "timesValue": 0,
+  "fine": 500000,
+  "costs": 12500,
+  "deferral": false,
+  "first": {
+    "jail": {
+      "min": 90,
+      "max": 365
+    },
+    "probation": 1095
+  },
+  "repeat": {
+    "prison": {
+      "min": 36,
+      "max": 120
+    }
+  }
+}

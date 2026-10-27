@@ -5,10 +5,11 @@
  */
 import { defineModule } from '@eb/core';
 import { namePoolOf } from '../ties/records.ts';
+import { frontTo, letGo, meetConnect, takeOn, wholesale } from './boss.ts';
 import { crewDays, front, join, payBack, recruit } from './crew.ts';
 import { TRADE, tradeOf } from './records.ts';
-import { type DealSlice, HEAT_MAX, heatOf, NO_CREW } from './state.ts';
-import { buy, buyerCame, corner, cornerHour, MOST_HELD, seize, sighted } from './trade.ts';
+import { type DealSlice, HEAT_MAX, heatOf, NO_CREW, noBoss } from './state.ts';
+import { buy, buyerCame, corner, cornerHour, seize, sighted } from './trade.ts';
 
 const TEXT = { type: 'text' } as const;
 const WHOLE = { type: 'int', min: 0 } as const;
@@ -16,9 +17,12 @@ const PERCENT = { type: 'int', min: 0, max: 100 } as const;
 
 export const dealModule = defineModule<DealSlice>({
   id: 'deal',
-  // 2 (M2.4 step 4): the crew, its fronts and the recruit.
-  version: 2,
-  migrate: { 2: (slice) => ({ ...(slice as object), ...NO_CREW }) },
+  // 2 (M2.4 step 4): the crew, its fronts and the recruit. 3 (M4.1 step 1): the connect and your own crew.
+  version: 3,
+  migrate: {
+    2: (slice) => ({ ...(slice as object), ...NO_CREW }),
+    3: (slice) => ({ ...(slice as object), ...noBoss() }),
+  },
   init: (ctx) => {
     const traded = ctx.content.has('trade', TRADE);
     const pool = traded ? namePoolOf(ctx.content, tradeOf(ctx.content).names) : null;
@@ -34,12 +38,14 @@ export const dealModule = defineModule<DealSlice>({
       takings: 0,
       seen: [],
       ...NO_CREW,
+      ...noBoss(),
     };
   },
   facts: {
     held: {
       read: ({ state }) => state.held,
-      domain: { type: 'int', min: 0, max: MOST_HELD },
+      // Up to the most any connect's record allows (trade.json's boss.connect.most).
+      domain: { type: 'int', min: 0, max: 100_000 },
       label: 'what you hold, in tenths of a gram',
     },
     heat: { read: (view) => heatOf(view), domain: { type: 'int', min: 0, max: HEAT_MAX }, label: 'the heat on you' },
@@ -53,6 +59,13 @@ export const dealModule = defineModule<DealSlice>({
       label: 'the coworker selling for you',
     },
     seen: { read: ({ state }) => state.seen.length, domain: WHOLE, label: 'sales seen' },
+    connect: { read: ({ state }) => state.connect, domain: { type: 'bool' }, label: 'introduced to the connect' },
+    'crew-size': { read: ({ state }) => state.members.length, domain: WHOLE, label: 'people in your own crew' },
+    'crew-owed': {
+      read: ({ state }) => state.members.reduce((n, m) => n + m.owed, 0),
+      domain: WHOLE,
+      label: 'owed you by your crew, in cents',
+    },
     'supplier-from': {
       read: ({ state, content }) =>
         state.supplier && content.has('trade', TRADE) ? tradeOf(content).supplier.hours.from : -1,
@@ -79,8 +92,41 @@ export const dealModule = defineModule<DealSlice>({
     recruited: { args: {}, label: 'Brought the coworker in' },
     'recruit-sold': { args: { sales: WHOLE, yours: WHOLE }, label: 'The recruit sold a night' },
     'recruit-arrested': { args: { sales: WHOLE, named: { type: 'bool' } }, label: 'The recruit was arrested' },
+    'met-connect': { args: {}, label: 'Met the supplier’s connect' },
+    wholesale: { args: { lot: TEXT, grams: WHOLE, price: WHOLE }, label: 'Bought weight from the connect' },
+    'took-on': { args: { person: WHOLE, name: TEXT }, label: 'Brought someone into your crew' },
+    'fronted-to': {
+      args: { person: WHOLE, name: TEXT, grams: WHOLE, owed: WHOLE, due: WHOLE },
+      label: 'Fronted someone in your crew',
+    },
+    'member-sold': { args: { person: WHOLE, name: TEXT, sales: WHOLE }, label: 'Someone in your crew sold a night' },
+    'member-paid': {
+      args: { person: WHOLE, name: TEXT, paid: WHOLE },
+      label: 'Someone in your crew paid what they owed',
+    },
+    'member-unpaid': { args: { person: WHOLE, name: TEXT, owed: WHOLE }, label: 'A front to your crew went unpaid' },
+    'member-arrested': {
+      args: { person: WHOLE, name: TEXT, sales: WHOLE, named: { type: 'bool' } },
+      label: 'Someone in your crew was arrested',
+    },
+    'let-go': {
+      args: { person: WHOLE, name: TEXT, owed: WHOLE, forgiven: { type: 'bool' } },
+      label: 'Let someone go from your crew',
+    },
   },
-  actions: { buy, corner, join, front, 'pay-back': payBack, recruit },
+  actions: {
+    buy,
+    corner,
+    join,
+    front,
+    'pay-back': payBack,
+    recruit,
+    'meet-connect': meetConnect,
+    wholesale,
+    'take-on': takeOn,
+    'front-to': frontTo,
+    'let-go': letGo,
+  },
   effects: { 'corner-hour': cornerHour, buyer: buyerCame, sighted, seize },
   on: {
     'time/passed': crewDays,
@@ -94,8 +140,16 @@ export const dealModule = defineModule<DealSlice>({
         takings: 0,
         seen: [],
         ...NO_CREW,
+        ...noBoss(),
         settled: s.settled,
       });
+    },
+    // Someone in your crew who dies is out of it, with what they held and owed.
+    'circle/died': (ctx, beat) => {
+      const person = (beat as { person?: number }).person;
+      if (!ctx.read().members.some((m) => m.person === person)) return;
+      const w = ctx.write();
+      w.members = w.members.filter((m) => m.person !== person);
     },
   },
 });

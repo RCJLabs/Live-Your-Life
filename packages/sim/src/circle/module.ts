@@ -147,6 +147,8 @@ export const circleModule = defineModule<CircleSlice>({
     // A spouse or live-in partner, and the closest friend, as heirs (heir.ts, D107).
     heirs: { read: circleHeirs, label: 'a partner and a close friend, as heirs' },
     known: { read: ({ state }) => state.ties.length, domain: { type: 'int', min: 0 }, label: 'people you know' },
+    // Whom you know, by their number in the roster: for the crew you can bring them into (M4.1).
+    people: { read: ({ state }) => state.ties.map((t) => t.person), label: 'the people you know' },
     partners: {
       read: ({ state }) => state.ties.filter(partnered).length,
       domain: { type: 'int', min: 0 },

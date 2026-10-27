@@ -272,6 +272,19 @@ Cocaine on the street (D78, D82). Every figure was read on 2026-10-23 through se
 
 **A departure.** The tier-1 people out on the street are those on their way to a shift (people/day.ts's commute hour). With only the line cook's shifts so far (M2.3), almost nobody passes outside the hours before 06:00 and 14:00, and the day's other hours look quieter than a real street. The passers-by drawn on the page (D72) are not counted. More careers will spread it.
 
+## A crew of your own (M4.1, D145)
+
+The connect's prices, the heavier weights' charges, and the terms you set your own crew. Read on 2026-10-27 through search summaries; the wholesale prices had no 2024 government figure behind them, and every row is to be checked against its source.
+
+| Figure | Value | Record or code | Source, as found | Status |
+| --- | --- | --- | --- | --- |
+| A kilo at wholesale | about $30,000 in a Midwest city, so $8,500 a quarter-kilo and $16,000 a half (a kilo's share, a little dearer for the smaller lot) | `trade/cocaine.json`, `boss.connect.sells` | an undated treatment-centre page giving $26,000 to $33,500 for Cleveland and Cincinnati and up to $38,000 for Youngstown; two unsourced pages giving $20,000 to $30,000 for Chicago and Detroit; a 2025 South Carolina DEA case at $16,500 a kilo. The DEA's National Drug Threat Assessment is the source to check against | to check |
+| Your crew's front | an ounce for $1,400, due in 21 days: the supplier's own ounce is $1,200, and your cost at wholesale about $960 | `boss.crew.front` | none read: a mark-up between the supplier's and the street's | (tune) |
+| Your crew's nights | 5 a week, a buyer at 25 in 100 each ten minutes, a sale seen at 4 in 100, named at 70 in 100 less their regard | `boss.crew` | the coworker's terms (M2.4), a little busier | (tune) |
+| Delivery or possession, 50 to 450 g | felony, up to 20 years and $250,000; a first offence jail of 90 days to a year and three years' probation; a repeat 3 to 10 years | `offence/delivery-cocaine-450.json`, `possession-cocaine-450.json` | MCL 333.7401(2)(a)(iii) and 7403(2)(a)(iii), through a county bar's summary and Michigan's controlled substances benchbook; the sentences are proposals inside the guidelines' class B grid, not read from it | maxima secondary; sentences (tune) |
+| 450 to 1,000 g | felony, up to 30 years and $500,000; a first offence 21 to 35 months in prison, a repeat about 4 to 10 years | `…-1000.json` | 7401(2)(a)(ii) and 7403(2)(a)(ii), the same summaries; the first offence's range from memory of the class A grid with no prior record | maxima secondary; sentences to check |
+| 1,000 g or more | felony, life or any term of years and $1,000,000; a first offence about 4 to 7 years, a repeat 9 to 15 (tune) | `…-kilo.json`; "life" is held as 100 years | 7401(2)(a)(i) and 7403(2)(a)(i), the same summaries | maxima secondary; sentences (tune) |
+
 ## The police (M2.4)
 
 Police officer as a career (D80): the requirements, the academy, the pay, the ladder. Read on 2026-10-24 through search results; Michigan's and the federal sites were blocked from the build environment.

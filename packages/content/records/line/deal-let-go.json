@@ -1,0 +1,8 @@
+{
+  "beat": "deal/let-go",
+  "when": {
+    "field": "forgiven",
+    "is": "false"
+  },
+  "text": "{you} let {name} go from the crew."
+}

@@ -1,0 +1,4 @@
+{
+  "beat": "deal/member-paid",
+  "text": "{name} paid {you} the {paid} they owed."
+}

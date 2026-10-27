@@ -60,6 +60,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'law/trainee': 'told with the plea',
   'deal/sold': 'each sale; the hour on the corner is told, and the money shows in your cash',
   'deal/turned-away': 'a buyer you had nothing for; the hour on the corner is told',
+  'deal/member-sold': 'each night your crew sells; what they pay you is told',
   'deal/seen': 'who saw you is not yours to know; what the police do about it is told',
   'prison/hearing': 'its outcome is told',
   'circle/talked': 'every talk; what it did is theirs, shown in their panel',

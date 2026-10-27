@@ -1071,6 +1071,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** All seven as phases after the existing ones (chosen). A subset. Putting them before Phase 3 and release one (proposed order: money, housing, interiors, people, change, owning, cars).
 
+### D145. Above the crew, you run your own. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** M4.1's tier is a crew of your own. You buy weight from a wholesale connect, front it to recruits from the people you know, and set them on corners. Their debts, arrests and loyalty are yours to manage; an arrested recruit may name you, as the coworker can now (D85).
+
+**Options considered.** Your own crew (recommended, chosen). Rising inside the supplier's crew by trust. Both, rising first and then breaking off.
+
+### D146. Violence is in, rare and costly. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Amends D86. A dealer holding cash can be robbed, and can rob; an unpaid front can bring retaliation, either way. Injuries go through health and the hospital (M2.7), and violence raises heat and brings assault and robbery charges by Michigan's law. It is never the best play: B6's measure holds at this tier.
+
+**Options considered.** In, rare and costly (recommended, chosen). Threats only. Not yet, D86 kept.
+
+### D147. Cash carries a risk. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Cash beyond what your pay explains goes on the case file: spending or banking large sums draws attention, and a raid can seize what is found. Laundering through a business waits for Phase 10.
+
+**Options considered.** Cash with a risk (recommended, chosen). Laundering now, through a front built ahead of Phase 10. Cash with no extra risk.
+
+### D148. Rival crews hold corners. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Corners are held by crews among the tier-1 people. Selling on a held corner brings a warning, then trouble, with violence (D146).
+
+**Options considered.** Rivals on corners (recommended, chosen). No rivals yet.
+
 ---
 
 ## Open items

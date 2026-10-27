@@ -1,0 +1,29 @@
+{
+  "name": "Possession of cocaine, 1,000 grams or more",
+  "law": "MCL 333.7403(2)(a)(i)",
+  "felony": true,
+  "priors": 5,
+  "days": 36500,
+  "fineMax": 100000000,
+  "timesValue": 0,
+  "fine": 2000000,
+  "costs": 12500,
+  "deferral": false,
+  "first": {
+    "jail": {
+      "min": 0,
+      "max": 0
+    },
+    "probation": 0,
+    "prison": {
+      "min": 51,
+      "max": 85
+    }
+  },
+  "repeat": {
+    "prison": {
+      "min": 108,
+      "max": 180
+    }
+  }
+}

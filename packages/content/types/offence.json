@@ -92,6 +92,23 @@
           "kind": "int",
           "min": 0,
           "max": 1825
+        },
+        "prison": {
+          "kind": "group",
+          "optional": true,
+          "description": "Months in prison for a first offence, where the guidelines' range starts above jail: served in prison instead of jail and probation (M4.1).",
+          "fields": {
+            "min": {
+              "kind": "int",
+              "min": 1,
+              "max": 480
+            },
+            "max": {
+              "kind": "int",
+              "min": 1,
+              "max": 480
+            }
+          }
         }
       }
     },
