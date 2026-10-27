@@ -148,17 +148,21 @@ function college(life: Life, s: EducationSlice): SchoolSection[] {
 function loans(life: Life, s: EducationSlice): SchoolSection[] {
   const owed = life.fact('education.owed') as number;
   if (owed <= 0) return [];
-  const l = s.loan;
+  // The college's and university's loans, and law school's, counted together (M4.2 step 2).
+  const both = [s.loan, s.grad];
+  const monthly = both.reduce((n, l) => n + l.monthly, 0);
+  const starts = both.filter((l) => l.repay >= 0 && l.monthly === 0).map((l) => l.repay);
   const plan =
-    l.monthly > 0
-      ? `You pay ${money(l.monthly)} on the 1st of each month.`
-      : l.repay >= 0
-        ? `Payments start after ${dayText(life, l.repay)}.`
+    monthly > 0
+      ? `You pay ${money(monthly)} on the 1st of each month.`
+      : starts.length > 0
+        ? `Payments start after ${dayText(life, Math.min(...starts))}.`
         : 'Nothing is due while you’re in school at half time or more.';
   const items = [item('owed', `You owe ${money(owed)}, interest to date included. ${plan}`)];
-  if (l.behind > 0) {
-    const pay = offered(life, 'education/pay-loan').map((action) => ({ label: `Pay ${money(l.behind)}`, action }));
-    items.push(item('behind', `${money(l.behind)} in payments is behind.`, pay));
+  const behind = life.fact('education.behind') as number;
+  if (behind > 0) {
+    const pay = offered(life, 'education/pay-loan').map((action) => ({ label: `Pay ${money(behind)}`, action }));
+    items.push(item('behind', `${money(behind)} in payments is behind.`, pay));
   }
   return [{ id: 'loans', title: 'Student loans', items }];
 }
@@ -216,13 +220,14 @@ export function schoolWaiting(life: Life): Waiting[] {
       actions: [{ label: 'Go to class', action: a }],
     });
   }
-  if (s.loan.behind > 0) {
+  const behind = life.fact('education.behind') as number;
+  if (behind > 0) {
     out.push({
       id: 'loans-behind',
       kind: 'owed',
       day: null,
-      text: `You’re ${money(s.loan.behind)} behind on your student loans.`,
-      actions: offered(life, 'education/pay-loan').map((action) => ({ label: `Pay ${money(s.loan.behind)}`, action })),
+      text: `You’re ${money(behind)} behind on your student loans.`,
+      actions: offered(life, 'education/pay-loan').map((action) => ({ label: `Pay ${money(behind)}`, action })),
     });
   }
   return out;

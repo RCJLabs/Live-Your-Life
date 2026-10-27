@@ -7,10 +7,12 @@
  * (D115): the game has no parents' income. At half time or more a federal
  * Direct loan can pay the rest, or the year's limit, less its fee; what is left you pay in cash,
  * and what aid pays past the bill is paid out to you, as a college's refund is. The university
- * (M4.2, D149) charges its own price a credit, higher once you are past its lower-division credits.
+ * (M4.2, D149) charges its own price a credit, higher once you are past its lower-division credits;
+ * law school its own, with no Pell and a professional student's loans.
  */
 import type { FactView, ModuleContext } from '@eb/core';
 import { nextCourses, schoolOf, type Which } from './college.ts';
+import { lawOf } from './law.ts';
 import type { EducationSlice } from './module.ts';
 import { type Aid, educationOf } from './records.ts';
 import { universityOf } from './university.ts';
@@ -76,9 +78,9 @@ const FREE = (credits: number): Bill => ({ credits, charge: 0, pell: 0, borrowed
 
 /** Tuition and fees for a term of `credits` at a school. */
 function chargeFor(v: View, a: Aid, which: Which, credits: number): number {
-  const u = which === 'university' ? universityOf(v) : null;
+  const u = which === 'university' ? universityOf(v) : which === 'law' ? lawOf(v) : null;
   if (!u) return credits * (a.tuition + a.hourFee) + a.termFee;
-  const upper = slice(v).university.credits >= u.price.upper.after;
+  const upper = slice(v)[which].credits >= u.price.upper.after;
   return credits * (upper ? u.price.upper.perCredit : u.price.perCredit) + u.price.termFee;
 }
 
@@ -88,14 +90,18 @@ export function billFor(v: View, which: Which, courses: number, borrow: Borrow):
   const a = aidOf(v);
   if (!a) return FREE(credits);
   const charge = chargeFor(v, a, which, credits);
+  // Law school (M4.2 step 2): no Pell, which is for a first degree, and a professional student's loans.
+  const law = which === 'law' ? lawOf(v) : null;
   const share = Math.min(credits, a.pell.fullTime);
-  const pell = Math.floor((pellYear(a, aidIncome(v)) * share) / a.pell.fullTime / 2);
-  const limit = credits >= a.loans.half ? termLimit(a, slice(v)[which].credits) : 0;
+  const pell = law ? 0 : Math.floor((pellYear(a, aidIncome(v)) * share) / a.pell.fullTime / 2);
+  const half = credits >= a.loans.half;
+  const limit = !half ? 0 : law ? Math.floor(law.loans.year / 2) : termLimit(a, slice(v)[which].credits);
+  const rate = law ? law.loans.fee : a.loans.fee;
   const need = Math.max(0, charge - pell);
-  const kept = 100000 - a.loans.fee;
+  const kept = 100000 - rate;
   const borrowed =
     borrow === 'most' ? limit : borrow === 'bill' ? Math.min(limit, Math.ceil((need * 100000) / kept)) : 0;
-  const fee = Math.floor((borrowed * a.loans.fee) / 100000);
+  const fee = Math.floor((borrowed * rate) / 100000);
   const net = borrowed - fee;
   return {
     credits,

@@ -63,6 +63,46 @@ export interface University extends Omit<College, 'associate'> {
   };
 }
 
+/**
+ * The law school (M4.2 step 2, D149, D150): terms, courses and grades as the university's, the JD
+ * at `degree` credits; the LSAT, admission at odds from it and the university's average, its own
+ * loans, and the bar exam.
+ */
+export interface LawSchool extends Omit<University, 'transfer' | 'admit'> {
+  readonly admit: {
+    readonly at: number;
+    readonly lsat: number;
+    readonly perPoint: number;
+    readonly gpa: number;
+    readonly perTenth: number;
+    readonly most: number;
+    readonly conviction: number;
+    readonly felony: number;
+    readonly wait: number;
+  };
+  readonly lsat: {
+    readonly price: number;
+    readonly minutes: number;
+    readonly mean: number;
+    /** Tenths of a point a standard deviation. */
+    readonly spread: number;
+    readonly perHour: number;
+    readonly most: number;
+    readonly wait: number;
+  };
+  readonly loans: { readonly rate: number; readonly fee: number; readonly year: number };
+  readonly bar: {
+    readonly days: readonly { readonly month: number; readonly day: number }[];
+    readonly price: number;
+    readonly again: number;
+    readonly minutes: number;
+    readonly first: number;
+    readonly repeat: number;
+    readonly hours: number;
+    readonly least: number;
+  };
+}
+
 /** Paying for the college (step 4, D113), in cents unless said. */
 export interface Aid {
   readonly tuition: number;
@@ -105,6 +145,8 @@ export interface EducationRecord {
   readonly college?: College;
   /** The university (M4.2); absent in a pack from before it. */
   readonly university?: University;
+  /** The law school (M4.2 step 2); absent in a pack from before it. */
+  readonly law?: LawSchool;
   /** Paying for it (step 4); absent in a pack from before it, when a term is free. */
   readonly aid?: Aid;
 }

@@ -1,0 +1,8 @@
+{
+  "beat": "education/bar",
+  "when": {
+    "field": "passed",
+    "is": "true"
+  },
+  "text": "{you} passed the bar exam."
+}

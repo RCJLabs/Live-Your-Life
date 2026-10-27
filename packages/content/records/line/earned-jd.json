@@ -1,0 +1,8 @@
+{
+  "beat": "education/earned",
+  "when": {
+    "field": "credential",
+    "is": "jd"
+  },
+  "text": "{you} earned a law degree."
+}

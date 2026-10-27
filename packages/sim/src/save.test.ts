@@ -43,12 +43,12 @@ const withDeal = (list: readonly Migrated[]) =>
 const jobToo = (list: readonly Migrated[]) => byModule([...list, { module: 'job', from: 1, to: 2 }]);
 /** And, if it had the trade, the deal. */
 const withJob = (list: readonly Migrated[]) => withDeal(jobToo(list));
-/** Every save from M2.8 to M4.1 migrates the education to version 6 (the university) as well. */
+/** Every save from M2.8 to M4.1 migrates the education to version 7 (the university, law school) as well. */
 const withSchool = (list: readonly Migrated[]) =>
   byModule(
     list.some((m) => m.module === 'education')
-      ? list.map((m) => (m.module === 'education' ? { ...m, to: 6 } : m))
-      : [...list, { module: 'education', from: 5, to: 6 }],
+      ? list.map((m) => (m.module === 'education' ? { ...m, to: 7 } : m))
+      : [...list, { module: 'education', from: 5, to: 7 }],
   );
 
 describe('the save fixtures', () => {
@@ -342,12 +342,12 @@ describe('the save fixtures', () => {
     expect((result.state.circle as { self: number }).self).toBe(-1);
   });
 
-  it('loads the twelfth, saved before the GED, migrating the education from 1 to 6 (M2.8)', () => {
+  it('loads the twelfth, saved before the GED, migrating the education from 1 to 7 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v12.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 1, to: 6 }])));
+    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 1, to: 7 }])));
     expect(result.report.added).toEqual(['travel', 'season', 'event', 'edition']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -355,24 +355,24 @@ describe('the save fixtures', () => {
     expect((result.state.education as { ged: unknown }).ged).toEqual({ passed: [], prep: {} });
   });
 
-  it('loads the thirteenth, saved before the college, migrating the education from 2 to 6 (M2.8)', () => {
+  it('loads the thirteenth, saved before the college, migrating the education from 2 to 7 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v13.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 2, to: 6 }])));
+    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 2, to: 7 }])));
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v13-shape', sim).education));
     expect((result.state.education as { college: { term: unknown } }).college.term).toBeNull();
   });
 
-  it('loads the fourteenth, saved before paying for college, migrating the education from 3 to 6 (M2.8)', () => {
+  it('loads the fourteenth, saved before paying for college, migrating the education from 3 to 7 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v14.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 3, to: 6 }])));
+    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 3, to: 7 }])));
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v14-shape', sim).education));
@@ -380,12 +380,12 @@ describe('the save fixtures', () => {
     expect((result.state.education as { loan: { owed: number } }).loan.owed).toBe(0);
   });
 
-  it('loads the fifteenth, saved before retakes, migrating the education from 4 to 6 (M2.8)', () => {
+  it('loads the fifteenth, saved before retakes, migrating the education from 4 to 7 (M2.8)', () => {
     const people = sliceGame({ people: 1000 });
     const result = load('life-v15.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 4, to: 6 }])));
+    expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 4, to: 7 }])));
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v15-shape', sim).education));
@@ -497,12 +497,12 @@ describe('the save fixtures', () => {
     expect(result.state.deal).toMatchObject({ dirty: 0 });
   });
 
-  it('loads the twenty-fourth, saved before the university, migrating the education from 5 to 6 (M4.2)', () => {
+  it('loads the twenty-fourth, saved before the university, migrating the education from 5 to 7 (M4.2)', () => {
     const people = sliceGame({ people: 1000, unlocked: false });
     const result = load('life-v24.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'education', from: 5, to: 6 }]);
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 5, to: 7 }]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -518,6 +518,20 @@ describe('the save fixtures', () => {
       applied: -1,
       transferred: 0,
     });
+  });
+
+  it('loads the twenty-fifth, saved before law school, migrating the education from 6 to 7 (M4.2 step 2)', () => {
+    const people = sliceGame({ people: 1000, unlocked: false });
+    const result = load('life-v25.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'education', from: 6, to: 7 }]);
+    expect(result.report.added).toEqual([]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    const e = result.state.education as { law: { lsat: number; admitted: boolean; licensed: boolean }; grad: object };
+    expect(e.law).toMatchObject({ lsat: -1, admitted: false, licensed: false });
+    expect(e.grad).toEqual({ owed: 0, interest: 0, since: 0, repay: -1, monthly: 0, behind: 0 });
   });
 
   it('migrates a version-3 crew’s members as never warned off a corner', () => {

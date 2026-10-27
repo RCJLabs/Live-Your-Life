@@ -1,0 +1,8 @@
+{
+  "beat": "education/law-admitted",
+  "when": {
+    "field": "admitted",
+    "is": "false"
+  },
+  "text": "The law school turned {you} down."
+}
