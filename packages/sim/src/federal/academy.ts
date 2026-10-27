@@ -8,6 +8,7 @@
 import type { Beat, FactView, ModuleContext } from '@eb/core';
 import { careerOf } from '../job/records.ts';
 import type { FederalSlice } from './apply.ts';
+import { ranks } from './cases.ts';
 import { agencyOf } from './records.ts';
 
 type Ctx = ModuleContext<FederalSlice>;
@@ -33,13 +34,19 @@ export function report(ctx: Ctx): void {
 /** A job taken while at the Academy: the agent's first rank swears you in; any other ends it. */
 export function hired(ctx: Ctx, beat: Beat): void {
   const a = agencyOf(ctx.content);
-  if (!a || ctx.read().stage !== 'academy' || beat.career === a.trainee) return;
+  if (!a) return;
+  // An agent taking a job outside the bureau leaves their case behind (D159).
+  if (ctx.read().stage === 'sworn' && ctx.read().case && !ranks(ctx, a).includes(String(beat.career))) {
+    ctx.write().case = null;
+  }
+  if (ctx.read().stage !== 'academy' || beat.career === a.trainee) return;
   if (beat.career === careerOf(ctx.content, a.trainee).ladder?.next) ctx.write().stage = 'sworn';
   else left(ctx);
 }
 
-/** Let go from the Academy, or quitting it: the application is over, and a new one waits its days. */
+/** Let go, or quitting: from the Academy the application is over, and a new one waits its days; an agent's case is dropped. */
 export function left(ctx: Ctx): void {
+  if (ctx.read().stage === 'sworn' && ctx.read().case) ctx.write().case = null;
   if (ctx.read().stage !== 'academy') return;
   Object.assign(ctx.write(), { stage: 'none', due: -1, refused: ctx.fact('time.day') as number });
 }

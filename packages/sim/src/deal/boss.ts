@@ -21,6 +21,8 @@ const known = (v: DealView): number[] => (v.fact('circle.people') as number[] | 
 const connectHere = (v: DealView): boolean => {
   const h = bossOf(v).connect.hours;
   const hour = v.fact('clock.hour') as number;
+  // The connect is the supplier's: away with their crew on an agent's case (D159).
+  if (v.fact('federal.supplier-down') === true) return false;
   return sliceOf(v).connect && hour >= h.from && hour < h.to;
 };
 

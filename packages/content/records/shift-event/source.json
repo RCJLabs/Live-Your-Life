@@ -1,0 +1,39 @@
+{
+  "name": "A confidential source",
+  "tags": ["bureau-case"],
+  "weight": 4,
+  "when": "federal.working",
+  "prompt": "A man arrested on a gun charge says he can buy from the crew you're after, if the charge goes away.",
+  "choices": [
+    {
+      "id": "slow",
+      "text": "Meet him twice more before trusting what he says",
+      "outcome": {
+        "told": "Most of what he says checks out. You write down the rest and wait.",
+        "practice": 45,
+        "evidence": 2
+      }
+    },
+    {
+      "id": "buy",
+      "text": "Wire him and send him to make a buy",
+      "odds": {
+        "base": 45,
+        "skill": 30,
+        "tired": 15
+      },
+      "outcome": {
+        "told": "The buy is on tape, with the price and the name of who sets it.",
+        "evidence": 7,
+        "standing": 2
+      },
+      "failure": {
+        "told": "He doesn't come back that night. The crew moves its corner, and the source stops answering.",
+        "standing": -2,
+        "needs": {
+          "calm": -6
+        }
+      }
+    }
+  ]
+}

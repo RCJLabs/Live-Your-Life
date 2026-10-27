@@ -35,6 +35,8 @@ export const mostHeld = (v: DealView): number =>
 
 export const supplierHere = (v: DealView): boolean => {
   if (!traded(v) || !sliceOf(v).supplier) return false;
+  // The supplier's crew convicted on an agent's case (M4.3 step 3, D159): nobody to buy from.
+  if (v.fact('federal.supplier-down') === true) return false;
   const hour = v.fact('clock.hour') as number;
   const h = tradeOf(v.content).supplier.hours;
   return hour >= h.from && hour < h.to;

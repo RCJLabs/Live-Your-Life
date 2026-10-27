@@ -8,6 +8,7 @@
  * days. Passing all four clears you for the Academy (academy.ts).
  */
 import type { FactView, ModuleContext } from '@eb/core';
+import type { Away, Case } from './cases.ts';
 import { type Agency, agencyOf } from './records.ts';
 
 /** After the background: cleared, then at the Academy once reported, then sworn in as an agent (academy.ts). */
@@ -27,6 +28,12 @@ export interface FederalSlice {
   training: number;
   /** Applications made. */
   tries: number;
+  /** An agent's open case (cases.ts, D159), or null. */
+  case: Case | null;
+  /** Crew heads convicted on your cases, and when each is out: the city's, kept for an heir. */
+  away: Away[];
+  /** The day the supplier's crew is out, convicted on your case; -1 if never. */
+  down: number;
 }
 
 export const NO_APPLICATION = (): FederalSlice => ({
@@ -36,6 +43,9 @@ export const NO_APPLICATION = (): FederalSlice => ({
   study: 0,
   training: 0,
   tries: 0,
+  case: null,
+  away: [],
+  down: -1,
 });
 
 type Ctx = ModuleContext<FederalSlice>;

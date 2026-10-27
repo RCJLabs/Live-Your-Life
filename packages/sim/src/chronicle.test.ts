@@ -138,6 +138,10 @@ const RARE = [
   'federal/passed',
   'federal/failed',
   'federal/cleared',
+  // An agent's cases (M4.3 step 3): federal/cases.test.ts opens and decides them.
+  'federal/opened',
+  'federal/convicted',
+  'federal/declined',
 ];
 
 /** Every event the bots raise in a few lives of each kind, by type. */

@@ -73,6 +73,7 @@ export const QUIET: Readonly<Record<string, string>> = {
   'education/attended': 'each class; the grade is told',
   'federal/prepared': 'each hour of study or training; the test it was for is told',
   'federal/reported': 'the job’s line tells it: started as a special agent trainee',
+  'job/evidence': 'each piece of the case; the indictment is told',
   'family/conceived': 'nobody knows yet; finding out is told',
   'circle/planned': 'the interface: the date is in the panel, and going or missing it is told',
 };

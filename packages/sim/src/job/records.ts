@@ -100,6 +100,8 @@ export interface Outcome {
   readonly act?: string;
   /** An arrest made, charged as this offence (M2.4): the police career's work. */
   readonly arrest?: string;
+  /** Evidence for the case you have open (M4.3 step 3, D159): a federal agent's work. */
+  readonly evidence?: number;
 }
 
 export interface Odds {

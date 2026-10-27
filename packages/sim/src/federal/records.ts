@@ -31,6 +31,14 @@ export interface Agency {
   readonly again: number;
   /** The Academy's career, whose ladder leads to the agent's (D157). */
   readonly trainee: string;
+  /** An agent's cases (D159). */
+  readonly cases: {
+    readonly corners: number;
+    readonly least: number;
+    readonly most: number;
+    readonly crew: { readonly sentence: number };
+    readonly supplier: { readonly sentence: number };
+  };
 }
 
 /** The record, or null in a pack from before it. */

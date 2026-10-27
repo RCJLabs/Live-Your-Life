@@ -39,7 +39,10 @@ export function holder(v: DealView, key: number): number {
   const h = mix(seed, SALT, key, stretchOf(v));
   if (h % 100 >= tradeOf(v.content).rivals.held) return -1;
   const n = (v.fact('people.count') as number | undefined) ?? 0;
-  return n > 0 ? mix(h, 31) % n : -2;
+  if (n === 0) return -2;
+  const head = mix(h, 31) % n;
+  // Convicted on an agent's case (M4.3 step 3, D159), they hold nothing while they are away.
+  return v.fact('federal.away', { person: head }) === true ? -1 : head;
 }
 
 /** The rival crew, as the journal names it: by whoever heads it. */

@@ -136,6 +136,13 @@
                 "to": "offence",
                 "optional": true,
                 "description": "An arrest made, charged as this offence (M2.4): the police career's work, on the same offences the law charges you with."
+              },
+              "evidence": {
+                "kind": "int",
+                "min": 1,
+                "max": 50,
+                "optional": true,
+                "description": "Points of evidence added to the case you have open (M4.3 step 3, D159): a federal agent's work."
               }
             }
           },
@@ -189,6 +196,13 @@
                 "to": "offence",
                 "optional": true,
                 "description": "An arrest made, charged as this offence (M2.4): the police career's work, on the same offences the law charges you with."
+              },
+              "evidence": {
+                "kind": "int",
+                "min": 1,
+                "max": 50,
+                "optional": true,
+                "description": "Points of evidence added to the case you have open (M4.3 step 3, D159): a federal agent's work."
               }
             }
           }

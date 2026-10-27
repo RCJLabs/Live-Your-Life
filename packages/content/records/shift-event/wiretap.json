@@ -1,0 +1,42 @@
+{
+  "name": "An affidavit for a wire",
+  "tags": ["bureau-case"],
+  "weight": 4,
+  "when": "federal.working",
+  "prompt": "The case needs a wiretap, and a judge signs one only on an affidavit that shows every other way was tried first.",
+  "choices": [
+    {
+      "id": "careful",
+      "text": "Write it out in full, every lead and every dead end",
+      "outcome": {
+        "told": "It takes the week. The judge signs it without a question.",
+        "practice": 60,
+        "evidence": 3,
+        "needs": {
+          "rest": -4
+        }
+      }
+    },
+    {
+      "id": "rush",
+      "text": "Take it to the judge as it stands",
+      "odds": {
+        "base": 50,
+        "skill": 30,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "The judge signs. By Friday the calls are coming in, and two of them name a stash house.",
+        "evidence": 7,
+        "standing": 2
+      },
+      "failure": {
+        "told": "The judge sends it back with questions you can't answer yet. The supervisor reads the note too.",
+        "standing": -2,
+        "needs": {
+          "calm": -5
+        }
+      }
+    }
+  ]
+}
