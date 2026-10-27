@@ -7,9 +7,9 @@ import { MINUTES_PER_DAY } from '../src/calendar.ts';
 import { tradeOf } from '../src/deal/records.ts';
 import type { DealSlice, Sighting } from '../src/deal/state.ts';
 import type { LawSlice } from '../src/law/state.ts';
-import { advance, play, sliceGame, sliceSim } from './slice.ts';
+import { advance, play, sliceGame, sliceSim, withoutRivals } from './slice.ts';
 
-export const sim = sliceSim();
+export const sim = sliceSim(withoutRivals());
 export const game = sliceGame();
 export const trade = tradeOf(sim.content);
 export const law = (s: GameState) => s.law as LawSlice;

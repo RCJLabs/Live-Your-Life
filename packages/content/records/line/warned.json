@@ -1,0 +1,8 @@
+{
+  "beat": "deal/warned",
+  "when": {
+    "field": "yours",
+    "is": "true"
+  },
+  "text": "Someone from {rival} told {you} the corner was theirs."
+}

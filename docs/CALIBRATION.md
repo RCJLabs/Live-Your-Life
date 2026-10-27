@@ -284,6 +284,7 @@ The connect's prices, the heavier weights' charges, and the terms you set your o
 | Delivery or possession, 50 to 450 g | felony, up to 20 years and $250,000; a first offence jail of 90 days to a year and three years' probation; a repeat 3 to 10 years | `offence/delivery-cocaine-450.json`, `possession-cocaine-450.json` | MCL 333.7401(2)(a)(iii) and 7403(2)(a)(iii), through a county bar's summary and Michigan's controlled substances benchbook; the sentences are proposals inside the guidelines' class B grid, not read from it | maxima secondary; sentences (tune) |
 | 450 to 1,000 g | felony, up to 30 years and $500,000; a first offence 21 to 35 months in prison, a repeat about 4 to 10 years | `…-1000.json` | 7401(2)(a)(ii) and 7403(2)(a)(ii), the same summaries; the first offence's range from memory of the class A grid with no prior record | maxima secondary; sentences to check |
 | 1,000 g or more | felony, life or any term of years and $1,000,000; a first offence about 4 to 7 years, a repeat 9 to 15 (tune) | `…-kilo.json`; "life" is held as 100 years | 7401(2)(a)(i) and 7403(2)(a)(i), the same summaries | maxima secondary; sentences (tune) |
+| Rival corners | 40 in 100 corners held by a rival crew in a four-week stretch; two warnings, then run off for 7 days | `trade/cocaine.json`, `rivals` | none read: the share of corners held is a proposal for play; ethnographies (Venkatesh's, among others) describe corners held by crews and outsiders warned off, but give no share | (tune) |
 
 ## The police (M2.4)
 

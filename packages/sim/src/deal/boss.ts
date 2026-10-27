@@ -7,6 +7,7 @@
  */
 import type { Action, OptionsView } from '@eb/core';
 import { TRADE, tradeOf } from './records.ts';
+import { noStanding, noticed, runOff } from './rivals.ts';
 import { type DealContext, type DealSlice, type DealView, heatOf, type Member, sliceOf } from './state.ts';
 import { cash, mostHeld, supplierHere } from './trade.ts';
 
@@ -95,7 +96,16 @@ export const takeOn = {
     const person = Number(action.person);
     const problem = takeOnProblem(ctx, person);
     if (problem) return ctx.refuse(problem);
-    ctx.write().members.push({ person, since: day(ctx), held: 0, owed: 0, due: -1, taken: 0, cutOff: false });
+    ctx.write().members.push({
+      person,
+      since: day(ctx),
+      held: 0,
+      owed: 0,
+      due: -1,
+      taken: 0,
+      cutOff: false,
+      rival: noStanding(),
+    });
     ctx.emit('took-on', { person, name: nameOf(ctx, person) });
   },
   options: (v: OptionsView<DealSlice>) =>
@@ -160,6 +170,9 @@ const sellsOn = (m: Member, d: number, nights: number): boolean => d > m.since &
 function memberNight(ctx: DealContext, person: number): void {
   const t = tradeOf(ctx.content);
   const c = t.boss.crew;
+  // Their corner first: run off it, they sell nothing; a holder who sees them warns or runs them off.
+  const standing = ctx.write().members.find((x) => x.person === person) as Member;
+  if (runOff(ctx, standing.rival) || noticed(ctx, standing.rival, person, person + 1)) return;
   const rng = ctx.rng('crew');
   let sold = 0;
   for (let k = 0; k < 24; k++) {

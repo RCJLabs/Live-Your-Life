@@ -7,6 +7,7 @@
 import type { DeepReadonly, FactView, ModuleContext, PreviewContext } from '@eb/core';
 import type { Fence } from '../law/fence.ts';
 import { TRADE, tradeOf } from './records.ts';
+import { noStanding, type Standing } from './rivals.ts';
 
 /** A sale someone saw and could tell of. */
 export interface Sighting {
@@ -46,6 +47,8 @@ export interface DealSlice {
   connect: boolean;
   /** Your own crew: people you know, selling what you front them (D145). */
   members: Member[];
+  /** How your corner's holder sees you (M4.1 step 2, D148). */
+  rival: Standing;
 }
 
 /** One of your crew: a tier-1 person you know, and what is between you and them. */
@@ -62,13 +65,25 @@ export interface Member {
   taken: number;
   /** A front gone unpaid: no more until it is settled or you let them go. */
   cutOff: boolean;
+  /** How their corner's holder sees them (M4.1 step 2). */
+  rival: Standing;
 }
 
 /** What a save from before the crew (deal version 1) gains (M2.4 step 4). */
 export const NO_CREW = { trust: 0, crew: false, cutOff: false, owed: 0, due: -1, recruit: -1, settled: 0 } as const;
 
 /** What a save from before your own crew (deal version 2) gains (M4.1 step 1). */
-export const noBoss = (): Pick<DealSlice, 'connect' | 'members'> => ({ connect: false, members: [] });
+export const noBoss = (): Pick<DealSlice, 'connect' | 'members' | 'rival'> => ({
+  connect: false,
+  members: [],
+  rival: noStanding(),
+});
+
+/** What a save from before rival crews (deal version 3) gains (M4.1 step 2). */
+export function migrateDeal4(slice: unknown): DealSlice {
+  const old = slice as DealSlice;
+  return { ...old, rival: noStanding(), members: old.members.map((m) => ({ ...m, rival: noStanding() })) };
+}
 
 export type DealContext = ModuleContext<DealSlice>;
 export type DealView = FactView<DealSlice> | DealContext | PreviewContext<DealSlice>;

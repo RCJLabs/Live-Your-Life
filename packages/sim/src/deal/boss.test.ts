@@ -1,14 +1,17 @@
 import type { Beat, GameState } from '@eb/core';
 import { describe, expect, it } from 'vitest';
-import { advance, play, refusal, sliceGame, sliceSim, waitUntil } from '../../test/slice.ts';
+import { advance, play, refusal, sliceGame, sliceSim, waitUntil, withoutRivals } from '../../test/slice.ts';
 import { MINUTES_PER_DAY } from '../calendar.ts';
 import { type CircleSlice, newTie } from '../circle/state.ts';
 import { chargeFor, tradeOf } from './records.ts';
+import { noStanding } from './rivals.ts';
 import type { DealSlice } from './state.ts';
 import { MOST_HELD } from './trade.ts';
 
-const sim = sliceSim();
+// Without rival crews (step 2): this file is the crew's own, on open corners; deal/rivals.test.ts has the rest.
+const sim = sliceSim(withoutRivals());
 const game = sliceGame({ people: 1000 });
+
 const trade = tradeOf(sim.content);
 const boss = trade.boss;
 const deal = (s: GameState) => s.deal as DealSlice;
@@ -45,7 +48,16 @@ const withCrew = (s: GameState, people: number[], held = boss.crew.front.grams *
       ...deal(s),
       connect: true,
       held,
-      members: people.map((person) => ({ person, since: 0, held: 0, owed: 0, due: -1, taken: 0, cutOff: false })),
+      members: people.map((person) => ({
+        person,
+        since: 0,
+        held: 0,
+        owed: 0,
+        due: -1,
+        taken: 0,
+        cutOff: false,
+        rival: noStanding(),
+      })),
     },
   }) as GameState;
 

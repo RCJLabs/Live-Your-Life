@@ -465,6 +465,30 @@
           }
         }
       }
+    },
+    "rivals": {
+      "kind": "group",
+      "description": "Rival crews on corners (M4.1 step 2, D148): how many corners they hold, the warnings before trouble, and how long trouble keeps you off (tune).",
+      "fields": {
+        "held": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "The odds in percent a corner is held by a rival crew in a four-week stretch."
+        },
+        "warnings": {
+          "kind": "int",
+          "min": 0,
+          "max": 10,
+          "description": "Warnings on a held corner before trouble."
+        },
+        "off": {
+          "kind": "int",
+          "min": 1,
+          "max": 60,
+          "description": "Days run off a corner after trouble."
+        }
+      }
     }
   }
 }
