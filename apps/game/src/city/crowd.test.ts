@@ -47,14 +47,21 @@ describe('the tier-1 people in the town (M2.2, D69)', () => {
   it('puts walkers in the town on its streets, never inside a building, and only in their hour on the way', () => {
     const roster = careerRoster(contentStore(), SEED, N);
     let seen = 0;
+    let fastest = 0;
     // A working week's mornings and afternoons.
     for (let day = 0; day < 5; day++) {
       for (let hour = 5; hour < 20; hour++) {
-        // Every minute: a long way to work crosses the town in a minute or two.
+        // Every minute, and how far each walker went since the one before: at the walking pace,
+        // however long the way (a long one is walked for its last stretch).
+        let before = new Map<string, { x: number; y: number }>();
         for (let m = 0; m < 60; m++) {
           const minute = day * 1440 + hour * 60 + m;
+          const now = new Map<string, { x: number; y: number }>();
           for (const a of crowd.actorsAt(minute, 0, 0, never)) {
             seen++;
+            now.set(a.id, a);
+            const b = before.get(a.id);
+            if (b) fastest = Math.max(fastest, Math.hypot(a.x - b.x, a.y - b.y));
             const i = Number(a.id.slice('person-'.length));
             const p = roster.people[i];
             expect(p && hourOf(p, SEED, i, day, day % 7, hour)).toBe(HOURS.commute);
@@ -63,10 +70,13 @@ describe('the tier-1 people in the town (M2.2, D69)', () => {
               expect(inside, `${a.id} in ${b.id}`).toBe(false);
             }
           }
+          before = now;
         }
       }
     }
     expect(seen, 'someone walks through the town in a week').toBeGreaterThan(0);
+    // 3.9 m a game minute (crowd.ts's PACE), with a little for the sidewalk's curves.
+    expect(fastest, 'the fastest walker’s metres in a game minute').toBeLessThan(4.5);
   });
 
   it('draws someone between jobs (M2.3) on no way to work', () => {
