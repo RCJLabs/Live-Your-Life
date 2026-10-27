@@ -186,7 +186,12 @@ describe('paying for the college (M2.8 step 4, D113)', () => {
     const grades = { ...Object.fromEntries(all.map((id) => [id, 3])), c02: 1 };
     const again = withMoney(s, 10_000_00, { college: { ...edu(s).college, passed: all, grades } });
     expect(shown(again, 1, 'none').credits).toBe(3);
-    expect(offered(again, 'education/enroll').map((a) => a.courses)).toEqual([1]);
+    // The EMT course (M4.4) is offered beside the college's own courses.
+    expect(
+      offered(again, 'education/enroll')
+        .filter((a) => a.school !== 'emt')
+        .map((a) => a.courses),
+    ).toEqual([1]);
   });
 
   it('charges nothing in a pack without aid', () => {

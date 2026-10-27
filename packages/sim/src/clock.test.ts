@@ -70,6 +70,7 @@ describe('the clock', () => {
       'education/enroll',
       'education/pay-loan',
       'education/sit-bar',
+      'education/sit-nremt',
       'education/study',
       'education/take-lsat',
       'education/take-test',

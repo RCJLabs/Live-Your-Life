@@ -1,0 +1,8 @@
+{
+  "beat": "education/enrolled",
+  "when": {
+    "field": "school",
+    "is": "emt"
+  },
+  "text": "{you} enrolled in the EMT course at the community college."
+}

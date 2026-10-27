@@ -22,6 +22,7 @@ const PROBLEM: Readonly<Record<string, string>> = {
   associate: 'They hire only with an associate’s degree.',
   bachelor: 'They hire only with a bachelor’s degree.',
   licence: 'They hire only lawyers admitted to the bar.',
+  'licence-emt': 'They hire only EMTs who have passed the national exam.',
   experience: 'They hire only someone who has done the work before.',
   'too-many': 'You’re waiting on five answers already.',
   applied: 'You’ve applied.',
@@ -144,6 +145,10 @@ function applied(life: Life, work: Work): HTMLElement[] {
   );
 }
 
+/** The problem's key for its words: a licence names the career's own. */
+const problemOf = (career: { requires?: { licence?: string } }, problem: string | null): string =>
+  problem === 'licence' && career.requires?.licence === 'emt' ? 'licence-emt' : (problem ?? '');
+
 function openings(life: Life, work: Work, act: (a: Action) => void): HTMLElement[] {
   const all = life.fact('market.openings') as Listing[];
   const walk = (l: Listing) => work.walkTo(l.employer)?.minutes ?? 0;
@@ -165,7 +170,7 @@ function openings(life: Life, work: Work, act: (a: Action) => void): HTMLElement
       ),
       go
         ? button('Apply', () => act(go), { 'data-action': go.type })
-        : el('p', { class: 'quiet' }, PROBLEM[l.problem ?? ''] ?? ''),
+        : el('p', { class: 'quiet' }, PROBLEM[problemOf(career, l.problem)] ?? ''),
     );
   });
 }

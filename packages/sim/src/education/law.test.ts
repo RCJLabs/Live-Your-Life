@@ -126,7 +126,8 @@ const beforeFall = (s: GameState, days: number) => play(game, sim, s, advance((9
 describe('law school’s terms (M4.2 step 2, D149)', () => {
   it('bills its own price with no Pell, and lends a professional student’s loan apart', () => {
     const s = beforeFall(lifeWith('term', { law: { admitted: true } }), 10);
-    const options = offered(s, 'education/enroll');
+    // The EMT course (M4.4) is offered to anyone past high school; the rest are law school's.
+    const options = offered(s, 'education/enroll').filter((o) => o.school !== 'emt');
     expect(options.length).toBeGreaterThan(0);
     expect(options.every((o) => o.school === 'law')).toBe(true);
     const bill = peek(s, { effect: 'college-bill', school: 'law', courses: 5, borrow: 'most' }) as unknown as Bill;

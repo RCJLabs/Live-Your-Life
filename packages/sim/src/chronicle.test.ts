@@ -133,6 +133,9 @@ const RARE = [
   'education/lsat',
   'education/law-admitted',
   'education/bar',
+  // The EMT course and its exam (M4.4): education/emt.test.ts takes them.
+  'education/certified',
+  'education/nremt',
   // The federal bureau (M4.3): no census life holds a bachelor's and two years' work; federal/apply.test.ts raises them.
   'federal/applied',
   'federal/passed',

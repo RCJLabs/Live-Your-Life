@@ -1,0 +1,37 @@
+{
+  "name": "A fall at home",
+  "tags": ["ambulance"],
+  "weight": 5,
+  "prompt": "An old woman fell in her bathroom last night and has lain there since. She says she's fine and doesn't want to go.",
+  "choices": [
+    {
+      "id": "talk",
+      "text": "Sit with her and explain what a night on the floor does",
+      "outcome": {
+        "told": "It takes half an hour. She lets you take her in, holding her own bag.",
+        "practice": 45,
+        "standing": 1
+      }
+    },
+    {
+      "id": "refusal",
+      "text": "Have her sign the refusal and clear the call",
+      "odds": {
+        "base": 60,
+        "skill": 20,
+        "tired": 10
+      },
+      "outcome": {
+        "told": "She signs. Her daughter calls the next day to say she's doing well.",
+        "standing": 0
+      },
+      "failure": {
+        "told": "You're sent back to the same house two days later. This time she can't speak, and your name is on the first report.",
+        "standing": -5,
+        "needs": {
+          "calm": -8
+        }
+      }
+    }
+  ]
+}

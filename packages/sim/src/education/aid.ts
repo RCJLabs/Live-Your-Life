@@ -92,9 +92,11 @@ export function billFor(v: View, which: Which, courses: number, borrow: Borrow):
   const charge = chargeFor(v, a, which, credits);
   // Law school (M4.2 step 2): no Pell, which is for a first degree, and a professional student's loans.
   const law = which === 'law' ? lawOf(v) : null;
+  // The EMT course (M4.4): a certificate under federal aid's least, so no Pell and no loans.
+  const emt = which === 'emt';
   const share = Math.min(credits, a.pell.fullTime);
-  const pell = law ? 0 : Math.floor((pellYear(a, aidIncome(v)) * share) / a.pell.fullTime / 2);
-  const half = credits >= a.loans.half;
+  const pell = law || emt ? 0 : Math.floor((pellYear(a, aidIncome(v)) * share) / a.pell.fullTime / 2);
+  const half = !emt && credits >= a.loans.half;
   const limit = !half ? 0 : law ? Math.floor(law.loans.year / 2) : termLimit(a, slice(v)[which].credits);
   const rate = law ? law.loans.fee : a.loans.fee;
   const need = Math.max(0, charge - pell);

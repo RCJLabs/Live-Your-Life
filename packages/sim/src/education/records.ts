@@ -34,6 +34,22 @@ export interface College {
 }
 
 /**
+ * The EMT course at the community college (M4.4 step 1, D163): a term's courses taken together,
+ * graded as the college's, the certificate at its credits, then the national exam.
+ */
+export interface EmtCourse extends Omit<College, 'associate' | 'retake'> {
+  readonly certificate: number;
+  readonly exam: {
+    readonly price: number;
+    readonly minutes: number;
+    readonly first: number;
+    readonly repeat: number;
+    readonly wait: number;
+  };
+  readonly retake?: undefined;
+}
+
+/**
  * The public university (M4.2 step 1, D149): its terms, courses and grades as the college's, with
  * the bachelor's at `degree` credits, its own price, and admission at odds.
  */
@@ -145,6 +161,8 @@ export interface EducationRecord {
   };
   /** The community college (step 3); absent in a pack from before it. */
   readonly college?: College;
+  /** The EMT course (M4.4); absent in a pack from before it. */
+  readonly emt?: EmtCourse;
   /** The university (M4.2); absent in a pack from before it. */
   readonly university?: University;
   /** The law school (M4.2 step 2); absent in a pack from before it. */

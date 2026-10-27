@@ -1167,6 +1167,30 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Later, with Phase 5 (recommended, chosen). Abstract fraud schemes at tier-1 workplaces now, with nothing behind them in the sim.
 
+### D161. The bureau's stages stay as they are. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** The agent bot's applications clear at 17.6 in 100 against about 2 in 100 of all real applicants hired. Every applicant the game sees meets the requirements and can prepare, which most real applicants haven't, so the two aren't the same measure. The stages' chances stay, and are read again if a per-stage pass rate is found (ROADMAP open question 108).
+
+**Options considered.** Leave it (recommended, chosen). Make it harder: lower the written test's untrained chance and the interview's, to about half the clear rate.
+
+### D162. Medicine next, as two milestones. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** After M4.3, medicine, the last of Phase 4. M4.4 is the EMT and the registered nurse, with the hospital as a workplace; M4.5 the physician: the MCAT, medical school, residency and their loans.
+
+**Options considered.** M4.4 Medicine (recommended, chosen), in two milestones (recommended, chosen) rather than one. Phase 5, money that matters. A pause for Evan's phone checks of M4.1 to M4.3.
+
+### D163. EMTs and nurses train at the college and the university. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** The EMT course is a one-term certificate at the community college, then the national exam; the registered nurse takes the college's associate's in nursing or the university's bachelor's, then the NCLEX licensing exam at its real pass rate. Terms, grades and aid are the colleges' own.
+
+**Options considered.** At the college (recommended, chosen). On the job, hired as a trainee like the police recruit: simpler, not how either is done in Michigan.
+
+### D164. Nurses and EMTs work real shift patterns. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Nurses work 12-hour shifts, three a week, days or nights; EMTs 12- or 24-hour ambulance shifts. Their shift events are patients', at odds shown, and can go wrong in real ways: an error reported, a needlestick.
+
+**Options considered.** Real shift patterns (recommended, chosen). Eight-hour weekday shifts, as the career template stands.
+
 ---
 
 ## Open items
