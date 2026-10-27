@@ -4,6 +4,8 @@
  * harness runs (M0.4); the block and its interiors (M1.1, M1.2); the job (M1.3). The plan is
  * ROADMAP.md; the design, docs/DESIGN.md.
  */
+
+export { bossFor } from './boss-bot.ts';
 export {
   REMEDY,
   RESERVE,

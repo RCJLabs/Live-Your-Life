@@ -183,7 +183,8 @@ function memberNight(ctx: DealContext, person: number): void {
     const w = ctx.write().members.find((x) => x.person === person) as Member;
     w.held -= t.sale.grams;
     w.taken += t.sale.price;
-    if (rng.int(0, 99) < c.seen) {
+    // In a thousand: a member's arrests come a few a year, not most weeks (CALIBRATION.md).
+    if (rng.int(0, 999) < c.seen) {
       memberArrested(ctx, person, sold);
       return;
     }

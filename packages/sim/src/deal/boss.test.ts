@@ -10,6 +10,16 @@ import { MOST_HELD } from './trade.ts';
 
 // Without rival crews (step 2): this file is the crew's own, on open corners; deal/rivals.test.ts has the rest.
 const sim = sliceSim(withoutRivals());
+/** A trade whose crew's sales are seen one time in ten: for the naming test, which needs arrests to count. */
+const seenOften = (() => {
+  const records = withoutRivals();
+  const trade = records.trade as Record<string, { boss: { crew: object } }>;
+  const c = trade.cocaine as { boss: { crew: object } };
+  return sliceSim({
+    ...records,
+    trade: { ...trade, cocaine: { ...c, boss: { ...c.boss, crew: { ...c.boss.crew, seen: 100 } } } },
+  });
+})();
 const game = sliceGame({ people: 1000 });
 
 const trade = tradeOf(sim.content);
@@ -30,11 +40,11 @@ function life(seed: string, hour: number, changes: Partial<DealSlice> = {}, mone
   } as GameState;
 }
 
-function days(s: GameState, n: number) {
+function days(s: GameState, n: number, at = sim) {
   const beats: Beat[] = [];
   let now = s;
   for (let d = 0; d < n; d++) {
-    const r = play(game, sim, now, advance(MINUTES_PER_DAY));
+    const r = play(game, at, now, advance(MINUTES_PER_DAY));
     beats.push(...r.beats);
     now = r.state;
   }
@@ -151,8 +161,8 @@ describe('a crew of your own (M4.1 step 1, D145)', () => {
       let taken = 0;
       for (let i = 0; i < 40 && taken < 15; i++) {
         const base = life(`named-${regard}-${i}`, 12, {}, 5_000_000, regard);
-        const s = play(game, sim, withCrew(base, [11]), { type: 'deal/front-to', person: 11 }).state;
-        const later = days(s, boss.crew.front.days);
+        const s = play(game, seenOften, withCrew(base, [11]), { type: 'deal/front-to', person: 11 }).state;
+        const later = days(s, boss.crew.front.days, seenOften);
         for (const b of later.of('deal/member-arrested')) {
           taken++;
           if (b.named === true) {
