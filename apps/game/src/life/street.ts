@@ -17,6 +17,7 @@ import {
   tradeOf,
   weight,
 } from '@lyl/sim';
+import { crewItems, crewLines } from './crew.ts';
 import type { Item } from './menus.ts';
 import type { Life } from './session.ts';
 import { dayText, money, odds, whenText } from './words.ts';
@@ -37,7 +38,11 @@ export function cornerLead(life: Life): string {
   if (from < 0) return holding;
   const here = life.options().some((a) => a.type === 'deal/buy' || a.type === 'deal/front' || a.type === 'deal/join');
   const hour = String(from).padStart(2, '0');
-  return `${holding} ${here ? `${supplierName(life)} is here.` : `${supplierName(life)} comes at ${hour}:00.`}`;
+  const crew = crewLines(life);
+  const dirty = life.fact('deal.unexplained') as number;
+  const money_ = dirty > 0 ? ` ${money(dirty)} of your cash is the trade's, and no pay explains it.` : '';
+  const yours = crew.length > 0 ? ` Your crew: ${crew.join(' ')}` : '';
+  return `${holding} ${here ? `${supplierName(life)} is here.` : `${supplierName(life)} comes at ${hour}:00.`}${money_}${yours}`;
 }
 
 /** What the corner offers now: buying, an hour's selling, and the crew. */
@@ -52,8 +57,22 @@ export function cornerItems(life: Life): Item[] {
   }
   const corner = options.find((a) => a.type === 'deal/corner');
   if (corner) {
-    const p = life.peek<{ buyer: number; seen: number; passing: number; price: number }>({ effect: 'corner-hour' });
-    const note = `A buyer comes about ${odds(p.buyer)} each ten minutes and pays ${money(p.price)} for ${weight(t.sale.grams)}. ${p.passing} people pass this hour; a sale is seen about ${odds(p.seen)}.`;
+    const p = life.peek<{
+      buyer: number;
+      seen: number;
+      passing: number;
+      price: number;
+      robbed: number;
+      held: boolean;
+      left: number;
+      trouble: number;
+    }>({ effect: 'corner-hour' });
+    const held = p.held
+      ? p.left > 0
+        ? ` Another crew holds this corner: ${p.left === 1 ? 'one warning' : `${p.left} warnings`} left before they run you off.`
+        : ` Another crew holds this corner and has warned you: they run you off now, and beat you about ${odds(p.trouble)}.`
+      : '';
+    const note = `A buyer comes about ${odds(p.buyer)} each ten minutes and pays ${money(p.price)} for ${weight(t.sale.grams)}. ${p.passing} people pass this hour; a sale is seen about ${odds(p.seen)}. You are robbed about ${odds(p.robbed)}.${held}`;
     items.push({ label: 'Sell here for an hour', note, action: corner });
   }
   const crew = t.crew;
@@ -74,7 +93,7 @@ export function cornerItems(life: Life): Item[] {
     const note = `They keep ${crew.recruit.share} in 100 of what they take. Arrested, they may name you.`;
     items.push({ label: `Ask ${coworkerName(life)} to sell for you`, note, action: recruit });
   }
-  return items;
+  return [...items, ...crewItems(life)];
 }
 
 /** The court's plea notes for a case: what a guilty plea and HYTA bring, from the records. */

@@ -67,6 +67,7 @@ node packages/sim/test/students-bench.ts [lives] [years]   # the student bot (M2
 node packages/sim/test/cooks-bench.ts [lives] [years]   # the cook bot (M2.5): when each steady cook became kitchen lead and chef, and the hours (20 lives, 5 years; about 15 minutes)
 node packages/sim/test/year-bench.ts [lives]   # Phase 2's year gate (M2.11): the steady bot lives a free year to its end or a death (500 lives; about 6 seconds a life)
 node packages/sim/test/seekers-bench.ts [lives] [days]   # the seeker bot (M2.3): the day each jobless life was hired, and into what (500 lives, 60 days)
+node packages/sim/test/bosses-bench.ts [lives] [weeks]   # B6 at a crew's tier (M4.1): bosses against line cooks, what each gained, and the bosses' toll (40 lives, 52 weeks; about 9 minutes)
 ```
 
 - Node ≥ 22.18 and pnpm 10.28 (Corepack reads `packageManager`). Tools run under Node's native TypeScript stripping: erasable syntax only, and local imports keep their `.ts` extension.

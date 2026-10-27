@@ -91,6 +91,7 @@ export interface Boss {
     readonly front: { readonly grams: number; readonly price: number; readonly days: number };
     readonly nights: number;
     readonly buyers: number;
+    /** In a thousand, a sale (M4.1 step 6). */
     readonly seen: number;
     readonly named: number;
   };
