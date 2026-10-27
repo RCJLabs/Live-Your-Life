@@ -30,11 +30,17 @@ const playable = (turn: Turn): Action[] => turn.options.filter((a) => !STAGE_ONL
 const of = (offered: readonly Action[], type: string) => offered.filter((a) => a.type === type);
 const level = (turn: Turn, need: string) => turn.fact('life.need', { need }) as number;
 
-/** Enrolling: the newest school's courses, by cash if it can, else by a loan for the rest. */
-function enroll(offered: readonly Action[], courses: number): Action | undefined {
+/**
+ * Enrolling: the newest school's courses, by cash if it can, else by a loan for the rest; by
+ * evening while it has a job and the school has evening sections (D152), so its shifts and its
+ * classes don't meet.
+ */
+function enroll(turn: Turn, offered: readonly Action[], courses: number): Action | undefined {
   const all = of(offered, 'education/enroll');
   const school = ['law', 'university', undefined].find((x) => all.some((a) => a.school === x));
-  const ways = all.filter((a) => a.school === school);
+  const here = all.filter((a) => a.school === school);
+  const evening = turn.fact('job.employed') === true && here.some((a) => a.evening === true);
+  const ways = here.filter((a) => (a.evening === true) === evening);
   const most = Math.max(0, ...ways.map((a) => a.courses as number));
   const n = Math.min(courses, most);
   const mine = ways.filter((a) => a.courses === n);
@@ -126,7 +132,7 @@ export const studentFor = (days: number, name = 'student', courses = COURSES): P
       if (work) return work;
       // Enrolling comes before a meal: a term the window closes on is a half year lost, and at a
       // degree school what the loans pay past the bill is what it eats on.
-      const term = enroll(offered, courses);
+      const term = enroll(turn, offered, courses);
       if (term) return term;
       if (level(turn, 'food') < 15) return steady.choose(turn);
       const pick =

@@ -60,6 +60,10 @@ describe('the School tab’s university and law school (M4.2 step 4)', () => {
     const four = itemOf(life, 'university', 'enroll/4/none');
     const bill = life.peek<Bill>({ effect: 'college-bill', school: 'university', courses: 4, borrow: 'none' });
     expect(four?.text).toContain(billText(bill));
+    // By evening too (D152), with the same bill.
+    const evening = itemOf(life, 'university', 'enroll/4/none/evening');
+    expect(evening?.text).toContain('4 courses by evening');
+    expect(evening?.text).toContain(billText(bill));
     expect(section(life, 'college')?.items.some((i) => i.id.startsWith('enroll/'))).toBe(false);
     life.act(four?.actions[0]?.action as never);
     expect(section(life, 'university')?.items.filter((i) => /^u-\d+$/.test(i.id)).length).toBe(4);

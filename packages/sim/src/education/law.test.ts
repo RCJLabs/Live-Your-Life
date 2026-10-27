@@ -168,7 +168,7 @@ describe('law school’s terms (M4.2 step 2, D149)', () => {
     const day = fact(s0, 'time.day') as number;
     const last = l.courses[l.courses.length - 1]?.id as string;
     const full = { id: last, slot: 0, attended: 30, study: l.study * 3 * 15 * 60 };
-    const term: Term = { id: 'fall', start: day, end: day + 15 * 7, courses: [full] };
+    const term: Term = { evening: false, id: 'fall', start: day, end: day + 15 * 7, courses: [full] };
     const s = { ...s0, education: { ...edu(s0), law: { ...edu(s0).law, term } } } as GameState;
     const end = play(game, sim, s, advance(15 * 7 * MINUTES_PER_DAY));
     expect(end.of('education/earned')).toEqual([{ type: 'education/earned', credential: 'jd' }]);

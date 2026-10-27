@@ -417,6 +417,7 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | Applying again | 120 days after a refusal | `university.admit.wait` | none: a term's admission cycle, roughly | (tune) |
 | Credits | a bachelor's at 120 credits and a 2.00 average; up to 60 college credits taken in transfer, as whole courses, counting toward the degree and not the average | `university.degree`, `transfer`, `gpa` | 120 is the common minimum for a bachelor's; the Michigan Transfer Agreement and associate's-to-bachelor's agreements take 60 or more; transfer grades leaving the average is Western's rule, through search summaries | secondary |
 | Terms | fall from 2 September and spring from 12 January, 15 weeks each; enrolling 60 days before; classes at 09:00, 13:00 and Friday 10:00 | `university.terms`, `enroll`, `slots` | the common pattern of a Michigan public's calendar, from general knowledge | placeholder |
+| Evening sections (D152) | four slots, Monday and Wednesday or Tuesday and Thursday at 18:00 and 20:00, 75 minutes, at the same price; at law school too | `university.evening`, `law.evening` | the common pattern of public universities' evening and part-time programs, from general knowledge | placeholder |
 | Direct loans in the third year | an independent student's limit $12,500 a year from 60 credits | `aid.loans.limits` | the same aid pages as the college's loans | secondary |
 
 ## Law school (M4.2 step 2, D149, D150)

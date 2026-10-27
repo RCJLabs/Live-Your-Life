@@ -155,6 +155,7 @@ export {
   type Catalog,
   type CollegeSlice,
   meetings,
+  slotsOf,
   type Term as CollegeTerm,
   type Which,
 } from './education/college.ts';

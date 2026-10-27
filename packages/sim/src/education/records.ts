@@ -39,6 +39,8 @@ export interface College {
  */
 export interface University extends Omit<College, 'associate'> {
   readonly degree: number;
+  /** Evening sections (D152): when a term's courses meet if taken by evening; absent, none. */
+  readonly evening?: College['slots'];
   /** The most college credits it takes in transfer. */
   readonly transfer: number;
   /** In cents: a credit, a credit once `after` credits are earned, and the term's fee. */

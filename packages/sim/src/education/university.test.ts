@@ -152,6 +152,50 @@ describe('the university’s terms (M4.2 step 1, D149)', () => {
     expect((up as unknown as Bill).charge).toBe(3 * u.price.upper.perCredit + u.price.termFee);
   });
 
+  it('offers evening sections (D152): the same courses and bill, meeting at the evening slots', () => {
+    const s = beforeFall(lifeWith('evening', { university: { admitted: true } }), 10);
+    const evening = offered(s, 'education/enroll').filter((o) => o.evening === true);
+    expect(Math.max(...evening.map((o) => o.courses as number))).toBe(u.evening?.length);
+    expect(evening.every((o) => o.school === 'university')).toBe(true);
+    const step = play(game, sim, s, {
+      type: 'education/enroll',
+      courses: 2,
+      borrow: 'none',
+      school: 'university',
+      evening: true,
+    });
+    const term = edu(step.state).university.term as Term;
+    expect(term.evening).toBe(true);
+    // Tuesday 2 September, the term's first day: the second course meets at the second evening slot.
+    const first = play(
+      game,
+      sim,
+      step.state,
+      advance((term.start - (fact(step.state, 'time.day') as number)) * MINUTES_PER_DAY),
+    ).state;
+    const morning = play(game, sim, first, {
+      type: 'clock/wait-until',
+      hour: u.slots[1]?.hour as number,
+      minute: 0,
+    }).state;
+    expect(offered(morning, 'education/attend')).toEqual([]);
+    const night = play(game, sim, morning, {
+      type: 'clock/wait-until',
+      hour: u.evening?.[1]?.hour as number,
+      minute: 0,
+    }).state;
+    expect(offered(night, 'education/attend')).toEqual([{ type: 'education/attend', course: term.courses[1]?.id }]);
+    expect(
+      refusal(game, sim, s, {
+        type: 'education/enroll',
+        courses: 5,
+        borrow: 'none',
+        school: 'university',
+        evening: true,
+      }),
+    ).toBe('no-enrolling');
+  });
+
   it('refuses the university’s term to someone not admitted, and the college’s once you hold a bachelor’s', () => {
     const s = beforeFall(lifeWith('closed'), 10);
     expect(offered(s, 'education/enroll').some((o) => o.school === 'university')).toBe(false);
@@ -168,6 +212,7 @@ describe('the university’s terms (M4.2 step 1, D149)', () => {
     const day = fact(s0, 'time.day') as number;
     const last = u.courses[u.courses.length - 1]?.id as string;
     const term: Term = {
+      evening: false,
       id: 'fall',
       start: day,
       end: day + 15 * 7,

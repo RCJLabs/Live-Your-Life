@@ -14,6 +14,7 @@ import {
   type EducationSlice,
   educationOf,
   meetings,
+  slotsOf,
   type Which,
 } from '@lyl/sim';
 import { lawSchool, university } from './degrees.ts';
@@ -106,8 +107,11 @@ export function enrolling(life: Life, which: Which = 'college'): SchoolItem[] {
     const n = a.courses as number;
     const school = which === 'college' ? {} : { school: which };
     const b = life.peek<Bill>({ effect: 'college-bill', courses: n, borrow: a.borrow, ...school });
-    const what = `${n} ${n === 1 ? 'course' : 'courses'}, ${b.credits} credits. ${billText(b)}`;
-    return item(`enroll/${n}/${String(a.borrow)}`, what, [{ label: HOW[a.borrow as Borrow] ?? 'Enroll', action: a }]);
+    // By evening (D152): the same courses and bill, meeting after a day's work.
+    const when = a.evening === true ? ' by evening' : '';
+    const what = `${n} ${n === 1 ? 'course' : 'courses'}${when}, ${b.credits} credits. ${billText(b)}`;
+    const id = `enroll/${n}/${String(a.borrow)}${a.evening === true ? '/evening' : ''}`;
+    return item(id, what, [{ label: HOW[a.borrow as Borrow] ?? 'Enroll', action: a }]);
   });
 }
 
@@ -121,7 +125,7 @@ export function classes(life: Life, t: CollegeTerm | null, c: Catalog): SchoolIt
     item('term', when),
     ...t.courses.map((x) => {
       const course = c.courses.find((y) => y.id === x.id);
-      const slot = c.slots[x.slot];
+      const slot = slotsOf(c, t)[x.slot];
       const days = (slot?.days ?? []).map((d) => d.charAt(0).toUpperCase() + d.slice(1)).join(' and ');
       const asked = c.study * (course?.credits ?? 0) * ((t.end - t.start) / 7) * 60;
       const text = `${course?.name ?? x.id}: ${days} at ${String(slot?.hour ?? 0).padStart(2, '0')}:00. You’ve gone to ${x.attended} of ${meetings(c, x, t)} classes and studied ${hours(x.study)} of the ${hours(asked)} it asks.`;

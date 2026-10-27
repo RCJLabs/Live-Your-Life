@@ -112,7 +112,7 @@ describe('paying for the college (M2.8 step 4, D113)', () => {
     expect(owed).toBeLessThanOrEqual(1_000_000 + 63_900);
     expect(owed).toBeGreaterThan(1_000_000 + 63_880);
     // A term's end starts the grace.
-    const term: Term = { id: 'fall', start: day - 112, end: day, courses: [] };
+    const term: Term = { evening: false, id: 'fall', start: day - 112, end: day, courses: [] };
     const ended = play(game, sim, withMoney(s, cash(s), { college: { ...edu(s).college, term } }), advance(60)).state;
     expect(loanOf(ended).repay).toBe(day + a.loans.grace);
     // Past the grace, on the 1st: the plan's payment, taken from cash.

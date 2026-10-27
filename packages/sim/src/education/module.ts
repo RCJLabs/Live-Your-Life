@@ -20,6 +20,7 @@ import {
   enrollOptions,
   gpaOf,
   NO_COLLEGE,
+  type Term,
 } from './college.ts';
 import { gedChance, result, sit, study, studyOptions, subjectOf, testOptions } from './ged.ts';
 import {
@@ -86,6 +87,13 @@ const FRESH = (finished: Schooling): EducationSlice => ({
 
 type Ctx = ModuleContext<EducationSlice>;
 
+/** Version 8: each school's term, if one is under way, was taken by day. */
+export function migrateTerms(s: EducationSlice): EducationSlice {
+  const byDay = <T extends { term: Term | null }>(x: T): T =>
+    x.term ? { ...x, term: { ...x.term, evening: false } } : x;
+  return { ...s, college: byDay(s.college), university: byDay(s.university), law: byDay(s.law) };
+}
+
 /**
  * A diploma or not, at the record's rate, from the education stream. A pack without the record
  * gives everyone one, and opens no stream: a replay by such a pack keeps its hash.
@@ -103,8 +111,8 @@ export const educationModule = defineModule<EducationSlice>({
   // 5 (step 8): each course's last grade, for retakes; a save from before has none, so its courses
   // passed can't be retaken (their grades weren't kept). 6 (M4.2 step 1): the university; a save
   // from before has not applied. 7 (step 2): law school and its loans; a save from before has
-  // neither.
-  version: 7,
+  // neither. 8 (D152): a term taken by day or by evening; a term from before was by day.
+  version: 8,
   migrate: {
     2: (slice) => ({ ...(slice as object), ged: NO_GED() }),
     3: (slice) => ({ ...(slice as object), college: NO_COLLEGE() }),
@@ -115,6 +123,7 @@ export const educationModule = defineModule<EducationSlice>({
     },
     6: (slice) => ({ ...(slice as object), university: NO_UNIVERSITY() }),
     7: (slice) => ({ ...(slice as object), law: NO_LAW(), grad: NO_LOAN() }),
+    8: (slice) => migrateTerms(slice as EducationSlice),
   },
   // Added to a save from before it, the life has a diploma: it was lived as if it had.
   init: (ctx) => FRESH(drawn(ctx)),
@@ -170,7 +179,7 @@ export const educationModule = defineModule<EducationSlice>({
   actions: {
     study: { run: (ctx, a) => study(ctx, a.subject, a.minutes), options: studyOptions },
     'take-test': { run: (ctx, a) => sit(ctx, a.subject), options: testOptions },
-    enroll: { run: (ctx, a) => enroll(ctx, a.courses, a.borrow, a.school), options: enrollOptions },
+    enroll: { run: (ctx, a) => enroll(ctx, a.courses, a.borrow, a.school, a.evening), options: enrollOptions },
     apply: { run: (ctx) => apply(ctx), options: applyOptions },
     'take-lsat': { run: (ctx) => sitLsat(ctx), options: lsatOptions },
     'apply-law': { run: (ctx) => applyLaw(ctx), options: applyLawOptions },

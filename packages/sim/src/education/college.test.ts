@@ -63,6 +63,7 @@ describe('the community college (M2.8 step 3, D111)', () => {
     const s0 = game.init('grades', sim);
     const day = fact(s0, 'time.day') as number;
     const term: Term = {
+      evening: false,
       id: 'fall',
       start: day,
       end: day + 16 * 7,
@@ -93,6 +94,7 @@ describe('the community college (M2.8 step 3, D111)', () => {
     const done = c.courses.slice(0, -1).map((x) => x.id);
     const credits = c.associate - last.credits;
     const term: Term = {
+      evening: false,
       id: 'spring',
       start: day,
       end: day + 7,
@@ -135,6 +137,7 @@ describe('the community college (M2.8 step 3, D111)', () => {
     const grades = { ...Object.fromEntries(all.map((id) => [id, 2])), c01: 1 };
     const points = 3 * (19 * 2 + 1);
     const term: Term = {
+      evening: false,
       id: 'fall',
       start: day,
       end: day + 7,

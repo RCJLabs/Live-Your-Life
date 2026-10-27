@@ -35,7 +35,13 @@ export interface Term {
   readonly start: number;
   readonly end: number;
   readonly courses: Course[];
+  /** Taken by evening (M4.2, D152): its courses meet at the school's evening slots. */
+  readonly evening: boolean;
 }
+
+/** The slots a term's courses meet at: the school's evening ones for an evening term. */
+export const slotsOf = (c: Catalog, t: { readonly evening?: boolean }): Catalog['slots'] =>
+  t.evening && 'evening' in c && c.evening ? c.evening : c.slots;
 
 export interface CollegeSlice {
   term: Term | null;
@@ -113,6 +119,8 @@ export type Enrolling = {
   readonly borrow: Borrow;
   /** Only the university's and law school's: a college option keeps the shape it had before (D149). */
   readonly school?: 'university' | 'law';
+  /** By evening (D152), where the school has evening sections; absent, by day. */
+  readonly evening?: true;
 };
 
 /** Whether you could enroll at a school at all: a diploma or GED for the college; admitted, and not through it, for the others. */
@@ -137,16 +145,24 @@ export function enrollOptions(v: View): Enrolling[] {
     if (!t || t.start - (v.fact('time.day') as number) > c.enroll) return [];
     const left = nextCourses(c, s[which]).length;
     const school = which === 'college' ? {} : { school: which };
-    return Array.from({ length: Math.min(c.slots.length, left) }, (_, i) => i + 1).flatMap((courses) =>
-      payOptions(v, which, courses).map((borrow) => ({ courses, borrow, ...school })),
+    const sections: { evening?: true; slots: number }[] = [{ slots: c.slots.length }];
+    if ('evening' in c && c.evening) sections.push({ evening: true, slots: c.evening.length });
+    return sections.flatMap(({ slots, ...evening }) =>
+      Array.from({ length: Math.min(slots, left) }, (_, i) => i + 1).flatMap((courses) =>
+        payOptions(v, which, courses).map((borrow) => ({ courses, borrow, ...school, ...evening })),
+      ),
     );
   });
 }
 
-export function enroll(ctx: Ctx, courses: unknown, how: unknown, school: unknown): void {
+export function enroll(ctx: Ctx, courses: unknown, how: unknown, school: unknown, evening: unknown): void {
   const which: Which = school === 'university' || school === 'law' ? school : 'college';
   const offered = enrollOptions(ctx).some(
-    (o) => o.courses === courses && o.borrow === how && o.school === (school as string | undefined),
+    (o) =>
+      o.courses === courses &&
+      o.borrow === how &&
+      o.school === (school as string | undefined) &&
+      o.evening === (evening as true | undefined),
   );
   const c = schoolOf(ctx, which);
   if (!c || !offered) ctx.refuse('no-enrolling');
@@ -165,6 +181,7 @@ export function enroll(ctx: Ctx, courses: unknown, how: unknown, school: unknown
     start: t.start,
     end: t.start + t.weeks * 7,
     courses: picked.map((x, slot) => ({ id: x.id, slot, attended: 0, study: 0 })),
+    evening: evening === true,
   };
   ctx.emit('enrolled', { term: t.id, courses: picked.length, start: t.start, school: which });
   const { credits: _c, ...paid } = bill;
@@ -180,7 +197,7 @@ function meetingNow(v: View): DeepReadonly<Course> | undefined {
   const weekday = v.fact('time.weekday') as (typeof WEEKDAYS)[number];
   const minute = v.fact('time.of-day') as number;
   return at.term.courses.find((x) => {
-    const slot = at.c.slots[x.slot];
+    const slot = slotsOf(at.c, at.term)[x.slot];
     return slot?.days.includes(weekday) && minute >= slot.hour * 60 && minute < slot.hour * 60 + 15;
   });
 }
@@ -196,7 +213,7 @@ export function classIn(v: View): number | undefined {
   const weekday = v.fact('time.weekday') as (typeof WEEKDAYS)[number];
   const minute = v.fact('time.of-day') as number;
   const starts = at.term.courses
-    .map((x) => at.c.slots[x.slot])
+    .map((x) => slotsOf(at.c, at.term)[x.slot])
     .filter((slot) => slot?.days.includes(weekday))
     .map((slot) => (slot?.hour ?? 0) * 60 - minute)
     .filter((m) => m > 0);
@@ -212,8 +229,8 @@ export function attend(ctx: Ctx, course: unknown): void {
   const at = enrolledAt(ctx);
   const x = meetingNow(ctx);
   if (!at || !x || x.id !== course) ctx.refuse('no-class');
-  const { which, c } = at as NonNullable<typeof at>;
-  const slot = c.slots[(x as Course).slot] as College['slots'][number];
+  const { which, c, term: now } = at as NonNullable<typeof at>;
+  const slot = slotsOf(c, now)[(x as Course).slot] as College['slots'][number];
   const minutes = slot.hour * 60 + slot.minutes - (ctx.fact('time.of-day') as number);
   const term = ctx.write()[which].term as Term;
   const mine = term.courses.find((y) => y.id === course) as Course;
@@ -233,7 +250,7 @@ export function studyCourse(ctx: Ctx, course: string, minutes: number): boolean 
 
 /** Meetings in a term: each slot day, each week. */
 export const meetings = (c: Catalog, x: Readonly<Course>, t: DeepReadonly<Term>): number =>
-  ((c.slots[x.slot]?.days.length ?? 0) * (t.end - t.start)) / 7;
+  ((slotsOf(c, t)[x.slot]?.days.length ?? 0) * (t.end - t.start)) / 7;
 
 /** A course's score in 100: half attendance, half the study a full grade asks. */
 export function score(c: Catalog, x: Readonly<Course>, t: DeepReadonly<Term>): number {
