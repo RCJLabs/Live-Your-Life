@@ -8,7 +8,16 @@
 import type { Action, Beat, OptionsView } from '@eb/core';
 import { bossDay } from './boss.ts';
 import { TRADE, tradeOf } from './records.ts';
-import { type DealContext, type DealSlice, type DealView, heatOf, sliceOf } from './state.ts';
+import {
+  type DealContext,
+  type DealSlice,
+  type DealView,
+  dirtyOf,
+  earned,
+  heatOf,
+  raiseHeat,
+  sliceOf,
+} from './state.ts';
 import { cash, mostHeld, supplierHere, TRUST_MOST } from './trade.ts';
 import { beatenAt } from './violence.ts';
 
@@ -138,7 +147,7 @@ function paid(ctx: DealContext, sold: number): void {
   const t = tradeOf(ctx.content, TRADE);
   const takings = sold * t.sale.price;
   const yours = takings - Math.floor((takings * t.crew.recruit.share) / 100);
-  ctx.apply({ effect: 'add-resource', resource: 'cash', by: yours });
+  earned(ctx, yours);
   ctx.write().takings += yours;
   ctx.emit('recruit-sold', { sales: sold, yours });
 }
@@ -177,6 +186,8 @@ export function crewDays(ctx: DealContext, _event: Beat): void {
     }
     if (ctx.read().recruit >= 0 && ctx.read().recruit < d && sellsOn(d, c.recruit.nights)) recruitNight(ctx);
     bossDay(ctx, d);
+    // The trade's money in hand, past what the record lets pass unseen, draws the police's attention (D147).
+    if (dirtyOf(ctx) > tradeOf(ctx.content, TRADE).cash.notice) raiseHeat(ctx, tradeOf(ctx.content, TRADE).cash.heat);
   }
   ctx.write().settled = today;
 }

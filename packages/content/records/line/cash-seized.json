@@ -1,0 +1,4 @@
+{
+  "beat": "deal/cash-seized",
+  "text": "The police took {cash} from {you} as the money the trade had made."
+}

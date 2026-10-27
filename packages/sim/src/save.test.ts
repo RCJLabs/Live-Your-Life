@@ -32,12 +32,12 @@ const keysOf = (value: unknown): string[] =>
 
 type Migrated = { readonly module: string; readonly from: number; readonly to: number };
 const byModule = (list: readonly Migrated[]) => [...list].sort((a, b) => a.module.localeCompare(b.module));
-/** Every save from before M4.1 migrates the deal to version 4 (a crew of your own, rival corners) as well. */
+/** Every save from before M4.1 migrates the deal to version 5 (a crew of your own, rival corners, the trade's cash) as well. */
 const withDeal = (list: readonly Migrated[]) =>
   byModule(
     list.some((m) => m.module === 'deal')
-      ? list.map((m) => (m.module === 'deal' ? { ...m, to: 4 } : m))
-      : [...list, { module: 'deal', from: 2, to: 4 }],
+      ? list.map((m) => (m.module === 'deal' ? { ...m, to: 5 } : m))
+      : [...list, { module: 'deal', from: 2, to: 5 }],
   );
 /** Every save from before M2.5 step 2 migrates the job to its experience as well. */
 const jobToo = (list: readonly Migrated[]) => byModule([...list, { module: 'job', from: 1, to: 2 }]);
@@ -461,22 +461,33 @@ describe('the save fixtures', () => {
     const result = load('life-v21.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'deal', from: 2, to: 4 }]);
+    expect(result.report.migrated).toEqual([{ module: 'deal', from: 2, to: 5 }]);
     expect(result.report.added).toEqual([]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(result.state.deal).toMatchObject({ connect: false, members: [] });
   });
 
-  it('loads the twenty-second, saved before rival corners, migrating the deal from 3 to 4 (M4.1 step 2)', () => {
+  it('loads the twenty-second, saved before rival corners, migrating the deal from 3 to 5 (M4.1 step 2)', () => {
     const people = sliceGame({ people: 1000, unlocked: false });
     const result = load('life-v22.json', sim, people);
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
-    expect(result.report.migrated).toEqual([{ module: 'deal', from: 3, to: 4 }]);
+    expect(result.report.migrated).toEqual([{ module: 'deal', from: 3, to: 5 }]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(result.state.deal).toMatchObject({ rival: { warned: 0, stretch: -1, off: -1 } });
+  });
+
+  it('loads the twenty-third, saved before the trade’s cash was counted, migrating the deal from 4 to 5 (M4.1 step 4)', () => {
+    const people = sliceGame({ people: 1000, unlocked: false });
+    const result = load('life-v23.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'deal', from: 4, to: 5 }]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect(result.state.deal).toMatchObject({ dirty: 0 });
   });
 
   it('migrates a version-3 crew’s members as never warned off a corner', () => {

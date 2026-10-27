@@ -8,7 +8,7 @@
 import type { Action, Effect, OptionsView, PreviewContext } from '@eb/core';
 import { tradeOf } from './records.ts';
 import { holder, YOURS } from './rivals.ts';
-import { type DealContext, type DealSlice, type DealView, type Member, raiseHeat, sliceOf } from './state.ts';
+import { type DealContext, type DealSlice, type DealView, earned, type Member, raiseHeat, sliceOf } from './state.ts';
 
 const violenceOf = (v: DealView) => tradeOf(v.content).violence;
 const cashOf = (v: DealView): number => v.fact('economy.amount', { resource: 'cash' }) as number;
@@ -99,7 +99,7 @@ export function collected(ctx: DealContext, effect: Effect): void {
   const c = violenceOf(ctx).collect;
   const m = leave(ctx, person);
   const paid = m?.owed ?? 0;
-  ctx.apply({ effect: 'add-resource', resource: 'cash', by: paid });
+  earned(ctx, paid);
   ctx.write().takings += paid;
   const name = ctx.fact('circle.name', { person }) as string;
   ctx.emit('collected', { person, name, paid });
@@ -177,6 +177,6 @@ export function robFailed(ctx: DealContext): void {
 export function robbedThem(ctx: DealContext): void {
   const r = violenceOf(ctx).rob;
   const cash = ctx.rng('violence').int(r.min, r.max);
-  ctx.apply({ effect: 'add-resource', resource: 'cash', by: cash });
+  earned(ctx, cash);
   ctx.emit('robbed-them', { cash });
 }

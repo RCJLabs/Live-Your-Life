@@ -648,6 +648,24 @@
           "description": "The odds of winning at trial on a reported assault or robbery."
         }
       }
+    },
+    "cash": {
+      "kind": "group",
+      "description": "Cash the trade made (M4.1 step 4, D147): what draws attention, and how much.",
+      "fields": {
+        "notice": {
+          "kind": "int",
+          "min": 0,
+          "max": 100000000,
+          "description": "Cents of the trade's money in hand before it draws attention."
+        },
+        "heat": {
+          "kind": "int",
+          "min": 0,
+          "max": 100,
+          "description": "Heat a day while it is over that."
+        }
+      }
     }
   }
 }

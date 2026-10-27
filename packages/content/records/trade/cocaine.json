@@ -163,5 +163,9 @@
       "robbery": "unarmed-robbery"
     },
     "contest": 30
+  },
+  "cash": {
+    "notice": 1000000,
+    "heat": 2
   }
 }

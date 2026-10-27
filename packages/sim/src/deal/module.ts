@@ -9,7 +9,7 @@ import { frontTo, letGo, meetConnect, takeOn, wholesale } from './boss.ts';
 import { crewDays, front, join, payBack, recruit } from './crew.ts';
 import { TRADE, tradeOf } from './records.ts';
 import { yourCorner } from './rivals.ts';
-import { type DealSlice, HEAT_MAX, heatOf, migrateDeal4, NO_CREW, noBoss } from './state.ts';
+import { type DealSlice, dirtyOf, HEAT_MAX, heatOf, migrateDeal4, migrateDeal5, NO_CREW, noBoss } from './state.ts';
 import { buy, buyerCame, corner, cornerHour, seize, sighted } from './trade.ts';
 import {
   beat,
@@ -32,12 +32,13 @@ const PERCENT = { type: 'int', min: 0, max: 100 } as const;
 export const dealModule = defineModule<DealSlice>({
   id: 'deal',
   // 2 (M2.4 step 4): the crew, its fronts and the recruit. 3 (M4.1 step 1): the connect and your own
-  // crew. 4 (step 2): how the corners' holders see you and your crew.
-  version: 4,
+  // crew. 4 (step 2): how the corners' holders see you and your crew. 5 (step 4): the trade's money in hand.
+  version: 5,
   migrate: {
     2: (slice) => ({ ...(slice as object), ...NO_CREW }),
     3: (slice) => ({ ...(slice as object), connect: false, members: [] }),
     4: migrateDeal4,
+    5: migrateDeal5,
   },
   init: (ctx) => {
     const traded = ctx.content.has('trade', TRADE);
@@ -84,6 +85,11 @@ export const dealModule = defineModule<DealSlice>({
       read: (v) => yourCorner(v).left,
       domain: WHOLE,
       label: 'warnings left on your corner before trouble',
+    },
+    unexplained: {
+      read: (v) => dirtyOf(v),
+      domain: WHOLE,
+      label: 'cash the trade made, which no pay explains, in cents',
     },
     connect: { read: ({ state }) => state.connect, domain: { type: 'bool' }, label: 'introduced to the connect' },
     'crew-size': { read: ({ state }) => state.members.length, domain: WHOLE, label: 'people in your own crew' },

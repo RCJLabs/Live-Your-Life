@@ -49,6 +49,8 @@ export interface DealSlice {
   members: Member[];
   /** How your corner's holder sees you (M4.1 step 2, D148). */
   rival: Standing;
+  /** Cents of your cash the trade made, which no pay explains (M4.1 step 4, D147). */
+  dirty: number;
 }
 
 /** One of your crew: a tier-1 person you know, and what is between you and them. */
@@ -73,17 +75,35 @@ export interface Member {
 export const NO_CREW = { trust: 0, crew: false, cutOff: false, owed: 0, due: -1, recruit: -1, settled: 0 } as const;
 
 /** What a save from before your own crew (deal version 2) gains (M4.1 step 1). */
-export const noBoss = (): Pick<DealSlice, 'connect' | 'members' | 'rival'> => ({
+export const noBoss = (): Pick<DealSlice, 'connect' | 'members' | 'rival' | 'dirty'> => ({
   connect: false,
   members: [],
   rival: noStanding(),
+  dirty: 0,
 });
+
+/**
+ * The trade's money in hand: what it made, as far as your cash still holds it. Spending comes out of
+ * what pay explains first, so the trade's share is the last to go (D147).
+ */
+export const dirtyOf = (v: DealView): number =>
+  Math.min(sliceOf(v).dirty, v.fact('economy.amount', { resource: 'cash' }) as number);
+
+/** Cash the trade paid you: in hand, and counted as unexplained. */
+export function earned(ctx: DealContext, cents: number): void {
+  const before = dirtyOf(ctx);
+  ctx.apply({ effect: 'add-resource', resource: 'cash', by: cents });
+  ctx.write().dirty = before + cents;
+}
 
 /** What a save from before rival crews (deal version 3) gains (M4.1 step 2). */
 export function migrateDeal4(slice: unknown): DealSlice {
   const old = slice as DealSlice;
   return { ...old, rival: noStanding(), members: old.members.map((m) => ({ ...m, rival: noStanding() })) };
 }
+
+/** Version 5 (M4.1 step 4): the trade's money in hand, none counted for a save from before. */
+export const migrateDeal5 = (slice: unknown): DealSlice => ({ ...(slice as DealSlice), dirty: 0 });
 
 export type DealContext = ModuleContext<DealSlice>;
 export type DealView = FactView<DealSlice> | DealContext | PreviewContext<DealSlice>;

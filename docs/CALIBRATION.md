@@ -290,6 +290,7 @@ The connect's prices, the heavier weights' charges, and the terms you set your o
 | Unarmed robbery | felony, up to 15 years; a first offence jail of 90 days to a year and two years' probation, a repeat 2 to 5 years (tune) | `offence/unarmed-robbery.json` | MCL 750.530, from memory: the search found the attempt (750.88, 15 years) but not the statute itself | to check |
 | Violence's odds | robbed 1 in 100 an hour, a point more for every 25 g held, 3 more on a held corner, at most 15; beaten when robbed 40, run off 30, cut off 40; collecting 60, hurting them 40, hurt yourself 50, reported 25; robbing 50 to win, $50 to $400, hurt 50, reported 30; a reported case won at trial 30 | `trade/cocaine.json`, `violence` | none read: proposals for play, D146's "rare and costly" | (tune) |
 | A beating | 14 days of illness, 10 off work, 5 points of health a day | `illness/michigan.json`, `beaten` | none read: the work injury's shape, heavier | (tune) |
+| The trade's cash | over $10,000 of it in hand draws 2 of heat a day; a raid seizes all of it | `trade/cocaine.json`, `cash` | none read: $10,000 is the federal cash-reporting line (31 U.S.C. 5313, general knowledge), used here as where attention starts; Michigan's forfeiture of drug proceeds (MCL 333.7521) is the seizure, from memory | (tune); the law to check |
 
 ## The police (M2.4)
 

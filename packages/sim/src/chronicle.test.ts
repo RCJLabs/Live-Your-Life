@@ -103,6 +103,8 @@ const RARE = [
   'deal/robbed-them',
   'deal/rob-failed',
   'law/charged',
+  // The trade's cash seized (M4.1 step 4): deal/cash.test.ts raises it.
+  'deal/cash-seized',
   'law/searched',
   'law/raided',
   'law/arraigned',

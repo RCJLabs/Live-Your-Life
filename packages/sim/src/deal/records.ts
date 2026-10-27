@@ -34,6 +34,8 @@ export interface TradeRecord {
   readonly contest: { readonly seen: number; readonly found: number };
   readonly crew: Crew;
   readonly boss: Boss;
+  /** Cash the trade made (M4.1 step 4, D147). */
+  readonly cash: { readonly notice: number; readonly heat: number };
   /** Violence (M4.1 step 3, D146): odds in percent, money in cents. */
   readonly violence: Violence;
   /** Rival crews on corners (M4.1 step 2, D148). */
