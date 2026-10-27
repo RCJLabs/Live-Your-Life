@@ -104,6 +104,16 @@ export const federalModule = defineModule<FederalSlice>({
       domain: { type: 'int', min: -1 },
       label: 'the day the application’s next stage can be sat or is decided',
     },
+    studied: {
+      read: ({ state }) => state.study,
+      domain: { type: 'int', min: 0 },
+      label: 'minutes studied for the written test',
+    },
+    trained: {
+      read: ({ state }) => state.training,
+      domain: { type: 'int', min: 0 },
+      label: 'minutes trained for the fitness test',
+    },
     // For the page: why an application can't be made now, or '' when it can.
     problem: {
       read: (view) => {
