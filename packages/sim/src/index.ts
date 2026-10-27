@@ -182,6 +182,8 @@ export {
 export { endCost } from './family/module.ts';
 export { pregnancyOf } from './family/records.ts';
 export { type Child, type FamilySlice, type Pregnancy, YOU } from './family/state.ts';
+export { type FederalSlice, professional } from './federal/apply.ts';
+export { type Agency, agencyOf } from './federal/records.ts';
 export {
   createLifeGame,
   type LifeOptions,

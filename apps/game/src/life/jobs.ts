@@ -8,6 +8,7 @@
 import type { Action } from '@eb/core';
 import { careerOf, type Listing, type MarketSlice, postOpen } from '@lyl/sim';
 import type { Work } from '../city/workplace.ts';
+import { bureauView } from './bureau.ts';
 import { button, el } from './dom.ts';
 import type { Life } from './session.ts';
 import { dayText, money, odds, whenText } from './words.ts';
@@ -176,6 +177,7 @@ export function jobsView(life: Life, work: Work, act: (a: Action) => void): HTML
     'div',
     { id: 'jobs' },
     yourJob(life, work, act),
+    ...bureauView(life, act),
     ...(waitingOn.length > 0 ? [el('ul', { class: 'list', id: 'job-offers' }, ...waitingOn)] : []),
     el('h2', {}, 'Openings'),
     open.length > 0
