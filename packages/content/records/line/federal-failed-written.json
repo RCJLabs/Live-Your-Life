@@ -1,0 +1,8 @@
+{
+  "beat": "federal/failed",
+  "when": {
+    "field": "stage",
+    "is": "written"
+  },
+  "text": "{you} did not pass the federal bureau's written test, and the application ended."
+}

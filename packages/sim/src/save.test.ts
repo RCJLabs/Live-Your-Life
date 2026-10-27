@@ -75,7 +75,8 @@ describe('the save fixtures', () => {
     id === 'travel' ||
     id === 'season' ||
     id === 'event' ||
-    id === 'edition';
+    id === 'edition' ||
+    id === 'federal';
   const before = createGame({
     modules: lifeModules({ career: LINE_COOK }).filter((m) => !m.id.startsWith('people')),
     start: 'world',
@@ -138,6 +139,7 @@ describe('the save fixtures', () => {
       'season',
       'event',
       'edition',
+      'federal',
     ]);
     // Without the market's and the trade's own slices and versions, and the law's migration to 2
     // (M2.4) taken back, the very state saved.
@@ -154,6 +156,7 @@ describe('the save fixtures', () => {
       season: _se,
       event: _ev,
       edition: _ed,
+      federal: _fed,
       law,
       job,
       ...rest
@@ -177,6 +180,7 @@ describe('the save fixtures', () => {
       season: __se,
       event: __ev,
       edition: __ed,
+      federal: __fed,
       ...versions
     } = kernel.versions;
     const saved = {
@@ -209,6 +213,7 @@ describe('the save fixtures', () => {
       'season',
       'event',
       'edition',
+      'federal',
     ]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -247,6 +252,7 @@ describe('the save fixtures', () => {
       'season',
       'event',
       'edition',
+      'federal',
     ]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
@@ -264,7 +270,16 @@ describe('the save fixtures', () => {
         { module: 'family', from: 1, to: 4 },
       ]),
     );
-    expect(result.report.added).toEqual(['lives', 'health', 'education', 'travel', 'season', 'event', 'edition']);
+    expect(result.report.added).toEqual([
+      'lives',
+      'health',
+      'education',
+      'travel',
+      'season',
+      'event',
+      'edition',
+      'federal',
+    ]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const fresh = people.init('v7-shape', sim).family as Record<string, unknown>;
@@ -335,7 +350,7 @@ describe('the save fixtures', () => {
         { module: 'lives', from: 1, to: 2 },
       ]),
     );
-    expect(result.report.added).toEqual(['education', 'travel', 'season', 'event', 'edition']);
+    expect(result.report.added).toEqual(['education', 'travel', 'season', 'event', 'edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.lives)).toEqual(keysOf(people.init('v11-shape', sim).lives));
@@ -349,7 +364,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([{ module: 'education', from: 1, to: 8 }])));
-    expect(result.report.added).toEqual(['travel', 'season', 'event', 'edition']);
+    expect(result.report.added).toEqual(['travel', 'season', 'event', 'edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(keysOf(result.state.education)).toEqual(keysOf(people.init('v12-shape', sim).education));
@@ -400,7 +415,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withSchool(withJob([])));
-    expect(result.report.added).toEqual(['travel', 'season', 'event', 'edition']);
+    expect(result.report.added).toEqual(['travel', 'season', 'event', 'edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     // No fares paid on any day before.
@@ -413,7 +428,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(byModule(result.report.migrated)).toEqual(withSchool(withDeal([{ module: 'job', from: 1, to: 2 }])));
-    expect(result.report.added).toEqual(['season', 'event', 'edition']);
+    expect(result.report.added).toEqual(['season', 'event', 'edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const job = result.state.job as { career: string; practice: number; experience: Record<string, number> };
@@ -429,7 +444,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual(withSchool(withDeal([])));
-    expect(result.report.added).toEqual(['season', 'event', 'edition']);
+    expect(result.report.added).toEqual(['season', 'event', 'edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     // The log's time passing set the clocks' timer and the last day told.
@@ -443,7 +458,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual(withSchool(withDeal([])));
-    expect(result.report.added).toEqual(['event', 'edition']);
+    expect(result.report.added).toEqual(['event', 'edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const ev = result.state.event as { settled: number; waiting: string[] };
@@ -458,7 +473,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual(withSchool(withDeal([])));
-    expect(result.report.added).toEqual(['edition']);
+    expect(result.report.added).toEqual(['edition', 'federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(result.state.edition).toEqual({ unlocked: false });
@@ -470,7 +485,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual(withSchool([{ module: 'deal', from: 2, to: 5 }]));
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     expect(result.state.deal).toMatchObject({ connect: false, members: [] });
@@ -504,7 +519,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'education', from: 5, to: 8 }]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     // Never applied: not admitted, nothing earned there.
@@ -527,7 +542,7 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'education', from: 6, to: 8 }]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
     const e = result.state.education as { law: { lsat: number; admitted: boolean; licensed: boolean }; grad: object };
@@ -541,9 +556,21 @@ describe('the save fixtures', () => {
     expect(result.ok, result.ok ? '' : result.message).toBe(true);
     if (!result.ok) return;
     expect(result.report.migrated).toEqual([{ module: 'education', from: 7, to: 8 }]);
-    expect(result.report.added).toEqual([]);
+    expect(result.report.added).toEqual(['federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
+  });
+
+  it('loads the twenty-seventh, saved before the federal bureau, adding it as never applied to (M4.3)', () => {
+    const people = sliceGame({ people: 1000, unlocked: false });
+    const result = load('life-v27.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([]);
+    expect(result.report.added).toEqual(['federal']);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect(result.state.federal).toEqual({ stage: 'none', due: -1, refused: -1, study: 0, training: 0, tries: 0 });
   });
 
   it('migrates a term under way as taken by day, and leaves a school with none as it was', () => {
@@ -625,6 +652,7 @@ describe('the save fixtures', () => {
       'season',
       'event',
       'edition',
+      'federal',
     ]);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);

@@ -133,6 +133,11 @@ const RARE = [
   'education/lsat',
   'education/law-admitted',
   'education/bar',
+  // The federal bureau (M4.3): no census life holds a bachelor's and two years' work; federal/apply.test.ts raises them.
+  'federal/applied',
+  'federal/passed',
+  'federal/failed',
+  'federal/cleared',
 ];
 
 /** Every event the bots raise in a few lives of each kind, by type. */
