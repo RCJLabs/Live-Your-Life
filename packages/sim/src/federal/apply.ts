@@ -5,12 +5,13 @@
  * at a chance raised by the hours you trained; the interview; and the polygraph and background
  * investigation, which take their weeks and weigh a conviction. Each chance is shown first and
  * rolled as shown. Failing a stage ends the application; you can apply again after the record's
- * days. Passing all four clears you for the Academy (step 2).
+ * days. Passing all four clears you for the Academy (academy.ts).
  */
 import type { FactView, ModuleContext } from '@eb/core';
 import { type Agency, agencyOf } from './records.ts';
 
-export const STAGES = ['none', 'written', 'fitness', 'interview', 'background', 'cleared'] as const;
+/** After the background: cleared, then at the Academy once reported, then sworn in as an agent (academy.ts). */
+export const STAGES = ['none', 'written', 'fitness', 'interview', 'background', 'cleared', 'academy', 'sworn'] as const;
 export type Stage = (typeof STAGES)[number];
 /** The stages that are sat, as an action; the background is waited out. */
 export const SAT = ['written', 'fitness', 'interview'] as const;

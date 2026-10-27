@@ -1,8 +1,9 @@
 /**
  * Federal law (M4.3, D153–D156): the federal bureau's special agents. Step 1 is the application in
- * stages (apply.ts); the Academy, the agent's career and cases follow. Posted in the city (D156).
+ * stages (apply.ts); step 2 the Academy and the agent's ranks (academy.ts); cases follow. Posted in the city (D156).
  */
 import { defineModule } from '@eb/core';
+import { hired, left, report, reportOptions } from './academy.ts';
 import {
   apply,
   applyOptions,
@@ -36,11 +37,13 @@ export const federalModule = defineModule<FederalSlice>({
     passed: { args: { stage: STAGE, chance: CHANCE }, label: 'Passed a stage of the application' },
     failed: { args: { stage: STAGE, chance: CHANCE }, label: 'Failed a stage of the application' },
     cleared: { args: {}, label: 'Cleared for the Academy' },
+    reported: { args: { career: { type: 'ref', to: 'career' } }, label: 'Reported to the Academy' },
   },
   actions: {
     apply: { run: (ctx) => apply(ctx), options: applyOptions },
     prepare: { run: (ctx, a) => prepare(ctx, a.for, a.minutes), options: prepareOptions },
     sit: { run: (ctx) => sit(ctx), options: sitOptions },
+    report: { run: (ctx) => report(ctx), options: reportOptions },
   },
   effects: {
     'stage-result': (ctx, e) => result(ctx, String(e.stage), e.passed === true, e.chance as number),
@@ -64,6 +67,9 @@ export const federalModule = defineModule<FederalSlice>({
   on: {
     // The background is decided at the turn of its day.
     'time/passed': (ctx) => decide(ctx),
+    'job/hired': (ctx, beat) => hired(ctx, beat),
+    'job/let-go': (ctx) => left(ctx),
+    'job/quit': (ctx) => left(ctx),
     // An heir's application is their own: none yet.
     'lives/succeeded': (ctx) => {
       Object.assign(ctx.write(), NO_APPLICATION());

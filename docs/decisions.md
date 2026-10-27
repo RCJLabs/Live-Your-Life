@@ -1143,6 +1143,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Stay in the city (recommended, chosen). A posting elsewhere ending the city chapter.
 
+### D157. The Academy is weekday training in the city. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Cleared, you report, and the bureau takes you on as a special agent trainee: a career like the police recruit's, ten-hour training days Monday to Friday for about 18 weeks, home each night, at the grade 10 rate without availability pay. Its ladder makes you a special agent once its weeks are worked in good standing. Leaving it any other way ends the application, which can be made again a year later. The real Academy is residential at Quantico; written beside the figure as a departure, as D156 keeps the life in the city.
+
+**Options considered.** Weekday days in the city (recommended, chosen). Away for 18 weeks with time passing and sparse choices, prison's form: truer, a new mode, about twice the work.
+
+### D158. An agent's grades are ranks on the ladder. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** Grades 10 to 13 are four careers on one ladder (special agent, then the same at grades 11, 12 and 13), each reached after about a year's practice in standing 50 or better, as the real career ladder promotes to GS-13 without competition. Each pays step 1 of its grade at Detroit's locality with 25 in 100 availability pay, spread over 50-hour weeks.
+
+**Options considered.** Ranks on the ladder (recommended, chosen). One career whose wage rises with years served: a new pay-by-tenure rule in the job module.
+
 ---
 
 ## Open items

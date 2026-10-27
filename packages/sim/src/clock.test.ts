@@ -79,6 +79,7 @@ describe('the clock', () => {
       'family/pay-bill',
       'federal/apply',
       'federal/prepare',
+      'federal/report',
       'federal/sit',
       'health/pay-bill',
       'health/rest',

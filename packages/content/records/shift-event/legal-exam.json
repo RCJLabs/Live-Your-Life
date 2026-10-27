@@ -1,0 +1,41 @@
+{
+  "name": "The legal exam",
+  "tags": ["bureau-academy"],
+  "weight": 4,
+  "prompt": "The academy's legal exam is on search, seizure and the rules of evidence. A trainee who fails it sits it once more, then goes home.",
+  "choices": [
+    {
+      "id": "study",
+      "text": "Spend the evening on the case law",
+      "outcome": {
+        "told": "You sit it rested on what you know and pass with a few points to spare.",
+        "practice": 60,
+        "standing": 1,
+        "needs": {
+          "rest": -6
+        }
+      }
+    },
+    {
+      "id": "sit",
+      "text": "Sit it on what you have",
+      "odds": {
+        "base": 60,
+        "skill": 30,
+        "tired": 20
+      },
+      "outcome": {
+        "told": "Ninety-one. The instructor posts the scores by number, and yours is near the top.",
+        "standing": 3,
+        "practice": 30
+      },
+      "failure": {
+        "told": "Eighty-two. You'll sit it again next week, and a second miss ends your place.",
+        "standing": -4,
+        "needs": {
+          "calm": -8
+        }
+      }
+    }
+  ]
+}
