@@ -285,6 +285,11 @@ The connect's prices, the heavier weights' charges, and the terms you set your o
 | 450 to 1,000 g | felony, up to 30 years and $500,000; a first offence 21 to 35 months in prison, a repeat about 4 to 10 years | `…-1000.json` | 7401(2)(a)(ii) and 7403(2)(a)(ii), the same summaries; the first offence's range from memory of the class A grid with no prior record | maxima secondary; sentences to check |
 | 1,000 g or more | felony, life or any term of years and $1,000,000; a first offence about 4 to 7 years, a repeat 9 to 15 (tune) | `…-kilo.json`; "life" is held as 100 years | 7401(2)(a)(i) and 7403(2)(a)(i), the same summaries | maxima secondary; sentences (tune) |
 | Rival corners | 40 in 100 corners held by a rival crew in a four-week stretch; two warnings, then run off for 7 days | `trade/cocaine.json`, `rivals` | none read: the share of corners held is a proposal for play; ethnographies (Venkatesh's, among others) describe corners held by crews and outsiders warned off, but give no share | (tune) |
+| Assault and battery | misdemeanour, up to 93 days and $500 | `offence/assault-battery.json` | MCL 750.81, through Michigan Legal Center's summary and the statute as WomensLaw quotes it | secondary |
+| Aggravated assault | misdemeanour, up to a year and $1,000, for a serious injury without a weapon | `offence/aggravated-assault.json` | MCL 750.81a, through the same | secondary |
+| Unarmed robbery | felony, up to 15 years; a first offence jail of 90 days to a year and two years' probation, a repeat 2 to 5 years (tune) | `offence/unarmed-robbery.json` | MCL 750.530, from memory: the search found the attempt (750.88, 15 years) but not the statute itself | to check |
+| Violence's odds | robbed 1 in 100 an hour, a point more for every 25 g held, 3 more on a held corner, at most 15; beaten when robbed 40, run off 30, cut off 40; collecting 60, hurting them 40, hurt yourself 50, reported 25; robbing 50 to win, $50 to $400, hurt 50, reported 30; a reported case won at trial 30 | `trade/cocaine.json`, `violence` | none read: proposals for play, D146's "rare and costly" | (tune) |
+| A beating | 14 days of illness, 10 off work, 5 points of health a day | `illness/michigan.json`, `beaten` | none read: the work injury's shape, heavier | (tune) |
 
 ## The police (M2.4)
 

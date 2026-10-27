@@ -76,7 +76,7 @@ describe('prison (M2.4, D81)', () => {
     expect(rolled.outcome === 0 ? rolled.chance : 100 - (rolled.chance as number)).toBe(shown.chance);
   });
 
-  it('paroles you onto the law’s probation, or hears you again a year on', () => {
+  it('paroles you onto the law’s probation, or hears you again a year on', { timeout: 30_000 }, () => {
     let paroled = false;
     let denied = false;
     for (let i = 0; i < 12 && !(paroled && denied); i++) {

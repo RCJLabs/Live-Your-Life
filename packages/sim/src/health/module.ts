@@ -84,7 +84,8 @@ function dayOf(ctx: Ctx, r: IllnessRecord, d: number): void {
     if (ctx.read().hospital < 0) ctx.apply({ effect: 'adjust-needs', needs: { health: -kindOf(r, ill.kind).health } });
   } else {
     const rng = ctx.rng('health');
-    const k = r.kinds.find((x) => !x.work && rng.int(0, 99_999) < dayChance(x));
+    // Only kinds that come by chance: a beating (M4.1) is dealt, and must draw nothing, so old saves replay alike.
+    const k = r.kinds.find((x) => !x.work && x.perYear > 0 && rng.int(0, 99_999) < dayChance(x));
     if (k) fall(ctx, r, k.id, d);
   }
   // An illness or injury that brings health to nothing, out in the world: hospital. Neglect alone
@@ -216,6 +217,15 @@ export const healthModule = defineModule<HealthSlice>({
       },
       options: (v) =>
         v.state.owed > 0 && (v.fact('economy.amount', { resource: 'cash' }) as number) >= v.state.owed ? [{}] : [],
+    },
+  },
+  effects: {
+    // Hurt by someone (M4.1 step 3, D146): the kind's days and health, as an illness is. One ill
+    // already is hurt the worse of the two: the beating replaces a cold, never the other way.
+    hurt: (ctx, effect) => {
+      const r = illnessOf(ctx.content);
+      if (!r || !r.kinds.some((k) => k.id === effect.kind)) return;
+      fall(ctx, r, String(effect.kind), day(ctx));
     },
   },
   on: {

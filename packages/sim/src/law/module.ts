@@ -10,7 +10,7 @@ import { defineModule } from '@eb/core';
 import { attend, checkIn, contest, convictAndSentence, courtIn, owedOf, pay, plead } from './court.ts';
 import { arraign, drugCase, postBail, released, remand } from './drugs.ts';
 import { drawFence, eat, type Fence, sale, sell } from './fence.ts';
-import { hearing, lawDay, newVisit, review, saleSeen, ticket, visit } from './police.ts';
+import { hearing, later, lawDay, newVisit, review, saleSeen, ticket, visit } from './police.ts';
 import { FENCE, fenceOf } from './records.ts';
 import { crime, freshLaw, type LawSlice } from './state.ts';
 import { filmedNow, gotAway, heldNow, take, theft, wait } from './take.ts';
@@ -149,6 +149,9 @@ export const lawModule = defineModule<LawState>({
     },
     // M2.4: a drug case (drugs.ts).
     'drug-case': (ctx) => drugCase(ctx, (day) => newVisit(ctx, day, { why: 'raid', item: '', case: 0 })),
+    // An assault or robbery reported (M4.1 step 3): the police come, at a time you are told.
+    'reported-case': (ctx, effect) =>
+      newVisit(ctx, later(ctx), { why: 'report', item: String(effect.offence), case: 0 }),
     arraign,
     released,
     // A prison sentence served (prison/module.ts): parole is a sentence's probation, without HYTA.

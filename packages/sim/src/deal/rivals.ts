@@ -10,6 +10,7 @@ import { mix } from '../people/roster.ts';
 import { tradeOf } from './records.ts';
 import type { DealContext, DealView } from './state.ts';
 import { sliceOf } from './state.ts';
+import { beatenAt } from './violence.ts';
 
 /** Days a holder keeps a corner before it may change hands (tune). */
 export const STRETCH = 28;
@@ -76,6 +77,8 @@ export function noticed(ctx: DealContext, s: Standing, person: number, key: numb
   }
   s.off = (ctx.fact('time.day') as number) + r.off;
   ctx.emit('run-off', { person, yours, name, rival, days: r.off });
+  // Run off you may be beaten as well (D146); one of your crew's hurts are theirs, not yours to carry.
+  if (yours) ctx.apply(beatenAt(tradeOf(ctx.content).violence.trouble, 'rivals'));
   return true;
 }
 

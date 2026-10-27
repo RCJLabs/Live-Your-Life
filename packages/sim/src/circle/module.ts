@@ -292,6 +292,11 @@ export const circleModule = defineModule<CircleSlice>({
     'date-roll': dateRoll,
     dated,
     'found-out': foundOut,
+    // What they think of you, set by something done to them (M4.1 step 3: a debt collected by force).
+    'regard-to': (ctx, effect) => {
+      const t = ctx.write().ties.find((x) => x.person === effect.person);
+      if (t) t.regard = Math.max(0, Math.min(100, Number(effect.to)));
+    },
     'night-roll': nightRoll,
     night,
     'move-in-roll': moveInRoll,

@@ -1,0 +1,8 @@
+{
+  "beat": "health/fell-ill",
+  "when": {
+    "field": "kind",
+    "is": "beaten"
+  },
+  "text": "{you} was hurt badly enough to stay off work for days."
+}

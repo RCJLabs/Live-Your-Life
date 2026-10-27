@@ -1,0 +1,10 @@
+{
+  "name": "Aggravated assault",
+  "law": "MCL 750.81a",
+  "priors": 5,
+  "days": 365,
+  "fineMax": 100000,
+  "timesValue": 0,
+  "fine": 50000,
+  "costs": 12500
+}

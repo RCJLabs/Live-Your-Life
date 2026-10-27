@@ -1,0 +1,10 @@
+{
+  "name": "Assault and battery",
+  "law": "MCL 750.81",
+  "priors": 5,
+  "days": 93,
+  "fineMax": 50000,
+  "timesValue": 0,
+  "fine": 25000,
+  "costs": 12500
+}

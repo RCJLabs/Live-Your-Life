@@ -10,6 +10,7 @@ import { bossDay } from './boss.ts';
 import { TRADE, tradeOf } from './records.ts';
 import { type DealContext, type DealSlice, type DealView, heatOf, sliceOf } from './state.ts';
 import { cash, mostHeld, supplierHere, TRUST_MOST } from './trade.ts';
+import { beatenAt } from './violence.ts';
 
 const crewOf = (v: DealView) => tradeOf(v.content, TRADE).crew;
 const day = (v: DealView): number => v.fact('time.day') as number;
@@ -171,6 +172,8 @@ export function crewDays(ctx: DealContext, _event: Beat): void {
       w.cutOff = true;
       w.trust = Math.max(0, w.trust - c.unpaid);
       ctx.emit('cut-off', { owed: now.owed });
+      // And their people may come for you (D146, amending D86).
+      ctx.apply(beatenAt(tradeOf(ctx.content, TRADE).violence.cutOff, 'supplier'));
     }
     if (ctx.read().recruit >= 0 && ctx.read().recruit < d && sellsOn(d, c.recruit.nights)) recruitNight(ctx);
     bossDay(ctx, d);

@@ -95,6 +95,14 @@ const RARE = [
   // Rival corners (M4.1 step 2): the census's lives don't deal; deal/rivals.test.ts raises them.
   'deal/warned',
   'deal/run-off',
+  // Violence (M4.1 step 3): deal/violence.test.ts raises them.
+  'deal/robbed',
+  'deal/beaten',
+  'deal/collected',
+  'deal/not-collected',
+  'deal/robbed-them',
+  'deal/rob-failed',
+  'law/charged',
   'law/searched',
   'law/raided',
   'law/arraigned',

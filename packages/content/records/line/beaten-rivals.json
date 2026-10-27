@@ -1,0 +1,8 @@
+{
+  "beat": "deal/beaten",
+  "when": {
+    "field": "by",
+    "is": "rivals"
+  },
+  "text": "The crew that held the corner beat {you} before they let them go."
+}

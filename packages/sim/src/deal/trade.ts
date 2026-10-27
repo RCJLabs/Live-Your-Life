@@ -8,6 +8,7 @@ import type { Action, Effect, PreviewContext } from '@eb/core';
 import { type Lot, TRADE, tradeOf } from './records.ts';
 import { noticed, runOff, YOURS, yourCorner } from './rivals.ts';
 import { type DealContext, type DealSlice, type DealView, heatOf, raiseHeat, sliceOf } from './state.ts';
+import { robbedOdds } from './violence.ts';
 import { passingNow } from './witnesses.ts';
 
 /** Trust with the supplier holds at most this much. */
@@ -98,7 +99,17 @@ export const cornerHour = {
     const buyer = buyerOdds(ctx);
     const seen = seenOdds(ctx);
     const passing = passingNow(ctx);
+    const robbed = robbedOdds(ctx);
     ctx.emit('on-corner', { buyer, seen, passing });
+    // Robbed first, at the hour's odds (D146): what is taken is not there for the buyers after.
+    if (robbed > 0)
+      ctx.apply({
+        effect: 'roll',
+        outcomes: [
+          { chance: robbed, effects: [{ effect: 'robbed' }] },
+          { chance: 100 - robbed, effects: [] },
+        ],
+      });
     for (let k = 0; k < SLOTS && buyer > 0; k++) {
       const outcomes = [{ chance: buyer, effects: [{ effect: 'buyer', seen, passing }] }];
       ctx.apply({
@@ -119,6 +130,8 @@ export const cornerHour = {
       price: t.sale.price,
       held: held.holder !== -1,
       left: held.left,
+      robbed: robbedOdds(ctx),
+      trouble: held.holder !== -1 && held.left === 0 ? tradeOf(ctx.content).violence.trouble : 0,
     };
   },
 };

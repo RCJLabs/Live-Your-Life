@@ -1,0 +1,8 @@
+{
+  "beat": "deal/beaten",
+  "when": {
+    "field": "by",
+    "is": "collecting"
+  },
+  "text": "{you} came off worse in the fight over the money."
+}

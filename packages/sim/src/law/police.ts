@@ -23,6 +23,7 @@ import {
   tickOf,
   type Visit,
 } from './state.ts';
+import { reported } from './violence.ts';
 
 /** When in the day the police come round: from 10:00 to 18:00 (tune). */
 const CALLS = { from: 10 * 60, to: 18 * 60 };
@@ -83,7 +84,8 @@ export function ticket(ctx: LawContext, effect: Effect): void {
 /** Sets a visit for a day, at a time in the police's hours, and tells the player. */
 function visitOn(ctx: LawContext, day: number, v: Visit): void {
   const at = tickOf(todayOf(ctx), day, between(ctx, CALLS.from, CALLS.to));
-  const what = v.why === 'warrant' || v.why === 'violation' ? 'arrest' : v.why === 'raid' ? 'raid' : 'visit';
+  const what =
+    v.why === 'warrant' || v.why === 'violation' || v.why === 'report' ? 'arrest' : v.why === 'raid' ? 'raid' : 'visit';
   setTimer(ctx, `law-visit-${v.id}`, at, [{ effect: 'visit', visit: v.id }], what);
 }
 
@@ -121,6 +123,10 @@ export function visit(ctx: LawContext, effect: Effect): void {
     return;
   }
   ctx.write().visits = ctx.read().visits.filter((x) => x.id !== v.id);
+  if (v.why === 'report') {
+    reported(ctx, v.item);
+    return;
+  }
   if (v.why === 'raid' || v.why === 'violation') {
     if (v.why === 'raid') raid(ctx);
     else violation(ctx);

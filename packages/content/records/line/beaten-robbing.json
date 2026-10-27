@@ -1,0 +1,8 @@
+{
+  "beat": "deal/beaten",
+  "when": {
+    "field": "by",
+    "is": "robbing"
+  },
+  "text": "{you} was beaten by the seller {you} tried to rob."
+}

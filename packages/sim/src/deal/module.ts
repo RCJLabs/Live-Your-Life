@@ -11,6 +11,19 @@ import { TRADE, tradeOf } from './records.ts';
 import { yourCorner } from './rivals.ts';
 import { type DealSlice, HEAT_MAX, heatOf, migrateDeal4, NO_CREW, noBoss } from './state.ts';
 import { buy, buyerCame, corner, cornerHour, seize, sighted } from './trade.ts';
+import {
+  beat,
+  collect,
+  collected,
+  collectRoll,
+  notCollected,
+  reportRoll,
+  rob,
+  robbed,
+  robbedThem,
+  robFailed,
+  robRoll,
+} from './violence.ts';
 
 const TEXT = { type: 'text' } as const;
 const WHOLE = { type: 'int', min: 0 } as const;
@@ -139,8 +152,24 @@ export const dealModule = defineModule<DealSlice>({
     'take-on': takeOn,
     'front-to': frontTo,
     'let-go': letGo,
+    collect,
+    rob,
   },
-  effects: { 'corner-hour': cornerHour, buyer: buyerCame, sighted, seize },
+  effects: {
+    'corner-hour': cornerHour,
+    buyer: buyerCame,
+    sighted,
+    seize,
+    robbed,
+    beaten: (ctx, effect) => beat(ctx, String(effect.by)),
+    'collect-roll': collectRoll,
+    collected,
+    'not-collected': notCollected,
+    'report-roll': reportRoll,
+    'rob-roll': robRoll,
+    'robbed-them': robbedThem,
+    'rob-failed': robFailed,
+  },
   on: {
     'time/passed': crewDays,
     // An heir holds nothing, and is no one to the trade; the supplier is still who they are (M2.7 step 3).

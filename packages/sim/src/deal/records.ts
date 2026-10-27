@@ -34,8 +34,42 @@ export interface TradeRecord {
   readonly contest: { readonly seen: number; readonly found: number };
   readonly crew: Crew;
   readonly boss: Boss;
+  /** Violence (M4.1 step 3, D146): odds in percent, money in cents. */
+  readonly violence: Violence;
   /** Rival crews on corners (M4.1 step 2, D148). */
   readonly rivals: { readonly held: number; readonly warnings: number; readonly off: number };
+}
+
+export interface Violence {
+  readonly hurt: string;
+  readonly robbed: {
+    readonly base: number;
+    readonly per: number;
+    readonly held: number;
+    readonly most: number;
+    readonly cash: number;
+    readonly hurt: number;
+  };
+  readonly trouble: number;
+  readonly cutOff: number;
+  readonly collect: {
+    readonly win: number;
+    readonly hurt: number;
+    readonly yours: number;
+    readonly reported: number;
+    readonly assault: string;
+    readonly aggravated: string;
+  };
+  readonly rob: {
+    readonly win: number;
+    readonly min: number;
+    readonly max: number;
+    readonly yours: number;
+    readonly seen: number;
+    readonly heat: number;
+    readonly robbery: string;
+  };
+  readonly contest: number;
 }
 
 /** A crew of your own (M4.1, D145): the wholesale connect, and the terms you set your recruits. */
@@ -119,6 +153,7 @@ export function tradeOf(store: RecordStore, id: string = TRADE): TradeRecord {
     fail(what, 'two of what the connect sells share an id');
   for (const l of c.sells) if (l.grams > c.most) fail(what, `the connect's "${l.id}" is more than you can hold`);
   if (t.boss.crew.front.grams > c.most) fail(what, 'your crew’s front is more than you can hold');
+  if (t.violence.rob.min > t.violence.rob.max) fail(what, 'a robbery takes more at least than at most');
   inWeight(store, what, t.possession);
   inWeight(store, what, t.delivery);
   checked.add(t);
