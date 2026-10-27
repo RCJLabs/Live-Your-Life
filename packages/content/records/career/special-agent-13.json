@@ -53,8 +53,8 @@
     "half": 24000
   },
   "events": {
-    "tags": ["investigation"],
-    "chance": 60
+    "tags": ["bureau-case"],
+    "chance": 40
   },
   "requires": {
     "record": "no-felony",

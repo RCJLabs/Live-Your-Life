@@ -570,7 +570,29 @@ describe('the save fixtures', () => {
     expect(result.report.added).toEqual(['federal']);
     expect(result.report.skipped).toBe(0);
     expect(result.report.replayed).toBe(result.file.log.length);
-    expect(result.state.federal).toEqual({ stage: 'none', due: -1, refused: -1, study: 0, training: 0, tries: 0 });
+    expect(result.state.federal).toEqual({
+      stage: 'none',
+      due: -1,
+      refused: -1,
+      study: 0,
+      training: 0,
+      tries: 0,
+      case: null,
+      away: [],
+      down: -1,
+    });
+  });
+
+  it('loads the twenty-eighth, saved before cases, with none open and nobody away (M4.3 step 3)', () => {
+    const people = sliceGame({ people: 1000, unlocked: false });
+    const result = load('life-v28.json', sim, people);
+    expect(result.ok, result.ok ? '' : result.message).toBe(true);
+    if (!result.ok) return;
+    expect(result.report.migrated).toEqual([{ module: 'federal', from: 1, to: 2 }]);
+    expect(result.report.added).toEqual([]);
+    expect(result.report.skipped).toBe(0);
+    expect(result.report.replayed).toBe(result.file.log.length);
+    expect(result.state.federal).toMatchObject({ case: null, away: [], down: -1 });
   });
 
   it('migrates a term under way as taken by day, and leaves a school with none as it was', () => {

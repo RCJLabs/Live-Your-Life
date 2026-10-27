@@ -94,6 +94,7 @@ const stakes = (o: Outcome) => ({
   // What the coworker would remember of it, if they are there to see (D42).
   act: o.act ?? null,
   arrest: o.arrest ?? null,
+  evidence: o.evidence ?? 0,
 });
 
 /** `shift-choice`: the choice made, rolled if it has odds. Its preview is what the player is shown. */
@@ -137,6 +138,8 @@ export function shiftOutcome(ctx: JobContext, effect: Readonly<Record<string, un
   }
   ctx.emit('outcome', { event, choice: choice.id, failed });
   if (o.arrest) ctx.emit('made-arrest', { offence: o.arrest });
+  // Heard by the federal module (M4.3 step 3): the case file grows.
+  if (o.evidence) ctx.emit('evidence', { points: o.evidence });
   if (o.standing) moveStanding(ctx, o.standing, `event:${event}`);
 }
 

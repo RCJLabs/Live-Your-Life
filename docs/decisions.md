@@ -1155,6 +1155,18 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Ranks on the ladder (recommended, chosen). One career whose wage rises with years served: a new pay-by-tenure rule in the job module.
 
+### D159. A case is a file, then a takedown. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** An agent works one case at a time, against a target drawn from the city: the head of a rival crew holding a corner, or the supplier's crew. Shift events add evidence at the odds shown. With enough, you ask for an indictment, rolled at a chance from the evidence. A conviction sends the target away for the sentence: a head's corner goes open, and while the supplier's crew is away nobody sells. Someone who has bought or sold in the trade opens no case.
+
+**Options considered.** A file, then a takedown (recommended, chosen). Shift events only, each one an arrest or not, like the detective's: cheaper, little that lasts.
+
+### D160. Fraud cases wait for Phase 5. LOCKED, 2026-10-27 (Evan's call)
+
+**Decision.** The sim has no fraud yet, so an agent's cases are against the trade for now. Fraud cases come when Phase 5 adds banks, credit and money that can be stolen on paper.
+
+**Options considered.** Later, with Phase 5 (recommended, chosen). Abstract fraud schemes at tier-1 workplaces now, with nothing behind them in the sim.
+
 ---
 
 ## Open items

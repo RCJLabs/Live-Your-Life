@@ -98,6 +98,12 @@ export function jobModule(hire?: Hire) {
         label: 'minutes worked in a career',
       },
       employed: { read: ({ state }) => state.employed, domain: { type: 'bool' }, label: 'has a job' },
+      // Heard by the federal module (M4.3 step 3): whether the job held is an agent's.
+      career: {
+        read: ({ state }) => state.career ?? '',
+        domain: { type: 'text' },
+        label: 'the career of the job held, or the last',
+      },
       // Heard by health (M2.7, D105): a job whose employer offers health cover.
       insured: {
         read: ({ state, content }) =>
@@ -202,6 +208,8 @@ export function jobModule(hire?: Hire) {
         label: "Didn't show for a shift",
       },
       hired: { args: { career: { type: 'text' } }, label: 'Started a job' },
+      // Heard by the federal module (M4.3 step 3): a shift's work added to the open case.
+      evidence: { args: { points: { type: 'int', min: 1 } }, label: 'Found evidence for a case' },
       quit: { label: 'Quit a job' },
       standing: {
         args: { by: { type: 'int' }, now: { type: 'int', min: 0, max: 100 }, why: { type: 'text' } },

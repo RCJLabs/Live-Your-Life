@@ -178,6 +178,52 @@
       "kind": "ref",
       "to": "career",
       "description": "The career one cleared reports to: the Academy's, whose ladder leads to the agent's (M4.3 step 2, D157)."
+    },
+    "cases": {
+      "kind": "group",
+      "description": "An agent's cases (M4.3 step 3, D159): one at a time, against a rival crew's head or the supplier's crew; evidence from the work, then an indictment at a chance from it.",
+      "fields": {
+        "corners": {
+          "kind": "int",
+          "min": 1,
+          "max": 50,
+          "description": "Corners whose holders an agent can open a case on: yours and the first after it."
+        },
+        "least": {
+          "kind": "int",
+          "min": 1,
+          "max": 100,
+          "description": "Evidence before an indictment can be asked for."
+        },
+        "most": {
+          "kind": "int",
+          "min": 1,
+          "max": 100,
+          "description": "The highest chance an indictment holds, in 100: the chance is the evidence, up to this."
+        },
+        "crew": {
+          "kind": "group",
+          "fields": {
+            "sentence": {
+              "kind": "int",
+              "min": 1,
+              "max": 10000,
+              "description": "Days a crew's head is away, convicted."
+            }
+          }
+        },
+        "supplier": {
+          "kind": "group",
+          "fields": {
+            "sentence": {
+              "kind": "int",
+              "min": 1,
+              "max": 10000,
+              "description": "Days the supplier's crew is away, convicted: nobody sells to you."
+            }
+          }
+        }
+      }
     }
   }
 }

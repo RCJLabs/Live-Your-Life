@@ -1,0 +1,42 @@
+{
+  "name": "Surveillance",
+  "tags": ["bureau-case"],
+  "weight": 4,
+  "when": "federal.working",
+  "prompt": "Eight hours in a parked car across from a house the crew uses. A courier comes and goes twice.",
+  "choices": [
+    {
+      "id": "log",
+      "text": "Stay on the house and log every car",
+      "outcome": {
+        "told": "Plates, times, faces. The log runs four pages and puts three of the crew at the house.",
+        "practice": 60,
+        "evidence": 3,
+        "needs": {
+          "rest": -5
+        }
+      }
+    },
+    {
+      "id": "follow",
+      "text": "Follow the courier",
+      "odds": {
+        "base": 50,
+        "skill": 30,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "He leads you to a second house and a man you hadn't known about.",
+        "evidence": 6,
+        "standing": 1
+      },
+      "failure": {
+        "told": "You lose him at a light, and he slows down at the next corner to look back.",
+        "standing": -1,
+        "needs": {
+          "calm": -4
+        }
+      }
+    }
+  ]
+}

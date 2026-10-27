@@ -1,0 +1,42 @@
+{
+  "name": "Following the money",
+  "tags": ["bureau-case"],
+  "weight": 3,
+  "when": "federal.working",
+  "prompt": "A subpoena brings back a year of bank records for a car wash the crew's head owns. The deposits are larger than its customers.",
+  "choices": [
+    {
+      "id": "read",
+      "text": "Go through the deposits line by line",
+      "outcome": {
+        "told": "By the end of the night you have a table of cash deposits just under the reporting line.",
+        "practice": 60,
+        "evidence": 3,
+        "needs": {
+          "rest": -6
+        }
+      }
+    },
+    {
+      "id": "ask",
+      "text": "Interview the car wash's bookkeeper",
+      "odds": {
+        "base": 40,
+        "skill": 35,
+        "tired": 15
+      },
+      "outcome": {
+        "told": "She shows you the second set of books before her lawyer arrives.",
+        "evidence": 7,
+        "standing": 2
+      },
+      "failure": {
+        "told": "She calls a lawyer before you sit down, and the head knows by evening what you asked.",
+        "standing": -2,
+        "needs": {
+          "calm": -5
+        }
+      }
+    }
+  ]
+}

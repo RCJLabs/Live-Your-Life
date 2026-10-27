@@ -43,5 +43,12 @@
     "wait": 120
   },
   "again": 365,
-  "trainee": "agent-trainee"
+  "trainee": "agent-trainee",
+  "cases": {
+    "corners": 6,
+    "least": 40,
+    "most": 90,
+    "crew": { "sentence": 1589 },
+    "supplier": { "sentence": 3178 }
+  }
 }
