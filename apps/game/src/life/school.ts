@@ -1,12 +1,22 @@
 /**
  * The School tab (M2.8 step 6, D111–D116): what you have finished, the GED's tests without a
  * diploma, the community college's terms and what they cost, your classes this term, and the
- * loans. Prices, chances and bills come from the sim's previews, the same sums it charges and
+ * loans; since M4.2 the university and law school (degrees.ts). Prices, chances and bills come from the sim's previews, the same sums it charges and
  * rolls (CLAUDE.md: odds on screen are the odds rolled); nothing here is typed in. The tab is a
  * model of sections first (`school`), so its words can be tested without a page, then drawn.
  */
 import type { Action } from '@eb/core';
-import { type Bill, type Borrow, type College, type EducationSlice, educationOf, meetings } from '@lyl/sim';
+import {
+  type Bill,
+  type Borrow,
+  type Catalog,
+  type CollegeTerm,
+  type EducationSlice,
+  educationOf,
+  meetings,
+  type Which,
+} from '@lyl/sim';
+import { lawSchool, university } from './degrees.ts';
 import { button, el } from './dom.ts';
 import type { Waiting } from './pending.ts';
 import type { Life } from './session.ts';
@@ -32,6 +42,8 @@ const FINISHED: Readonly<Record<string, string>> = {
   diploma: 'You have a high school diploma.',
   ged: 'You have a GED.',
   associate: 'You have an associate’s degree.',
+  bachelor: 'You have a bachelor’s degree.',
+  jd: 'You have a law degree.',
 };
 
 const HOW: Readonly<Record<Borrow, string>> = {
@@ -40,13 +52,13 @@ const HOW: Readonly<Record<Borrow, string>> = {
   most: 'Enroll, borrowing the most',
 };
 
-const hours = (minutes: number) => {
+export const hours = (minutes: number) => {
   const h = Math.floor(minutes / 60);
   return `${h} ${h === 1 ? 'hour' : 'hours'}`;
 };
-const offered = (life: Life, type: string, match: (a: Action) => boolean = () => true) =>
+export const offered = (life: Life, type: string, match: (a: Action) => boolean = () => true) =>
   life.options().filter((a) => a.type === type && match(a));
-const item = (id: string, text: string, actions: SchoolItem['actions'] = [], quiet = false): SchoolItem => ({
+export const item = (id: string, text: string, actions: SchoolItem['actions'] = [], quiet = false): SchoolItem => ({
   id,
   text,
   actions,
@@ -87,19 +99,20 @@ export function billText(b: Bill): string {
   return parts.join(' ');
 }
 
-/** Enrolling, while the window is open: each number of courses and each way to pay, with its bill. */
-function enrolling(life: Life): SchoolItem[] {
-  return offered(life, 'education/enroll').map((a) => {
+/** Enrolling at a school, while its window is open: each number of courses and each way to pay, with its bill. */
+export function enrolling(life: Life, which: Which = 'college'): SchoolItem[] {
+  const at = (a: Action) => (a.school ?? 'college') === which;
+  return offered(life, 'education/enroll', at).map((a) => {
     const n = a.courses as number;
-    const b = life.peek<Bill>({ effect: 'college-bill', courses: n, borrow: a.borrow });
+    const school = which === 'college' ? {} : { school: which };
+    const b = life.peek<Bill>({ effect: 'college-bill', courses: n, borrow: a.borrow, ...school });
     const what = `${n} ${n === 1 ? 'course' : 'courses'}, ${b.credits} credits. ${billText(b)}`;
     return item(`enroll/${n}/${String(a.borrow)}`, what, [{ label: HOW[a.borrow as Borrow] ?? 'Enroll', action: a }]);
   });
 }
 
 /** This term's classes: when each meets, the classes gone to, and the study it asks. */
-function classes(life: Life, s: EducationSlice, c: College): SchoolItem[] {
-  const t = s.college.term;
+export function classes(life: Life, t: CollegeTerm | null, c: Catalog): SchoolItem[] {
   if (!t) return [];
   const today = life.fact('time.day') as number;
   const when =
@@ -141,7 +154,13 @@ function college(life: Life, s: EducationSlice): SchoolSection[] {
       ? []
       : [item('window', `You can enroll in the ${c.enroll} days before a term starts.`, [], true)];
   const title = c.name.charAt(0).toUpperCase() + c.name.slice(1);
-  return [{ id: 'college', title, items: [item('record', record), ...classes(life, s, c), ...enroll, ...window] }];
+  return [
+    {
+      id: 'college',
+      title,
+      items: [item('record', record), ...classes(life, s.college.term, c), ...enroll, ...window],
+    },
+  ];
 }
 
 /** What is owed on the loans, the month's payment, and what is behind. */
@@ -175,6 +194,8 @@ export function school(life: Life): SchoolSection[] {
     { id: 'finished', title: null, items: [item('finished', FINISHED[s.finished] ?? '')] },
     ...ged(life, s),
     ...college(life, s),
+    ...university(life, s),
+    ...lawSchool(life, s),
     ...loans(life, s),
   ];
 }
@@ -206,12 +227,13 @@ export function schoolView(life: Life, act: (a: Action) => void): HTMLElement {
 /** For the Waiting list: a class starting now, and loan payments behind (pending.ts). */
 export function schoolWaiting(life: Life): Waiting[] {
   const s = edu(life);
-  const c = educationOf(life.sim.content)?.college;
-  if (!s || !c) return [];
+  const r = educationOf(life.sim.content);
+  if (!s || !r) return [];
+  const all = [r.college, r.university, r.law].flatMap((c) => c?.courses ?? []);
   const out: Waiting[] = [];
   const today = life.fact('time.day') as number;
   for (const a of offered(life, 'education/attend')) {
-    const name = c.courses.find((y) => y.id === a.course)?.name ?? String(a.course);
+    const name = all.find((y) => y.id === a.course)?.name ?? String(a.course);
     out.push({
       id: `class/${String(a.course)}`,
       kind: 'school',

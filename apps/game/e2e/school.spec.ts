@@ -4,8 +4,8 @@ import { expectNothingOffscreen, smallTargets, watchErrors } from './checks.ts';
 /**
  * M2.8's School tab on the page, by taps. A life without a diploma (life-3) sees the GED's four
  * tests, each with the chance the sim previews, and studies an hour for one; a life with one
- * (life-1) sees the college and when it can enroll. At both phone widths, nothing past the edge
- * and every target 44 px.
+ * (life-1) sees the college and when it can enroll, and the university's chance, and applies
+ * (M4.2). At both phone widths, nothing past the edge and every target 44 px.
  */
 
 type Life = Record<string, (...args: unknown[]) => unknown>;
@@ -54,6 +54,23 @@ for (const width of [360, 390]) {
       await expect(page.locator('#school [data-section="college"]')).toContainText('days before a term starts');
       await expectNothingOffscreen(page);
       expect(await smallTargets(page, '#panel')).toEqual([]);
+      expect(errors).toEqual([]);
+    });
+
+    test('shows the university’s chance as previewed, and applies by a tap (M4.2)', async ({ page }) => {
+      const errors = watchErrors(page);
+      await page.goto('./?seed=life-1');
+      await expect(page.locator('#when')).toContainText('07:0');
+      await schoolTab(page);
+      const uni = page.locator('#school [data-section="university"]');
+      const { chance } = await L<{ chance: number }>(page, 'peek', { effect: 'admit-odds' });
+      await expect(uni).toContainText(`About ${chance} in 100 with your record are admitted`);
+      await expectNothingOffscreen(page);
+      expect(await smallTargets(page, '#panel')).toEqual([]);
+      await uni.locator('button', { hasText: 'Apply' }).click();
+      const admitted = await L<boolean>(page, 'fact', 'education.admitted');
+      await expect(uni).toContainText(admitted ? 'credits for a bachelor’s' : 'You can apply again');
+      await expectNothingOffscreen(page);
       expect(errors).toEqual([]);
     });
   });

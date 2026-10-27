@@ -151,11 +151,23 @@ export { dealerFor } from './dealer.ts';
 export * from './dials.ts';
 export { type EditionSlice, editionModule, FREE_DAYS, YEAR_END } from './edition/module.ts';
 export { type Bill, BORROWING, type Borrow } from './education/aid.ts';
-export { type CollegeSlice, meetings, type Term as CollegeTerm } from './education/college.ts';
+export {
+  type Catalog,
+  type CollegeSlice,
+  meetings,
+  type Term as CollegeTerm,
+  type Which,
+} from './education/college.ts';
 export type { Loan } from './education/loans.ts';
 // Your schooling (M2.8).
 export { type EducationSlice, educationModule, SCHOOLING, type Schooling } from './education/module.ts';
-export { type College, type EducationRecord, educationOf } from './education/records.ts';
+export {
+  type College,
+  type EducationRecord,
+  educationOf,
+  type LawSchool,
+  type University,
+} from './education/records.ts';
 export { type EventsSlice, eventsModule, LIFE_EVENT, MOST_WAITING } from './events/module.ts';
 export {
   choiceOf,
