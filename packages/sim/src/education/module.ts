@@ -14,6 +14,7 @@ import {
   attendOptions,
   type CollegeSlice,
   certified,
+  classDuring,
   classIn,
   emtOf,
   endTerm,
@@ -392,6 +393,12 @@ export const educationModule = defineModule<EducationSlice>({
       domain: { type: 'bool' },
       label: 'the EMT course’s certificate earned',
     },
+    // For the nursing student bot (M4.4 step 5), as a player sees on the School tab.
+    'adn-admitted': {
+      read: ({ state }) => state.adn.admitted,
+      domain: { type: 'bool' },
+      label: 'admitted to the college’s nursing program',
+    },
     nursing: {
       read: ({ state }) => state.nursing,
       domain: { type: 'enum', values: ['none', ...NURSING] },
@@ -420,6 +427,13 @@ export const educationModule = defineModule<EducationSlice>({
       },
       domain: { type: 'int', min: 1 },
       label: 'minutes until a class of yours, or the bar exam, starts today',
+    },
+    // Whether a class meets in a span (M4.4 step 5): what the nursing student bot weighs a shift against.
+    'class-during': {
+      args: { day: { type: 'int', min: 0 }, minute: { type: 'int', min: 0 }, minutes: { type: 'int', min: 1 } },
+      read: (v, { day, minute, minutes }) => classDuring(v, day as number, minute as number, minutes as number),
+      domain: { type: 'bool' },
+      label: 'a class of yours meets in that span',
     },
     'aid-income': {
       read: (v) => aidIncome(v),
