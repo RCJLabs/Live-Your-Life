@@ -1,7 +1,7 @@
 /**
  * The School tab (M2.8 step 6, D111–D116): what you have finished, the GED's tests without a
  * diploma, the community college's terms and what they cost, your classes this term, and the
- * loans; since M4.2 the university and law school (degrees.ts). Prices, chances and bills come from the sim's previews, the same sums it charges and
+ * loans; since M4.2 the university and law school (degrees.ts); since M4.4 medicine (medicine.ts). Prices, chances and bills come from the sim's previews, the same sums it charges and
  * rolls (CLAUDE.md: odds on screen are the odds rolled); nothing here is typed in. The tab is a
  * model of sections first (`school`), so its words can be tested without a page, then drawn.
  */
@@ -19,6 +19,7 @@ import {
 } from '@lyl/sim';
 import { lawSchool, university } from './degrees.ts';
 import { button, el } from './dom.ts';
+import { medicine } from './medicine.ts';
 import type { Waiting } from './pending.ts';
 import type { Life } from './session.ts';
 import { dayText, money, odds } from './words.ts';
@@ -200,6 +201,7 @@ export function school(life: Life): SchoolSection[] {
     ...college(life, s),
     ...university(life, s),
     ...lawSchool(life, s),
+    ...medicine(life, s),
     ...loans(life, s),
   ];
 }
@@ -233,7 +235,7 @@ export function schoolWaiting(life: Life): Waiting[] {
   const s = edu(life);
   const r = educationOf(life.sim.content);
   if (!s || !r) return [];
-  const all = [r.college, r.university, r.law].flatMap((c) => c?.courses ?? []);
+  const all = [r.college, r.university, r.law, r.emt, r.adn, r.bsn].flatMap((c) => c?.courses ?? []);
   const out: Waiting[] = [];
   const today = life.fact('time.day') as number;
   for (const a of offered(life, 'education/attend')) {

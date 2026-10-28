@@ -67,15 +67,22 @@ function weekView(life: Life, act: (a: Action) => void): HTMLElement {
   );
 }
 
-/** "The dinner shift tomorrow, 14:00 to 22:00." */
-function postingText(life: Life, day: number): string {
+/** A shift's name in a sentence: the kitchen's by their meals, medicine's by day, night or the whole day (M4.4). */
+const SHIFT_NAMES: Readonly<Record<string, string>> = { days: 'day', nights: 'night', 'twenty-four': 'day-long' };
+
+/** "The dinner shift tomorrow, 14:00 to 22:00." "The night shift tomorrow, 19:00 to 07:00 the next morning." */
+export function postingText(life: Life, day: number): string {
   const posted = (life.state.job as { posted: { day: number; shift: string }[] }).posted.find((p) => p.day === day);
   const career = (life.state.job as { career: string | null }).career;
   const kind = career ? careerOf(life.sim.content, career).shifts.find((k) => k.id === posted?.shift) : undefined;
   if (!posted || !kind) return `A shift ${dayText(life, day)}.`;
   const at = (m: number) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
   const start = kind.hour * 60 + kind.minute;
-  return `The ${posted.shift} shift ${dayText(life, day)}, ${at(start)} to ${at(start + kind.minutes)}.`;
+  const end = start + kind.minutes;
+  const next = end > 24 * 60 ? ' the next morning' : '';
+  const breaks = kind.breaks ? ` Up to ${kind.breaks} minutes of it are unpaid breaks.` : '';
+  const name = SHIFT_NAMES[posted.shift] ?? posted.shift;
+  return `The ${name} shift ${dayText(life, day)}, ${at(start)} to ${at(end)}${next}.${breaks}`;
 }
 
 function needsView(life: Life): HTMLElement {

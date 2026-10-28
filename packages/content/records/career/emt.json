@@ -33,7 +33,7 @@
       "hour": 7,
       "minute": 0,
       "minutes": 1440,
-      "breaks": 480
+      "breaks": 510
     }
   ],
   "open": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],

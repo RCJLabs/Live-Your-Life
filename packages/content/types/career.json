@@ -175,7 +175,7 @@
             "kind": "int",
             "optional": true,
             "min": 0,
-            "max": 480,
+            "max": 600,
             "description": "Minutes of the shift you may spend off work, unpaid, without leaving it early: a meal break, or the sleep a 24-hour crew takes at the station between calls (M4.4 step 3)."
           }
         }
