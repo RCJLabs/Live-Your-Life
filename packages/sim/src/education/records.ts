@@ -50,6 +50,34 @@ export interface EmtCourse extends Omit<College, 'associate' | 'retake'> {
 }
 
 /**
+ * A nursing program (M4.4 step 2, D163): the college's associate's or the university's bachelor's
+ * in nursing. Its courses are graded as the college's; it finishes at `degree` credits of its own
+ * at its average; it admits selectively, from the credits and average of the school it builds on.
+ */
+export interface NursingProgram extends Omit<College, 'associate' | 'retake'> {
+  readonly degree: number;
+  readonly admit: {
+    readonly credits: number;
+    readonly gpa: number;
+    readonly chance: number;
+    readonly perTenth: number;
+    readonly most: number;
+    readonly wait: number;
+  };
+  readonly retake?: undefined;
+}
+
+/** The nursing licensing exam (M4.4 step 2): the first sitting's chance by program, then a later one's. */
+export interface Nclex {
+  readonly price: number;
+  readonly minutes: number;
+  readonly adn: number;
+  readonly bsn: number;
+  readonly repeat: number;
+  readonly wait: number;
+}
+
+/**
  * The public university (M4.2 step 1, D149): its terms, courses and grades as the college's, with
  * the bachelor's at `degree` credits, its own price, and admission at odds.
  */
@@ -163,6 +191,10 @@ export interface EducationRecord {
   readonly college?: College;
   /** The EMT course (M4.4); absent in a pack from before it. */
   readonly emt?: EmtCourse;
+  /** The nursing programs and the licensing exam (M4.4 step 2); absent in a pack from before them. */
+  readonly adn?: NursingProgram;
+  readonly bsn?: NursingProgram;
+  readonly nclex?: Nclex;
   /** The university (M4.2); absent in a pack from before it. */
   readonly university?: University;
   /** The law school (M4.2 step 2); absent in a pack from before it. */

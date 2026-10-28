@@ -14,7 +14,14 @@ import { aidOf, type Borrow, billFor, payOptions } from './aid.ts';
 import { lawOf } from './law.ts';
 import { borrow, defer, leftSchool } from './loans.ts';
 import type { EducationSlice } from './module.ts';
-import { type College, type EmtCourse, educationOf, type LawSchool, type University } from './records.ts';
+import {
+  type College,
+  type EmtCourse,
+  educationOf,
+  type LawSchool,
+  type NursingProgram,
+  type University,
+} from './records.ts';
 import { transferIn, universityOf } from './university.ts';
 
 type Ctx = ModuleContext<EducationSlice>;
@@ -55,10 +62,16 @@ export interface CollegeSlice {
   grades: Record<string, number>;
 }
 
-/** The schools, by their slice's key: the EMT course (M4.4, D163) is the college's, kept apart. */
-export type Which = 'college' | 'university' | 'law' | 'emt';
-export const SCHOOLS: readonly Which[] = ['college', 'university', 'law', 'emt'];
-export type Catalog = College | University | LawSchool | EmtCourse;
+/**
+ * The schools, by their slice's key: the EMT course (M4.4, D163) is the college's, kept apart; the
+ * nursing programs (M4.4 step 2) the college's associate's and the university's bachelor's.
+ */
+export type Which = 'college' | 'university' | 'law' | 'emt' | 'adn' | 'bsn';
+export const SCHOOLS: readonly Which[] = ['college', 'university', 'law', 'emt', 'adn', 'bsn'];
+/** The nursing programs among them. */
+export const NURSING = ['adn', 'bsn'] as const;
+export type Program = (typeof NURSING)[number];
+export type Catalog = College | University | LawSchool | EmtCourse | NursingProgram;
 
 export const NO_COLLEGE = (): CollegeSlice => ({
   term: null,
@@ -87,9 +100,13 @@ export const collegeOf = (v: { readonly content: View['content'] }): College | n
 export const emtOf = (v: { readonly content: View['content'] }): EmtCourse | null =>
   educationOf(v.content)?.emt ?? null;
 
+export const programOf = (v: { readonly content: View['content'] }, which: Program): NursingProgram | null =>
+  educationOf(v.content)?.[which] ?? null;
+
 export function schoolOf(v: { readonly content: View['content'] }, which: Which): Catalog | null {
   if (which === 'college') return collegeOf(v);
   if (which === 'university') return universityOf(v);
+  if (which === 'adn' || which === 'bsn') return programOf(v, which);
   return which === 'law' ? lawOf(v) : emtOf(v);
 }
 
@@ -124,7 +141,7 @@ export type Enrolling = {
   readonly courses: number;
   readonly borrow: Borrow;
   /** Only the university's, law school's and the EMT course's: a college option keeps the shape it had before (D149). */
-  readonly school?: 'university' | 'law' | 'emt';
+  readonly school?: 'university' | 'law' | 'emt' | Program;
   /** By evening (D152), where the school has evening sections; absent, by day. */
   readonly evening?: true;
 };
@@ -138,6 +155,8 @@ function open(v: View, which: Which): boolean {
   const s = slice(v);
   if (which === 'college') return s.finished === 'diploma' || s.finished === 'ged';
   if (which === 'emt') return s.finished !== 'none' && !certified(v);
+  // A nursing program: admitted, and not yet finished (nursing.ts).
+  if (which === 'adn' || which === 'bsn') return s[which].admitted && s.nursing !== which;
   if (which === 'university') return s.university.admitted && s.finished !== 'bachelor' && s.finished !== 'jd';
   return s.law.admitted && s.finished !== 'jd';
 }
@@ -167,7 +186,7 @@ export function enrollOptions(v: View): Enrolling[] {
 }
 
 export function enroll(ctx: Ctx, courses: unknown, how: unknown, school: unknown, evening: unknown): void {
-  const which: Which = school === 'university' || school === 'law' || school === 'emt' ? school : 'college';
+  const which: Which = SCHOOLS.includes(school as Which) ? (school as Which) : 'college';
   const offered = enrollOptions(ctx).some(
     (o) =>
       o.courses === courses &&
@@ -319,6 +338,8 @@ const EARNS: Record<
   { credential: 'associate' | 'bachelor' | 'jd'; above: readonly string[] }
 > = {
   college: { credential: 'associate', above: ['associate', 'bachelor', 'jd'] },
+  adn: { credential: 'associate', above: ['associate', 'bachelor', 'jd'] },
+  bsn: { credential: 'bachelor', above: ['bachelor', 'jd'] },
   university: { credential: 'bachelor', above: ['bachelor', 'jd'] },
   law: { credential: 'jd', above: ['jd'] },
 };
@@ -337,8 +358,14 @@ export function endTerm(ctx: Ctx): void {
   }
   const done = ctx.read()[which];
   const needs = 'associate' in c ? c.associate : 'degree' in c ? c.degree : Number.POSITIVE_INFINITY;
+  const through = done.credits >= needs && gpaOf(done) >= c.gpa;
+  // A nursing program finished lets you sit the licensing exam, whatever schooling it adds (nursing.ts).
+  if ((which === 'adn' || which === 'bsn') && through && ctx.read().nursing !== which) {
+    ctx.write().nursing = which;
+    ctx.emit('nursed', { program: which, name: c.name });
+  }
   const { credential, above } = EARNS[which];
-  if (!above.includes(ctx.read().finished) && done.credits >= needs && gpaOf(done) >= c.gpa) {
+  if (!above.includes(ctx.read().finished) && through) {
     ctx.write().finished = credential;
     ctx.emit('earned', { credential });
   }

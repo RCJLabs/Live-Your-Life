@@ -1,0 +1,8 @@
+{
+  "beat": "education/nclex",
+  "when": {
+    "field": "passed",
+    "is": "false"
+  },
+  "text": "{you} sat the nursing licensing exam and did not pass."
+}

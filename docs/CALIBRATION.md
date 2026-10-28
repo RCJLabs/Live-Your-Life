@@ -442,6 +442,16 @@ Who the tier-1 people are and how you come to know them (D89, D91). Read on 2026
 | No Pell, no loans | the certificate is under federal aid's least program, 600 clock hours or 16 credits | `education/aid.ts` | 34 CFR 668.8, from memory: to check that 15 credits over one term falls short | to check |
 | The exam | $104 a sitting; 70 in 100 pass at a first sitting, 50 at a later one, 15 days apart | `emt.exam` | the national registry's fee and its 15-day wait, from memory; no national first-attempt rate was found (programs report 80 to 95 for their own, and one source a national 79 of unclear kind) | to check; the rates (tune) |
 
+## Nursing (M4.4 step 2, D163)
+
+| What | Figure | Where it's used | Source | Status |
+| --- | --- | --- | --- | --- |
+| The college's associate's in nursing | 36 credits of nursing courses, two 6-credit courses a term by day (08:00 to 12:00, two days each), at a 2.50 average; on top of 15 credits of prerequisites at the college | `education/michigan.json`, `adn` | Macomb's ADN is a selective-admission program of about four semesters after its prerequisites (its packet for fall 2026, through a search summary); its points and seats weren't read. Departure: the clinical hours are the classes, and the general courses beside the nursing ones are left to the college's own | secondary; the credits (tune) |
+| Its admission | 40 in 100 at a 2.75 prerequisite average, 5 more for each tenth above, at most 80; again after 182 days | `adn.admit` | none read: Macomb ranks applicants by points and the HESI exam. A proposal for a competitive program | (tune) |
+| The university's bachelor's in nursing | 60 credits of nursing courses, up to three 6-credit courses a term by day, at the university's upper-division price; entered with 60 university credits at a 3.00 average; it makes a bachelor's | `bsn` | the usual shape of a BSN's two upper-division years (general knowledge). Departure: the 60 credits before it are the university's general ones | secondary; (tune) |
+| Its admission | 50 in 100 at a 3.00 university average, 5 more for each tenth above, at most 85 | `bsn.admit` | none read | (tune) |
+| The licensing exam | $200 a sitting, five hours; 90 in 100 pass at a first sitting from the associate's, 92 from the bachelor's, 50 at a later one; 45 days apart | `nclex` | 2024: 91.16 in 100 nationally (the Texas board's April 2025 report), 90.63 for US-educated associate's candidates at a first sitting (a college's report of NCSBN's figures), through search summaries; the bachelor's and repeat rates weren't found; the $200 fee and 45 days from memory | secondary; the repeat (tune) |
+
 ## The federal bureau (M4.3, D153–D156)
 
 The game calls it the federal bureau: a real agency's name stays out of player-facing text (VOICE.md's blocklist). The figures are the FBI's.

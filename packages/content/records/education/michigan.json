@@ -291,6 +291,239 @@
       "wait": 15
     }
   },
+  "adn": {
+    "name": "the college's nursing program",
+    "terms": [
+      {
+        "id": "fall",
+        "month": 9,
+        "day": 1,
+        "weeks": 16
+      },
+      {
+        "id": "spring",
+        "month": 1,
+        "day": 13,
+        "weeks": 16
+      }
+    ],
+    "enroll": 28,
+    "courses": [
+      {
+        "id": "adn-01",
+        "name": "Nursing I",
+        "credits": 6
+      },
+      {
+        "id": "adn-02",
+        "name": "Nursing II",
+        "credits": 6
+      },
+      {
+        "id": "adn-03",
+        "name": "Nursing III",
+        "credits": 6
+      },
+      {
+        "id": "adn-04",
+        "name": "Nursing IV",
+        "credits": 6
+      },
+      {
+        "id": "adn-05",
+        "name": "Nursing V",
+        "credits": 6
+      },
+      {
+        "id": "adn-06",
+        "name": "Nursing VI",
+        "credits": 6
+      }
+    ],
+    "slots": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 8,
+        "minutes": 240
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 8,
+        "minutes": 240
+      }
+    ],
+    "study": 2,
+    "grades": [
+      {
+        "letter": "A",
+        "least": 90,
+        "points": 4
+      },
+      {
+        "letter": "B",
+        "least": 80,
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "least": 70,
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "least": 60,
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "least": 0,
+        "points": 0
+      }
+    ],
+    "degree": 36,
+    "gpa": 250,
+    "admit": {
+      "credits": 15,
+      "gpa": 275,
+      "chance": 40,
+      "perTenth": 5,
+      "most": 80,
+      "wait": 182
+    }
+  },
+  "bsn": {
+    "name": "the university's nursing program",
+    "terms": [
+      {
+        "id": "fall",
+        "month": 9,
+        "day": 2,
+        "weeks": 15
+      },
+      {
+        "id": "spring",
+        "month": 1,
+        "day": 12,
+        "weeks": 15
+      }
+    ],
+    "enroll": 60,
+    "courses": [
+      {
+        "id": "bsn-01",
+        "name": "Nursing Practice I",
+        "credits": 6
+      },
+      {
+        "id": "bsn-02",
+        "name": "Nursing Practice II",
+        "credits": 6
+      },
+      {
+        "id": "bsn-03",
+        "name": "Nursing Practice III",
+        "credits": 6
+      },
+      {
+        "id": "bsn-04",
+        "name": "Nursing Practice IV",
+        "credits": 6
+      },
+      {
+        "id": "bsn-05",
+        "name": "Nursing Practice V",
+        "credits": 6
+      },
+      {
+        "id": "bsn-06",
+        "name": "Nursing Practice VI",
+        "credits": 6
+      },
+      {
+        "id": "bsn-07",
+        "name": "Nursing Practice VII",
+        "credits": 6
+      },
+      {
+        "id": "bsn-08",
+        "name": "Nursing Practice VIII",
+        "credits": 6
+      },
+      {
+        "id": "bsn-09",
+        "name": "Nursing Practice IX",
+        "credits": 6
+      },
+      {
+        "id": "bsn-10",
+        "name": "Nursing Practice X",
+        "credits": 6
+      }
+    ],
+    "slots": [
+      {
+        "days": ["monday", "wednesday"],
+        "hour": 8,
+        "minutes": 240
+      },
+      {
+        "days": ["tuesday", "thursday"],
+        "hour": 8,
+        "minutes": 240
+      },
+      {
+        "days": ["friday"],
+        "hour": 8,
+        "minutes": 240
+      }
+    ],
+    "study": 2,
+    "grades": [
+      {
+        "letter": "A",
+        "least": 90,
+        "points": 4
+      },
+      {
+        "letter": "B",
+        "least": 80,
+        "points": 3
+      },
+      {
+        "letter": "C",
+        "least": 70,
+        "points": 2
+      },
+      {
+        "letter": "D",
+        "least": 60,
+        "points": 1
+      },
+      {
+        "letter": "F",
+        "least": 0,
+        "points": 0
+      }
+    ],
+    "degree": 60,
+    "gpa": 250,
+    "admit": {
+      "credits": 60,
+      "gpa": 300,
+      "chance": 50,
+      "perTenth": 5,
+      "most": 85,
+      "wait": 182
+    }
+  },
+  "nclex": {
+    "price": 20000,
+    "minutes": 300,
+    "adn": 90,
+    "bsn": 92,
+    "repeat": 50,
+    "wait": 45
+  },
   "aid": {
     "tuition": 11300,
     "hourFee": 750,
