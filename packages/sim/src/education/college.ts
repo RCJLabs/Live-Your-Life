@@ -9,7 +9,7 @@
  * university's bachelor's comes at its record's credits; you are enrolled at one school at a time.
  */
 import type { DeepReadonly, FactView, ModuleContext } from '@eb/core';
-import { MONTHS, type WEEKDAYS } from '../calendar.ts';
+import { MINUTES_PER_DAY, MONTHS, WEEKDAYS } from '../calendar.ts';
 import { aidOf, type Borrow, billFor, payOptions } from './aid.ts';
 import { lawOf } from './law.ts';
 import { borrow, defer, leftSchool } from './loans.ts';
@@ -248,6 +248,30 @@ export function classIn(v: View): number | undefined {
     .map((slot) => (slot?.hour ?? 0) * 60 - minute)
     .filter((m) => m > 0);
   return starts.length > 0 ? Math.min(...starts) : undefined;
+}
+
+/**
+ * Whether a class of yours meets in the `minutes` from `minute` of `day` (M4.4 step 5): what a
+ * student weighs before signing up for a shift. A span past midnight runs into the next day.
+ */
+export function classDuring(v: View, day: number, minute: number, minutes: number): boolean {
+  const at = enrolledAt(v);
+  if (!at) return false;
+  const today = v.fact('time.day') as number;
+  const weekday = WEEKDAYS.indexOf(v.fact('time.weekday') as (typeof WEEKDAYS)[number]);
+  const from = day * MINUTES_PER_DAY + minute;
+  const to = from + minutes;
+  for (let d = day; d * MINUTES_PER_DAY < to; d++) {
+    if (d < at.term.start || d >= at.term.end) continue;
+    const name = WEEKDAYS[(((weekday + d - today) % 7) + 7) % 7] as (typeof WEEKDAYS)[number];
+    for (const x of at.term.courses) {
+      const slot = slotsOf(at.c, at.term)[x.slot];
+      if (!slot?.days.includes(name)) continue;
+      const start = d * MINUTES_PER_DAY + slot.hour * 60;
+      if (start < to && from < start + slot.minutes) return true;
+    }
+  }
+  return false;
 }
 
 export function attendOptions(v: View): { course: string }[] {

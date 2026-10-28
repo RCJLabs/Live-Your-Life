@@ -188,6 +188,27 @@ export function jobModule(hire?: Hire) {
         domain: { type: 'int', min: -1 },
         label: 'the minute of the day your shift that day starts, or -1',
       },
+      // A posted shift's start and length, for a bot weighing it against its classes (M4.4 step 5); -1 and 0 with none.
+      'posted-start': {
+        args: { day: { type: 'int', min: 0 } },
+        read: (view, { day }) => {
+          const p = view.state.posted.find((x) => x.day === day);
+          return p && view.state.career !== null
+            ? startOf(shiftKind(careerFor(view.content, view.state), p.shift))
+            : -1;
+        },
+        domain: { type: 'int', min: -1 },
+        label: 'the minute of the day the shift posted that day starts, or -1',
+      },
+      'posted-minutes': {
+        args: { day: { type: 'int', min: 0 } },
+        read: (view, { day }) => {
+          const p = view.state.posted.find((x) => x.day === day);
+          return p && view.state.career !== null ? shiftKind(careerFor(view.content, view.state), p.shift).minutes : 0;
+        },
+        domain: { type: 'int', min: 0 },
+        label: 'how long the shift posted that day is, or 0',
+      },
       // Whether a shift you signed up for covers that minute of that day: dates are planned around it (M2.6).
       busy: {
         args: { day: { type: 'int', min: 0 }, minute: { type: 'int', min: 0 } },
