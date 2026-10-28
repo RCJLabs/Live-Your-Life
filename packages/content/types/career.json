@@ -79,8 +79,8 @@
         "licence": {
           "kind": "enum",
           "optional": true,
-          "values": ["bar", "emt"],
-          "description": "A licence it hires only with: bar, admitted to the bar (M4.2); emt, licensed after the national EMT exam (M4.4)."
+          "values": ["bar", "emt", "rn"],
+          "description": "A licence it hires only with: bar, admitted to the bar (M4.2); emt, licensed after the national EMT exam; rn, licensed after the NCLEX (M4.4)."
         },
         "experience": {
           "kind": "group",
@@ -91,9 +91,15 @@
               "kind": "list",
               "min": 1,
               "max": 5,
-              "of": { "kind": "ref", "to": "career" }
+              "of": {
+                "kind": "ref",
+                "to": "career"
+              }
             },
-            "minutes": { "kind": "int", "min": 1 }
+            "minutes": {
+              "kind": "int",
+              "min": 1
+            }
           }
         }
       }
@@ -141,7 +147,7 @@
       "kind": "list",
       "min": 1,
       "max": 6,
-      "description": "The shifts it runs on every day it is open, by when they start and how long they last.",
+      "description": "The shifts it runs on every day it is open, by when they start and how long they last. A shift may run past midnight into the next day, up to a whole day (M4.4 step 3, D164).",
       "of": {
         "kind": "group",
         "fields": {
@@ -163,7 +169,14 @@
           "minutes": {
             "kind": "int",
             "min": 60,
-            "max": 720
+            "max": 1440
+          },
+          "breaks": {
+            "kind": "int",
+            "optional": true,
+            "min": 0,
+            "max": 480,
+            "description": "Minutes of the shift you may spend off work, unpaid, without leaving it early: a meal break, or the sleep a 24-hour crew takes at the station between calls (M4.4 step 3)."
           }
         }
       }
@@ -204,6 +217,14 @@
       "max": 7,
       "label": "Shifts a week",
       "description": "The most shifts you may take from Monday to Sunday."
+    },
+    "rest": {
+      "kind": "int",
+      "optional": true,
+      "min": 0,
+      "max": 4320,
+      "label": "Rest between shifts",
+      "description": "The fewest minutes between the end of one of your shifts and the start of the next: none is posted or taken closer (M4.4 step 3)."
     },
     "pay": {
       "kind": "group",

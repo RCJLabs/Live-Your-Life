@@ -1,0 +1,43 @@
+{
+  "name": "A needlestick",
+  "tags": ["hospital"],
+  "weight": 2,
+  "prompt": "Drawing blood from a confused patient, he jerks his arm as the needle comes out. It goes into the heel of your hand through the glove.",
+  "choices": [
+    {
+      "id": "report",
+      "text": "Report it now and go down to occupational health",
+      "outcome": {
+        "told": "They draw your blood and the patient's, and start the first doses while the tests run. The results come back in weeks.",
+        "standing": 0,
+        "needs": {
+          "calm": -8,
+          "rest": -3
+        }
+      }
+    },
+    {
+      "id": "after",
+      "text": "Finish the shift and report it at the end",
+      "odds": {
+        "base": 70,
+        "skill": 0,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "You report it at the end of the shift. Occupational health starts the tests in time.",
+        "needs": {
+          "calm": -10
+        }
+      },
+      "failure": {
+        "told": "By the time you report it the window for the first dose has narrowed. The charge nurse writes up the delay.",
+        "warning": true,
+        "standing": -3,
+        "needs": {
+          "calm": -14
+        }
+      }
+    }
+  ]
+}

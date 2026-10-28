@@ -16,6 +16,8 @@ export interface ShiftKind {
   readonly hour: number;
   readonly minute: number;
   readonly minutes: number;
+  /** Minutes of it you may spend off work, unpaid, and not have left early (M4.4 step 3). */
+  readonly breaks?: number;
 }
 
 export interface StandingRules {
@@ -62,8 +64,8 @@ export interface CareerRecord {
     readonly record?: 'none' | 'no-theft' | 'no-felony';
     /** The least schooling it hires (M2.8, D114). */
     readonly schooling?: 'high-school' | 'associate' | 'bachelor';
-    /** A licence it hires only with: the bar (M4.2), or the EMT's (M4.4). */
-    readonly licence?: 'bar' | 'emt';
+    /** A licence it hires only with: the bar (M4.2), the EMT's or a registered nurse's (M4.4). */
+    readonly licence?: 'bar' | 'emt' | 'rn';
     /** Minutes worked in any of these careers, anywhere (M2.5, D122). */
     readonly experience?: { readonly careers: readonly string[]; readonly minutes: number };
   };
@@ -72,6 +74,8 @@ export interface CareerRecord {
   readonly open: readonly Weekday[];
   readonly posting: { readonly weekday: Weekday; readonly fewest: number; readonly most: number };
   readonly perWeek: number;
+  /** The fewest minutes from the end of one of your shifts to the start of the next (M4.4 step 3, D164). */
+  readonly rest?: number;
   readonly pay: { readonly weekday: Weekday; readonly hour: number; readonly minute: number };
   readonly withholding: readonly string[];
   readonly standing: StandingRules;
@@ -102,6 +106,10 @@ export interface Outcome {
   readonly arrest?: string;
   /** Evidence for the case you have open (M4.3 step 3, D159): a federal agent's work. */
   readonly evidence?: number;
+  /** Hurt by it, as one of the illness record's kinds (M4.4 step 3). */
+  readonly hurt?: string;
+  /** A written warning on your file at work (M4.4 step 3). */
+  readonly warning?: boolean;
 }
 
 export interface Odds {
@@ -147,13 +155,15 @@ const fail = (what: string, problem: string): never => {
 
 const unique = (ids: readonly string[]): boolean => new Set(ids).size === ids.length;
 
-/** A career, checked: its shifts within a day, its counts in order, and its taxes there. */
+/** A career, checked: its shifts a day long at most and their breaks shorter, its counts in order, and its taxes there. */
 export function careerOf(store: RecordStore, id: string): CareerRecord {
   const what = `career "${id}"`;
   const c = store.get<CareerRecord>('career', id) ?? fail(what, 'no such record');
   if (!unique(c.shifts.map((s) => s.id))) fail(what, 'two shifts have one id');
   for (const s of c.shifts) {
-    if (s.hour * 60 + s.minute + s.minutes > MINUTES_PER_DAY) fail(what, `shift "${s.id}" runs past midnight`);
+    // A shift may run on past midnight (D164), but not past the start of the next day's.
+    if (s.minutes > MINUTES_PER_DAY) fail(what, `shift "${s.id}" runs longer than a day`);
+    if ((s.breaks ?? 0) >= s.minutes) fail(what, `shift "${s.id}" has breaks as long as itself`);
   }
   if (c.posting.fewest > c.posting.most) fail(what, 'posts more at its fewest than at its most');
   if (!unique(c.open)) fail(what, 'a day is open twice');

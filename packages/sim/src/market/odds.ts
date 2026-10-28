@@ -28,6 +28,8 @@ export interface Applicant {
   readonly licensed?: boolean;
   /** Licensed as an EMT (M4.4). */
   readonly emt?: boolean;
+  /** Licensed as a registered nurse (M4.4 step 2). */
+  readonly rn?: boolean;
   /** Minutes worked in each career, at any employer (M2.5, D122). */
   readonly worked?: Readonly<Record<string, number>>;
 }
@@ -59,6 +61,7 @@ export function barred(
   if (career.requires?.licence === 'bar' && you.licensed !== true) return 'licence';
   // An EMT is one who passed the national exam (M4.4): the college's certificate alone doesn't make one.
   if (career.requires?.licence === 'emt' && you.emt !== true) return 'licence';
+  if (career.requires?.licence === 'rn' && you.rn !== true) return 'licence';
   const exp = career.requires?.experience;
   if (exp && experienceIn(you, exp.careers) < exp.minutes) return 'experience';
   const rule = career.requires?.record;

@@ -8,7 +8,16 @@
  */
 import type { Action, DeepReadonly, OptionsView, PreviewContext, Rng } from '@eb/core';
 import { type Choice, eventsFor, type Odds, type Outcome, shiftEventOf } from './records.ts';
-import { careerFor, type JobContext, type JobSlice, moveStanding, shiftNow, skillOf } from './state.ts';
+import {
+  activeWarnings,
+  careerFor,
+  type JobContext,
+  type JobSlice,
+  letGo,
+  moveStanding,
+  shiftNow,
+  skillOf,
+} from './state.ts';
 
 /** No choice with odds is ever certain either way (tune). */
 export const LEAST = 5;
@@ -95,6 +104,8 @@ const stakes = (o: Outcome) => ({
   act: o.act ?? null,
   arrest: o.arrest ?? null,
   evidence: o.evidence ?? 0,
+  hurt: o.hurt ?? null,
+  warning: o.warning ?? false,
 });
 
 /** `shift-choice`: the choice made, rolled if it has odds. Its preview is what the player is shown. */
@@ -140,7 +151,20 @@ export function shiftOutcome(ctx: JobContext, effect: Readonly<Record<string, un
   if (o.arrest) ctx.emit('made-arrest', { offence: o.arrest });
   // Heard by the federal module (M4.3 step 3): the case file grows.
   if (o.evidence) ctx.emit('evidence', { points: o.evidence });
+  // Hurt as the illness record has it (M4.4 step 3): days off work, a doctor's visit, its toll on health.
+  if (o.hurt) ctx.apply({ effect: 'hurt', kind: o.hurt });
+  if (o.warning) warn(ctx, day);
   if (o.standing) moveStanding(ctx, o.standing, `event:${event}`);
+}
+
+/** A written warning (M4.4 step 3): counted with a no-show's, and as many let you go. */
+function warn(ctx: JobContext, day: number): void {
+  const career = careerFor(ctx.content, ctx.read());
+  const tick = ctx.fact('time.tick') as number;
+  const warnings = [...activeWarnings(ctx.read(), career, tick), tick];
+  ctx.write().warnings = warnings;
+  ctx.emit('warned', { day, warnings: warnings.length });
+  if (warnings.length >= career.warnings.letGoAt) letGo(ctx, 'warnings');
 }
 
 /** `job/choose`: only in the `shift-event` mode, one of the event's choices. */

@@ -1,0 +1,43 @@
+{
+  "name": "Withdrawal",
+  "tags": ["hospital"],
+  "weight": 2,
+  "prompt": "A man two days into withdrawal is pulling at his IV and shouting that he's leaving. He swings when you reach for the line.",
+  "choices": [
+    {
+      "id": "security",
+      "text": "Step back and call security",
+      "outcome": {
+        "told": "Security holds the door while the doctor orders something to settle him. He sleeps by the end of the hour.",
+        "needs": {
+          "calm": -8
+        }
+      }
+    },
+    {
+      "id": "talk",
+      "text": "Talk him down yourself",
+      "odds": {
+        "base": 45,
+        "skill": 30,
+        "tired": 25
+      },
+      "outcome": {
+        "told": "You keep your voice low and your hands where he can see them. He sits back down on the bed.",
+        "practice": 30,
+        "standing": 2,
+        "needs": {
+          "calm": -5
+        }
+      },
+      "failure": {
+        "told": "His fist catches you across the jaw. You're sent home and the hospital files a report with the police.",
+        "hurt": "injury",
+        "home": true,
+        "needs": {
+          "calm": -15
+        }
+      }
+    }
+  ]
+}

@@ -112,12 +112,14 @@ describe('credentials and careers (M2.8 step 5, D114)', () => {
         ? (s[(s.length - 1) / 2] as number)
         : ((s[s.length / 2 - 1] as number) + (s[s.length / 2] as number)) / 2;
     };
-    // The real careers a newcomer can start in: not this file's test clerk, and not a rank that asks
-    // for years of experience (M2.5), whose wage is no one's start.
+    // The real careers a newcomer can start in: not this file's test clerk, not a rank that asks
+    // for years of experience (M2.5), whose wage is no one's start, and not one that asks for a
+    // licence besides (the bar, the EMT's, the nurse's, M4.4): the credential alone doesn't open it,
+    // and with so few careers to a credential, one nurse's wage would be the associate's median.
     const hiring = PACK_STORE.ids('career')
       .filter((id) => id !== CLERK)
       .map((id) => careerOf(PACK_STORE, id))
-      .filter((c) => c.employers.staff > 0 && c.requires?.experience === undefined);
+      .filter((c) => c.employers.staff > 0 && c.requires?.experience === undefined && !c.requires?.licence);
     const at = (need: keyof typeof BLS) =>
       median(hiring.filter((c) => (c.requires?.schooling ?? 'none') === need).map((c) => c.wage));
     for (const need of ['high-school', 'associate', 'bachelor'] as const) {

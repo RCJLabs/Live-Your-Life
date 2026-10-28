@@ -18,16 +18,32 @@
       "id": "days",
       "hour": 7,
       "minute": 0,
-      "minutes": 720
+      "minutes": 720,
+      "breaks": 30
+    },
+    {
+      "id": "nights",
+      "hour": 19,
+      "minute": 0,
+      "minutes": 720,
+      "breaks": 30
+    },
+    {
+      "id": "twenty-four",
+      "hour": 7,
+      "minute": 0,
+      "minutes": 1440,
+      "breaks": 480
     }
   ],
   "open": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
   "posting": {
     "weekday": "thursday",
-    "fewest": 3,
-    "most": 4
+    "fewest": 2,
+    "most": 3
   },
-  "perWeek": 4,
+  "perWeek": 3,
+  "rest": 720,
   "pay": {
     "weekday": "friday",
     "hour": 6,

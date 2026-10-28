@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { along, lookOf, makeCrowd } from './crowd.ts';
 import { townScene } from './town.ts';
 
-const SEED = 4242;
+const SEED = 4243;
 const N = 1000;
 
 describe('the tier-1 people in the town (M2.2, D69)', () => {

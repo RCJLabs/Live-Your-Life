@@ -114,7 +114,7 @@ export const activeWarnings = (
 ): number[] => slice.warnings.filter((at) => tick - at < career.warnings.lapse * MINUTES_PER_DAY);
 
 /** The job ends: every shift signed up for is dropped, and nothing more is posted. */
-export function letGo(ctx: JobContext, reason: 'no-shows' | 'standing' | 'prison' | 'record'): void {
+export function letGo(ctx: JobContext, reason: 'no-shows' | 'warnings' | 'standing' | 'prison' | 'record'): void {
   const slice = ctx.write();
   for (const s of slice.signed) {
     ctx.apply({ effect: 'cancel-timer', timer: timerFor(s.day, 'event') });

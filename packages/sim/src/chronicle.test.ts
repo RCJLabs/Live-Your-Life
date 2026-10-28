@@ -23,6 +23,8 @@ const RARE = [
   'law/dismissed',
   'home/paid-owed',
   'job/quit',
+  // A written warning from a hospital's event (M4.4 step 3): job/nights.test.ts raises it.
+  'job/warned',
   // The street trade and a drug case (M2.4): no bot deals until step 7's; law/drugs.test.ts raises them.
   'deal/bought',
   'deal/on-corner',
