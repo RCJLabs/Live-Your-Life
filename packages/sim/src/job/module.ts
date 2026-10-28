@@ -7,7 +7,7 @@
  */
 import { defineModule, type FactView, type InitContext } from '@eb/core';
 import { type LifeStart, MINUTES_PER_DAY, weekdayOf } from '../calendar.ts';
-import { daysAtHire, post, startOf, type Today, todayOf } from './days.ts';
+import { daysAtHire, post, shiftKind, startOf, type Today, todayOf } from './days.ts';
 import { choose, shiftChoice, shiftEvent, shiftOutcome } from './events.ts';
 import { quit, hire as startJob } from './hire.ts';
 import { payday } from './pay.ts';
@@ -138,6 +138,31 @@ export function jobModule(hire?: Hire) {
       },
       'on-shift': { read: (view) => shiftNow(view) !== null, domain: { type: 'bool' }, label: 'on shift' },
       'shift-left': { read: shiftLeft, domain: { type: 'int', min: 0 }, label: 'minutes of work left now' },
+      // The shift under way, for the trip to work off screen to take its breaks in their place (M4.4 step 4).
+      'shift-ends-in': {
+        read: (view) => {
+          const now = shiftNow(view);
+          return now ? now.end - (view.fact('time.tick') as number) : 0;
+        },
+        domain: { type: 'int', min: 0 },
+        label: 'minutes until the shift under way ends',
+      },
+      'shift-minutes': {
+        read: (view) => {
+          const now = shiftNow(view);
+          return now ? now.end - now.start : 0;
+        },
+        domain: { type: 'int', min: 0 },
+        label: 'how long the shift under way is',
+      },
+      'shift-breaks': {
+        read: (view) => {
+          const now = shiftNow(view);
+          return now ? (shiftKind(careerFor(view.content, view.state), now.s.shift).breaks ?? 0) : 0;
+        },
+        domain: { type: 'int', min: 0 },
+        label: 'minutes of the shift under way you may spend off work, unpaid',
+      },
       'next-shift-in': { read: nextShiftIn, domain: { type: 'int', min: 1 }, label: 'minutes to the next shift' },
       unpaid: {
         read: ({ state, content }) =>

@@ -162,7 +162,7 @@ describe('the national EMT exam (M4.4 step 1)', () => {
     expect(emt.shifts.map((k) => [k.id, k.hour, k.minutes, k.breaks])).toEqual([
       ['days', 7, 720, 30],
       ['nights', 19, 720, 30],
-      ['twenty-four', 7, 1440, 480],
+      ['twenty-four', 7, 1440, 510],
     ]);
   });
 });

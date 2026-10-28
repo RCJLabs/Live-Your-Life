@@ -5,7 +5,7 @@ import { expectNothingOffscreen, smallTargets, watchErrors } from './checks.ts';
  * M2.8's School tab on the page, by taps. A life without a diploma (life-3) sees the GED's four
  * tests, each with the chance the sim previews, and studies an hour for one; a life with one
  * (life-1) sees the college and when it can enroll, and the university's chance, and applies
- * (M4.2). At both phone widths, nothing past the edge and every target 44 px.
+ * (M4.2), and the EMT course and the college's nursing program (M4.4). At both phone widths, nothing past the edge and every target 44 px.
  */
 
 type Life = Record<string, (...args: unknown[]) => unknown>;
@@ -52,6 +52,20 @@ for (const width of [360, 390]) {
       await schoolTab(page);
       await expect(page.locator('#school')).toContainText('You have a high school diploma.');
       await expect(page.locator('#school [data-section="college"]')).toContainText('days before a term starts');
+      await expectNothingOffscreen(page);
+      expect(await smallTargets(page, '#panel')).toEqual([]);
+      expect(errors).toEqual([]);
+    });
+
+    test('shows the EMT course and the college’s nursing program with what it asks (M4.4)', async ({ page }) => {
+      const errors = watchErrors(page);
+      await page.goto('./?seed=life-1');
+      await expect(page.locator('#when')).toContainText('07:0');
+      await schoolTab(page);
+      await expect(page.locator('#school [data-section="emt"]')).toContainText('Passing both earns the certificate.');
+      await expect(page.locator('#school [data-section="adn"]')).toContainText('It admits after');
+      await expect(page.locator('#school [data-section="bsn"]')).toHaveCount(0);
+      await page.locator('#school [data-section="adn"]').scrollIntoViewIfNeeded();
       await expectNothingOffscreen(page);
       expect(await smallTargets(page, '#panel')).toEqual([]);
       expect(errors).toEqual([]);
