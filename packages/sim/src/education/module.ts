@@ -21,8 +21,12 @@ import {
   enrollOptions,
   gpaOf,
   NO_COLLEGE,
+  NURSING,
+  type Program,
+  SCHOOLS,
   schoolOf,
   type Term,
+  type Which,
 } from './college.ts';
 import { type ExamSlice, examChance, examOptions, examResult, NO_EXAM, sitExam } from './emt.ts';
 import { gedChance, result, sit, study, studyOptions, subjectOf, testOptions } from './ged.ts';
@@ -44,6 +48,18 @@ import {
   sitLsat,
 } from './law.ts';
 import { behindOf, LOANS, type Loan, month, NO_LOAN, owedNow, payBehind, termsOf } from './loans.ts';
+import {
+  type Admission,
+  apply as applyNursing,
+  applyOptions as applyNursingOptions,
+  nclexChance,
+  nclexOf,
+  nclexOptions,
+  nclexResult,
+  nursingChance,
+  result as nursingResult,
+  sitNclex,
+} from './nursing.ts';
 import { educationOf } from './records.ts';
 import {
   admitChance,
@@ -77,6 +93,11 @@ export interface EducationSlice {
   /** The EMT course at the college, and the national exam (M4.4, D163). */
   emt: CollegeSlice;
   nremt: ExamSlice;
+  /** The nursing programs, each with its admission; the one finished; the licensing exam (M4.4 step 2). */
+  adn: CollegeSlice & Admission;
+  bsn: CollegeSlice & Admission;
+  nursing: 'none' | Program;
+  nclex: ExamSlice;
 }
 
 const NO_GED = (): EducationSlice['ged'] => ({ passed: [], prep: {} });
@@ -91,9 +112,19 @@ const FRESH = (finished: Schooling): EducationSlice => ({
   grad: NO_LOAN(),
   emt: NO_COLLEGE(),
   nremt: NO_EXAM(),
+  ...NO_NURSING(),
+});
+
+/** What a life before the nursing programs (version 9) has: none applied to, none finished. */
+const NO_NURSING = (): Pick<EducationSlice, 'adn' | 'bsn' | 'nursing' | 'nclex'> => ({
+  adn: { ...NO_COLLEGE(), admitted: false, applied: -1 },
+  bsn: { ...NO_COLLEGE(), admitted: false, applied: -1 },
+  nursing: 'none',
+  nclex: NO_EXAM(),
 });
 
 type Ctx = ModuleContext<EducationSlice>;
+const PROGRAM = { type: 'enum', values: NURSING } as const;
 
 /** Version 8: each school's term, if one is under way, was taken by day. */
 export function migrateTerms(s: EducationSlice): EducationSlice {
@@ -120,8 +151,9 @@ export const educationModule = defineModule<EducationSlice>({
   // passed can't be retaken (their grades weren't kept). 6 (M4.2 step 1): the university; a save
   // from before has not applied. 7 (step 2): law school and its loans; a save from before has
   // neither. 8 (D152): a term taken by day or by evening; a term from before was by day. 9 (M4.4
-  // step 1): the EMT course and its exam; a save from before has taken neither.
-  version: 9,
+  // step 1): the EMT course and its exam; a save from before has taken neither. 10 (step 2): the
+  // nursing programs and their exam; a save from before has applied to neither.
+  version: 10,
   migrate: {
     2: (slice) => ({ ...(slice as object), ged: NO_GED() }),
     3: (slice) => ({ ...(slice as object), college: NO_COLLEGE() }),
@@ -134,6 +166,7 @@ export const educationModule = defineModule<EducationSlice>({
     7: (slice) => ({ ...(slice as object), law: NO_LAW(), grad: NO_LOAN() }),
     8: (slice) => migrateTerms(slice as EducationSlice),
     9: (slice) => ({ ...(slice as object), emt: NO_COLLEGE(), nremt: NO_EXAM() }),
+    10: (slice) => ({ ...(slice as object), ...NO_NURSING() }),
   },
   // Added to a save from before it, the life has a diploma: it was lived as if it had.
   init: (ctx) => FRESH(drawn(ctx)),
@@ -149,7 +182,7 @@ export const educationModule = defineModule<EducationSlice>({
         term: { type: 'text' },
         courses: { type: 'int', min: 1 },
         start: { type: 'int', min: 0 },
-        school: { type: 'enum', values: ['college', 'university', 'law', 'emt'] },
+        school: { type: 'enum', values: SCHOOLS },
       },
       label: 'Enrolled for a term',
     },
@@ -169,6 +202,20 @@ export const educationModule = defineModule<EducationSlice>({
     },
     bar: { args: { passed: { type: 'bool' }, chance: { type: 'int', min: 0, max: 100 } }, label: 'Sat the bar exam' },
     certified: { args: {}, label: 'Earned the EMT certificate' },
+    'nursing-admitted': {
+      args: {
+        program: PROGRAM,
+        name: { type: 'text' },
+        admitted: { type: 'bool' },
+        chance: { type: 'int', min: 0, max: 100 },
+      },
+      label: 'Heard from a nursing program',
+    },
+    nursed: { args: { program: PROGRAM, name: { type: 'text' } }, label: 'Finished a nursing program' },
+    nclex: {
+      args: { passed: { type: 'bool' }, chance: { type: 'int', min: 0, max: 100 } },
+      label: 'Sat the nursing licensing exam',
+    },
     nremt: {
       args: { passed: { type: 'bool' }, chance: { type: 'int', min: 0, max: 100 } },
       label: 'Sat the national EMT exam',
@@ -200,6 +247,8 @@ export const educationModule = defineModule<EducationSlice>({
     'apply-law': { run: (ctx) => applyLaw(ctx), options: applyLawOptions },
     'sit-bar': { run: (ctx) => sitBar(ctx), options: barOptions },
     'sit-nremt': { run: (ctx) => sitExam(ctx), options: examOptions },
+    'apply-nursing': { run: (ctx, a) => applyNursing(ctx, a.program), options: applyNursingOptions },
+    'sit-nclex': { run: (ctx) => sitNclex(ctx), options: nclexOptions },
     'pay-loan': {
       run: (ctx) => payBehind(ctx),
       // Offered only when all of it can be paid, as rent owed is.
@@ -215,7 +264,7 @@ export const educationModule = defineModule<EducationSlice>({
     'college-bill': {
       run: () => {},
       preview: (ctx, e) => {
-        const which = e.school === 'university' || e.school === 'law' || e.school === 'emt' ? e.school : 'college';
+        const which: Which = SCHOOLS.includes(e.school as Which) ? (e.school as Which) : 'college';
         const how = (BORROWING as readonly string[]).includes(String(e.borrow)) ? (e.borrow as Borrow) : 'none';
         const open = schoolOf(ctx as never, which);
         return open ? { ...billFor(ctx as never, which, Number(e.courses), how) } : {};
@@ -225,6 +274,24 @@ export const educationModule = defineModule<EducationSlice>({
     'law-result': (ctx, e) => lawResult(ctx, e.admitted === true, e.chance as number),
     'bar-result': (ctx, e) => barResult(ctx, e.passed === true, e.chance as number),
     'nremt-result': (ctx, e) => examResult(ctx, e.passed === true, e.chance as number),
+    'nursing-result': (ctx, e) => nursingResult(ctx, e.program as Program, e.admitted === true, e.chance as number),
+    'nclex-result': (ctx, e) => nclexResult(ctx, e.passed === true, e.chance as number),
+    // A nursing program's chance of admitting you now, and the licensing exam's: the ones rolled.
+    'nursing-odds': {
+      run: () => {},
+      preview: (ctx, e) => {
+        const which = NURSING.find((x) => x === e.program);
+        const p = which ? schoolOf(ctx as never, which) : null;
+        return { chance: which && p ? nursingChance(ctx as never, which, p as never) : 0 };
+      },
+    },
+    'nclex-odds': {
+      run: () => {},
+      preview: (ctx) => {
+        const n = nclexOf(ctx);
+        return { chance: n ? nclexChance(ctx as never, n) : 0 };
+      },
+    },
     // The national EMT exam's chance now, for the page to show before you sit it: the one rolled.
     'nremt-odds': {
       run: () => {},
@@ -324,6 +391,16 @@ export const educationModule = defineModule<EducationSlice>({
       read: (v) => certified(v as never),
       domain: { type: 'bool' },
       label: 'the EMT course’s certificate earned',
+    },
+    nursing: {
+      read: ({ state }) => state.nursing,
+      domain: { type: 'enum', values: ['none', ...NURSING] },
+      label: 'the nursing program you finished, or none',
+    },
+    'rn-licensed': {
+      read: ({ state }) => state.nclex.licensed,
+      domain: { type: 'bool' },
+      label: 'licensed as a registered nurse',
     },
     'emt-licensed': {
       read: ({ state }) => state.nremt.licensed,

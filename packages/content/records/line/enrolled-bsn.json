@@ -1,0 +1,8 @@
+{
+  "beat": "education/enrolled",
+  "when": {
+    "field": "school",
+    "is": "bsn"
+  },
+  "text": "{you} enrolled in the university's nursing program for {courses} courses."
+}

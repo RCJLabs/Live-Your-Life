@@ -1,0 +1,8 @@
+{
+  "beat": "education/nursing-admitted",
+  "when": {
+    "field": "admitted",
+    "is": "true"
+  },
+  "text": "{you} was admitted to {name}."
+}

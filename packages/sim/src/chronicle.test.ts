@@ -136,6 +136,10 @@ const RARE = [
   // The EMT course and its exam (M4.4): education/emt.test.ts takes them.
   'education/certified',
   'education/nremt',
+  // The nursing programs and their exam (M4.4 step 2): education/nursing.test.ts takes them.
+  'education/nursing-admitted',
+  'education/nursed',
+  'education/nclex',
   // The federal bureau (M4.3): no census life holds a bachelor's and two years' work; federal/apply.test.ts raises them.
   'federal/applied',
   'federal/passed',

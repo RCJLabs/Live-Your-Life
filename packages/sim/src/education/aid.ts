@@ -61,6 +61,14 @@ export function creditsOf(v: View, which: Which, courses: number): number {
     .reduce((n, x) => n + x.credits, 0);
 }
 
+/** Credits earned toward a loan's year limit: a nursing program's own and the school it builds on. */
+function earnedFor(v: View, which: Which): number {
+  const s = slice(v);
+  if (which === 'adn') return s.college.credits + s.adn.credits;
+  if (which === 'bsn') return s.university.credits + s.bsn.credits;
+  return s[which].credits;
+}
+
 export interface Bill {
   readonly credits: number;
   /** Tuition and fees. */
@@ -78,9 +86,10 @@ const FREE = (credits: number): Bill => ({ credits, charge: 0, pell: 0, borrowed
 
 /** Tuition and fees for a term of `credits` at a school. */
 function chargeFor(v: View, a: Aid, which: Which, credits: number): number {
-  const u = which === 'university' ? universityOf(v) : which === 'law' ? lawOf(v) : null;
+  // The university's nursing program (M4.4 step 2) is its upper division: the upper price.
+  const u = which === 'university' || which === 'bsn' ? universityOf(v) : which === 'law' ? lawOf(v) : null;
   if (!u) return credits * (a.tuition + a.hourFee) + a.termFee;
-  const upper = slice(v)[which].credits >= u.price.upper.after;
+  const upper = which === 'bsn' || slice(v)[which].credits >= u.price.upper.after;
   return credits * (upper ? u.price.upper.perCredit : u.price.perCredit) + u.price.termFee;
 }
 
@@ -97,7 +106,7 @@ export function billFor(v: View, which: Which, courses: number, borrow: Borrow):
   const share = Math.min(credits, a.pell.fullTime);
   const pell = law || emt ? 0 : Math.floor((pellYear(a, aidIncome(v)) * share) / a.pell.fullTime / 2);
   const half = !emt && credits >= a.loans.half;
-  const limit = !half ? 0 : law ? Math.floor(law.loans.year / 2) : termLimit(a, slice(v)[which].credits);
+  const limit = !half ? 0 : law ? Math.floor(law.loans.year / 2) : termLimit(a, earnedFor(v, which));
   const rate = law ? law.loans.fee : a.loans.fee;
   const need = Math.max(0, charge - pell);
   const kept = 100000 - rate;

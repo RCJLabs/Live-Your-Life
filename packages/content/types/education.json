@@ -420,6 +420,415 @@
         }
       }
     },
+    "adn": {
+      "kind": "group",
+      "optional": true,
+      "description": "The college's associate's in nursing (M4.4 step 2, D163): selective admission after its prerequisites, its nursing courses by day, and the associate's at their credits and average.",
+      "fields": {
+        "name": {
+          "kind": "text",
+          "min": 1,
+          "max": 60
+        },
+        "terms": {
+          "kind": "list",
+          "min": 1,
+          "max": 4,
+          "description": "When each term starts in the year, and its weeks of classes.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 16
+              },
+              "month": {
+                "kind": "int",
+                "min": 1,
+                "max": 12
+              },
+              "day": {
+                "kind": "int",
+                "min": 1,
+                "max": 31
+              },
+              "weeks": {
+                "kind": "int",
+                "min": 1,
+                "max": 20
+              }
+            }
+          }
+        },
+        "enroll": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Days before a term starts that enrolling opens."
+        },
+        "courses": {
+          "kind": "list",
+          "min": 1,
+          "max": 40,
+          "description": "The certificate's courses, taken together in one term.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "name": {
+                "kind": "text",
+                "min": 1,
+                "max": 60
+              },
+              "credits": {
+                "kind": "int",
+                "min": 1,
+                "max": 6
+              }
+            }
+          }
+        },
+        "slots": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "When a term's courses meet, the first course at the first slot: two days a week, an hour of the day, minutes a meeting.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          }
+        },
+        "study": {
+          "kind": "int",
+          "min": 0,
+          "max": 10,
+          "description": "Hours of study a week for each credit that a full grade asks (the rule of thumb's two)."
+        },
+        "grades": {
+          "kind": "list",
+          "min": 1,
+          "max": 6,
+          "description": "The least score, in 100, for each grade, highest first, with its points: the score is half attendance and half study done (tune).",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "letter": {
+                "kind": "text",
+                "min": 1,
+                "max": 2
+              },
+              "least": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "points": {
+                "kind": "int",
+                "min": 0,
+                "max": 4
+              }
+            }
+          }
+        },
+        "gpa": {
+          "kind": "int",
+          "min": 0,
+          "max": 400,
+          "description": "The least grade point average in the program's courses to finish it, in hundredths."
+        },
+        "degree": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Credits in the program's own courses to finish it."
+        },
+        "admit": {
+          "kind": "group",
+          "description": "Selective admission: the credits and average asked of the school it builds on (the college for the associate's, the university for the bachelor's), the chance at that average, the points more for each tenth above it, the most, and the days before applying again.",
+          "fields": {
+            "credits": {
+              "kind": "int",
+              "min": 0,
+              "max": 120
+            },
+            "gpa": {
+              "kind": "int",
+              "min": 0,
+              "max": 400
+            },
+            "chance": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "perTenth": {
+              "kind": "int",
+              "min": 0,
+              "max": 20
+            },
+            "most": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "wait": {
+              "kind": "int",
+              "min": 0,
+              "max": 730
+            }
+          }
+        }
+      }
+    },
+    "bsn": {
+      "kind": "group",
+      "optional": true,
+      "description": "The university's bachelor's in nursing (M4.4 step 2, D163): admission after two years' university credits, its nursing courses by day at the university's price, and the bachelor's at their credits and average.",
+      "fields": {
+        "name": {
+          "kind": "text",
+          "min": 1,
+          "max": 60
+        },
+        "terms": {
+          "kind": "list",
+          "min": 1,
+          "max": 4,
+          "description": "When each term starts in the year, and its weeks of classes.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 16
+              },
+              "month": {
+                "kind": "int",
+                "min": 1,
+                "max": 12
+              },
+              "day": {
+                "kind": "int",
+                "min": 1,
+                "max": 31
+              },
+              "weeks": {
+                "kind": "int",
+                "min": 1,
+                "max": 20
+              }
+            }
+          }
+        },
+        "enroll": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Days before a term starts that enrolling opens."
+        },
+        "courses": {
+          "kind": "list",
+          "min": 1,
+          "max": 40,
+          "description": "The certificate's courses, taken together in one term.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "id": {
+                "kind": "text",
+                "min": 1,
+                "max": 24
+              },
+              "name": {
+                "kind": "text",
+                "min": 1,
+                "max": 60
+              },
+              "credits": {
+                "kind": "int",
+                "min": 1,
+                "max": 6
+              }
+            }
+          }
+        },
+        "slots": {
+          "kind": "list",
+          "min": 1,
+          "max": 8,
+          "description": "When a term's courses meet, the first course at the first slot: two days a week, an hour of the day, minutes a meeting.",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "days": {
+                "kind": "list",
+                "min": 1,
+                "max": 5,
+                "of": {
+                  "kind": "text",
+                  "min": 6,
+                  "max": 9
+                }
+              },
+              "hour": {
+                "kind": "int",
+                "min": 6,
+                "max": 22
+              },
+              "minutes": {
+                "kind": "int",
+                "min": 15,
+                "max": 240
+              }
+            }
+          }
+        },
+        "study": {
+          "kind": "int",
+          "min": 0,
+          "max": 10,
+          "description": "Hours of study a week for each credit that a full grade asks (the rule of thumb's two)."
+        },
+        "grades": {
+          "kind": "list",
+          "min": 1,
+          "max": 6,
+          "description": "The least score, in 100, for each grade, highest first, with its points: the score is half attendance and half study done (tune).",
+          "of": {
+            "kind": "group",
+            "fields": {
+              "letter": {
+                "kind": "text",
+                "min": 1,
+                "max": 2
+              },
+              "least": {
+                "kind": "int",
+                "min": 0,
+                "max": 100
+              },
+              "points": {
+                "kind": "int",
+                "min": 0,
+                "max": 4
+              }
+            }
+          }
+        },
+        "gpa": {
+          "kind": "int",
+          "min": 0,
+          "max": 400,
+          "description": "The least grade point average in the program's courses to finish it, in hundredths."
+        },
+        "degree": {
+          "kind": "int",
+          "min": 1,
+          "max": 120,
+          "description": "Credits in the program's own courses to finish it."
+        },
+        "admit": {
+          "kind": "group",
+          "description": "Selective admission: the credits and average asked of the school it builds on (the college for the associate's, the university for the bachelor's), the chance at that average, the points more for each tenth above it, the most, and the days before applying again.",
+          "fields": {
+            "credits": {
+              "kind": "int",
+              "min": 0,
+              "max": 120
+            },
+            "gpa": {
+              "kind": "int",
+              "min": 0,
+              "max": 400
+            },
+            "chance": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "perTenth": {
+              "kind": "int",
+              "min": 0,
+              "max": 20
+            },
+            "most": {
+              "kind": "int",
+              "min": 0,
+              "max": 100
+            },
+            "wait": {
+              "kind": "int",
+              "min": 0,
+              "max": 730
+            }
+          }
+        }
+      }
+    },
+    "nclex": {
+      "kind": "group",
+      "optional": true,
+      "description": "The nursing licensing exam (M4.4 step 2), sat after either program: its fee, length, the first sitting's chance by program, a later sitting's, and the days between.",
+      "fields": {
+        "price": {
+          "kind": "int",
+          "min": 0,
+          "max": 100000
+        },
+        "minutes": {
+          "kind": "int",
+          "min": 30,
+          "max": 480
+        },
+        "adn": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "bsn": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "repeat": {
+          "kind": "int",
+          "min": 0,
+          "max": 100
+        },
+        "wait": {
+          "kind": "int",
+          "min": 0,
+          "max": 365
+        }
+      }
+    },
     "aid": {
       "kind": "group",
       "optional": true,
