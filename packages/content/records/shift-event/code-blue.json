@@ -1,0 +1,46 @@
+{
+  "name": "A code",
+  "tags": ["hospital"],
+  "weight": 3,
+  "prompt": "The monitor in the next room goes flat. You're the first one through the door.",
+  "choices": [
+    {
+      "id": "start",
+      "text": "Start compressions and call the code",
+      "outcome": {
+        "told": "The team takes over in two minutes and gets a rhythm back. Nobody knows yet if she'll wake.",
+        "practice": 60,
+        "standing": 2,
+        "needs": {
+          "rest": -6,
+          "calm": -6
+        }
+      }
+    },
+    {
+      "id": "lead",
+      "text": "Run the code until the doctor comes",
+      "odds": {
+        "base": 35,
+        "skill": 45,
+        "tired": 25
+      },
+      "outcome": {
+        "told": "You call the drugs and the shocks in order. When the doctor comes there's a pulse and nothing for her to change.",
+        "practice": 90,
+        "standing": 4,
+        "needs": {
+          "rest": -8
+        }
+      },
+      "failure": {
+        "told": "You lose count of the doses in the noise. The doctor takes over and calls it twenty minutes later.",
+        "standing": -2,
+        "needs": {
+          "calm": -16,
+          "rest": -8
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "The label",
+  "tags": ["hospital"],
+  "weight": 3,
+  "prompt": "The order says ten units of insulin. The label from the pharmacy says a hundred.",
+  "choices": [
+    {
+      "id": "hold",
+      "text": "Hold the dose and call the pharmacy",
+      "outcome": {
+        "told": "The label was wrong. The pharmacist thanks you and sends up a new one, and the patient's breakfast goes cold.",
+        "practice": 30,
+        "standing": 2,
+        "needs": {
+          "calm": -3
+        }
+      }
+    },
+    {
+      "id": "give",
+      "text": "Give it, checking the pen against the order at the bedside",
+      "odds": {
+        "base": 35,
+        "skill": 40,
+        "tired": 30
+      },
+      "outcome": {
+        "told": "At the bedside you dial it to the order, not the label, and report the label after.",
+        "practice": 20,
+        "standing": 1
+      },
+      "failure": {
+        "told": "The patient's sugar falls hard within the hour. A rapid response, and an incident report with your name on it.",
+        "warning": true,
+        "standing": -6,
+        "needs": {
+          "calm": -16
+        }
+      }
+    }
+  ]
+}

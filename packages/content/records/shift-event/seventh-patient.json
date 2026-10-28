@@ -1,0 +1,46 @@
+{
+  "name": "A seventh patient",
+  "tags": ["hospital"],
+  "weight": 3,
+  "prompt": "Two nurses called in sick. The charge nurse asks you to take a seventh patient on top of your six.",
+  "choices": [
+    {
+      "id": "refuse",
+      "text": "Say six is all you can do safely",
+      "outcome": {
+        "told": "She gives the patient to the float nurse and doesn't look at you for the rest of the shift.",
+        "standing": -2,
+        "needs": {
+          "calm": -3
+        }
+      }
+    },
+    {
+      "id": "take",
+      "text": "Take the seventh",
+      "odds": {
+        "base": 60,
+        "skill": 25,
+        "tired": 40
+      },
+      "outcome": {
+        "told": "You run the whole shift and chart through your break, but every dose goes out on time.",
+        "practice": 30,
+        "standing": 3,
+        "needs": {
+          "rest": -8,
+          "food": -6
+        }
+      },
+      "failure": {
+        "told": "A dose goes out two hours late and a fall alarm goes unanswered. The patient isn't hurt; the write-up says it was close.",
+        "warning": true,
+        "standing": -4,
+        "needs": {
+          "rest": -8,
+          "calm": -12
+        }
+      }
+    }
+  ]
+}

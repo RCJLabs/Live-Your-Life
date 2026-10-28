@@ -1,0 +1,44 @@
+{
+  "name": "The turn",
+  "tags": ["hospital"],
+  "weight": 3,
+  "prompt": "A patient of near three hundred pounds needs turning before his skin breaks down. The lift team is on another floor.",
+  "choices": [
+    {
+      "id": "wait",
+      "text": "Wait for the lift team",
+      "outcome": {
+        "told": "They come forty minutes later. The call lights stack up in the meantime.",
+        "standing": -1,
+        "needs": {
+          "calm": -4
+        }
+      }
+    },
+    {
+      "id": "turn",
+      "text": "Turn him with the aide",
+      "odds": {
+        "base": 55,
+        "skill": 20,
+        "tired": 35
+      },
+      "outcome": {
+        "told": "You turn him on the count and wedge the pillows. Your arms shake after.",
+        "standing": 1,
+        "needs": {
+          "rest": -6
+        }
+      },
+      "failure": {
+        "told": "Something in your lower back gives as he rolls. Occupational health sends you home, off work until it heals.",
+        "hurt": "injury",
+        "home": true,
+        "needs": {
+          "rest": -10,
+          "calm": -8
+        }
+      }
+    }
+  ]
+}

@@ -143,6 +143,18 @@
                 "max": 50,
                 "optional": true,
                 "description": "Points of evidence added to the case you have open (M4.3 step 3, D159): a federal agent's work."
+              },
+              "hurt": {
+                "kind": "text",
+                "optional": true,
+                "min": 1,
+                "max": 24,
+                "description": "Hurt by it (M4.4 step 3): one of the illness record's kinds, as a beating or a fall would hurt you, with its days off work."
+              },
+              "warning": {
+                "kind": "bool",
+                "optional": true,
+                "description": "A written warning on your file at work (M4.4 step 3), counted toward being let go as a no-show's is."
               }
             }
           },
@@ -203,6 +215,18 @@
                 "max": 50,
                 "optional": true,
                 "description": "Points of evidence added to the case you have open (M4.3 step 3, D159): a federal agent's work."
+              },
+              "hurt": {
+                "kind": "text",
+                "optional": true,
+                "min": 1,
+                "max": 24,
+                "description": "Hurt by it (M4.4 step 3): one of the illness record's kinds, as a beating or a fall would hurt you, with its days off work."
+              },
+              "warning": {
+                "kind": "bool",
+                "optional": true,
+                "description": "A written warning on your file at work (M4.4 step 3), counted toward being let go as a no-show's is."
               }
             }
           }

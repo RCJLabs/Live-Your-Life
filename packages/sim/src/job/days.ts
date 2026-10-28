@@ -52,13 +52,23 @@ export interface Posting {
 export const weeklyCount = (career: CareerRecord, standing: number): number =>
   career.posting.fewest + nearest((career.posting.most - career.posting.fewest) * standing, 100);
 
+/** Whether two spans of ticks leave `rest` minutes between them, either way round. */
+export const apart = (
+  a: { readonly start: number; readonly end: number },
+  b: { readonly start: number; readonly end: number },
+  rest: number,
+): boolean => a.start >= b.end + rest || b.start >= a.end + rest;
+
 /**
  * The shifts posted for some days: of the days the place is open, a share of the week's count
- * as large as their share of its open days, each day a shift drawn from its kinds.
+ * as large as their share of its open days, each day a shift drawn from its kinds. A career with
+ * rest between shifts (D164) posts none closer than that to another, drawing days until the count
+ * is met or none is left.
  */
 export function post(career: CareerRecord, rng: Rng, today: Today, days: readonly number[], standing: number) {
   const open = days.filter((day) => career.open.includes(WEEKDAYS[weekdayOn(today, day)] as Weekday));
   const count = Math.min(open.length, nearest(weeklyCount(career, standing) * open.length, career.open.length));
+  if (career.rest !== undefined) return rested(career, rng, today, open, count);
   const chosen = rng
     .shuffle(open)
     .slice(0, count)
@@ -82,4 +92,17 @@ export function daysAtHire(career: CareerRecord, today: Today): number[] {
   const rest = daysFrom(today.day + 1, today.day + 6 - today.weekday);
   const posted = today.weekday >= WEEKDAYS.indexOf(career.posting.weekday);
   return posted ? [...rest, ...nextWeek(today)] : rest;
+}
+
+/** Days drawn in turn, each a kind drawn, kept when it is `rest` from those kept. */
+function rested(career: CareerRecord, rng: Rng, today: Today, open: readonly number[], count: number): Posting[] {
+  const kept: { day: number; shift: string; start: number; end: number }[] = [];
+  for (const day of rng.shuffle(open)) {
+    if (kept.length >= count) break;
+    const kind = rng.pick(career.shifts) as ShiftKind;
+    const start = tickAt(today, day, startOf(kind));
+    const span = { start, end: start + kind.minutes };
+    if (kept.every((k) => apart(span, k, career.rest ?? 0))) kept.push({ day, shift: kind.id, ...span });
+  }
+  return kept.sort((a, b) => a.day - b.day).map(({ day, shift }): Posting => ({ day, shift }));
 }

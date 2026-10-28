@@ -1191,6 +1191,8 @@ Tapping opens a panel with all six needs, the week's shifts, and what is pending
 
 **Options considered.** Real shift patterns (recommended, chosen). Eight-hour weekday shifts, as the career template stands.
 
+**How it was built (M4.4 step 3, 2026-10-28).** A shift may now run past midnight, up to a whole day. A shift kind can carry breaks: minutes off work that are unpaid and don't count as leaving early. That covers a nurse's meal and a 24-hour crew's sleep, which the Fair Labor Standards Act lets an employer leave unpaid. A career can set rest, the fewest minutes between one shift's end and the next's start. Neither its postings nor your sign-ups come closer than that. The nurse rests 10 hours and the EMT 12 (tune). A patient's event can hurt you, as the illness record's injury at work, or put a written warning on your file at work. Written warnings count with no-shows toward being let go.
+
 ---
 
 ## Open items

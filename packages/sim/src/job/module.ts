@@ -6,8 +6,8 @@
  * events the ties module hears, and takes and gives shifts as favours (D42).
  */
 import { defineModule, type FactView, type InitContext } from '@eb/core';
-import { type LifeStart, weekdayOf } from '../calendar.ts';
-import { daysAtHire, post, type Today, todayOf } from './days.ts';
+import { type LifeStart, MINUTES_PER_DAY, weekdayOf } from '../calendar.ts';
+import { daysAtHire, post, startOf, type Today, todayOf } from './days.ts';
 import { choose, shiftChoice, shiftEvent, shiftOutcome } from './events.ts';
 import { quit, hire as startJob } from './hire.ts';
 import { payday } from './pay.ts';
@@ -167,11 +167,14 @@ export function jobModule(hire?: Hire) {
       busy: {
         args: { day: { type: 'int', min: 0 }, minute: { type: 'int', min: 0 } },
         read: (view, { day, minute }) => {
-          const signed = view.state.signed.find((s) => s.day === day);
-          if (!signed || view.state.career === null) return false;
-          const kind = careerFor(view.content, view.state).shifts.find((k) => k.id === signed.shift);
-          const start = kind ? kind.hour * 60 + kind.minute : -1;
-          return kind !== undefined && (minute as number) >= start && (minute as number) < start + kind.minutes;
+          if (view.state.career === null) return false;
+          const career = careerFor(view.content, view.state);
+          // The day before's too: a night shift runs on into the morning (D164).
+          return view.state.signed.some((s) => {
+            const at = ((day as number) - s.day) * MINUTES_PER_DAY + (minute as number);
+            const kind = career.shifts.find((k) => k.id === s.shift);
+            return kind !== undefined && at >= startOf(kind) && at < startOf(kind) + kind.minutes;
+          });
         },
         domain: { type: 'bool' },
         label: 'on a shift you signed up for at that minute of that day',
@@ -215,8 +218,13 @@ export function jobModule(hire?: Hire) {
         args: { by: { type: 'int' }, now: { type: 'int', min: 0, max: 100 }, why: { type: 'text' } },
         label: 'Standing at work moved',
       },
+      // A written warning from a shift's event (M4.4 step 3).
+      warned: {
+        args: { day: { type: 'int', min: 0 }, warnings: { type: 'int', min: 1 } },
+        label: 'Given a written warning at work',
+      },
       'let-go': {
-        args: { reason: { type: 'enum', values: ['no-shows', 'standing', 'prison', 'record'] } },
+        args: { reason: { type: 'enum', values: ['no-shows', 'warnings', 'standing', 'prison', 'record'] } },
         label: 'Let go from a job',
       },
     },

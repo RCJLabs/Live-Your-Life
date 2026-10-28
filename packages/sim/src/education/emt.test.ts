@@ -158,6 +158,11 @@ describe('the national EMT exam (M4.4 step 1)', () => {
     expect(barred(emt, you)).toBe('licence');
     expect(barred(emt, { ...you, emt: true })).toBeNull();
     expect(barred(emt, { ...you, emt: true, felonies: 1, convictions: 1 })).toBe('record');
-    expect(emt.shifts).toEqual([{ id: 'days', hour: 7, minute: 0, minutes: 720 }]);
+    // Days, nights and the 24-hour shift (M4.4 step 3, D164), each with its unpaid breaks.
+    expect(emt.shifts.map((k) => [k.id, k.hour, k.minutes, k.breaks])).toEqual([
+      ['days', 7, 720, 30],
+      ['nights', 19, 720, 30],
+      ['twenty-four', 7, 1440, 480],
+    ]);
   });
 });

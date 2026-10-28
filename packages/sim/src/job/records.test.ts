@@ -54,6 +54,7 @@ describe("the slice's job content", () => {
       'police-officer',
       'police-recruit',
       'receptionist',
+      'registered-nurse',
       'retail-salesperson',
       'security-guard',
       'server',
@@ -104,7 +105,10 @@ describe('a bad record is refused when it is read', () => {
   it('in a career', () => {
     const shift = { id: 'breakfast', hour: 6, minute: 0, minutes: 480 };
     expect(career({ shifts: [shift, shift] })).toThrow('two shifts have one id');
-    expect(career({ shifts: [{ ...shift, hour: 20 }] })).toThrow('runs past midnight');
+    // Past midnight is a night shift (D164); past a whole day is not a shift.
+    expect(career({ shifts: [{ ...shift, hour: 20 }] })).not.toThrow();
+    expect(career({ shifts: [{ ...shift, minutes: 1441 }] })).toThrow('longer than a day');
+    expect(career({ shifts: [{ ...shift, breaks: 480 }] })).toThrow('breaks as long as itself');
     expect(career({ posting: { ...cook.posting, fewest: 6, most: 3 } })).toThrow('more at its fewest');
     expect(career({ open: ['monday', 'monday'] })).toThrow('open twice');
     expect(career({ withholding: ['no-such-tax'] })).toThrow('tax "no-such-tax": no such record');

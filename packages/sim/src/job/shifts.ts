@@ -6,7 +6,7 @@
 
 import type { Action, FactView } from '@eb/core';
 import { WEEKDAYS } from '../calendar.ts';
-import { nextWeek, post, shiftKind, type Today, todayOf, weekOf } from './days.ts';
+import { apart, nextWeek, post, shiftKind, startOf, type Today, tickAt, todayOf, weekOf } from './days.ts';
 import { hire } from './hire.ts';
 import { postOpen } from './posts.ts';
 import { careerOf, type Weekday } from './records.ts';
@@ -26,8 +26,35 @@ import {
 type Viewer = FactView<JobSlice> | JobContext;
 const sliceOf = (view: Viewer) => ('state' in view ? view.state : view.read());
 
-/** Why a day can't take one more shift of yours, or null when it can: from tomorrow, one a day, the week's limit. */
-export function freeProblem(view: Viewer, day: number): string | null {
+/**
+ * Whether a shift of `kind` on `day` keeps the career's rest from your others (D164): those signed
+ * up for, and those worked lately, which are taken to end as early as any of its kinds could, since
+ * a shift over keeps only its day.
+ */
+function rested(view: Viewer, day: number, kind: string): boolean {
+  const slice = sliceOf(view);
+  const career = careerFor(view.content, slice);
+  const rest = career.rest ?? 0;
+  if (rest === 0) return true;
+  const today = todayOf(view);
+  const span = (d: number, k: string) => {
+    const start = tickAt(today, d, startOf(shiftKind(career, k)));
+    return { start, end: start + shiftKind(career, k).minutes };
+  };
+  const want = span(day, kind);
+  if (!slice.signed.every((x) => apart(want, span(x.day, x.shift), rest))) return false;
+  const soonest = Math.min(...career.shifts.map((k) => startOf(k) + k.minutes));
+  return slice.done.every((d) => {
+    const end = tickAt(today, d, soonest);
+    return apart(want, { start: end, end }, rest);
+  });
+}
+
+/**
+ * Why a day can't take one more shift of yours, or null when it can: from tomorrow, one a day,
+ * the week's limit, and with `shift`, the career's rest from your others.
+ */
+export function freeProblem(view: Viewer, day: number, shift?: string): string | null {
   const slice = sliceOf(view);
   if (!slice.employed) return 'not-employed';
   if (slice.signed.some((s) => s.day === day)) return 'already-signed-up';
@@ -38,14 +65,16 @@ export function freeProblem(view: Viewer, day: number): string | null {
   const taken =
     slice.signed.filter((s) => weekOf(today, s.day) === week).length +
     slice.done.filter((d) => weekOf(today, d) === week).length;
-  return taken >= careerFor(view.content, slice).perWeek ? 'week-full' : null;
+  if (taken >= careerFor(view.content, slice).perWeek) return 'week-full';
+  return shift !== undefined && !rested(view, day, shift) ? 'too-little-rest' : null;
 }
 
 /** Why a posted day can't be signed up for now, or null when it can. */
 function signUpProblem(view: Viewer, day: number): string | null {
   // Postings are from tomorrow on: hiring posts from tomorrow, and midnight clears the day's.
-  if (sliceOf(view).employed && !sliceOf(view).posted.some((p) => p.day === day)) return 'not-posted';
-  return freeProblem(view, day);
+  const posted = sliceOf(view).posted.find((p) => p.day === day);
+  if (sliceOf(view).employed && !posted) return 'not-posted';
+  return freeProblem(view, day, posted?.shift);
 }
 
 /** A shift of yours from now on: its event, if it has one, sealed now so the routine can stop for it (D40). */
@@ -75,12 +104,12 @@ export const signUp = {
 
 /** `take-shift`: a shift not posted to you, taken as a favour (D42). It counts in your week like any other. */
 export function takeShift(ctx: JobContext, day: number, shift: string): void {
-  const problem = freeProblem(ctx, day);
+  if (!careerFor(ctx.content, ctx.read()).shifts.some((k) => k.id === shift)) throw new Error(`no shift "${shift}"`);
+  const problem = freeProblem(ctx, day, shift);
   if (problem) {
     ctx.refuse(problem);
     return;
   }
-  if (!careerFor(ctx.content, ctx.read()).shifts.some((k) => k.id === shift)) throw new Error(`no shift "${shift}"`);
   addSignUp(ctx, day, shift);
   ctx.emit('took-shift', { day, shift });
 }
@@ -206,7 +235,8 @@ export function shiftOver(ctx: JobContext, day: number): void {
   const { start, end } = windowOf(career, today, s);
   const missed = end - s.in - s.worked;
   const late = s.in - start > rules.lateAfter;
-  const left = !s.home && missed > rules.missedAfter;
+  // A shift's breaks are its own to take, unpaid (D164): a meal, or a 24-hour crew's sleep.
+  const left = !s.home && missed > rules.missedAfter + (shiftKind(career, s.shift).breaks ?? 0);
   ctx.emit('shift-over', { day, worked: s.worked, late: s.in - start, missed, home: s.home });
   if (left) moveStanding(ctx, -rules.leftEarly, 'left-early');
   else if (!late && !s.home) {
